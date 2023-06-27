@@ -16,5 +16,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/status", app.status)
 
+	mux.Route("v1", func(r chi.Router) {})
+
 	return mux
 }
