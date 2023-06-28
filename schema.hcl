@@ -116,8 +116,8 @@ table "users" {
   }
   column "activated" {
     null    = false
-    type    = bool
-    default = false
+    type    = integer
+    default = 0
   }
   column "version" {
     null    = false

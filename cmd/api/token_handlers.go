@@ -42,7 +42,7 @@ func (app *application) createPasswordResetTokenHandler(w http.ResponseWriter, r
 		return
 	}
 
-	if !user.Ent.Activated {
+	if user.Ent.Activated == 0 {
 		v.AddFieldError("email", "user account must be activated")
 		app.failedValidation(w, r, v)
 		return
@@ -101,7 +101,7 @@ func (app *application) createActivationTokenHandler(w http.ResponseWriter, r *h
 		return
 	}
 
-	if user.Ent.Activated {
+	if user.Ent.Activated == 1 {
 		v.AddFieldError("email", "user has already been activated")
 		app.failedValidation(w, r, v)
 		return

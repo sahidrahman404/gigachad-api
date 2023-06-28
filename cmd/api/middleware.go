@@ -85,7 +85,7 @@ func (app *application) requireActivatedUser(next http.HandlerFunc) http.Handler
 	fn := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user := app.contextGetUser(r)
 
-		if user.Ent.Activated {
+		if user.Ent.Activated == 1 {
 			app.inactiveAccount(w, r)
 			return
 		}
