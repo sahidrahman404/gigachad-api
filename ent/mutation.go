@@ -614,9 +614,11 @@ type UserMutation struct {
 	username        *string
 	hashed_password *string
 	name            *string
-	sex             *string
-	bio             *string
 	created_at      *string
+	activated       *int
+	addactivated    *int
+	version         *int
+	addversion      *int
 	clearedFields   map[string]struct{}
 	tokens          map[int]struct{}
 	removedtokens   map[int]struct{}
@@ -874,91 +876,6 @@ func (m *UserMutation) ResetName() {
 	m.name = nil
 }
 
-// SetSex sets the "sex" field.
-func (m *UserMutation) SetSex(s string) {
-	m.sex = &s
-}
-
-// Sex returns the value of the "sex" field in the mutation.
-func (m *UserMutation) Sex() (r string, exists bool) {
-	v := m.sex
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldSex returns the old "sex" field's value of the User entity.
-// If the User object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldSex(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSex is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSex requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSex: %w", err)
-	}
-	return oldValue.Sex, nil
-}
-
-// ResetSex resets all changes to the "sex" field.
-func (m *UserMutation) ResetSex() {
-	m.sex = nil
-}
-
-// SetBio sets the "bio" field.
-func (m *UserMutation) SetBio(s string) {
-	m.bio = &s
-}
-
-// Bio returns the value of the "bio" field in the mutation.
-func (m *UserMutation) Bio() (r string, exists bool) {
-	v := m.bio
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldBio returns the old "bio" field's value of the User entity.
-// If the User object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldBio(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldBio is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldBio requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldBio: %w", err)
-	}
-	return oldValue.Bio, nil
-}
-
-// ClearBio clears the value of the "bio" field.
-func (m *UserMutation) ClearBio() {
-	m.bio = nil
-	m.clearedFields[user.FieldBio] = struct{}{}
-}
-
-// BioCleared returns if the "bio" field was cleared in this mutation.
-func (m *UserMutation) BioCleared() bool {
-	_, ok := m.clearedFields[user.FieldBio]
-	return ok
-}
-
-// ResetBio resets all changes to the "bio" field.
-func (m *UserMutation) ResetBio() {
-	m.bio = nil
-	delete(m.clearedFields, user.FieldBio)
-}
-
 // SetCreatedAt sets the "created_at" field.
 func (m *UserMutation) SetCreatedAt(s string) {
 	m.created_at = &s
@@ -993,6 +910,118 @@ func (m *UserMutation) OldCreatedAt(ctx context.Context) (v string, err error) {
 // ResetCreatedAt resets all changes to the "created_at" field.
 func (m *UserMutation) ResetCreatedAt() {
 	m.created_at = nil
+}
+
+// SetActivated sets the "activated" field.
+func (m *UserMutation) SetActivated(i int) {
+	m.activated = &i
+	m.addactivated = nil
+}
+
+// Activated returns the value of the "activated" field in the mutation.
+func (m *UserMutation) Activated() (r int, exists bool) {
+	v := m.activated
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldActivated returns the old "activated" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldActivated(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldActivated is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldActivated requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldActivated: %w", err)
+	}
+	return oldValue.Activated, nil
+}
+
+// AddActivated adds i to the "activated" field.
+func (m *UserMutation) AddActivated(i int) {
+	if m.addactivated != nil {
+		*m.addactivated += i
+	} else {
+		m.addactivated = &i
+	}
+}
+
+// AddedActivated returns the value that was added to the "activated" field in this mutation.
+func (m *UserMutation) AddedActivated() (r int, exists bool) {
+	v := m.addactivated
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetActivated resets all changes to the "activated" field.
+func (m *UserMutation) ResetActivated() {
+	m.activated = nil
+	m.addactivated = nil
+}
+
+// SetVersion sets the "version" field.
+func (m *UserMutation) SetVersion(i int) {
+	m.version = &i
+	m.addversion = nil
+}
+
+// Version returns the value of the "version" field in the mutation.
+func (m *UserMutation) Version() (r int, exists bool) {
+	v := m.version
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldVersion returns the old "version" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldVersion(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldVersion is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldVersion requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldVersion: %w", err)
+	}
+	return oldValue.Version, nil
+}
+
+// AddVersion adds i to the "version" field.
+func (m *UserMutation) AddVersion(i int) {
+	if m.addversion != nil {
+		*m.addversion += i
+	} else {
+		m.addversion = &i
+	}
+}
+
+// AddedVersion returns the value that was added to the "version" field in this mutation.
+func (m *UserMutation) AddedVersion() (r int, exists bool) {
+	v := m.addversion
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetVersion resets all changes to the "version" field.
+func (m *UserMutation) ResetVersion() {
+	m.version = nil
+	m.addversion = nil
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by ids.
@@ -1096,14 +1125,14 @@ func (m *UserMutation) Fields() []string {
 	if m.name != nil {
 		fields = append(fields, user.FieldName)
 	}
-	if m.sex != nil {
-		fields = append(fields, user.FieldSex)
-	}
-	if m.bio != nil {
-		fields = append(fields, user.FieldBio)
-	}
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
+	}
+	if m.activated != nil {
+		fields = append(fields, user.FieldActivated)
+	}
+	if m.version != nil {
+		fields = append(fields, user.FieldVersion)
 	}
 	return fields
 }
@@ -1121,12 +1150,12 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.HashedPassword()
 	case user.FieldName:
 		return m.Name()
-	case user.FieldSex:
-		return m.Sex()
-	case user.FieldBio:
-		return m.Bio()
 	case user.FieldCreatedAt:
 		return m.CreatedAt()
+	case user.FieldActivated:
+		return m.Activated()
+	case user.FieldVersion:
+		return m.Version()
 	}
 	return nil, false
 }
@@ -1144,12 +1173,12 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldHashedPassword(ctx)
 	case user.FieldName:
 		return m.OldName(ctx)
-	case user.FieldSex:
-		return m.OldSex(ctx)
-	case user.FieldBio:
-		return m.OldBio(ctx)
 	case user.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
+	case user.FieldActivated:
+		return m.OldActivated(ctx)
+	case user.FieldVersion:
+		return m.OldVersion(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -1187,26 +1216,26 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
-	case user.FieldSex:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetSex(v)
-		return nil
-	case user.FieldBio:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetBio(v)
-		return nil
 	case user.FieldCreatedAt:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedAt(v)
+		return nil
+	case user.FieldActivated:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetActivated(v)
+		return nil
+	case user.FieldVersion:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetVersion(v)
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
@@ -1215,13 +1244,26 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *UserMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addactivated != nil {
+		fields = append(fields, user.FieldActivated)
+	}
+	if m.addversion != nil {
+		fields = append(fields, user.FieldVersion)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case user.FieldActivated:
+		return m.AddedActivated()
+	case user.FieldVersion:
+		return m.AddedVersion()
+	}
 	return nil, false
 }
 
@@ -1230,6 +1272,20 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case user.FieldActivated:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddActivated(v)
+		return nil
+	case user.FieldVersion:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddVersion(v)
+		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -1237,11 +1293,7 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *UserMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(user.FieldBio) {
-		fields = append(fields, user.FieldBio)
-	}
-	return fields
+	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -1254,11 +1306,6 @@ func (m *UserMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *UserMutation) ClearField(name string) error {
-	switch name {
-	case user.FieldBio:
-		m.ClearBio()
-		return nil
-	}
 	return fmt.Errorf("unknown User nullable field %s", name)
 }
 
@@ -1278,14 +1325,14 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldName:
 		m.ResetName()
 		return nil
-	case user.FieldSex:
-		m.ResetSex()
-		return nil
-	case user.FieldBio:
-		m.ResetBio()
-		return nil
 	case user.FieldCreatedAt:
 		m.ResetCreatedAt()
+		return nil
+	case user.FieldActivated:
+		m.ResetActivated()
+		return nil
+	case user.FieldVersion:
+		m.ResetVersion()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

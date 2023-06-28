@@ -37,9 +37,9 @@ var (
 		{Name: "username", Type: field.TypeString},
 		{Name: "hashed_password", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "sex", Type: field.TypeString},
-		{Name: "bio", Type: field.TypeString, Nullable: true},
 		{Name: "created_at", Type: field.TypeString},
+		{Name: "activated", Type: field.TypeInt, Default: 0},
+		{Name: "version", Type: field.TypeInt, Default: 1},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{

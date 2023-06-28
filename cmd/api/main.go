@@ -40,11 +40,11 @@ type config struct {
 }
 
 type application struct {
-	config config
-	db     *database.DB
-	logger *leveledlog.Logger
-	mailer *smtp.Mailer
-	wg     sync.WaitGroup
+	config  config
+	logger  *leveledlog.Logger
+	mailer  *smtp.Mailer
+	wg      sync.WaitGroup
+	storage *database.Storage
 }
 
 func run(logger *leveledlog.Logger) error {
@@ -72,15 +72,21 @@ func run(logger *leveledlog.Logger) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer db.Db.Close()
 
-	mailer := smtp.NewMailer(cfg.smtp.host, cfg.smtp.port, cfg.smtp.username, cfg.smtp.password, cfg.smtp.from)
+	mailer := smtp.NewMailer(
+		cfg.smtp.host,
+		cfg.smtp.port,
+		cfg.smtp.username,
+		cfg.smtp.password,
+		cfg.smtp.from,
+	)
 
 	app := &application{
-		config: cfg,
-		db:     db,
-		logger: logger,
-		mailer: mailer,
+		config:  cfg,
+		logger:  logger,
+		mailer:  mailer,
+		storage: database.NewStorage(db.Ent),
 	}
 
 	return app.serveHTTP()

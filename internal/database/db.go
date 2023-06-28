@@ -3,19 +3,25 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
+	_ "github.com/libsql/libsql-client-go/libsql"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sahidrahman404/gigachad-api/ent"
 )
 
-const defaultTimeout = 3 * time.Second
+var (
+	defaultTimeout    = 3 * time.Second
+	ErrRecordNotFound = errors.New("record not found")
+	ErrEditConflict   = errors.New("edit conflict")
+)
 
 type DB struct {
-	db  *sql.DB
-	ent *ent.Client
+	Db  *sql.DB
+	Ent *ent.Client
 }
 
 func New(dsn string) (*DB, error) {
@@ -39,5 +45,5 @@ func New(dsn string) (*DB, error) {
 
 	drv := entsql.OpenDB(dialect.SQLite, db)
 	entClient := ent.NewClient(ent.Driver(drv))
-	return &DB{db: db, ent: entClient}, nil
+	return &DB{Db: db, Ent: entClient}, nil
 }

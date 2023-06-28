@@ -16,7 +16,32 @@ func (app *application) routes() http.Handler {
 
 	mux.Get("/status", app.status)
 
-	mux.Route("v1", func(r chi.Router) {})
+	mux.Route("/v1", func(r chi.Router) {
+		// users resources
+		r.Route("/users", func(r chi.Router) {
+			// user registration
+			r.Post("/", app.registerUserHandler)
+			// user activation
+			r.Put("/activated", app.activateUserHandler)
+			// password reset
+			r.Put("/password", app.updateUserPasswordHandler)
+		})
+
+		// tokens resources
+		r.Route("/tokens", func(r chi.Router) {
+			// user login
+			r.Post("/authentication", app.createAuthenticationTokenHandler)
+
+			// user activation
+			r.Post("/activation", app.createActivationTokenHandler)
+
+			// password reset
+			r.Post(
+				"/password-reset",
+				app.createPasswordResetTokenHandler,
+			)
+		})
+	})
 
 	return mux
 }

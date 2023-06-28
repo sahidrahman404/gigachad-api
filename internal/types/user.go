@@ -20,8 +20,6 @@ type CreateUserParams struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Name     string `json:"name"`
-	Sex      string `json:"sex"`
-	Bio      string `json:"bio"`
 }
 
 type User struct {
@@ -39,8 +37,6 @@ func NewUserFromParams(params CreateUserParams) (*User, error) {
 			Email:          strings.ToLower(params.Email),
 			HashedPassword: string(encpw),
 			Name:           params.Name,
-			Sex:            params.Sex,
-			Bio:            params.Bio,
 		},
 	}, nil
 }

@@ -24,12 +24,12 @@ type User struct {
 	HashedPassword string `json:"hashed_password,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// Sex holds the value of the "sex" field.
-	Sex string `json:"sex,omitempty"`
-	// Bio holds the value of the "bio" field.
-	Bio string `json:"bio,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt string `json:"created_at,omitempty"`
+	// Activated holds the value of the "activated" field.
+	Activated int `json:"activated,omitempty"`
+	// Version holds the value of the "version" field.
+	Version int `json:"version,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -59,7 +59,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldID, user.FieldEmail, user.FieldUsername, user.FieldHashedPassword, user.FieldName, user.FieldSex, user.FieldBio, user.FieldCreatedAt:
+		case user.FieldActivated, user.FieldVersion:
+			values[i] = new(sql.NullInt64)
+		case user.FieldID, user.FieldEmail, user.FieldUsername, user.FieldHashedPassword, user.FieldName, user.FieldCreatedAt:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -106,23 +108,23 @@ func (u *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				u.Name = value.String
 			}
-		case user.FieldSex:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field sex", values[i])
-			} else if value.Valid {
-				u.Sex = value.String
-			}
-		case user.FieldBio:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field bio", values[i])
-			} else if value.Valid {
-				u.Bio = value.String
-			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
 				u.CreatedAt = value.String
+			}
+		case user.FieldActivated:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field activated", values[i])
+			} else if value.Valid {
+				u.Activated = int(value.Int64)
+			}
+		case user.FieldVersion:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field version", values[i])
+			} else if value.Valid {
+				u.Version = int(value.Int64)
 			}
 		default:
 			u.selectValues.Set(columns[i], values[i])
@@ -177,14 +179,14 @@ func (u *User) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(u.Name)
 	builder.WriteString(", ")
-	builder.WriteString("sex=")
-	builder.WriteString(u.Sex)
-	builder.WriteString(", ")
-	builder.WriteString("bio=")
-	builder.WriteString(u.Bio)
-	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(u.CreatedAt)
+	builder.WriteString(", ")
+	builder.WriteString("activated=")
+	builder.WriteString(fmt.Sprintf("%v", u.Activated))
+	builder.WriteString(", ")
+	builder.WriteString("version=")
+	builder.WriteString(fmt.Sprintf("%v", u.Version))
 	builder.WriteByte(')')
 	return builder.String()
 }

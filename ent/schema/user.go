@@ -20,9 +20,9 @@ func (User) Fields() []ent.Field {
 		field.String("username"),
 		field.String("hashed_password"),
 		field.String("name"),
-		field.String("sex"),
-		field.String("bio").Optional(),
 		field.String("created_at").DefaultFunc(generateTime),
+		field.Int("activated").Default(0),
+		field.Int("version").Default(1),
 	}
 }
 

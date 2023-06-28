@@ -44,26 +44,6 @@ func (uc *UserCreate) SetName(s string) *UserCreate {
 	return uc
 }
 
-// SetSex sets the "sex" field.
-func (uc *UserCreate) SetSex(s string) *UserCreate {
-	uc.mutation.SetSex(s)
-	return uc
-}
-
-// SetBio sets the "bio" field.
-func (uc *UserCreate) SetBio(s string) *UserCreate {
-	uc.mutation.SetBio(s)
-	return uc
-}
-
-// SetNillableBio sets the "bio" field if the given value is not nil.
-func (uc *UserCreate) SetNillableBio(s *string) *UserCreate {
-	if s != nil {
-		uc.SetBio(*s)
-	}
-	return uc
-}
-
 // SetCreatedAt sets the "created_at" field.
 func (uc *UserCreate) SetCreatedAt(s string) *UserCreate {
 	uc.mutation.SetCreatedAt(s)
@@ -74,6 +54,34 @@ func (uc *UserCreate) SetCreatedAt(s string) *UserCreate {
 func (uc *UserCreate) SetNillableCreatedAt(s *string) *UserCreate {
 	if s != nil {
 		uc.SetCreatedAt(*s)
+	}
+	return uc
+}
+
+// SetActivated sets the "activated" field.
+func (uc *UserCreate) SetActivated(i int) *UserCreate {
+	uc.mutation.SetActivated(i)
+	return uc
+}
+
+// SetNillableActivated sets the "activated" field if the given value is not nil.
+func (uc *UserCreate) SetNillableActivated(i *int) *UserCreate {
+	if i != nil {
+		uc.SetActivated(*i)
+	}
+	return uc
+}
+
+// SetVersion sets the "version" field.
+func (uc *UserCreate) SetVersion(i int) *UserCreate {
+	uc.mutation.SetVersion(i)
+	return uc
+}
+
+// SetNillableVersion sets the "version" field if the given value is not nil.
+func (uc *UserCreate) SetNillableVersion(i *int) *UserCreate {
+	if i != nil {
+		uc.SetVersion(*i)
 	}
 	return uc
 }
@@ -146,6 +154,14 @@ func (uc *UserCreate) defaults() {
 		v := user.DefaultCreatedAt()
 		uc.mutation.SetCreatedAt(v)
 	}
+	if _, ok := uc.mutation.Activated(); !ok {
+		v := user.DefaultActivated
+		uc.mutation.SetActivated(v)
+	}
+	if _, ok := uc.mutation.Version(); !ok {
+		v := user.DefaultVersion
+		uc.mutation.SetVersion(v)
+	}
 	if _, ok := uc.mutation.ID(); !ok {
 		v := user.DefaultID()
 		uc.mutation.SetID(v)
@@ -166,11 +182,14 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
 	}
-	if _, ok := uc.mutation.Sex(); !ok {
-		return &ValidationError{Name: "sex", err: errors.New(`ent: missing required field "User.sex"`)}
-	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "User.created_at"`)}
+	}
+	if _, ok := uc.mutation.Activated(); !ok {
+		return &ValidationError{Name: "activated", err: errors.New(`ent: missing required field "User.activated"`)}
+	}
+	if _, ok := uc.mutation.Version(); !ok {
+		return &ValidationError{Name: "version", err: errors.New(`ent: missing required field "User.version"`)}
 	}
 	return nil
 }
@@ -223,17 +242,17 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := uc.mutation.Sex(); ok {
-		_spec.SetField(user.FieldSex, field.TypeString, value)
-		_node.Sex = value
-	}
-	if value, ok := uc.mutation.Bio(); ok {
-		_spec.SetField(user.FieldBio, field.TypeString, value)
-		_node.Bio = value
-	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeString, value)
 		_node.CreatedAt = value
+	}
+	if value, ok := uc.mutation.Activated(); ok {
+		_spec.SetField(user.FieldActivated, field.TypeInt, value)
+		_node.Activated = value
+	}
+	if value, ok := uc.mutation.Version(); ok {
+		_spec.SetField(user.FieldVersion, field.TypeInt, value)
+		_node.Version = value
 	}
 	if nodes := uc.mutation.TokensIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

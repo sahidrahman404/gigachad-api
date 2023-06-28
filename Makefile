@@ -63,3 +63,33 @@ run/live:
 		--build.include_ext "go, tpl, tmpl, html, css, scss, js, ts, sql, jpeg, jpg, gif, png, bmp, svg, webp, ico" \
 		--misc.clean_on_exit "true"
 
+## ent/schema name=$: generate ent schema
+.PHONY: ent/schema
+ent/schema:
+	go run -mod=mod entgo.io/ent/cmd/ent new ${name}
+
+## ent/sql: generate sql schema
+.PHONY: ent/sql
+ent/sql:
+		go run -mod=mod entgo.io/ent/cmd/ent generate --feature privacy,schema/snapshot ./ent/schema
+
+## atlas/migrate/diff name=$1
+.PHONY: atlas/migrate/diff
+atlas/migrate/diff:
+	atlas migrate diff ${name} \
+  --dir "file://ent/migrate/migrations" \
+  --to "ent://ent/schema" \
+  --dev-url "sqlite://file?mode=memory&_fk=1"
+
+
+## atlas/apply name=$1
+.PHONY: atlas/migrate/apply
+atlas/migrate/apply:
+		atlas migrate apply \
+  --dir "file://ent/migrate/migrations" \
+  --url "sqlite://file.db?_fk=1"
+
+## atlas/inspect
+.PHONY: atlas/migrate/inspect
+atlas/migrate/inspect:
+		atlas schema inspect --url "sqlite://file.db?_fk=1" > schema.hcl

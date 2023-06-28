@@ -20,12 +20,12 @@ const (
 	FieldHashedPassword = "hashed_password"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldSex holds the string denoting the sex field in the database.
-	FieldSex = "sex"
-	// FieldBio holds the string denoting the bio field in the database.
-	FieldBio = "bio"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
+	// FieldActivated holds the string denoting the activated field in the database.
+	FieldActivated = "activated"
+	// FieldVersion holds the string denoting the version field in the database.
+	FieldVersion = "version"
 	// EdgeTokens holds the string denoting the tokens edge name in mutations.
 	EdgeTokens = "tokens"
 	// Table holds the table name of the user in the database.
@@ -46,9 +46,9 @@ var Columns = []string{
 	FieldUsername,
 	FieldHashedPassword,
 	FieldName,
-	FieldSex,
-	FieldBio,
 	FieldCreatedAt,
+	FieldActivated,
+	FieldVersion,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -64,6 +64,10 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() string
+	// DefaultActivated holds the default value on creation for the "activated" field.
+	DefaultActivated int
+	// DefaultVersion holds the default value on creation for the "version" field.
+	DefaultVersion int
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() string
 )
@@ -96,19 +100,19 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// BySex orders the results by the sex field.
-func BySex(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldSex, opts...).ToFunc()
-}
-
-// ByBio orders the results by the bio field.
-func ByBio(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldBio, opts...).ToFunc()
-}
-
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByActivated orders the results by the activated field.
+func ByActivated(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldActivated, opts...).ToFunc()
+}
+
+// ByVersion orders the results by the version field.
+func ByVersion(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldVersion, opts...).ToFunc()
 }
 
 // ByTokensCount orders the results by tokens count.

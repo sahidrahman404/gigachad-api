@@ -14,9 +14,17 @@ func init() {
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.
-	userDescCreatedAt := userFields[7].Descriptor()
+	userDescCreatedAt := userFields[5].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() string)
+	// userDescActivated is the schema descriptor for activated field.
+	userDescActivated := userFields[6].Descriptor()
+	// user.DefaultActivated holds the default value on creation for the activated field.
+	user.DefaultActivated = userDescActivated.Default.(int)
+	// userDescVersion is the schema descriptor for version field.
+	userDescVersion := userFields[7].Descriptor()
+	// user.DefaultVersion holds the default value on creation for the version field.
+	user.DefaultVersion = userDescVersion.Default.(int)
 	// userDescID is the schema descriptor for id field.
 	userDescID := userFields[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.
