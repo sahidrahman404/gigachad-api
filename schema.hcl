@@ -127,6 +127,14 @@ table "users" {
   primary_key {
     columns = [column.id]
   }
+  index "user_username" {
+    unique  = true
+    columns = [column.username]
+  }
+  index "user_email" {
+    unique  = true
+    columns = [column.email]
+  }
 }
 schema "main" {
 }
