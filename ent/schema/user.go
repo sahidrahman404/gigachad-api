@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 )
 
 // User holds the schema definition for the User entity.
@@ -23,6 +24,13 @@ func (User) Fields() []ent.Field {
 		field.String("created_at").DefaultFunc(generateTime),
 		field.Int("activated").Default(0),
 		field.Int("version").Default(1),
+	}
+}
+
+func (User) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("username").Unique(),
+		index.Fields("email").Unique(),
 	}
 }
 
