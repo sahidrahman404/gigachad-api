@@ -37,4 +37,4 @@ require (
 	nhooyr.io/websocket v1.8.7 // indirect
 )
 
-replace github.com/libsql/libsql-client-go => github.com/sahidrahman404/libsql-client-go v0.0.0-20230627090247-51e028dd37dd
+replace github.com/libsql/libsql-client-go => github.com/sahidrahman404/libsql-client-go v0.0.0-20230629115811-2704e86fded8
