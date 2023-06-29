@@ -52,9 +52,9 @@ func (e *EntUserStore) Insert(u *types.User) error {
 
 	if err != nil {
 		switch {
-		case err.Error() == SqliteDuplicateEmail:
+		case parseSqliteError(err.Error()) == SqliteDuplicateEmail:
 			return ErrDuplicateEmail
-		case err.Error() == SqliteDuplicateUsername:
+		case parseSqliteError(err.Error()) == SqliteDuplicateUsername:
 			return ErrDuplicateUsername
 		default:
 			return err
@@ -100,9 +100,9 @@ func (e EntUserStore) Update(u *types.User, c context.Context) error {
 
 	if err != nil {
 		switch {
-		case err.Error() == SqliteDuplicateEmail:
+		case parseSqliteError(err.Error()) == SqliteDuplicateEmail:
 			return ErrDuplicateEmail
-		case err.Error() == SqliteDuplicateUsername:
+		case parseSqliteError(err.Error()) == SqliteDuplicateUsername:
 			return ErrDuplicateUsername
 		case errors.Is(err, sql.ErrNoRows):
 			return ErrEditConflict
