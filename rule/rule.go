@@ -3,8 +3,8 @@ package rule
 import (
 	"context"
 
-	"github.com/sahidrahman404/readme_api/ent/privacy"
-	"github.com/sahidrahman404/readme_api/viewer"
+	"github.com/sahidrahman404/gigachad-api/ent/privacy"
+	"github.com/sahidrahman404/gigachad-api/viewer"
 )
 
 // DenyIfNoViewer is a rule that returns deny decision if the viewer is missing in the context.
