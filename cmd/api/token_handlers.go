@@ -148,7 +148,7 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	types.ValidateEmail(v, input.Email)
 	types.ValidatePasswordPlaintext(v, input.Password)
 
-	if !v.HasErrors() {
+	if v.HasErrors() {
 		app.failedValidation(w, r, v)
 		return
 	}
