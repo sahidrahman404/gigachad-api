@@ -28,6 +28,16 @@ const (
 	FieldVersion = "version"
 	// EdgeTokens holds the string denoting the tokens edge name in mutations.
 	EdgeTokens = "tokens"
+	// EdgeExercises holds the string denoting the exercises edge name in mutations.
+	EdgeExercises = "exercises"
+	// EdgeRoutines holds the string denoting the routines edge name in mutations.
+	EdgeRoutines = "routines"
+	// EdgeWorkouts holds the string denoting the workouts edge name in mutations.
+	EdgeWorkouts = "workouts"
+	// EdgeWorkoutLogs holds the string denoting the workout_logs edge name in mutations.
+	EdgeWorkoutLogs = "workout_logs"
+	// EdgeRoutineExercises holds the string denoting the routine_exercises edge name in mutations.
+	EdgeRoutineExercises = "routine_exercises"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// TokensTable is the table that holds the tokens relation/edge.
@@ -37,6 +47,41 @@ const (
 	TokensInverseTable = "tokens"
 	// TokensColumn is the table column denoting the tokens relation/edge.
 	TokensColumn = "user_id"
+	// ExercisesTable is the table that holds the exercises relation/edge.
+	ExercisesTable = "exercises"
+	// ExercisesInverseTable is the table name for the Exercise entity.
+	// It exists in this package in order to avoid circular dependency with the "exercise" package.
+	ExercisesInverseTable = "exercises"
+	// ExercisesColumn is the table column denoting the exercises relation/edge.
+	ExercisesColumn = "user_id"
+	// RoutinesTable is the table that holds the routines relation/edge.
+	RoutinesTable = "routines"
+	// RoutinesInverseTable is the table name for the Routine entity.
+	// It exists in this package in order to avoid circular dependency with the "routine" package.
+	RoutinesInverseTable = "routines"
+	// RoutinesColumn is the table column denoting the routines relation/edge.
+	RoutinesColumn = "user_id"
+	// WorkoutsTable is the table that holds the workouts relation/edge.
+	WorkoutsTable = "workouts"
+	// WorkoutsInverseTable is the table name for the Workout entity.
+	// It exists in this package in order to avoid circular dependency with the "workout" package.
+	WorkoutsInverseTable = "workouts"
+	// WorkoutsColumn is the table column denoting the workouts relation/edge.
+	WorkoutsColumn = "user_id"
+	// WorkoutLogsTable is the table that holds the workout_logs relation/edge.
+	WorkoutLogsTable = "workout_logs"
+	// WorkoutLogsInverseTable is the table name for the WorkoutLog entity.
+	// It exists in this package in order to avoid circular dependency with the "workoutlog" package.
+	WorkoutLogsInverseTable = "workout_logs"
+	// WorkoutLogsColumn is the table column denoting the workout_logs relation/edge.
+	WorkoutLogsColumn = "user_id"
+	// RoutineExercisesTable is the table that holds the routine_exercises relation/edge.
+	RoutineExercisesTable = "routine_exercises"
+	// RoutineExercisesInverseTable is the table name for the RoutineExercise entity.
+	// It exists in this package in order to avoid circular dependency with the "routineexercise" package.
+	RoutineExercisesInverseTable = "routine_exercises"
+	// RoutineExercisesColumn is the table column denoting the routine_exercises relation/edge.
+	RoutineExercisesColumn = "user_id"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -128,10 +173,115 @@ func ByTokens(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newTokensStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// ByExercisesCount orders the results by exercises count.
+func ByExercisesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newExercisesStep(), opts...)
+	}
+}
+
+// ByExercises orders the results by exercises terms.
+func ByExercises(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newExercisesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByRoutinesCount orders the results by routines count.
+func ByRoutinesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newRoutinesStep(), opts...)
+	}
+}
+
+// ByRoutines orders the results by routines terms.
+func ByRoutines(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newRoutinesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByWorkoutsCount orders the results by workouts count.
+func ByWorkoutsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newWorkoutsStep(), opts...)
+	}
+}
+
+// ByWorkouts orders the results by workouts terms.
+func ByWorkouts(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newWorkoutsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByWorkoutLogsCount orders the results by workout_logs count.
+func ByWorkoutLogsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newWorkoutLogsStep(), opts...)
+	}
+}
+
+// ByWorkoutLogs orders the results by workout_logs terms.
+func ByWorkoutLogs(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newWorkoutLogsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByRoutineExercisesCount orders the results by routine_exercises count.
+func ByRoutineExercisesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newRoutineExercisesStep(), opts...)
+	}
+}
+
+// ByRoutineExercises orders the results by routine_exercises terms.
+func ByRoutineExercises(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newRoutineExercisesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newTokensStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(TokensInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, TokensTable, TokensColumn),
+	)
+}
+func newExercisesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ExercisesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ExercisesTable, ExercisesColumn),
+	)
+}
+func newRoutinesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(RoutinesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, RoutinesTable, RoutinesColumn),
+	)
+}
+func newWorkoutsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(WorkoutsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, WorkoutsTable, WorkoutsColumn),
+	)
+}
+func newWorkoutLogsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(WorkoutLogsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, WorkoutLogsTable, WorkoutLogsColumn),
+	)
+}
+func newRoutineExercisesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(RoutineExercisesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, RoutineExercisesTable, RoutineExercisesColumn),
 	)
 }

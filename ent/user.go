@@ -40,9 +40,19 @@ type User struct {
 type UserEdges struct {
 	// Tokens holds the value of the tokens edge.
 	Tokens []*Token `json:"tokens,omitempty"`
+	// Exercises holds the value of the exercises edge.
+	Exercises []*Exercise `json:"exercises,omitempty"`
+	// Routines holds the value of the routines edge.
+	Routines []*Routine `json:"routines,omitempty"`
+	// Workouts holds the value of the workouts edge.
+	Workouts []*Workout `json:"workouts,omitempty"`
+	// WorkoutLogs holds the value of the workout_logs edge.
+	WorkoutLogs []*WorkoutLog `json:"workout_logs,omitempty"`
+	// RoutineExercises holds the value of the routine_exercises edge.
+	RoutineExercises []*RoutineExercise `json:"routine_exercises,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [6]bool
 }
 
 // TokensOrErr returns the Tokens value or an error if the edge
@@ -52,6 +62,51 @@ func (e UserEdges) TokensOrErr() ([]*Token, error) {
 		return e.Tokens, nil
 	}
 	return nil, &NotLoadedError{edge: "tokens"}
+}
+
+// ExercisesOrErr returns the Exercises value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ExercisesOrErr() ([]*Exercise, error) {
+	if e.loadedTypes[1] {
+		return e.Exercises, nil
+	}
+	return nil, &NotLoadedError{edge: "exercises"}
+}
+
+// RoutinesOrErr returns the Routines value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) RoutinesOrErr() ([]*Routine, error) {
+	if e.loadedTypes[2] {
+		return e.Routines, nil
+	}
+	return nil, &NotLoadedError{edge: "routines"}
+}
+
+// WorkoutsOrErr returns the Workouts value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) WorkoutsOrErr() ([]*Workout, error) {
+	if e.loadedTypes[3] {
+		return e.Workouts, nil
+	}
+	return nil, &NotLoadedError{edge: "workouts"}
+}
+
+// WorkoutLogsOrErr returns the WorkoutLogs value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) WorkoutLogsOrErr() ([]*WorkoutLog, error) {
+	if e.loadedTypes[4] {
+		return e.WorkoutLogs, nil
+	}
+	return nil, &NotLoadedError{edge: "workout_logs"}
+}
+
+// RoutineExercisesOrErr returns the RoutineExercises value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) RoutineExercisesOrErr() ([]*RoutineExercise, error) {
+	if e.loadedTypes[5] {
+		return e.RoutineExercises, nil
+	}
+	return nil, &NotLoadedError{edge: "routine_exercises"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -142,6 +197,31 @@ func (u *User) Value(name string) (ent.Value, error) {
 // QueryTokens queries the "tokens" edge of the User entity.
 func (u *User) QueryTokens() *TokenQuery {
 	return NewUserClient(u.config).QueryTokens(u)
+}
+
+// QueryExercises queries the "exercises" edge of the User entity.
+func (u *User) QueryExercises() *ExerciseQuery {
+	return NewUserClient(u.config).QueryExercises(u)
+}
+
+// QueryRoutines queries the "routines" edge of the User entity.
+func (u *User) QueryRoutines() *RoutineQuery {
+	return NewUserClient(u.config).QueryRoutines(u)
+}
+
+// QueryWorkouts queries the "workouts" edge of the User entity.
+func (u *User) QueryWorkouts() *WorkoutQuery {
+	return NewUserClient(u.config).QueryWorkouts(u)
+}
+
+// QueryWorkoutLogs queries the "workout_logs" edge of the User entity.
+func (u *User) QueryWorkoutLogs() *WorkoutLogQuery {
+	return NewUserClient(u.config).QueryWorkoutLogs(u)
+}
+
+// QueryRoutineExercises queries the "routine_exercises" edge of the User entity.
+func (u *User) QueryRoutineExercises() *RoutineExerciseQuery {
+	return NewUserClient(u.config).QueryRoutineExercises(u)
 }
 
 // Update returns a builder for updating this User.

@@ -9,6 +9,78 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent"
 )
 
+// The EquipmentFunc type is an adapter to allow the use of ordinary
+// function as Equipment mutator.
+type EquipmentFunc func(context.Context, *ent.EquipmentMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f EquipmentFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.EquipmentMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EquipmentMutation", m)
+}
+
+// The ExerciseFunc type is an adapter to allow the use of ordinary
+// function as Exercise mutator.
+type ExerciseFunc func(context.Context, *ent.ExerciseMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ExerciseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ExerciseMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ExerciseMutation", m)
+}
+
+// The ExerciseTypeFunc type is an adapter to allow the use of ordinary
+// function as ExerciseType mutator.
+type ExerciseTypeFunc func(context.Context, *ent.ExerciseTypeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ExerciseTypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ExerciseTypeMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ExerciseTypeMutation", m)
+}
+
+// The MusclesGroupFunc type is an adapter to allow the use of ordinary
+// function as MusclesGroup mutator.
+type MusclesGroupFunc func(context.Context, *ent.MusclesGroupMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f MusclesGroupFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.MusclesGroupMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.MusclesGroupMutation", m)
+}
+
+// The RoutineFunc type is an adapter to allow the use of ordinary
+// function as Routine mutator.
+type RoutineFunc func(context.Context, *ent.RoutineMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f RoutineFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.RoutineMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoutineMutation", m)
+}
+
+// The RoutineExerciseFunc type is an adapter to allow the use of ordinary
+// function as RoutineExercise mutator.
+type RoutineExerciseFunc func(context.Context, *ent.RoutineExerciseMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f RoutineExerciseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.RoutineExerciseMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoutineExerciseMutation", m)
+}
+
 // The TokenFunc type is an adapter to allow the use of ordinary
 // function as Token mutator.
 type TokenFunc func(context.Context, *ent.TokenMutation) (ent.Value, error)
@@ -31,6 +103,30 @@ func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 		return f(ctx, mv)
 	}
 	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+}
+
+// The WorkoutFunc type is an adapter to allow the use of ordinary
+// function as Workout mutator.
+type WorkoutFunc func(context.Context, *ent.WorkoutMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f WorkoutFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.WorkoutMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.WorkoutMutation", m)
+}
+
+// The WorkoutLogFunc type is an adapter to allow the use of ordinary
+// function as WorkoutLog mutator.
+type WorkoutLogFunc func(context.Context, *ent.WorkoutLogMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f WorkoutLogFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.WorkoutLogMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.WorkoutLogMutation", m)
 }
 
 // Condition is a hook condition function.

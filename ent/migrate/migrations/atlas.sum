@@ -1,4 +1,6 @@
-h1:9fLGhSYvnQxPCbhBDoRw+qAEPHIRAkUu+EdLE2x4aTY=
+h1:PRieRpRxXGd3jVKruFQWJqXn5XFyqQoQt7d/fO4AjDs=
 20230628141405_add-users-tokens-tables.sql h1:fuOJ2sHOMEP/24Ni9DT6j31fuudcRRBHP9FR3B+iabk=
 20230628144036_change-activated-column-type-to-int.sql h1:iGspKnS3bD1Of/VsA9jPiu/F0UQnIZkaVlhfop++diY=
 20230629131540_add-unique-constraint-to-users-table.sql h1:RTfWHMm4IFP3xoYPiVdY6LaLopPZcPiDXV9fCMojdUo=
+20230630043417_add-exercises-table.sql h1:ugWYUMWyRPHCJi5IxYzbxDBAtu5+Nu1K5AIWR4qrc6s=
+20230630094211_add-tables.sql h1:ZNHQGU0Qdfte8DcVoPblkJlVB1pUlddXVFR6NUxTBCI=

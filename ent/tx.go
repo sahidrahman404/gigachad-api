@@ -12,10 +12,26 @@ import (
 // Tx is a transactional client that is created by calling Client.Tx().
 type Tx struct {
 	config
+	// Equipment is the client for interacting with the Equipment builders.
+	Equipment *EquipmentClient
+	// Exercise is the client for interacting with the Exercise builders.
+	Exercise *ExerciseClient
+	// ExerciseType is the client for interacting with the ExerciseType builders.
+	ExerciseType *ExerciseTypeClient
+	// MusclesGroup is the client for interacting with the MusclesGroup builders.
+	MusclesGroup *MusclesGroupClient
+	// Routine is the client for interacting with the Routine builders.
+	Routine *RoutineClient
+	// RoutineExercise is the client for interacting with the RoutineExercise builders.
+	RoutineExercise *RoutineExerciseClient
 	// Token is the client for interacting with the Token builders.
 	Token *TokenClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// Workout is the client for interacting with the Workout builders.
+	Workout *WorkoutClient
+	// WorkoutLog is the client for interacting with the WorkoutLog builders.
+	WorkoutLog *WorkoutLogClient
 
 	// lazily loaded.
 	client     *Client
@@ -147,8 +163,16 @@ func (tx *Tx) Client() *Client {
 }
 
 func (tx *Tx) init() {
+	tx.Equipment = NewEquipmentClient(tx.config)
+	tx.Exercise = NewExerciseClient(tx.config)
+	tx.ExerciseType = NewExerciseTypeClient(tx.config)
+	tx.MusclesGroup = NewMusclesGroupClient(tx.config)
+	tx.Routine = NewRoutineClient(tx.config)
+	tx.RoutineExercise = NewRoutineExerciseClient(tx.config)
 	tx.Token = NewTokenClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.Workout = NewWorkoutClient(tx.config)
+	tx.WorkoutLog = NewWorkoutLogClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
@@ -158,7 +182,7 @@ func (tx *Tx) init() {
 // of them in order to commit or rollback the transaction.
 //
 // If a closed transaction is embedded in one of the generated entities, and the entity
-// applies a query, for example: Token.QueryXXX(), the query will be executed
+// applies a query, for example: Equipment.QueryXXX(), the query will be executed
 // through the driver which created this transaction.
 //
 // Note that txDriver is not goroutine safe.

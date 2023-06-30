@@ -6,8 +6,32 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Equipment is the predicate function for equipment builders.
+type Equipment func(*sql.Selector)
+
+// Exercise is the predicate function for exercise builders.
+type Exercise func(*sql.Selector)
+
+// ExerciseType is the predicate function for exercisetype builders.
+type ExerciseType func(*sql.Selector)
+
+// MusclesGroup is the predicate function for musclesgroup builders.
+type MusclesGroup func(*sql.Selector)
+
+// Routine is the predicate function for routine builders.
+type Routine func(*sql.Selector)
+
+// RoutineExercise is the predicate function for routineexercise builders.
+type RoutineExercise func(*sql.Selector)
+
 // Token is the predicate function for token builders.
 type Token func(*sql.Selector)
 
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
+
+// Workout is the predicate function for workout builders.
+type Workout func(*sql.Selector)
+
+// WorkoutLog is the predicate function for workoutlog builders.
+type WorkoutLog func(*sql.Selector)

@@ -12,8 +12,16 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/sahidrahman404/gigachad-api/ent/equipment"
+	"github.com/sahidrahman404/gigachad-api/ent/exercise"
+	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
+	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
+	"github.com/sahidrahman404/gigachad-api/ent/routine"
+	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
+	"github.com/sahidrahman404/gigachad-api/ent/workout"
+	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -74,8 +82,16 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			token.Table: token.ValidColumn,
-			user.Table:  user.ValidColumn,
+			equipment.Table:       equipment.ValidColumn,
+			exercise.Table:        exercise.ValidColumn,
+			exercisetype.Table:    exercisetype.ValidColumn,
+			musclesgroup.Table:    musclesgroup.ValidColumn,
+			routine.Table:         routine.ValidColumn,
+			routineexercise.Table: routineexercise.ValidColumn,
+			token.Table:           token.ValidColumn,
+			user.Table:            user.ValidColumn,
+			workout.Table:         workout.ValidColumn,
+			workoutlog.Table:      workoutlog.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)

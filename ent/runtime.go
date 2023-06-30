@@ -3,14 +3,58 @@
 package ent
 
 import (
+	"github.com/sahidrahman404/gigachad-api/ent/equipment"
+	"github.com/sahidrahman404/gigachad-api/ent/exercise"
+	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
+	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
+	"github.com/sahidrahman404/gigachad-api/ent/routine"
+	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
+	"github.com/sahidrahman404/gigachad-api/ent/workout"
+	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
 )
 
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	equipmentFields := schema.Equipment{}.Fields()
+	_ = equipmentFields
+	// equipmentDescID is the schema descriptor for id field.
+	equipmentDescID := equipmentFields[0].Descriptor()
+	// equipment.DefaultID holds the default value on creation for the id field.
+	equipment.DefaultID = equipmentDescID.Default.(func() string)
+	exerciseFields := schema.Exercise{}.Fields()
+	_ = exerciseFields
+	// exerciseDescID is the schema descriptor for id field.
+	exerciseDescID := exerciseFields[0].Descriptor()
+	// exercise.DefaultID holds the default value on creation for the id field.
+	exercise.DefaultID = exerciseDescID.Default.(func() string)
+	exercisetypeFields := schema.ExerciseType{}.Fields()
+	_ = exercisetypeFields
+	// exercisetypeDescID is the schema descriptor for id field.
+	exercisetypeDescID := exercisetypeFields[0].Descriptor()
+	// exercisetype.DefaultID holds the default value on creation for the id field.
+	exercisetype.DefaultID = exercisetypeDescID.Default.(func() string)
+	musclesgroupFields := schema.MusclesGroup{}.Fields()
+	_ = musclesgroupFields
+	// musclesgroupDescID is the schema descriptor for id field.
+	musclesgroupDescID := musclesgroupFields[0].Descriptor()
+	// musclesgroup.DefaultID holds the default value on creation for the id field.
+	musclesgroup.DefaultID = musclesgroupDescID.Default.(func() string)
+	routineFields := schema.Routine{}.Fields()
+	_ = routineFields
+	// routineDescID is the schema descriptor for id field.
+	routineDescID := routineFields[0].Descriptor()
+	// routine.DefaultID holds the default value on creation for the id field.
+	routine.DefaultID = routineDescID.Default.(func() string)
+	routineexerciseFields := schema.RoutineExercise{}.Fields()
+	_ = routineexerciseFields
+	// routineexerciseDescID is the schema descriptor for id field.
+	routineexerciseDescID := routineexerciseFields[0].Descriptor()
+	// routineexercise.DefaultID holds the default value on creation for the id field.
+	routineexercise.DefaultID = routineexerciseDescID.Default.(func() string)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.
@@ -29,4 +73,24 @@ func init() {
 	userDescID := userFields[0].Descriptor()
 	// user.DefaultID holds the default value on creation for the id field.
 	user.DefaultID = userDescID.Default.(func() string)
+	workoutFields := schema.Workout{}.Fields()
+	_ = workoutFields
+	// workoutDescCreatedAt is the schema descriptor for created_at field.
+	workoutDescCreatedAt := workoutFields[6].Descriptor()
+	// workout.DefaultCreatedAt holds the default value on creation for the created_at field.
+	workout.DefaultCreatedAt = workoutDescCreatedAt.Default.(func() string)
+	// workoutDescID is the schema descriptor for id field.
+	workoutDescID := workoutFields[0].Descriptor()
+	// workout.DefaultID holds the default value on creation for the id field.
+	workout.DefaultID = workoutDescID.Default.(func() string)
+	workoutlogFields := schema.WorkoutLog{}.Fields()
+	_ = workoutlogFields
+	// workoutlogDescCreatedAt is the schema descriptor for created_at field.
+	workoutlogDescCreatedAt := workoutlogFields[2].Descriptor()
+	// workoutlog.DefaultCreatedAt holds the default value on creation for the created_at field.
+	workoutlog.DefaultCreatedAt = workoutlogDescCreatedAt.Default.(func() string)
+	// workoutlogDescID is the schema descriptor for id field.
+	workoutlogDescID := workoutlogFields[0].Descriptor()
+	// workoutlog.DefaultID holds the default value on creation for the id field.
+	workoutlog.DefaultID = workoutlogDescID.Default.(func() string)
 }
