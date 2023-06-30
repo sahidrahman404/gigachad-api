@@ -24,7 +24,7 @@ var (
 	ExercisesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "how_to", Type: field.TypeString},
+		{Name: "how_to", Type: field.TypeString, Nullable: true},
 		{Name: "equipment_id", Type: field.TypeString, Nullable: true},
 		{Name: "muscles_group_id", Type: field.TypeString, Nullable: true},
 		{Name: "exercise_type_id", Type: field.TypeString, Nullable: true},

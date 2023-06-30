@@ -746,9 +746,22 @@ func (m *ExerciseMutation) OldHowTo(ctx context.Context) (v string, err error) {
 	return oldValue.HowTo, nil
 }
 
+// ClearHowTo clears the value of the "how_to" field.
+func (m *ExerciseMutation) ClearHowTo() {
+	m.how_to = nil
+	m.clearedFields[exercise.FieldHowTo] = struct{}{}
+}
+
+// HowToCleared returns if the "how_to" field was cleared in this mutation.
+func (m *ExerciseMutation) HowToCleared() bool {
+	_, ok := m.clearedFields[exercise.FieldHowTo]
+	return ok
+}
+
 // ResetHowTo resets all changes to the "how_to" field.
 func (m *ExerciseMutation) ResetHowTo() {
 	m.how_to = nil
+	delete(m.clearedFields, exercise.FieldHowTo)
 }
 
 // SetEquipmentID sets the "equipment_id" field.
@@ -1386,6 +1399,9 @@ func (m *ExerciseMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ExerciseMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(exercise.FieldHowTo) {
+		fields = append(fields, exercise.FieldHowTo)
+	}
 	if m.FieldCleared(exercise.FieldEquipmentID) {
 		fields = append(fields, exercise.FieldEquipmentID)
 	}
@@ -1412,6 +1428,9 @@ func (m *ExerciseMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ExerciseMutation) ClearField(name string) error {
 	switch name {
+	case exercise.FieldHowTo:
+		m.ClearHowTo()
+		return nil
 	case exercise.FieldEquipmentID:
 		m.ClearEquipmentID()
 		return nil

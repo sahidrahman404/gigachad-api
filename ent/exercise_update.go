@@ -45,6 +45,20 @@ func (eu *ExerciseUpdate) SetHowTo(s string) *ExerciseUpdate {
 	return eu
 }
 
+// SetNillableHowTo sets the "how_to" field if the given value is not nil.
+func (eu *ExerciseUpdate) SetNillableHowTo(s *string) *ExerciseUpdate {
+	if s != nil {
+		eu.SetHowTo(*s)
+	}
+	return eu
+}
+
+// ClearHowTo clears the value of the "how_to" field.
+func (eu *ExerciseUpdate) ClearHowTo() *ExerciseUpdate {
+	eu.mutation.ClearHowTo()
+	return eu
+}
+
 // SetEquipmentID sets the "equipment_id" field.
 func (eu *ExerciseUpdate) SetEquipmentID(s string) *ExerciseUpdate {
 	eu.mutation.SetEquipmentID(s)
@@ -344,6 +358,9 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := eu.mutation.HowTo(); ok {
 		_spec.SetField(exercise.FieldHowTo, field.TypeString, value)
 	}
+	if eu.mutation.HowToCleared() {
+		_spec.ClearField(exercise.FieldHowTo, field.TypeString)
+	}
 	if value, ok := eu.mutation.EquipmentID(); ok {
 		_spec.SetField(exercise.FieldEquipmentID, field.TypeString, value)
 	}
@@ -585,6 +602,20 @@ func (euo *ExerciseUpdateOne) SetName(s string) *ExerciseUpdateOne {
 // SetHowTo sets the "how_to" field.
 func (euo *ExerciseUpdateOne) SetHowTo(s string) *ExerciseUpdateOne {
 	euo.mutation.SetHowTo(s)
+	return euo
+}
+
+// SetNillableHowTo sets the "how_to" field if the given value is not nil.
+func (euo *ExerciseUpdateOne) SetNillableHowTo(s *string) *ExerciseUpdateOne {
+	if s != nil {
+		euo.SetHowTo(*s)
+	}
+	return euo
+}
+
+// ClearHowTo clears the value of the "how_to" field.
+func (euo *ExerciseUpdateOne) ClearHowTo() *ExerciseUpdateOne {
+	euo.mutation.ClearHowTo()
 	return euo
 }
 
@@ -916,6 +947,9 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 	}
 	if value, ok := euo.mutation.HowTo(); ok {
 		_spec.SetField(exercise.FieldHowTo, field.TypeString, value)
+	}
+	if euo.mutation.HowToCleared() {
+		_spec.ClearField(exercise.FieldHowTo, field.TypeString)
 	}
 	if value, ok := euo.mutation.EquipmentID(); ok {
 		_spec.SetField(exercise.FieldEquipmentID, field.TypeString, value)

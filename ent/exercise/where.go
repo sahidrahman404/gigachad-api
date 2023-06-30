@@ -213,6 +213,16 @@ func HowToHasSuffix(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldHasSuffix(FieldHowTo, v))
 }
 
+// HowToIsNil applies the IsNil predicate on the "how_to" field.
+func HowToIsNil() predicate.Exercise {
+	return predicate.Exercise(sql.FieldIsNull(FieldHowTo))
+}
+
+// HowToNotNil applies the NotNil predicate on the "how_to" field.
+func HowToNotNil() predicate.Exercise {
+	return predicate.Exercise(sql.FieldNotNull(FieldHowTo))
+}
+
 // HowToEqualFold applies the EqualFold predicate on the "how_to" field.
 func HowToEqualFold(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldEqualFold(FieldHowTo, v))

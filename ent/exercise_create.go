@@ -37,6 +37,14 @@ func (ec *ExerciseCreate) SetHowTo(s string) *ExerciseCreate {
 	return ec
 }
 
+// SetNillableHowTo sets the "how_to" field if the given value is not nil.
+func (ec *ExerciseCreate) SetNillableHowTo(s *string) *ExerciseCreate {
+	if s != nil {
+		ec.SetHowTo(*s)
+	}
+	return ec
+}
+
 // SetEquipmentID sets the "equipment_id" field.
 func (ec *ExerciseCreate) SetEquipmentID(s string) *ExerciseCreate {
 	ec.mutation.SetEquipmentID(s)
@@ -258,9 +266,6 @@ func (ec *ExerciseCreate) defaults() {
 func (ec *ExerciseCreate) check() error {
 	if _, ok := ec.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Exercise.name"`)}
-	}
-	if _, ok := ec.mutation.HowTo(); !ok {
-		return &ValidationError{Name: "how_to", err: errors.New(`ent: missing required field "Exercise.how_to"`)}
 	}
 	return nil
 }
