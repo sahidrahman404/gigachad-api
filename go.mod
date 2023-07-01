@@ -7,7 +7,7 @@ require (
 	github.com/fatih/color v1.15.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-mail/mail/v2 v2.3.0
-	github.com/libsql/libsql-client-go v0.0.0-20230627181611-293bd03f5eda
+	github.com/libsql/libsql-client-go v0.0.0-20230701171611-68694a37813e
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/segmentio/ksuid v1.0.4
 	golang.org/x/crypto v0.0.0-20220517005047-85d78b3ac167
