@@ -33,7 +33,7 @@ func New(dsn string) (*DB, error) {
 
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(25)
-	db.SetConnMaxIdleTime(5 * time.Minute)
+	db.SetConnMaxIdleTime(1 * time.Minute)
 	db.SetConnMaxLifetime(2 * time.Hour)
 
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)

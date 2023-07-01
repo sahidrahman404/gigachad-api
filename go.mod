@@ -7,7 +7,7 @@ require (
 	github.com/fatih/color v1.15.0
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-mail/mail/v2 v2.3.0
-	github.com/libsql/libsql-client-go v0.0.0-00010101000000-000000000000
+	github.com/libsql/libsql-client-go v0.0.0-20230627181611-293bd03f5eda
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/segmentio/ksuid v1.0.4
 	golang.org/x/crypto v0.0.0-20220517005047-85d78b3ac167
@@ -36,5 +36,3 @@ require (
 	gopkg.in/mail.v2 v2.3.1 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
 )
-
-replace github.com/libsql/libsql-client-go => github.com/sahidrahman404/libsql-client-go v0.0.0-20230629144022-b2de45c01d00
