@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -27,7 +26,6 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	v := validator.NewValidator()
 
 	if params.ValidateUser(v); v.HasErrors() {
-		fmt.Println(v)
 		app.failedValidation(w, r, v)
 		return
 	}

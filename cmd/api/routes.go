@@ -41,6 +41,11 @@ func (app *application) routes() http.Handler {
 				app.createPasswordResetTokenHandler,
 			)
 		})
+
+		// equipment resources
+		r.Route("/equipments", func(r chi.Router) {
+			r.Post("/", app.createEquipmentHandler)
+		})
 	})
 
 	return mux
