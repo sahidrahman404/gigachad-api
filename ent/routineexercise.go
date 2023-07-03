@@ -12,7 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -24,7 +24,7 @@ type RoutineExercise struct {
 	// RestTimer holds the value of the "rest_timer" field.
 	RestTimer int `json:"rest_timer,omitempty"`
 	// Set holds the value of the "set" field.
-	Set *[]schema.Set `json:"set,omitempty"`
+	Set *[]set.Set `json:"set,omitempty"`
 	// RoutineID holds the value of the "routine_id" field.
 	RoutineID string `json:"routine_id,omitempty"`
 	// ExerciseID holds the value of the "exercise_id" field.

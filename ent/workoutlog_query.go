@@ -369,7 +369,7 @@ func (wlq *WorkoutLogQuery) WithWorkouts(opts ...func(*WorkoutQuery)) *WorkoutLo
 // Example:
 //
 //	var v []struct {
-//		Sets *[]schema.Set `json:"sets,omitempty"`
+//		Sets *[]set.Set `json:"sets,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -392,7 +392,7 @@ func (wlq *WorkoutLogQuery) GroupBy(field string, fields ...string) *WorkoutLogG
 // Example:
 //
 //	var v []struct {
-//		Sets *[]schema.Set `json:"sets,omitempty"`
+//		Sets *[]set.Set `json:"sets,omitempty"`
 //	}
 //
 //	client.WorkoutLog.Query().

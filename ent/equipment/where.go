@@ -193,16 +193,6 @@ func ImageHasSuffix(v string) predicate.Equipment {
 	return predicate.Equipment(sql.FieldHasSuffix(FieldImage, v))
 }
 
-// ImageIsNil applies the IsNil predicate on the "image" field.
-func ImageIsNil() predicate.Equipment {
-	return predicate.Equipment(sql.FieldIsNull(FieldImage))
-}
-
-// ImageNotNil applies the NotNil predicate on the "image" field.
-func ImageNotNil() predicate.Equipment {
-	return predicate.Equipment(sql.FieldNotNull(FieldImage))
-}
-
 // ImageEqualFold applies the EqualFold predicate on the "image" field.
 func ImageEqualFold(v string) predicate.Equipment {
 	return predicate.Equipment(sql.FieldEqualFold(FieldImage, v))

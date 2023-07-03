@@ -114,6 +114,20 @@ func (wu *WorkoutUpdate) SetImage(s string) *WorkoutUpdate {
 	return wu
 }
 
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (wu *WorkoutUpdate) SetNillableImage(s *string) *WorkoutUpdate {
+	if s != nil {
+		wu.SetImage(*s)
+	}
+	return wu
+}
+
+// ClearImage clears the value of the "image" field.
+func (wu *WorkoutUpdate) ClearImage() *WorkoutUpdate {
+	wu.mutation.ClearImage()
+	return wu
+}
+
 // SetDescription sets the "description" field.
 func (wu *WorkoutUpdate) SetDescription(s string) *WorkoutUpdate {
 	wu.mutation.SetDescription(s)
@@ -274,6 +288,9 @@ func (wu *WorkoutUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := wu.mutation.Image(); ok {
 		_spec.SetField(workout.FieldImage, field.TypeString, value)
+	}
+	if wu.mutation.ImageCleared() {
+		_spec.ClearField(workout.FieldImage, field.TypeString)
 	}
 	if value, ok := wu.mutation.Description(); ok {
 		_spec.SetField(workout.FieldDescription, field.TypeString, value)
@@ -454,6 +471,20 @@ func (wuo *WorkoutUpdateOne) SetNillableCreatedAt(s *string) *WorkoutUpdateOne {
 // SetImage sets the "image" field.
 func (wuo *WorkoutUpdateOne) SetImage(s string) *WorkoutUpdateOne {
 	wuo.mutation.SetImage(s)
+	return wuo
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (wuo *WorkoutUpdateOne) SetNillableImage(s *string) *WorkoutUpdateOne {
+	if s != nil {
+		wuo.SetImage(*s)
+	}
+	return wuo
+}
+
+// ClearImage clears the value of the "image" field.
+func (wuo *WorkoutUpdateOne) ClearImage() *WorkoutUpdateOne {
+	wuo.mutation.ClearImage()
 	return wuo
 }
 
@@ -647,6 +678,9 @@ func (wuo *WorkoutUpdateOne) sqlSave(ctx context.Context) (_node *Workout, err e
 	}
 	if value, ok := wuo.mutation.Image(); ok {
 		_spec.SetField(workout.FieldImage, field.TypeString, value)
+	}
+	if wuo.mutation.ImageCleared() {
+		_spec.ClearField(workout.FieldImage, field.TypeString)
 	}
 	if value, ok := wuo.mutation.Description(); ok {
 		_spec.SetField(workout.FieldDescription, field.TypeString, value)

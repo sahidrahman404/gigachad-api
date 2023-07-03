@@ -12,7 +12,7 @@ var (
 	EquipmentColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "image", Type: field.TypeString, Nullable: true},
+		{Name: "image", Type: field.TypeString},
 	}
 	// EquipmentTable holds the schema information for the "equipment" table.
 	EquipmentTable = &schema.Table{
@@ -24,6 +24,7 @@ var (
 	ExercisesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
+		{Name: "image", Type: field.TypeString, Nullable: true},
 		{Name: "how_to", Type: field.TypeString, Nullable: true},
 		{Name: "equipment_id", Type: field.TypeString, Nullable: true},
 		{Name: "muscles_group_id", Type: field.TypeString, Nullable: true},
@@ -38,25 +39,25 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "exercises_equipment_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[4]},
+				Columns:    []*schema.Column{ExercisesColumns[5]},
 				RefColumns: []*schema.Column{EquipmentColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "exercises_exercise_types_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[5]},
+				Columns:    []*schema.Column{ExercisesColumns[6]},
 				RefColumns: []*schema.Column{ExerciseTypesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "exercises_muscles_groups_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[4]},
+				Columns:    []*schema.Column{ExercisesColumns[5]},
 				RefColumns: []*schema.Column{MusclesGroupsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "exercises_users_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[6]},
+				Columns:    []*schema.Column{ExercisesColumns[7]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -202,7 +203,7 @@ var (
 		{Name: "time", Type: field.TypeString, Nullable: true},
 		{Name: "sets", Type: field.TypeInt},
 		{Name: "created_at", Type: field.TypeString},
-		{Name: "image", Type: field.TypeString},
+		{Name: "image", Type: field.TypeString, Nullable: true},
 		{Name: "description", Type: field.TypeString},
 		{Name: "user_id", Type: field.TypeString, Nullable: true},
 	}

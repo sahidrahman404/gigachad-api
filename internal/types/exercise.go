@@ -6,18 +6,18 @@ import (
 )
 
 type CreateExerciseParams struct {
-	Name           string `json:"name"`
-	HowTo          string `json:"howTo"`
-	EquipmentID    string `json:"equipmentID"`
-	MusclesGroupID string `json:"MusclesGroupID"`
-	ExerciseTypeID string `json:"ExerciseTypeID"`
+	Name           string  `json:"name"`
+	HowTo          *string `json:"howTo"`
+	EquipmentID    string  `json:"equipmentID"`
+	MusclesGroupID string  `json:"MusclesGroupID"`
+	ExerciseTypeID string  `json:"ExerciseTypeID"`
 }
 
 type Exercise struct {
 	Ent *ent.Exercise
 }
 
-func NewExerciseFromParams(p CreateExerciseParams, userID string) *Exercise {
+func NewExerciseFromParams(p CreateExerciseParams, userID *string) *Exercise {
 	e := &Exercise{
 		Ent: &ent.Exercise{
 			Name:           p.Name,
@@ -25,8 +25,10 @@ func NewExerciseFromParams(p CreateExerciseParams, userID string) *Exercise {
 			MusclesGroupID: p.MusclesGroupID,
 			ExerciseTypeID: p.ExerciseTypeID,
 			UserID:         userID,
-			HowTo:          p.HowTo,
 		},
+	}
+	if p.HowTo != nil{
+		e.Ent.HowTo = p.HowTo
 	}
 	return e
 }

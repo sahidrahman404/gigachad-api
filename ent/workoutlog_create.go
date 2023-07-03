@@ -10,7 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -24,7 +24,7 @@ type WorkoutLogCreate struct {
 }
 
 // SetSets sets the "sets" field.
-func (wlc *WorkoutLogCreate) SetSets(s *[]schema.Set) *WorkoutLogCreate {
+func (wlc *WorkoutLogCreate) SetSets(s *[]set.Set) *WorkoutLogCreate {
 	wlc.mutation.SetSets(s)
 	return wlc
 }

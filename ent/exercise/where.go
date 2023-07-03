@@ -68,6 +68,11 @@ func Name(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldEQ(FieldName, v))
 }
 
+// Image applies equality check predicate on the "image" field. It's identical to ImageEQ.
+func Image(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldEQ(FieldImage, v))
+}
+
 // HowTo applies equality check predicate on the "how_to" field. It's identical to HowToEQ.
 func HowTo(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldEQ(FieldHowTo, v))
@@ -156,6 +161,81 @@ func NameEqualFold(v string) predicate.Exercise {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldContainsFold(FieldName, v))
+}
+
+// ImageEQ applies the EQ predicate on the "image" field.
+func ImageEQ(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldEQ(FieldImage, v))
+}
+
+// ImageNEQ applies the NEQ predicate on the "image" field.
+func ImageNEQ(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldNEQ(FieldImage, v))
+}
+
+// ImageIn applies the In predicate on the "image" field.
+func ImageIn(vs ...string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldIn(FieldImage, vs...))
+}
+
+// ImageNotIn applies the NotIn predicate on the "image" field.
+func ImageNotIn(vs ...string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldNotIn(FieldImage, vs...))
+}
+
+// ImageGT applies the GT predicate on the "image" field.
+func ImageGT(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldGT(FieldImage, v))
+}
+
+// ImageGTE applies the GTE predicate on the "image" field.
+func ImageGTE(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldGTE(FieldImage, v))
+}
+
+// ImageLT applies the LT predicate on the "image" field.
+func ImageLT(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldLT(FieldImage, v))
+}
+
+// ImageLTE applies the LTE predicate on the "image" field.
+func ImageLTE(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldLTE(FieldImage, v))
+}
+
+// ImageContains applies the Contains predicate on the "image" field.
+func ImageContains(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldContains(FieldImage, v))
+}
+
+// ImageHasPrefix applies the HasPrefix predicate on the "image" field.
+func ImageHasPrefix(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldHasPrefix(FieldImage, v))
+}
+
+// ImageHasSuffix applies the HasSuffix predicate on the "image" field.
+func ImageHasSuffix(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldHasSuffix(FieldImage, v))
+}
+
+// ImageIsNil applies the IsNil predicate on the "image" field.
+func ImageIsNil() predicate.Exercise {
+	return predicate.Exercise(sql.FieldIsNull(FieldImage))
+}
+
+// ImageNotNil applies the NotNil predicate on the "image" field.
+func ImageNotNil() predicate.Exercise {
+	return predicate.Exercise(sql.FieldNotNull(FieldImage))
+}
+
+// ImageEqualFold applies the EqualFold predicate on the "image" field.
+func ImageEqualFold(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldEqualFold(FieldImage, v))
+}
+
+// ImageContainsFold applies the ContainsFold predicate on the "image" field.
+func ImageContainsFold(v string) predicate.Exercise {
+	return predicate.Exercise(sql.FieldContainsFold(FieldImage, v))
 }
 
 // HowToEQ applies the EQ predicate on the "how_to" field.

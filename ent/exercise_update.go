@@ -39,6 +39,26 @@ func (eu *ExerciseUpdate) SetName(s string) *ExerciseUpdate {
 	return eu
 }
 
+// SetImage sets the "image" field.
+func (eu *ExerciseUpdate) SetImage(s string) *ExerciseUpdate {
+	eu.mutation.SetImage(s)
+	return eu
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (eu *ExerciseUpdate) SetNillableImage(s *string) *ExerciseUpdate {
+	if s != nil {
+		eu.SetImage(*s)
+	}
+	return eu
+}
+
+// ClearImage clears the value of the "image" field.
+func (eu *ExerciseUpdate) ClearImage() *ExerciseUpdate {
+	eu.mutation.ClearImage()
+	return eu
+}
+
 // SetHowTo sets the "how_to" field.
 func (eu *ExerciseUpdate) SetHowTo(s string) *ExerciseUpdate {
 	eu.mutation.SetHowTo(s)
@@ -355,6 +375,12 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := eu.mutation.Name(); ok {
 		_spec.SetField(exercise.FieldName, field.TypeString, value)
 	}
+	if value, ok := eu.mutation.Image(); ok {
+		_spec.SetField(exercise.FieldImage, field.TypeString, value)
+	}
+	if eu.mutation.ImageCleared() {
+		_spec.ClearField(exercise.FieldImage, field.TypeString)
+	}
 	if value, ok := eu.mutation.HowTo(); ok {
 		_spec.SetField(exercise.FieldHowTo, field.TypeString, value)
 	}
@@ -596,6 +622,26 @@ type ExerciseUpdateOne struct {
 // SetName sets the "name" field.
 func (euo *ExerciseUpdateOne) SetName(s string) *ExerciseUpdateOne {
 	euo.mutation.SetName(s)
+	return euo
+}
+
+// SetImage sets the "image" field.
+func (euo *ExerciseUpdateOne) SetImage(s string) *ExerciseUpdateOne {
+	euo.mutation.SetImage(s)
+	return euo
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (euo *ExerciseUpdateOne) SetNillableImage(s *string) *ExerciseUpdateOne {
+	if s != nil {
+		euo.SetImage(*s)
+	}
+	return euo
+}
+
+// ClearImage clears the value of the "image" field.
+func (euo *ExerciseUpdateOne) ClearImage() *ExerciseUpdateOne {
+	euo.mutation.ClearImage()
 	return euo
 }
 
@@ -944,6 +990,12 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 	}
 	if value, ok := euo.mutation.Name(); ok {
 		_spec.SetField(exercise.FieldName, field.TypeString, value)
+	}
+	if value, ok := euo.mutation.Image(); ok {
+		_spec.SetField(exercise.FieldImage, field.TypeString, value)
+	}
+	if euo.mutation.ImageCleared() {
+		_spec.ClearField(exercise.FieldImage, field.TypeString)
 	}
 	if value, ok := euo.mutation.HowTo(); ok {
 		_spec.SetField(exercise.FieldHowTo, field.TypeString, value)

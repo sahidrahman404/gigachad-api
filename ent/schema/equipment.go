@@ -17,7 +17,7 @@ func (Equipment) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").DefaultFunc(generateKSUID),
 		field.String("name"),
-		field.String("image").Optional(),
+		field.String("image"),
 	}
 }
 

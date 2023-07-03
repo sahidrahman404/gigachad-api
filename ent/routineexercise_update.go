@@ -14,7 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -59,7 +59,7 @@ func (reu *RoutineExerciseUpdate) ClearRestTimer() *RoutineExerciseUpdate {
 }
 
 // SetSet sets the "set" field.
-func (reu *RoutineExerciseUpdate) SetSet(s *[]schema.Set) *RoutineExerciseUpdate {
+func (reu *RoutineExerciseUpdate) SetSet(s *[]set.Set) *RoutineExerciseUpdate {
 	reu.mutation.SetSet(s)
 	return reu
 }
@@ -387,7 +387,7 @@ func (reuo *RoutineExerciseUpdateOne) ClearRestTimer() *RoutineExerciseUpdateOne
 }
 
 // SetSet sets the "set" field.
-func (reuo *RoutineExerciseUpdateOne) SetSet(s *[]schema.Set) *RoutineExerciseUpdateOne {
+func (reuo *RoutineExerciseUpdateOne) SetSet(s *[]set.Set) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetSet(s)
 	return reuo
 }

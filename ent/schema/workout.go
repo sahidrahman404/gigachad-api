@@ -22,7 +22,7 @@ func (Workout) Fields() []ent.Field {
 		field.String("time").Optional(),
 		field.Int("sets"),
 		field.String("created_at").DefaultFunc(generateTime),
-		field.String("image"),
+		field.String("image").Optional().Nillable(),
 		field.String("description"),
 		field.String("user_id").Optional(),
 	}

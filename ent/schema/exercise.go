@@ -17,11 +17,12 @@ func (Exercise) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").DefaultFunc(generateKSUID),
 		field.String("name"),
-		field.String("how_to").Optional(),
+		field.String("image").Optional().Nillable(),
+		field.String("how_to").Optional().Nillable(),
 		field.String("equipment_id").Optional(),
 		field.String("muscles_group_id").Optional(),
 		field.String("exercise_type_id").Optional(),
-		field.String("user_id").Optional(),
+		field.String("user_id").Optional().Nillable(),
 	}
 }
 

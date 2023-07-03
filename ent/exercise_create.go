@@ -31,6 +31,20 @@ func (ec *ExerciseCreate) SetName(s string) *ExerciseCreate {
 	return ec
 }
 
+// SetImage sets the "image" field.
+func (ec *ExerciseCreate) SetImage(s string) *ExerciseCreate {
+	ec.mutation.SetImage(s)
+	return ec
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (ec *ExerciseCreate) SetNillableImage(s *string) *ExerciseCreate {
+	if s != nil {
+		ec.SetImage(*s)
+	}
+	return ec
+}
+
 // SetHowTo sets the "how_to" field.
 func (ec *ExerciseCreate) SetHowTo(s string) *ExerciseCreate {
 	ec.mutation.SetHowTo(s)
@@ -306,9 +320,13 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		_spec.SetField(exercise.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
+	if value, ok := ec.mutation.Image(); ok {
+		_spec.SetField(exercise.FieldImage, field.TypeString, value)
+		_node.Image = &value
+	}
 	if value, ok := ec.mutation.HowTo(); ok {
 		_spec.SetField(exercise.FieldHowTo, field.TypeString, value)
-		_node.HowTo = value
+		_node.HowTo = &value
 	}
 	if value, ok := ec.mutation.EquipmentID(); ok {
 		_spec.SetField(exercise.FieldEquipmentID, field.TypeString, value)
@@ -360,7 +378,7 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.UserID = nodes[0]
+		_node.UserID = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := ec.mutation.EquipmentsIDs(); len(nodes) > 0 {

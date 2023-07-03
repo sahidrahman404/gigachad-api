@@ -4,15 +4,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
 )
-
-type Set struct {
-	Set  int
-	Reps *int
-	Kg   *int
-	Time *string
-	Km   *int
-}
 
 // RoutineExercise holds the schema definition for the RoutineExercise entity.
 type RoutineExercise struct {
@@ -24,7 +17,7 @@ func (RoutineExercise) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").DefaultFunc(generateKSUID),
 		field.Int("rest_timer").Optional(),
-		field.JSON("set", &[]Set{}),
+		field.JSON("set", &[]set.Set{}),
 		field.String("routine_id").Optional(),
 		field.String("exercise_id").Optional(),
 		field.String("user_id").Optional(),

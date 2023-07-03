@@ -17,7 +17,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -233,22 +233,9 @@ func (m *EquipmentMutation) OldImage(ctx context.Context) (v string, err error) 
 	return oldValue.Image, nil
 }
 
-// ClearImage clears the value of the "image" field.
-func (m *EquipmentMutation) ClearImage() {
-	m.image = nil
-	m.clearedFields[equipment.FieldImage] = struct{}{}
-}
-
-// ImageCleared returns if the "image" field was cleared in this mutation.
-func (m *EquipmentMutation) ImageCleared() bool {
-	_, ok := m.clearedFields[equipment.FieldImage]
-	return ok
-}
-
 // ResetImage resets all changes to the "image" field.
 func (m *EquipmentMutation) ResetImage() {
 	m.image = nil
-	delete(m.clearedFields, equipment.FieldImage)
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by ids.
@@ -423,11 +410,7 @@ func (m *EquipmentMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *EquipmentMutation) ClearedFields() []string {
-	var fields []string
-	if m.FieldCleared(equipment.FieldImage) {
-		fields = append(fields, equipment.FieldImage)
-	}
-	return fields
+	return nil
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -440,11 +423,6 @@ func (m *EquipmentMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *EquipmentMutation) ClearField(name string) error {
-	switch name {
-	case equipment.FieldImage:
-		m.ClearImage()
-		return nil
-	}
 	return fmt.Errorf("unknown Equipment nullable field %s", name)
 }
 
@@ -553,6 +531,7 @@ type ExerciseMutation struct {
 	typ                      string
 	id                       *string
 	name                     *string
+	image                    *string
 	how_to                   *string
 	equipment_id             *string
 	clearedFields            map[string]struct{}
@@ -715,6 +694,55 @@ func (m *ExerciseMutation) ResetName() {
 	m.name = nil
 }
 
+// SetImage sets the "image" field.
+func (m *ExerciseMutation) SetImage(s string) {
+	m.image = &s
+}
+
+// Image returns the value of the "image" field in the mutation.
+func (m *ExerciseMutation) Image() (r string, exists bool) {
+	v := m.image
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldImage returns the old "image" field's value of the Exercise entity.
+// If the Exercise object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExerciseMutation) OldImage(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldImage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldImage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldImage: %w", err)
+	}
+	return oldValue.Image, nil
+}
+
+// ClearImage clears the value of the "image" field.
+func (m *ExerciseMutation) ClearImage() {
+	m.image = nil
+	m.clearedFields[exercise.FieldImage] = struct{}{}
+}
+
+// ImageCleared returns if the "image" field was cleared in this mutation.
+func (m *ExerciseMutation) ImageCleared() bool {
+	_, ok := m.clearedFields[exercise.FieldImage]
+	return ok
+}
+
+// ResetImage resets all changes to the "image" field.
+func (m *ExerciseMutation) ResetImage() {
+	m.image = nil
+	delete(m.clearedFields, exercise.FieldImage)
+}
+
 // SetHowTo sets the "how_to" field.
 func (m *ExerciseMutation) SetHowTo(s string) {
 	m.how_to = &s
@@ -732,7 +760,7 @@ func (m *ExerciseMutation) HowTo() (r string, exists bool) {
 // OldHowTo returns the old "how_to" field's value of the Exercise entity.
 // If the Exercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExerciseMutation) OldHowTo(ctx context.Context) (v string, err error) {
+func (m *ExerciseMutation) OldHowTo(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldHowTo is only allowed on UpdateOne operations")
 	}
@@ -928,7 +956,7 @@ func (m *ExerciseMutation) UserID() (r string, exists bool) {
 // OldUserID returns the old "user_id" field's value of the Exercise entity.
 // If the Exercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExerciseMutation) OldUserID(ctx context.Context) (v string, err error) {
+func (m *ExerciseMutation) OldUserID(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -1258,9 +1286,12 @@ func (m *ExerciseMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ExerciseMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.name != nil {
 		fields = append(fields, exercise.FieldName)
+	}
+	if m.image != nil {
+		fields = append(fields, exercise.FieldImage)
 	}
 	if m.how_to != nil {
 		fields = append(fields, exercise.FieldHowTo)
@@ -1287,6 +1318,8 @@ func (m *ExerciseMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case exercise.FieldName:
 		return m.Name()
+	case exercise.FieldImage:
+		return m.Image()
 	case exercise.FieldHowTo:
 		return m.HowTo()
 	case exercise.FieldEquipmentID:
@@ -1308,6 +1341,8 @@ func (m *ExerciseMutation) OldField(ctx context.Context, name string) (ent.Value
 	switch name {
 	case exercise.FieldName:
 		return m.OldName(ctx)
+	case exercise.FieldImage:
+		return m.OldImage(ctx)
 	case exercise.FieldHowTo:
 		return m.OldHowTo(ctx)
 	case exercise.FieldEquipmentID:
@@ -1333,6 +1368,13 @@ func (m *ExerciseMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case exercise.FieldImage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetImage(v)
 		return nil
 	case exercise.FieldHowTo:
 		v, ok := value.(string)
@@ -1399,6 +1441,9 @@ func (m *ExerciseMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ExerciseMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(exercise.FieldImage) {
+		fields = append(fields, exercise.FieldImage)
+	}
 	if m.FieldCleared(exercise.FieldHowTo) {
 		fields = append(fields, exercise.FieldHowTo)
 	}
@@ -1428,6 +1473,9 @@ func (m *ExerciseMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ExerciseMutation) ClearField(name string) error {
 	switch name {
+	case exercise.FieldImage:
+		m.ClearImage()
+		return nil
 	case exercise.FieldHowTo:
 		m.ClearHowTo()
 		return nil
@@ -1453,6 +1501,9 @@ func (m *ExerciseMutation) ResetField(name string) error {
 	switch name {
 	case exercise.FieldName:
 		m.ResetName()
+		return nil
+	case exercise.FieldImage:
+		m.ResetImage()
 		return nil
 	case exercise.FieldHowTo:
 		m.ResetHowTo()
@@ -3250,7 +3301,7 @@ type RoutineExerciseMutation struct {
 	id               *string
 	rest_timer       *int
 	addrest_timer    *int
-	set              **[]schema.Set
+	set              **[]set.Set
 	clearedFields    map[string]struct{}
 	routines         *string
 	clearedroutines  bool
@@ -3438,12 +3489,12 @@ func (m *RoutineExerciseMutation) ResetRestTimer() {
 }
 
 // SetSet sets the "set" field.
-func (m *RoutineExerciseMutation) SetSet(s *[]schema.Set) {
+func (m *RoutineExerciseMutation) SetSet(s *[]set.Set) {
 	m.set = &s
 }
 
 // Set returns the value of the "set" field in the mutation.
-func (m *RoutineExerciseMutation) Set() (r *[]schema.Set, exists bool) {
+func (m *RoutineExerciseMutation) Set() (r *[]set.Set, exists bool) {
 	v := m.set
 	if v == nil {
 		return
@@ -3454,7 +3505,7 @@ func (m *RoutineExerciseMutation) Set() (r *[]schema.Set, exists bool) {
 // OldSet returns the old "set" field's value of the RoutineExercise entity.
 // If the RoutineExercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoutineExerciseMutation) OldSet(ctx context.Context) (v *[]schema.Set, err error) {
+func (m *RoutineExerciseMutation) OldSet(ctx context.Context) (v *[]set.Set, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldSet is only allowed on UpdateOne operations")
 	}
@@ -3841,7 +3892,7 @@ func (m *RoutineExerciseMutation) SetField(name string, value ent.Value) error {
 		m.SetRestTimer(v)
 		return nil
 	case routineexercise.FieldSet:
-		v, ok := value.(*[]schema.Set)
+		v, ok := value.(*[]set.Set)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -6335,7 +6386,7 @@ func (m *WorkoutMutation) Image() (r string, exists bool) {
 // OldImage returns the old "image" field's value of the Workout entity.
 // If the Workout object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutMutation) OldImage(ctx context.Context) (v string, err error) {
+func (m *WorkoutMutation) OldImage(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldImage is only allowed on UpdateOne operations")
 	}
@@ -6349,9 +6400,22 @@ func (m *WorkoutMutation) OldImage(ctx context.Context) (v string, err error) {
 	return oldValue.Image, nil
 }
 
+// ClearImage clears the value of the "image" field.
+func (m *WorkoutMutation) ClearImage() {
+	m.image = nil
+	m.clearedFields[workout.FieldImage] = struct{}{}
+}
+
+// ImageCleared returns if the "image" field was cleared in this mutation.
+func (m *WorkoutMutation) ImageCleared() bool {
+	_, ok := m.clearedFields[workout.FieldImage]
+	return ok
+}
+
 // ResetImage resets all changes to the "image" field.
 func (m *WorkoutMutation) ResetImage() {
 	m.image = nil
+	delete(m.clearedFields, workout.FieldImage)
 }
 
 // SetDescription sets the "description" field.
@@ -6791,6 +6855,9 @@ func (m *WorkoutMutation) ClearedFields() []string {
 	if m.FieldCleared(workout.FieldTime) {
 		fields = append(fields, workout.FieldTime)
 	}
+	if m.FieldCleared(workout.FieldImage) {
+		fields = append(fields, workout.FieldImage)
+	}
 	if m.FieldCleared(workout.FieldUserID) {
 		fields = append(fields, workout.FieldUserID)
 	}
@@ -6810,6 +6877,9 @@ func (m *WorkoutMutation) ClearField(name string) error {
 	switch name {
 	case workout.FieldTime:
 		m.ClearTime()
+		return nil
+	case workout.FieldImage:
+		m.ClearImage()
 		return nil
 	case workout.FieldUserID:
 		m.ClearUserID()
@@ -6961,7 +7031,7 @@ type WorkoutLogMutation struct {
 	op               Op
 	typ              string
 	id               *string
-	sets             **[]schema.Set
+	sets             **[]set.Set
 	created_at       *string
 	clearedFields    map[string]struct{}
 	users            *string
@@ -7080,12 +7150,12 @@ func (m *WorkoutLogMutation) IDs(ctx context.Context) ([]string, error) {
 }
 
 // SetSets sets the "sets" field.
-func (m *WorkoutLogMutation) SetSets(s *[]schema.Set) {
+func (m *WorkoutLogMutation) SetSets(s *[]set.Set) {
 	m.sets = &s
 }
 
 // Sets returns the value of the "sets" field in the mutation.
-func (m *WorkoutLogMutation) Sets() (r *[]schema.Set, exists bool) {
+func (m *WorkoutLogMutation) Sets() (r *[]set.Set, exists bool) {
 	v := m.sets
 	if v == nil {
 		return
@@ -7096,7 +7166,7 @@ func (m *WorkoutLogMutation) Sets() (r *[]schema.Set, exists bool) {
 // OldSets returns the old "sets" field's value of the WorkoutLog entity.
 // If the WorkoutLog object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutLogMutation) OldSets(ctx context.Context) (v *[]schema.Set, err error) {
+func (m *WorkoutLogMutation) OldSets(ctx context.Context) (v *[]set.Set, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldSets is only allowed on UpdateOne operations")
 	}
@@ -7512,7 +7582,7 @@ func (m *WorkoutLogMutation) OldField(ctx context.Context, name string) (ent.Val
 func (m *WorkoutLogMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case workoutlog.FieldSets:
-		v, ok := value.(*[]schema.Set)
+		v, ok := value.(*[]set.Set)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

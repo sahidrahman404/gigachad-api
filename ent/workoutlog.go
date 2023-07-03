@@ -10,7 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -22,7 +22,7 @@ type WorkoutLog struct {
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
 	// Sets holds the value of the "sets" field.
-	Sets *[]schema.Set `json:"sets,omitempty"`
+	Sets *[]set.Set `json:"sets,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt string `json:"created_at,omitempty"`
 	// ExerciseID holds the value of the "exercise_id" field.

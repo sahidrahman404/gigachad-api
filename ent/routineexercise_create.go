@@ -12,7 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -38,7 +38,7 @@ func (rec *RoutineExerciseCreate) SetNillableRestTimer(i *int) *RoutineExerciseC
 }
 
 // SetSet sets the "set" field.
-func (rec *RoutineExerciseCreate) SetSet(s *[]schema.Set) *RoutineExerciseCreate {
+func (rec *RoutineExerciseCreate) SetSet(s *[]set.Set) *RoutineExerciseCreate {
 	rec.mutation.SetSet(s)
 	return rec
 }

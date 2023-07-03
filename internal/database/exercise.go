@@ -26,8 +26,9 @@ func NewExerciseStore(e *ent.Client) *ExerciseStore {
 func (e *ExerciseStore) Insert(ctx context.Context, ex *types.Exercise) error {
 	exercise, err := e.Client.Exercise.Create().
 		SetName(ex.Ent.Name).
-		SetHowTo(ex.Ent.HowTo).
-		SetUserID(ex.Ent.UserID).
+		SetNillableHowTo(ex.Ent.HowTo).
+		SetNillableUserID(ex.Ent.UserID).
+		SetNillableImage(ex.Ent.Image).
 		SetEquipmentID(ex.Ent.EquipmentID).
 		SetExerciseTypeID(ex.Ent.ExerciseTypeID).
 		SetMusclesGroupID(ex.Ent.MusclesGroupID).Save(ctx)
@@ -41,8 +42,9 @@ func (e *ExerciseStore) Insert(ctx context.Context, ex *types.Exercise) error {
 func (e *ExerciseStore) Update(ctx context.Context, ex *types.Exercise) error {
 	_, err := e.Client.Exercise.UpdateOneID(ex.Ent.ID).
 		SetName(ex.Ent.Name).
-		SetHowTo(ex.Ent.HowTo).
-		SetUserID(ex.Ent.UserID).
+		SetNillableHowTo(ex.Ent.HowTo).
+		SetNillableUserID(ex.Ent.UserID).
+		SetNillableImage(ex.Ent.Image).
 		SetEquipmentID(ex.Ent.EquipmentID).
 		SetExerciseTypeID(ex.Ent.ExerciseTypeID).
 		SetMusclesGroupID(ex.Ent.MusclesGroupID).Save(ctx)

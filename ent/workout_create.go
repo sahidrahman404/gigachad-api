@@ -79,6 +79,14 @@ func (wc *WorkoutCreate) SetImage(s string) *WorkoutCreate {
 	return wc
 }
 
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (wc *WorkoutCreate) SetNillableImage(s *string) *WorkoutCreate {
+	if s != nil {
+		wc.SetImage(*s)
+	}
+	return wc
+}
+
 // SetDescription sets the "description" field.
 func (wc *WorkoutCreate) SetDescription(s string) *WorkoutCreate {
 	wc.mutation.SetDescription(s)
@@ -209,9 +217,6 @@ func (wc *WorkoutCreate) check() error {
 	if _, ok := wc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Workout.created_at"`)}
 	}
-	if _, ok := wc.mutation.Image(); !ok {
-		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Workout.image"`)}
-	}
 	if _, ok := wc.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Workout.description"`)}
 	}
@@ -276,7 +281,7 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := wc.mutation.Image(); ok {
 		_spec.SetField(workout.FieldImage, field.TypeString, value)
-		_node.Image = value
+		_node.Image = &value
 	}
 	if value, ok := wc.mutation.Description(); ok {
 		_spec.SetField(workout.FieldDescription, field.TypeString, value)

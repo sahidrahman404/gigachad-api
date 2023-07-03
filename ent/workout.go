@@ -30,7 +30,7 @@ type Workout struct {
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt string `json:"created_at,omitempty"`
 	// Image holds the value of the "image" field.
-	Image string `json:"image,omitempty"`
+	Image *string `json:"image,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -144,7 +144,8 @@ func (w *Workout) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field image", values[i])
 			} else if value.Valid {
-				w.Image = value.String
+				w.Image = new(string)
+				*w.Image = value.String
 			}
 		case workout.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -222,8 +223,10 @@ func (w *Workout) String() string {
 	builder.WriteString("created_at=")
 	builder.WriteString(w.CreatedAt)
 	builder.WriteString(", ")
-	builder.WriteString("image=")
-	builder.WriteString(w.Image)
+	if v := w.Image; v != nil {
+		builder.WriteString("image=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(w.Description)

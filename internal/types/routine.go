@@ -2,7 +2,7 @@ package types
 
 import (
 	"github.com/sahidrahman404/gigachad-api/ent"
-	"github.com/sahidrahman404/gigachad-api/ent/schema"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
 
@@ -12,10 +12,10 @@ type CreateRoutineParams struct {
 }
 
 type RE struct {
-	RestTimer  *int         `json:"restTimer"`
-	Set        []schema.Set `json:"set"`
-	RoutineID  string       `json:"routineID"`
-	ExerciseID string       `json:"exerciseID"`
+	RestTimer  *int      `json:"restTimer"`
+	Set        []set.Set `json:"set"`
+	RoutineID  string    `json:"routineID"`
+	ExerciseID string    `json:"exerciseID"`
 }
 
 type Routine struct {
@@ -29,7 +29,7 @@ type RoutineExercise struct {
 func NewRoutineExerciseFromParams(p CreateRoutineParams, userID string) (*Routine, *[]RoutineExercise) {
 	r := &Routine{
 		Ent: &ent.Routine{
-			Name: p.Name,
+			Name:   p.Name,
 			UserID: userID,
 		},
 	}
