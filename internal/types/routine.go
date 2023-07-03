@@ -26,10 +26,11 @@ type RoutineExercise struct {
 	Ent *ent.RoutineExercise
 }
 
-func NewRoutineExerciseFromParams(p CreateRoutineParams) (*Routine, *[]RoutineExercise) {
+func NewRoutineExerciseFromParams(p CreateRoutineParams, userID string) (*Routine, *[]RoutineExercise) {
 	r := &Routine{
 		Ent: &ent.Routine{
 			Name: p.Name,
+			UserID: userID,
 		},
 	}
 	res := &[]RoutineExercise{}
