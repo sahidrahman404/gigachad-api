@@ -8,11 +8,11 @@ import (
 
 type CreateRoutineParams struct {
 	Name             string `json:"name"`
-	RestTimer        *int   `json:"restTimer"`
 	RoutineExercises []RE
 }
 
 type RE struct {
+	RestTimer  *int         `json:"restTimer"`
 	Set        []schema.Set `json:"set"`
 	RoutineID  string       `json:"routineID"`
 	ExerciseID string       `json:"exerciseID"`
@@ -40,6 +40,9 @@ func NewRoutineExerciseFromParams(p CreateRoutineParams) (*Routine, *[]RoutineEx
 				ExerciseID: v.ExerciseID,
 				RoutineID:  v.RoutineID,
 			},
+		}
+		if v.RestTimer != nil {
+			re.Ent.RestTimer = *v.RestTimer
 		}
 		*res = append(*res, re)
 	}
