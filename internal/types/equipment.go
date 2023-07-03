@@ -24,7 +24,7 @@ func NewEquipmentFromParams(p CreateEquipmentParams) *Equipment {
 	}
 }
 
-func (p CreateEquipmentParams) Validate(v validator.Validator) {
+func (p CreateEquipmentParams) Validate(v *validator.Validator) {
 	v.CheckField(p.Name != "", "name", "please provide name")
 	v.CheckField(p.Image != "", "image", "please provide image url")
 

@@ -25,7 +25,7 @@ func NewExerciseTypeFromParmas(p CreateExerciseTypeParams) *ExerciseType {
 	}
 }
 
-func (p CreateExerciseTypeParams) Validate(v validator.Validator) {
+func (p CreateExerciseTypeParams) Validate(v *validator.Validator) {
 	v.CheckField(p.Name != "", "name", "please provide name")
 	v.CheckField(p.Description != "", "image", "please provide description")
 	v.CheckField(len(p.Properties) != 0, "properties", "please provide properties")

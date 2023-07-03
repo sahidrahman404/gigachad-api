@@ -33,7 +33,7 @@ func NewExerciseFromParams(p CreateExerciseParams, userID *string) *Exercise {
 	return e
 }
 
-func (p CreateExerciseParams) ValidateExercise(v validator.Validator) {
+func (p CreateExerciseParams) Validate(v *validator.Validator) {
 	v.CheckField(p.Name != "", "name", "name must be provided")
 	v.CheckField(p.EquipmentID != "", "equipmentID", "equipmentID must be provided")
 	v.CheckField(p.MusclesGroupID != "", "musclesGroupID", "musclesGroupID must be provided")

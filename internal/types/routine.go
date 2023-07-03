@@ -50,7 +50,7 @@ func NewRoutineExerciseFromParams(p CreateRoutineParams, userID string) (*Routin
 	return r, res
 }
 
-func (p CreateRoutineParams) ValidateExercise(v validator.Validator) {
+func (p CreateRoutineParams) ValidateExercise(v *validator.Validator) {
 	v.CheckField(p.Name != "", "name", "name must be provided")
 	v.CheckField(len(p.RoutineExercises) != 0, "routineExercises", "routine exercises must be provided")
 	for _, val := range p.RoutineExercises {
