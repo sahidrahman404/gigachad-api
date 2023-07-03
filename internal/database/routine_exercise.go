@@ -21,7 +21,7 @@ type RoutineExerciseStore struct {
 	Client *ent.Client
 }
 
-func NewRoutineExerciseStore(c *ent.Client) *RoutineExerciseStore {
+func NewEntRoutineExerciseStore(c *ent.Client) *RoutineExerciseStore {
 	return &RoutineExerciseStore{
 		Client: c,
 	}

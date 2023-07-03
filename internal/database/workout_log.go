@@ -15,7 +15,7 @@ type WorkoutLogStore struct {
 	Client *ent.Client
 }
 
-func NewWorkoutLogStore(c *ent.Client) *WorkoutLogStore {
+func NewEntWorkoutLogStore(c *ent.Client) *WorkoutLogStore {
 	return &WorkoutLogStore{
 		Client: c,
 	}

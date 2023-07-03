@@ -18,7 +18,7 @@ type MusclesGroupStore struct {
 	Client *ent.Client
 }
 
-func NewMusclesGroupStore(e *ent.Client) *MusclesGroupStore {
+func NewEntMusclesGroupStore(e *ent.Client) *MusclesGroupStore {
 	return &MusclesGroupStore{
 		Client: e,
 	}

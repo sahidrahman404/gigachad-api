@@ -18,7 +18,7 @@ type EquipmentStore struct {
 	Client *ent.Client
 }
 
-func NewEquipmentStore(c *ent.Client) *EquipmentStore {
+func NewEntEquipmentStore(c *ent.Client) *EquipmentStore {
 	return &EquipmentStore{
 		Client: c,
 	}

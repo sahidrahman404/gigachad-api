@@ -21,7 +21,7 @@ type RoutineStore struct {
 	Client *ent.Client
 }
 
-func NewRoutineStore(e *ent.Client) *RoutineStore {
+func NewEntRoutineStore(e *ent.Client) *RoutineStore {
 	return &RoutineStore{
 		Client: e,
 	}
