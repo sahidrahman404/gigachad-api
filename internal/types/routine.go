@@ -26,14 +26,14 @@ type RoutineExercise struct {
 	Ent *ent.RoutineExercise
 }
 
-func NewRoutineExerciseFromParams(p CreateRoutineParams, userID string) (*Routine, *[]RoutineExercise) {
+func NewRoutineExerciseFromParams(p CreateRoutineParams, userID string) (*Routine, []*RoutineExercise) {
 	r := &Routine{
 		Ent: &ent.Routine{
 			Name:   p.Name,
 			UserID: userID,
 		},
 	}
-	res := &[]RoutineExercise{}
+	res := []*RoutineExercise{}
 	for _, v := range p.RoutineExercises {
 		re := RoutineExercise{
 			Ent: &ent.RoutineExercise{
@@ -45,7 +45,7 @@ func NewRoutineExerciseFromParams(p CreateRoutineParams, userID string) (*Routin
 		if v.RestTimer != nil {
 			re.Ent.RestTimer = *v.RestTimer
 		}
-		*res = append(*res, re)
+		res = append(res, &re)
 	}
 	return r, res
 }
