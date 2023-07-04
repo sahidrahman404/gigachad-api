@@ -40,7 +40,7 @@ func (app *application) createEquipmentHandler(w http.ResponseWriter, r *http.Re
 	err = response.JSON(
 		w,
 		http.StatusCreated,
-		"an email will be sent to you containing password instruction",
+		equipment,
 	)
 	if err != nil {
 		app.serverError(w, r, err)
