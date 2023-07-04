@@ -10,11 +10,11 @@ import (
 )
 
 type RoutineStorer interface {
-	Insert(ctx context.Context, r *types.Routine) error
-	Get(ctx context.Context, id string) (*types.Routine, error)
-	Update(ctx context.Context, r *types.Routine) error
-	Delete(ctx context.Context, id string) error
-	GetAllForUser(ctx context.Context, userID string) ([]*types.Routine, error)
+	Insert(context.Context, *types.Routine) error
+	Get(context.Context, string) (*types.Routine, error)
+	Update(context.Context, *types.Routine, string) error
+	Delete(context.Context, string) error
+	GetAllForUser(context.Context, string) ([]*types.Routine, error)
 }
 
 type RoutineStore struct {
@@ -36,8 +36,8 @@ func (e *RoutineStore) Insert(ctx context.Context, r *types.Routine) error {
 	return nil
 }
 
-func (e *RoutineStore) Get(ctx context.Context, id string) (*types.Routine, error) {
-	r, err := e.Client.Routine.Get(ctx, id)
+func (e *RoutineStore) Get(ctx context.Context, routineID string) (*types.Routine, error) {
+	r, err := e.Client.Routine.Get(ctx, routineID)
 	if err != nil {
 		return nil, err
 	}
@@ -46,16 +46,19 @@ func (e *RoutineStore) Get(ctx context.Context, id string) (*types.Routine, erro
 	}, nil
 }
 
-func (e *RoutineStore) Update(ctx context.Context, r *types.Routine) error {
-	_, err := e.Client.Routine.UpdateOneID(r.Ent.ID).SetName(r.Ent.Name).SetUserID(r.Ent.UserID).Save(ctx)
+func (e *RoutineStore) Update(ctx context.Context, r *types.Routine, routineID string) error {
+	_, err := e.Client.Routine.UpdateOneID(routineID).
+		SetName(r.Ent.Name).
+		SetUserID(r.Ent.UserID).
+		Save(ctx)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (e *RoutineStore) Delete(ctx context.Context, id string) error {
-	err := e.Client.Routine.DeleteOneID(id).Exec(ctx)
+func (e *RoutineStore) Delete(ctx context.Context, routineID string) error {
+	err := e.Client.Routine.DeleteOneID(routineID).Exec(ctx)
 	if err != nil {
 		return err
 	}
