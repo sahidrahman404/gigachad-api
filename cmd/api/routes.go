@@ -49,7 +49,6 @@ func (app *application) routes() http.Handler {
 			r.Put("/{equipmentID}", app.updateEquipmentHandler)
 		})
 
-
 		// MusclesGroup resources
 		r.Route("/musclesgroup", func(r chi.Router) {
 			r.Post("/", app.createMusclesGroupHandler)
@@ -69,6 +68,14 @@ func (app *application) routes() http.Handler {
 			r.Post("/", app.createExerciseHandler)
 			r.Get("/", app.listExerciseHandler)
 			r.Put("/{exerciseID}", app.updateExerciseHandler)
+		})
+
+		// Routine resources
+		r.Route("/routines", func(r chi.Router) {
+			r.Post("/", app.requireActivatedUser(app.createRoutineHandler))
+			r.Get("/", app.requireActivatedUser(app.listRoutineHandler))
+			r.Put("/{routineID}", app.requireActivatedUser(app.updateRoutineHandler))
+			r.Delete("/{routineID}", app.requireActivatedUser(app.deleteRoutineHandler))
 		})
 	})
 
