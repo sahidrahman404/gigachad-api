@@ -8,9 +8,19 @@ import (
 type CreateExerciseParams struct {
 	Name           string  `json:"name"`
 	HowTo          *string `json:"howTo"`
+	Image          *string `json:"image"`
 	EquipmentID    string  `json:"equipmentID"`
 	MusclesGroupID string  `json:"MusclesGroupID"`
 	ExerciseTypeID string  `json:"ExerciseTypeID"`
+}
+
+type UpdateExerciseParams struct {
+	Name           *string `json:"name"`
+	HowTo          *string `json:"howTo"`
+	Image          *string `json:"image"`
+	EquipmentID    *string `json:"equipmentID"`
+	MusclesGroupID *string `json:"MusclesGroupID"`
+	ExerciseTypeID *string `json:"ExerciseTypeID"`
 }
 
 type Exercise struct {
@@ -21,13 +31,14 @@ func NewExerciseFromParams(p CreateExerciseParams, userID *string) *Exercise {
 	e := &Exercise{
 		Ent: &ent.Exercise{
 			Name:           p.Name,
+			Image:          p.Image,
 			EquipmentID:    p.EquipmentID,
 			MusclesGroupID: p.MusclesGroupID,
 			ExerciseTypeID: p.ExerciseTypeID,
 			UserID:         userID,
 		},
 	}
-	if p.HowTo != nil{
+	if p.HowTo != nil {
 		e.Ent.HowTo = p.HowTo
 	}
 	return e
@@ -42,4 +53,31 @@ func (p CreateExerciseParams) Validate(v *validator.Validator) {
 	v.CheckField(len(p.EquipmentID) != 27, "equipmentID", "please add valid equipmentID")
 	v.CheckField(len(p.MusclesGroupID) != 27, "musclesGroupID", "please add valid musclesGroupID")
 	v.CheckField(len(p.ExerciseTypeID) != 27, "exerciseTypeID", "please add valid exerciseTypeID")
+}
+
+func UpdateExerciseFromParams(e *UpdateExerciseParams, ex *Exercise) {
+	if e.Name != nil {
+		ex.Ent.Name = *e.Name
+	}
+
+	if e.HowTo != nil {
+		ex.Ent.HowTo = e.HowTo
+	}
+
+
+	if e.Image != nil {
+		ex.Ent.Image = e.Image
+	}
+
+	if e.EquipmentID != nil {
+		ex.Ent.EquipmentID = *e.EquipmentID
+	}
+
+	if e.MusclesGroupID != nil {
+		ex.Ent.MusclesGroupID = *e.MusclesGroupID
+	}
+
+	if e.ExerciseTypeID != nil {
+		ex.Ent.ExerciseTypeID = *e.ExerciseTypeID
+	}
 }
