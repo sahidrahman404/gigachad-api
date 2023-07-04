@@ -10,6 +10,11 @@ type CreateMusclesGroupParams struct {
 	Image string `json:"image"`
 }
 
+type UpdateMusclesGroupParams struct {
+	Name  *string `json:"name"`
+	Image *string `json:"image"`
+}
+
 type MusclesGroup struct {
 	Ent *ent.MusclesGroup
 }
@@ -28,4 +33,14 @@ func (p CreateMusclesGroupParams) Validate(v *validator.Validator) {
 	v.CheckField(p.Image != "", "image", "please provide image url")
 
 	v.CheckField(validator.IsURL(p.Image), "image", "please provide correct image url")
+}
+
+func UpdateMusclesGroupFromParams(mgp *UpdateMusclesGroupParams, mg *MusclesGroup) {
+	if mgp.Name != nil {
+		mg.Ent.Name = *mgp.Name
+	}
+
+	if mgp.Image != nil {
+		mg.Ent.Image = *mgp.Image
+	}
 }
