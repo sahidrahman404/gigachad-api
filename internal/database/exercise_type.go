@@ -12,6 +12,7 @@ type ExerciseTypeStorer interface {
 	Update(ctx context.Context, et *types.ExerciseType) error
 	Delete(ctx context.Context, et *types.ExerciseType) error
 	Get(ctx context.Context, id string) (*types.ExerciseType, error)
+	GetAll(ctx context.Context) ([]*types.ExerciseType, error)
 }
 
 type EntExerciseTypeStore struct {
@@ -59,4 +60,18 @@ func (e *EntExerciseTypeStore) Get(ctx context.Context, id string) (*types.Exerc
 func (e *EntExerciseTypeStore) Delete(ctx context.Context, et *types.ExerciseType) error {
 	err := e.Client.ExerciseType.DeleteOneID(et.Ent.ID).Exec(ctx)
 	return err
+}
+
+func (e *EntExerciseTypeStore) GetAll(ctx context.Context) ([]*types.ExerciseType, error) {
+	et, err := e.Client.ExerciseType.Query().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	exerciseType := []*types.ExerciseType{}
+	for _, v := range et {
+		exerciseType = append(exerciseType, &types.ExerciseType{
+			Ent: v,
+		})
+	}
+	return exerciseType, nil
 }
