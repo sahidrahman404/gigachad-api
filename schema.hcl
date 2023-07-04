@@ -248,68 +248,6 @@ table "workout_logs" {
     on_delete   = CASCADE
   }
 }
-table "exercises" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "name" {
-    null = false
-    type = text
-  }
-  column "how_to" {
-    null = true
-    type = text
-  }
-  column "equipment_id" {
-    null = true
-    type = text
-  }
-  column "muscles_group_id" {
-    null = true
-    type = text
-  }
-  column "exercise_type_id" {
-    null = true
-    type = text
-  }
-  column "user_id" {
-    null = true
-    type = text
-  }
-  column "image" {
-    null = true
-    type = text
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "exercises_users_exercises" {
-    columns     = [column.user_id]
-    ref_columns = [table.users.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "exercises_muscles_groups_exercises" {
-    columns     = [column.muscles_group_id]
-    ref_columns = [table.muscles_groups.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "exercises_exercise_types_exercises" {
-    columns     = [column.exercise_type_id]
-    ref_columns = [table.exercise_types.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "exercises_equipment_exercises" {
-    columns     = [column.muscles_group_id]
-    ref_columns = [table.equipment.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-}
 table "workouts" {
   schema = schema.main
   column "id" {
@@ -434,6 +372,68 @@ table "routine_exercises" {
   index "routineexercise_routine_id_exercise_id" {
     unique  = true
     columns = [column.routine_id, column.exercise_id]
+  }
+}
+table "exercises" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "name" {
+    null = false
+    type = text
+  }
+  column "image" {
+    null = true
+    type = text
+  }
+  column "how_to" {
+    null = true
+    type = text
+  }
+  column "equipment_id" {
+    null = true
+    type = text
+  }
+  column "exercise_type_id" {
+    null = true
+    type = text
+  }
+  column "muscles_group_id" {
+    null = true
+    type = text
+  }
+  column "user_id" {
+    null = true
+    type = text
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "exercises_users_exercises" {
+    columns     = [column.user_id]
+    ref_columns = [table.users.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "exercises_muscles_groups_exercises" {
+    columns     = [column.muscles_group_id]
+    ref_columns = [table.muscles_groups.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "exercises_exercise_types_exercises" {
+    columns     = [column.exercise_type_id]
+    ref_columns = [table.exercise_types.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "exercises_equipment_exercises" {
+    columns     = [column.equipment_id]
+    ref_columns = [table.equipment.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
   }
 }
 schema "main" {

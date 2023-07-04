@@ -413,7 +413,7 @@ func (eq *EquipmentQuery) loadExercises(ctx context.Context, query *ExerciseQuer
 		}
 	}
 	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(exercise.FieldMusclesGroupID)
+		query.ctx.AppendFieldOnce(exercise.FieldEquipmentID)
 	}
 	query.Where(predicate.Exercise(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(equipment.ExercisesColumn), fks...))
@@ -423,10 +423,10 @@ func (eq *EquipmentQuery) loadExercises(ctx context.Context, query *ExerciseQuer
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.MusclesGroupID
+		fk := n.EquipmentID
 		node, ok := nodeids[fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "muscles_group_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "equipment_id" returned %v for node %v`, fk, n.ID)
 		}
 		assign(node, n)
 	}

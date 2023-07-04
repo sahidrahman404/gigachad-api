@@ -31,7 +31,7 @@ func (Exercise) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("workout_logs", WorkoutLog.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.From("users", User.Type).Ref("exercises").Field("user_id").Unique(),
-		edge.From("equipments", Equipment.Type).Ref("exercises").Field("muscles_group_id").Unique(),
+		edge.From("equipments", Equipment.Type).Ref("exercises").Field("equipment_id").Unique(),
 		edge.From("muscles_groups", MusclesGroup.Type).Ref("exercises").Field("muscles_group_id").Unique(),
 		edge.From("exercise_types", ExerciseType.Type).Ref("exercises").Field("exercise_type_id").Unique(),
 		edge.From("routines", Routine.Type).Ref("exercises").

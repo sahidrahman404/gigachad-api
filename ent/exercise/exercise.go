@@ -62,7 +62,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "equipment" package.
 	EquipmentsInverseTable = "equipment"
 	// EquipmentsColumn is the table column denoting the equipments relation/edge.
-	EquipmentsColumn = "muscles_group_id"
+	EquipmentsColumn = "equipment_id"
 	// MusclesGroupsTable is the table that holds the muscles_groups relation/edge.
 	MusclesGroupsTable = "exercises"
 	// MusclesGroupsInverseTable is the table name for the MusclesGroup entity.

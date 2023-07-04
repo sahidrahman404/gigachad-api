@@ -344,10 +344,6 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		_spec.SetField(exercise.FieldHowTo, field.TypeString, value)
 		_node.HowTo = &value
 	}
-	if value, ok := ec.mutation.EquipmentID(); ok {
-		_spec.SetField(exercise.FieldEquipmentID, field.TypeString, value)
-		_node.EquipmentID = value
-	}
 	if nodes := ec.mutation.WorkoutLogsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -395,7 +391,7 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.MusclesGroupID = nodes[0]
+		_node.EquipmentID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := ec.mutation.MusclesGroupsIDs(); len(nodes) > 0 {

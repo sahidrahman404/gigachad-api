@@ -424,12 +424,6 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if eu.mutation.HowToCleared() {
 		_spec.ClearField(exercise.FieldHowTo, field.TypeString)
 	}
-	if value, ok := eu.mutation.EquipmentID(); ok {
-		_spec.SetField(exercise.FieldEquipmentID, field.TypeString, value)
-	}
-	if eu.mutation.EquipmentIDCleared() {
-		_spec.ClearField(exercise.FieldEquipmentID, field.TypeString)
-	}
 	if eu.mutation.WorkoutLogsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -1141,12 +1135,6 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 	}
 	if euo.mutation.HowToCleared() {
 		_spec.ClearField(exercise.FieldHowTo, field.TypeString)
-	}
-	if value, ok := euo.mutation.EquipmentID(); ok {
-		_spec.SetField(exercise.FieldEquipmentID, field.TypeString, value)
-	}
-	if euo.mutation.EquipmentIDCleared() {
-		_spec.ClearField(exercise.FieldEquipmentID, field.TypeString)
 	}
 	if euo.mutation.WorkoutLogsCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -27,8 +27,8 @@ var (
 		{Name: "image", Type: field.TypeString, Nullable: true},
 		{Name: "how_to", Type: field.TypeString, Nullable: true},
 		{Name: "equipment_id", Type: field.TypeString, Nullable: true},
-		{Name: "muscles_group_id", Type: field.TypeString, Nullable: true},
 		{Name: "exercise_type_id", Type: field.TypeString, Nullable: true},
+		{Name: "muscles_group_id", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString, Nullable: true},
 	}
 	// ExercisesTable holds the schema information for the "exercises" table.
@@ -39,19 +39,19 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "exercises_equipment_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[5]},
+				Columns:    []*schema.Column{ExercisesColumns[4]},
 				RefColumns: []*schema.Column{EquipmentColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "exercises_exercise_types_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[6]},
+				Columns:    []*schema.Column{ExercisesColumns[5]},
 				RefColumns: []*schema.Column{ExerciseTypesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "exercises_muscles_groups_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[5]},
+				Columns:    []*schema.Column{ExercisesColumns[6]},
 				RefColumns: []*schema.Column{MusclesGroupsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},

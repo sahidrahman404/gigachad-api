@@ -533,7 +533,6 @@ type ExerciseMutation struct {
 	name                     *string
 	image                    *string
 	how_to                   *string
-	equipment_id             *string
 	clearedFields            map[string]struct{}
 	workout_logs             map[string]struct{}
 	removedworkout_logs      map[string]struct{}
@@ -797,12 +796,12 @@ func (m *ExerciseMutation) ResetHowTo() {
 
 // SetEquipmentID sets the "equipment_id" field.
 func (m *ExerciseMutation) SetEquipmentID(s string) {
-	m.equipment_id = &s
+	m.equipments = &s
 }
 
 // EquipmentID returns the value of the "equipment_id" field in the mutation.
 func (m *ExerciseMutation) EquipmentID() (r string, exists bool) {
-	v := m.equipment_id
+	v := m.equipments
 	if v == nil {
 		return
 	}
@@ -828,7 +827,7 @@ func (m *ExerciseMutation) OldEquipmentID(ctx context.Context) (v string, err er
 
 // ClearEquipmentID clears the value of the "equipment_id" field.
 func (m *ExerciseMutation) ClearEquipmentID() {
-	m.equipment_id = nil
+	m.equipments = nil
 	m.clearedFields[exercise.FieldEquipmentID] = struct{}{}
 }
 
@@ -840,7 +839,7 @@ func (m *ExerciseMutation) EquipmentIDCleared() bool {
 
 // ResetEquipmentID resets all changes to the "equipment_id" field.
 func (m *ExerciseMutation) ResetEquipmentID() {
-	m.equipment_id = nil
+	m.equipments = nil
 	delete(m.clearedFields, exercise.FieldEquipmentID)
 }
 
@@ -1096,7 +1095,7 @@ func (m *ExerciseMutation) ClearEquipments() {
 
 // EquipmentsCleared reports if the "equipments" edge to the Equipment entity was cleared.
 func (m *ExerciseMutation) EquipmentsCleared() bool {
-	return m.MusclesGroupIDCleared() || m.clearedequipments
+	return m.EquipmentIDCleared() || m.clearedequipments
 }
 
 // EquipmentsID returns the "equipments" edge ID in the mutation.
@@ -1353,7 +1352,7 @@ func (m *ExerciseMutation) Fields() []string {
 	if m.how_to != nil {
 		fields = append(fields, exercise.FieldHowTo)
 	}
-	if m.equipment_id != nil {
+	if m.equipments != nil {
 		fields = append(fields, exercise.FieldEquipmentID)
 	}
 	if m.muscles_groups != nil {

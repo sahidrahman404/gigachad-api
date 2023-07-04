@@ -728,7 +728,7 @@ func (eq *ExerciseQuery) loadEquipments(ctx context.Context, query *EquipmentQue
 	ids := make([]string, 0, len(nodes))
 	nodeids := make(map[string][]*Exercise)
 	for i := range nodes {
-		fk := nodes[i].MusclesGroupID
+		fk := nodes[i].EquipmentID
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -745,7 +745,7 @@ func (eq *ExerciseQuery) loadEquipments(ctx context.Context, query *EquipmentQue
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "muscles_group_id" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "equipment_id" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -932,7 +932,7 @@ func (eq *ExerciseQuery) querySpec() *sqlgraph.QuerySpec {
 			_spec.Node.AddColumnOnce(exercise.FieldUserID)
 		}
 		if eq.withEquipments != nil {
-			_spec.Node.AddColumnOnce(exercise.FieldMusclesGroupID)
+			_spec.Node.AddColumnOnce(exercise.FieldEquipmentID)
 		}
 		if eq.withMusclesGroups != nil {
 			_spec.Node.AddColumnOnce(exercise.FieldMusclesGroupID)
