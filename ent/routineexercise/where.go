@@ -188,16 +188,6 @@ func RoutineIDHasSuffix(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldRoutineID, v))
 }
 
-// RoutineIDIsNil applies the IsNil predicate on the "routine_id" field.
-func RoutineIDIsNil() predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldIsNull(FieldRoutineID))
-}
-
-// RoutineIDNotNil applies the NotNil predicate on the "routine_id" field.
-func RoutineIDNotNil() predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldNotNull(FieldRoutineID))
-}
-
 // RoutineIDEqualFold applies the EqualFold predicate on the "routine_id" field.
 func RoutineIDEqualFold(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEqualFold(FieldRoutineID, v))
@@ -261,16 +251,6 @@ func ExerciseIDHasPrefix(v string) predicate.RoutineExercise {
 // ExerciseIDHasSuffix applies the HasSuffix predicate on the "exercise_id" field.
 func ExerciseIDHasSuffix(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldExerciseID, v))
-}
-
-// ExerciseIDIsNil applies the IsNil predicate on the "exercise_id" field.
-func ExerciseIDIsNil() predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldIsNull(FieldExerciseID))
-}
-
-// ExerciseIDNotNil applies the NotNil predicate on the "exercise_id" field.
-func ExerciseIDNotNil() predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldNotNull(FieldExerciseID))
 }
 
 // ExerciseIDEqualFold applies the EqualFold predicate on the "exercise_id" field.
@@ -363,7 +343,7 @@ func HasRoutines() predicate.RoutineExercise {
 	return predicate.RoutineExercise(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, RoutinesTable, RoutinesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, RoutinesTable, RoutinesColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -386,7 +366,7 @@ func HasExercises() predicate.RoutineExercise {
 	return predicate.RoutineExercise(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, ExercisesTable, ExercisesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, ExercisesTable, ExercisesColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})

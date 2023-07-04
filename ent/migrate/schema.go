@@ -113,8 +113,8 @@ var (
 		{Name: "id", Type: field.TypeString},
 		{Name: "rest_timer", Type: field.TypeInt, Nullable: true},
 		{Name: "sets", Type: field.TypeJSON},
-		{Name: "exercise_id", Type: field.TypeString, Nullable: true},
-		{Name: "routine_id", Type: field.TypeString, Nullable: true},
+		{Name: "routine_id", Type: field.TypeString},
+		{Name: "exercise_id", Type: field.TypeString},
 		{Name: "user_id", Type: field.TypeString, Nullable: true},
 	}
 	// RoutineExercisesTable holds the schema information for the "routine_exercises" table.
@@ -124,15 +124,15 @@ var (
 		PrimaryKey: []*schema.Column{RoutineExercisesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "routine_exercises_exercises_routine_exercises",
+				Symbol:     "routine_exercises_routines_routines",
 				Columns:    []*schema.Column{RoutineExercisesColumns[3]},
-				RefColumns: []*schema.Column{ExercisesColumns[0]},
+				RefColumns: []*schema.Column{RoutinesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
-				Symbol:     "routine_exercises_routines_routine_exercises",
+				Symbol:     "routine_exercises_exercises_exercises",
 				Columns:    []*schema.Column{RoutineExercisesColumns[4]},
-				RefColumns: []*schema.Column{RoutinesColumns[0]},
+				RefColumns: []*schema.Column{ExercisesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
@@ -140,6 +140,18 @@ var (
 				Columns:    []*schema.Column{RoutineExercisesColumns[5]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "routineexercise_routine_id",
+				Unique:  true,
+				Columns: []*schema.Column{RoutineExercisesColumns[3]},
+			},
+			{
+				Name:    "routineexercise_routine_id_exercise_id",
+				Unique:  true,
+				Columns: []*schema.Column{RoutineExercisesColumns[3], RoutineExercisesColumns[4]},
 			},
 		},
 	}
@@ -277,8 +289,8 @@ func init() {
 	ExercisesTable.ForeignKeys[2].RefTable = MusclesGroupsTable
 	ExercisesTable.ForeignKeys[3].RefTable = UsersTable
 	RoutinesTable.ForeignKeys[0].RefTable = UsersTable
-	RoutineExercisesTable.ForeignKeys[0].RefTable = ExercisesTable
-	RoutineExercisesTable.ForeignKeys[1].RefTable = RoutinesTable
+	RoutineExercisesTable.ForeignKeys[0].RefTable = RoutinesTable
+	RoutineExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
 	RoutineExercisesTable.ForeignKeys[2].RefTable = UsersTable
 	TokensTable.ForeignKeys[0].RefTable = UsersTable
 	WorkoutsTable.ForeignKeys[0].RefTable = UsersTable

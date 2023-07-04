@@ -16,6 +16,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -28,12 +29,13 @@ type ExerciseQuery struct {
 	order                []exercise.OrderOption
 	inters               []Interceptor
 	predicates           []predicate.Exercise
-	withRoutineExercises *RoutineExerciseQuery
 	withWorkoutLogs      *WorkoutLogQuery
 	withUsers            *UserQuery
 	withEquipments       *EquipmentQuery
 	withMusclesGroups    *MusclesGroupQuery
 	withExerciseTypes    *ExerciseTypeQuery
+	withRoutines         *RoutineQuery
+	withRoutineExercises *RoutineExerciseQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -68,28 +70,6 @@ func (eq *ExerciseQuery) Unique(unique bool) *ExerciseQuery {
 func (eq *ExerciseQuery) Order(o ...exercise.OrderOption) *ExerciseQuery {
 	eq.order = append(eq.order, o...)
 	return eq
-}
-
-// QueryRoutineExercises chains the current query on the "routine_exercises" edge.
-func (eq *ExerciseQuery) QueryRoutineExercises() *RoutineExerciseQuery {
-	query := (&RoutineExerciseClient{config: eq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := eq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := eq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(exercise.Table, exercise.FieldID, selector),
-			sqlgraph.To(routineexercise.Table, routineexercise.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, exercise.RoutineExercisesTable, exercise.RoutineExercisesColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
 }
 
 // QueryWorkoutLogs chains the current query on the "workout_logs" edge.
@@ -195,6 +175,50 @@ func (eq *ExerciseQuery) QueryExerciseTypes() *ExerciseTypeQuery {
 			sqlgraph.From(exercise.Table, exercise.FieldID, selector),
 			sqlgraph.To(exercisetype.Table, exercisetype.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, exercise.ExerciseTypesTable, exercise.ExerciseTypesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryRoutines chains the current query on the "routines" edge.
+func (eq *ExerciseQuery) QueryRoutines() *RoutineQuery {
+	query := (&RoutineClient{config: eq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(exercise.Table, exercise.FieldID, selector),
+			sqlgraph.To(routine.Table, routine.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.RoutinesTable, exercise.RoutinesPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryRoutineExercises chains the current query on the "routine_exercises" edge.
+func (eq *ExerciseQuery) QueryRoutineExercises() *RoutineExerciseQuery {
+	query := (&RoutineExerciseClient{config: eq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := eq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := eq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(exercise.Table, exercise.FieldID, selector),
+			sqlgraph.To(routineexercise.Table, routineexercise.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, exercise.RoutineExercisesTable, exercise.RoutineExercisesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -394,27 +418,17 @@ func (eq *ExerciseQuery) Clone() *ExerciseQuery {
 		order:                append([]exercise.OrderOption{}, eq.order...),
 		inters:               append([]Interceptor{}, eq.inters...),
 		predicates:           append([]predicate.Exercise{}, eq.predicates...),
-		withRoutineExercises: eq.withRoutineExercises.Clone(),
 		withWorkoutLogs:      eq.withWorkoutLogs.Clone(),
 		withUsers:            eq.withUsers.Clone(),
 		withEquipments:       eq.withEquipments.Clone(),
 		withMusclesGroups:    eq.withMusclesGroups.Clone(),
 		withExerciseTypes:    eq.withExerciseTypes.Clone(),
+		withRoutines:         eq.withRoutines.Clone(),
+		withRoutineExercises: eq.withRoutineExercises.Clone(),
 		// clone intermediate query.
 		sql:  eq.sql.Clone(),
 		path: eq.path,
 	}
-}
-
-// WithRoutineExercises tells the query-builder to eager-load the nodes that are connected to
-// the "routine_exercises" edge. The optional arguments are used to configure the query builder of the edge.
-func (eq *ExerciseQuery) WithRoutineExercises(opts ...func(*RoutineExerciseQuery)) *ExerciseQuery {
-	query := (&RoutineExerciseClient{config: eq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	eq.withRoutineExercises = query
-	return eq
 }
 
 // WithWorkoutLogs tells the query-builder to eager-load the nodes that are connected to
@@ -469,6 +483,28 @@ func (eq *ExerciseQuery) WithExerciseTypes(opts ...func(*ExerciseTypeQuery)) *Ex
 		opt(query)
 	}
 	eq.withExerciseTypes = query
+	return eq
+}
+
+// WithRoutines tells the query-builder to eager-load the nodes that are connected to
+// the "routines" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *ExerciseQuery) WithRoutines(opts ...func(*RoutineQuery)) *ExerciseQuery {
+	query := (&RoutineClient{config: eq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withRoutines = query
+	return eq
+}
+
+// WithRoutineExercises tells the query-builder to eager-load the nodes that are connected to
+// the "routine_exercises" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *ExerciseQuery) WithRoutineExercises(opts ...func(*RoutineExerciseQuery)) *ExerciseQuery {
+	query := (&RoutineExerciseClient{config: eq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	eq.withRoutineExercises = query
 	return eq
 }
 
@@ -550,13 +586,14 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 	var (
 		nodes       = []*Exercise{}
 		_spec       = eq.querySpec()
-		loadedTypes = [6]bool{
-			eq.withRoutineExercises != nil,
+		loadedTypes = [7]bool{
 			eq.withWorkoutLogs != nil,
 			eq.withUsers != nil,
 			eq.withEquipments != nil,
 			eq.withMusclesGroups != nil,
 			eq.withExerciseTypes != nil,
+			eq.withRoutines != nil,
+			eq.withRoutineExercises != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
@@ -576,13 +613,6 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 	}
 	if len(nodes) == 0 {
 		return nodes, nil
-	}
-	if query := eq.withRoutineExercises; query != nil {
-		if err := eq.loadRoutineExercises(ctx, query, nodes,
-			func(n *Exercise) { n.Edges.RoutineExercises = []*RoutineExercise{} },
-			func(n *Exercise, e *RoutineExercise) { n.Edges.RoutineExercises = append(n.Edges.RoutineExercises, e) }); err != nil {
-			return nil, err
-		}
 	}
 	if query := eq.withWorkoutLogs; query != nil {
 		if err := eq.loadWorkoutLogs(ctx, query, nodes,
@@ -615,39 +645,23 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 			return nil, err
 		}
 	}
+	if query := eq.withRoutines; query != nil {
+		if err := eq.loadRoutines(ctx, query, nodes,
+			func(n *Exercise) { n.Edges.Routines = []*Routine{} },
+			func(n *Exercise, e *Routine) { n.Edges.Routines = append(n.Edges.Routines, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := eq.withRoutineExercises; query != nil {
+		if err := eq.loadRoutineExercises(ctx, query, nodes,
+			func(n *Exercise) { n.Edges.RoutineExercises = []*RoutineExercise{} },
+			func(n *Exercise, e *RoutineExercise) { n.Edges.RoutineExercises = append(n.Edges.RoutineExercises, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
-func (eq *ExerciseQuery) loadRoutineExercises(ctx context.Context, query *RoutineExerciseQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *RoutineExercise)) error {
-	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Exercise)
-	for i := range nodes {
-		fks = append(fks, nodes[i].ID)
-		nodeids[nodes[i].ID] = nodes[i]
-		if init != nil {
-			init(nodes[i])
-		}
-	}
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(routineexercise.FieldExerciseID)
-	}
-	query.Where(predicate.RoutineExercise(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(exercise.RoutineExercisesColumn), fks...))
-	}))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		fk := n.ExerciseID
-		node, ok := nodeids[fk]
-		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "exercise_id" returned %v for node %v`, fk, n.ID)
-		}
-		assign(node, n)
-	}
-	return nil
-}
 func (eq *ExerciseQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *WorkoutLog)) error {
 	fks := make([]driver.Value, 0, len(nodes))
 	nodeids := make(map[string]*Exercise)
@@ -794,6 +808,97 @@ func (eq *ExerciseQuery) loadExerciseTypes(ctx context.Context, query *ExerciseT
 		for i := range nodes {
 			assign(nodes[i], n)
 		}
+	}
+	return nil
+}
+func (eq *ExerciseQuery) loadRoutines(ctx context.Context, query *RoutineQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *Routine)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[string]*Exercise)
+	nids := make(map[string]map[*Exercise]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
+		}
+	}
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(exercise.RoutinesTable)
+		s.Join(joinT).On(s.C(routine.FieldID), joinT.C(exercise.RoutinesPrimaryKey[0]))
+		s.Where(sql.InValues(joinT.C(exercise.RoutinesPrimaryKey[1]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(exercise.RoutinesPrimaryKey[1]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
+	}
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(sql.NullString)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := values[0].(*sql.NullString).String
+				inValue := values[1].(*sql.NullString).String
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Exercise]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Routine](ctx, query, qr, query.inters)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected "routines" node returned %v`, n.ID)
+		}
+		for kn := range nodes {
+			assign(kn, n)
+		}
+	}
+	return nil
+}
+func (eq *ExerciseQuery) loadRoutineExercises(ctx context.Context, query *RoutineExerciseQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *RoutineExercise)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[string]*Exercise)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(routineexercise.FieldExerciseID)
+	}
+	query.Where(predicate.RoutineExercise(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(exercise.RoutineExercisesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.ExerciseID
+		node, ok := nodeids[fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "exercise_id" returned %v for node %v`, fk, n.ID)
+		}
+		assign(node, n)
 	}
 	return nil
 }

@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
@@ -55,19 +56,19 @@ func (rc *RoutineCreate) SetNillableID(s *string) *RoutineCreate {
 	return rc
 }
 
-// AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (rc *RoutineCreate) AddRoutineExerciseIDs(ids ...string) *RoutineCreate {
-	rc.mutation.AddRoutineExerciseIDs(ids...)
+// AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
+func (rc *RoutineCreate) AddExerciseIDs(ids ...string) *RoutineCreate {
+	rc.mutation.AddExerciseIDs(ids...)
 	return rc
 }
 
-// AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
-func (rc *RoutineCreate) AddRoutineExercises(r ...*RoutineExercise) *RoutineCreate {
-	ids := make([]string, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// AddExercises adds the "exercises" edges to the Exercise entity.
+func (rc *RoutineCreate) AddExercises(e ...*Exercise) *RoutineCreate {
+	ids := make([]string, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
-	return rc.AddRoutineExerciseIDs(ids...)
+	return rc.AddExerciseIDs(ids...)
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
@@ -87,6 +88,21 @@ func (rc *RoutineCreate) SetNillableUsersID(id *string) *RoutineCreate {
 // SetUsers sets the "users" edge to the User entity.
 func (rc *RoutineCreate) SetUsers(u *User) *RoutineCreate {
 	return rc.SetUsersID(u.ID)
+}
+
+// AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
+func (rc *RoutineCreate) AddRoutineExerciseIDs(ids ...string) *RoutineCreate {
+	rc.mutation.AddRoutineExerciseIDs(ids...)
+	return rc
+}
+
+// AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
+func (rc *RoutineCreate) AddRoutineExercises(r ...*RoutineExercise) *RoutineCreate {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return rc.AddRoutineExerciseIDs(ids...)
 }
 
 // Mutation returns the RoutineMutation object of the builder.
@@ -174,19 +190,26 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if nodes := rc.mutation.RoutineExercisesIDs(); len(nodes) > 0 {
+	if nodes := rc.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   routine.RoutineExercisesTable,
-			Columns: []string{routine.RoutineExercisesColumn},
+			Table:   routine.ExercisesTable,
+			Columns: routine.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoutineExerciseCreate{config: rc.config, mutation: newRoutineExerciseMutation(rc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
@@ -205,6 +228,22 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.UserID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := rc.mutation.RoutineExercisesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   routine.RoutineExercisesTable,
+			Columns: []string{routine.RoutineExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

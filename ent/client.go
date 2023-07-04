@@ -497,22 +497,6 @@ func (c *ExerciseClient) GetX(ctx context.Context, id string) *Exercise {
 	return obj
 }
 
-// QueryRoutineExercises queries the routine_exercises edge of a Exercise.
-func (c *ExerciseClient) QueryRoutineExercises(e *Exercise) *RoutineExerciseQuery {
-	query := (&RoutineExerciseClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := e.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(exercise.Table, exercise.FieldID, id),
-			sqlgraph.To(routineexercise.Table, routineexercise.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, exercise.RoutineExercisesTable, exercise.RoutineExercisesColumn),
-		)
-		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryWorkoutLogs queries the workout_logs edge of a Exercise.
 func (c *ExerciseClient) QueryWorkoutLogs(e *Exercise) *WorkoutLogQuery {
 	query := (&WorkoutLogClient{config: c.config}).Query()
@@ -586,6 +570,38 @@ func (c *ExerciseClient) QueryExerciseTypes(e *Exercise) *ExerciseTypeQuery {
 			sqlgraph.From(exercise.Table, exercise.FieldID, id),
 			sqlgraph.To(exercisetype.Table, exercisetype.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, exercise.ExerciseTypesTable, exercise.ExerciseTypesColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryRoutines queries the routines edge of a Exercise.
+func (c *ExerciseClient) QueryRoutines(e *Exercise) *RoutineQuery {
+	query := (&RoutineClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(exercise.Table, exercise.FieldID, id),
+			sqlgraph.To(routine.Table, routine.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.RoutinesTable, exercise.RoutinesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryRoutineExercises queries the routine_exercises edge of a Exercise.
+func (c *ExerciseClient) QueryRoutineExercises(e *Exercise) *RoutineExerciseQuery {
+	query := (&RoutineExerciseClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(exercise.Table, exercise.FieldID, id),
+			sqlgraph.To(routineexercise.Table, routineexercise.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, exercise.RoutineExercisesTable, exercise.RoutineExercisesColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -979,15 +995,15 @@ func (c *RoutineClient) GetX(ctx context.Context, id string) *Routine {
 	return obj
 }
 
-// QueryRoutineExercises queries the routine_exercises edge of a Routine.
-func (c *RoutineClient) QueryRoutineExercises(r *Routine) *RoutineExerciseQuery {
-	query := (&RoutineExerciseClient{config: c.config}).Query()
+// QueryExercises queries the exercises edge of a Routine.
+func (c *RoutineClient) QueryExercises(r *Routine) *ExerciseQuery {
+	query := (&ExerciseClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := r.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(routine.Table, routine.FieldID, id),
-			sqlgraph.To(routineexercise.Table, routineexercise.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, routine.RoutineExercisesTable, routine.RoutineExercisesColumn),
+			sqlgraph.To(exercise.Table, exercise.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, routine.ExercisesTable, routine.ExercisesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -1004,6 +1020,22 @@ func (c *RoutineClient) QueryUsers(r *Routine) *UserQuery {
 			sqlgraph.From(routine.Table, routine.FieldID, id),
 			sqlgraph.To(user.Table, user.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, routine.UsersTable, routine.UsersColumn),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryRoutineExercises queries the routine_exercises edge of a Routine.
+func (c *RoutineClient) QueryRoutineExercises(r *Routine) *RoutineExerciseQuery {
+	query := (&RoutineExerciseClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(routine.Table, routine.FieldID, id),
+			sqlgraph.To(routineexercise.Table, routineexercise.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, routine.RoutineExercisesTable, routine.RoutineExercisesColumn),
 		)
 		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
 		return fromV, nil
@@ -1137,7 +1169,7 @@ func (c *RoutineExerciseClient) QueryRoutines(re *RoutineExercise) *RoutineQuery
 		step := sqlgraph.NewStep(
 			sqlgraph.From(routineexercise.Table, routineexercise.FieldID, id),
 			sqlgraph.To(routine.Table, routine.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, routineexercise.RoutinesTable, routineexercise.RoutinesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, routineexercise.RoutinesTable, routineexercise.RoutinesColumn),
 		)
 		fromV = sqlgraph.Neighbors(re.driver.Dialect(), step)
 		return fromV, nil
@@ -1153,7 +1185,7 @@ func (c *RoutineExerciseClient) QueryExercises(re *RoutineExercise) *ExerciseQue
 		step := sqlgraph.NewStep(
 			sqlgraph.From(routineexercise.Table, routineexercise.FieldID, id),
 			sqlgraph.To(exercise.Table, exercise.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, routineexercise.ExercisesTable, routineexercise.ExercisesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, routineexercise.ExercisesTable, routineexercise.ExercisesColumn),
 		)
 		fromV = sqlgraph.Neighbors(re.driver.Dialect(), step)
 		return fromV, nil

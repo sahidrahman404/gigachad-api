@@ -2,8 +2,10 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"entgo.io/ent/schema/index"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
@@ -18,8 +20,8 @@ func (RoutineExercise) Fields() []ent.Field {
 		field.String("id").DefaultFunc(generateKSUID),
 		field.Int("rest_timer").Optional(),
 		field.JSON("sets", &schematype.Sets{}),
-		field.String("routine_id").Optional(),
-		field.String("exercise_id").Optional(),
+		field.String("routine_id"),
+		field.String("exercise_id"),
 		field.String("user_id").Optional(),
 	}
 }
@@ -27,8 +29,16 @@ func (RoutineExercise) Fields() []ent.Field {
 // Edges of the RoutineExercise.
 func (RoutineExercise) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("routines", Routine.Type).Ref("routine_exercises").Field("routine_id").Unique(),
-		edge.From("exercises", Exercise.Type).Ref("routine_exercises").Field("exercise_id").Unique(),
+		edge.To("routines", Routine.Type).Field("routine_id").Unique().Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("exercises", Exercise.Type).Field("exercise_id").Unique().Required().
+			Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.From("users", User.Type).Ref("routine_exercises").Field("user_id").Unique(),
+	}
+}
+
+func (RoutineExercise) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("routine_id").Unique(),
 	}
 }

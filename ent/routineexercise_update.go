@@ -70,37 +70,9 @@ func (reu *RoutineExerciseUpdate) SetRoutineID(s string) *RoutineExerciseUpdate 
 	return reu
 }
 
-// SetNillableRoutineID sets the "routine_id" field if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableRoutineID(s *string) *RoutineExerciseUpdate {
-	if s != nil {
-		reu.SetRoutineID(*s)
-	}
-	return reu
-}
-
-// ClearRoutineID clears the value of the "routine_id" field.
-func (reu *RoutineExerciseUpdate) ClearRoutineID() *RoutineExerciseUpdate {
-	reu.mutation.ClearRoutineID()
-	return reu
-}
-
 // SetExerciseID sets the "exercise_id" field.
 func (reu *RoutineExerciseUpdate) SetExerciseID(s string) *RoutineExerciseUpdate {
 	reu.mutation.SetExerciseID(s)
-	return reu
-}
-
-// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableExerciseID(s *string) *RoutineExerciseUpdate {
-	if s != nil {
-		reu.SetExerciseID(*s)
-	}
-	return reu
-}
-
-// ClearExerciseID clears the value of the "exercise_id" field.
-func (reu *RoutineExerciseUpdate) ClearExerciseID() *RoutineExerciseUpdate {
-	reu.mutation.ClearExerciseID()
 	return reu
 }
 
@@ -130,14 +102,6 @@ func (reu *RoutineExerciseUpdate) SetRoutinesID(id string) *RoutineExerciseUpdat
 	return reu
 }
 
-// SetNillableRoutinesID sets the "routines" edge to the Routine entity by ID if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableRoutinesID(id *string) *RoutineExerciseUpdate {
-	if id != nil {
-		reu = reu.SetRoutinesID(*id)
-	}
-	return reu
-}
-
 // SetRoutines sets the "routines" edge to the Routine entity.
 func (reu *RoutineExerciseUpdate) SetRoutines(r *Routine) *RoutineExerciseUpdate {
 	return reu.SetRoutinesID(r.ID)
@@ -146,14 +110,6 @@ func (reu *RoutineExerciseUpdate) SetRoutines(r *Routine) *RoutineExerciseUpdate
 // SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
 func (reu *RoutineExerciseUpdate) SetExercisesID(id string) *RoutineExerciseUpdate {
 	reu.mutation.SetExercisesID(id)
-	return reu
-}
-
-// SetNillableExercisesID sets the "exercises" edge to the Exercise entity by ID if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableExercisesID(id *string) *RoutineExerciseUpdate {
-	if id != nil {
-		reu = reu.SetExercisesID(*id)
-	}
 	return reu
 }
 
@@ -231,7 +187,21 @@ func (reu *RoutineExerciseUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (reu *RoutineExerciseUpdate) check() error {
+	if _, ok := reu.mutation.RoutinesID(); reu.mutation.RoutinesCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "RoutineExercise.routines"`)
+	}
+	if _, ok := reu.mutation.ExercisesID(); reu.mutation.ExercisesCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "RoutineExercise.exercises"`)
+	}
+	return nil
+}
+
 func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := reu.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(routineexercise.Table, routineexercise.Columns, sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString))
 	if ps := reu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -255,7 +225,7 @@ func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error
 	if reu.mutation.RoutinesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.RoutinesTable,
 			Columns: []string{routineexercise.RoutinesColumn},
 			Bidi:    false,
@@ -268,7 +238,7 @@ func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error
 	if nodes := reu.mutation.RoutinesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.RoutinesTable,
 			Columns: []string{routineexercise.RoutinesColumn},
 			Bidi:    false,
@@ -284,7 +254,7 @@ func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error
 	if reu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.ExercisesTable,
 			Columns: []string{routineexercise.ExercisesColumn},
 			Bidi:    false,
@@ -297,7 +267,7 @@ func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error
 	if nodes := reu.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.ExercisesTable,
 			Columns: []string{routineexercise.ExercisesColumn},
 			Bidi:    false,
@@ -398,37 +368,9 @@ func (reuo *RoutineExerciseUpdateOne) SetRoutineID(s string) *RoutineExerciseUpd
 	return reuo
 }
 
-// SetNillableRoutineID sets the "routine_id" field if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableRoutineID(s *string) *RoutineExerciseUpdateOne {
-	if s != nil {
-		reuo.SetRoutineID(*s)
-	}
-	return reuo
-}
-
-// ClearRoutineID clears the value of the "routine_id" field.
-func (reuo *RoutineExerciseUpdateOne) ClearRoutineID() *RoutineExerciseUpdateOne {
-	reuo.mutation.ClearRoutineID()
-	return reuo
-}
-
 // SetExerciseID sets the "exercise_id" field.
 func (reuo *RoutineExerciseUpdateOne) SetExerciseID(s string) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetExerciseID(s)
-	return reuo
-}
-
-// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableExerciseID(s *string) *RoutineExerciseUpdateOne {
-	if s != nil {
-		reuo.SetExerciseID(*s)
-	}
-	return reuo
-}
-
-// ClearExerciseID clears the value of the "exercise_id" field.
-func (reuo *RoutineExerciseUpdateOne) ClearExerciseID() *RoutineExerciseUpdateOne {
-	reuo.mutation.ClearExerciseID()
 	return reuo
 }
 
@@ -458,14 +400,6 @@ func (reuo *RoutineExerciseUpdateOne) SetRoutinesID(id string) *RoutineExerciseU
 	return reuo
 }
 
-// SetNillableRoutinesID sets the "routines" edge to the Routine entity by ID if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableRoutinesID(id *string) *RoutineExerciseUpdateOne {
-	if id != nil {
-		reuo = reuo.SetRoutinesID(*id)
-	}
-	return reuo
-}
-
 // SetRoutines sets the "routines" edge to the Routine entity.
 func (reuo *RoutineExerciseUpdateOne) SetRoutines(r *Routine) *RoutineExerciseUpdateOne {
 	return reuo.SetRoutinesID(r.ID)
@@ -474,14 +408,6 @@ func (reuo *RoutineExerciseUpdateOne) SetRoutines(r *Routine) *RoutineExerciseUp
 // SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
 func (reuo *RoutineExerciseUpdateOne) SetExercisesID(id string) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetExercisesID(id)
-	return reuo
-}
-
-// SetNillableExercisesID sets the "exercises" edge to the Exercise entity by ID if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableExercisesID(id *string) *RoutineExerciseUpdateOne {
-	if id != nil {
-		reuo = reuo.SetExercisesID(*id)
-	}
 	return reuo
 }
 
@@ -572,7 +498,21 @@ func (reuo *RoutineExerciseUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (reuo *RoutineExerciseUpdateOne) check() error {
+	if _, ok := reuo.mutation.RoutinesID(); reuo.mutation.RoutinesCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "RoutineExercise.routines"`)
+	}
+	if _, ok := reuo.mutation.ExercisesID(); reuo.mutation.ExercisesCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "RoutineExercise.exercises"`)
+	}
+	return nil
+}
+
 func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *RoutineExercise, err error) {
+	if err := reuo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(routineexercise.Table, routineexercise.Columns, sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString))
 	id, ok := reuo.mutation.ID()
 	if !ok {
@@ -613,7 +553,7 @@ func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Routi
 	if reuo.mutation.RoutinesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.RoutinesTable,
 			Columns: []string{routineexercise.RoutinesColumn},
 			Bidi:    false,
@@ -626,7 +566,7 @@ func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Routi
 	if nodes := reuo.mutation.RoutinesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.RoutinesTable,
 			Columns: []string{routineexercise.RoutinesColumn},
 			Bidi:    false,
@@ -642,7 +582,7 @@ func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Routi
 	if reuo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.ExercisesTable,
 			Columns: []string{routineexercise.ExercisesColumn},
 			Bidi:    false,
@@ -655,7 +595,7 @@ func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Routi
 	if nodes := reuo.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.ExercisesTable,
 			Columns: []string{routineexercise.ExercisesColumn},
 			Bidi:    false,

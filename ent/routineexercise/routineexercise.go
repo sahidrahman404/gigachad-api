@@ -130,14 +130,14 @@ func newRoutinesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(RoutinesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, RoutinesTable, RoutinesColumn),
+		sqlgraph.Edge(sqlgraph.M2O, false, RoutinesTable, RoutinesColumn),
 	)
 }
 func newExercisesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ExercisesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, ExercisesTable, ExercisesColumn),
+		sqlgraph.Edge(sqlgraph.M2O, false, ExercisesTable, ExercisesColumn),
 	)
 }
 func newUsersStep() *sqlgraph.Step {

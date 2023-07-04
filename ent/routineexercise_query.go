@@ -77,7 +77,7 @@ func (req *RoutineExerciseQuery) QueryRoutines() *RoutineQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(routineexercise.Table, routineexercise.FieldID, selector),
 			sqlgraph.To(routine.Table, routine.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, routineexercise.RoutinesTable, routineexercise.RoutinesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, routineexercise.RoutinesTable, routineexercise.RoutinesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(req.driver.Dialect(), step)
 		return fromU, nil
@@ -99,7 +99,7 @@ func (req *RoutineExerciseQuery) QueryExercises() *ExerciseQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(routineexercise.Table, routineexercise.FieldID, selector),
 			sqlgraph.To(exercise.Table, exercise.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, routineexercise.ExercisesTable, routineexercise.ExercisesColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, routineexercise.ExercisesTable, routineexercise.ExercisesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(req.driver.Dialect(), step)
 		return fromU, nil

@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
@@ -55,19 +56,19 @@ func (ru *RoutineUpdate) ClearUserID() *RoutineUpdate {
 	return ru
 }
 
-// AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (ru *RoutineUpdate) AddRoutineExerciseIDs(ids ...string) *RoutineUpdate {
-	ru.mutation.AddRoutineExerciseIDs(ids...)
+// AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
+func (ru *RoutineUpdate) AddExerciseIDs(ids ...string) *RoutineUpdate {
+	ru.mutation.AddExerciseIDs(ids...)
 	return ru
 }
 
-// AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
-func (ru *RoutineUpdate) AddRoutineExercises(r ...*RoutineExercise) *RoutineUpdate {
-	ids := make([]string, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// AddExercises adds the "exercises" edges to the Exercise entity.
+func (ru *RoutineUpdate) AddExercises(e ...*Exercise) *RoutineUpdate {
+	ids := make([]string, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
-	return ru.AddRoutineExerciseIDs(ids...)
+	return ru.AddExerciseIDs(ids...)
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
@@ -89,9 +90,51 @@ func (ru *RoutineUpdate) SetUsers(u *User) *RoutineUpdate {
 	return ru.SetUsersID(u.ID)
 }
 
+// AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
+func (ru *RoutineUpdate) AddRoutineExerciseIDs(ids ...string) *RoutineUpdate {
+	ru.mutation.AddRoutineExerciseIDs(ids...)
+	return ru
+}
+
+// AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
+func (ru *RoutineUpdate) AddRoutineExercises(r ...*RoutineExercise) *RoutineUpdate {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ru.AddRoutineExerciseIDs(ids...)
+}
+
 // Mutation returns the RoutineMutation object of the builder.
 func (ru *RoutineUpdate) Mutation() *RoutineMutation {
 	return ru.mutation
+}
+
+// ClearExercises clears all "exercises" edges to the Exercise entity.
+func (ru *RoutineUpdate) ClearExercises() *RoutineUpdate {
+	ru.mutation.ClearExercises()
+	return ru
+}
+
+// RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
+func (ru *RoutineUpdate) RemoveExerciseIDs(ids ...string) *RoutineUpdate {
+	ru.mutation.RemoveExerciseIDs(ids...)
+	return ru
+}
+
+// RemoveExercises removes "exercises" edges to Exercise entities.
+func (ru *RoutineUpdate) RemoveExercises(e ...*Exercise) *RoutineUpdate {
+	ids := make([]string, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return ru.RemoveExerciseIDs(ids...)
+}
+
+// ClearUsers clears the "users" edge to the User entity.
+func (ru *RoutineUpdate) ClearUsers() *RoutineUpdate {
+	ru.mutation.ClearUsers()
+	return ru
 }
 
 // ClearRoutineExercises clears all "routine_exercises" edges to the RoutineExercise entity.
@@ -113,12 +156,6 @@ func (ru *RoutineUpdate) RemoveRoutineExercises(r ...*RoutineExercise) *RoutineU
 		ids[i] = r[i].ID
 	}
 	return ru.RemoveRoutineExerciseIDs(ids...)
-}
-
-// ClearUsers clears the "users" edge to the User entity.
-func (ru *RoutineUpdate) ClearUsers() *RoutineUpdate {
-	ru.mutation.ClearUsers()
-	return ru
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -160,48 +197,69 @@ func (ru *RoutineUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ru.mutation.Name(); ok {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
 	}
-	if ru.mutation.RoutineExercisesCleared() {
+	if ru.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   routine.RoutineExercisesTable,
-			Columns: []string{routine.RoutineExercisesColumn},
+			Table:   routine.ExercisesTable,
+			Columns: routine.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
+		}
+		createE := &RoutineExerciseCreate{config: ru.config, mutation: newRoutineExerciseMutation(ru.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ru.mutation.RemovedRoutineExercisesIDs(); len(nodes) > 0 && !ru.mutation.RoutineExercisesCleared() {
+	if nodes := ru.mutation.RemovedExercisesIDs(); len(nodes) > 0 && !ru.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   routine.RoutineExercisesTable,
-			Columns: []string{routine.RoutineExercisesColumn},
+			Table:   routine.ExercisesTable,
+			Columns: routine.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		createE := &RoutineExerciseCreate{config: ru.config, mutation: newRoutineExerciseMutation(ru.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ru.mutation.RoutineExercisesIDs(); len(nodes) > 0 {
+	if nodes := ru.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   routine.RoutineExercisesTable,
-			Columns: []string{routine.RoutineExercisesColumn},
+			Table:   routine.ExercisesTable,
+			Columns: routine.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoutineExerciseCreate{config: ru.config, mutation: newRoutineExerciseMutation(ru.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -227,6 +285,51 @@ func (ru *RoutineUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ru.mutation.RoutineExercisesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   routine.RoutineExercisesTable,
+			Columns: []string{routine.RoutineExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RemovedRoutineExercisesIDs(); len(nodes) > 0 && !ru.mutation.RoutineExercisesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   routine.RoutineExercisesTable,
+			Columns: []string{routine.RoutineExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ru.mutation.RoutineExercisesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   routine.RoutineExercisesTable,
+			Columns: []string{routine.RoutineExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -280,19 +383,19 @@ func (ruo *RoutineUpdateOne) ClearUserID() *RoutineUpdateOne {
 	return ruo
 }
 
-// AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (ruo *RoutineUpdateOne) AddRoutineExerciseIDs(ids ...string) *RoutineUpdateOne {
-	ruo.mutation.AddRoutineExerciseIDs(ids...)
+// AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
+func (ruo *RoutineUpdateOne) AddExerciseIDs(ids ...string) *RoutineUpdateOne {
+	ruo.mutation.AddExerciseIDs(ids...)
 	return ruo
 }
 
-// AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
-func (ruo *RoutineUpdateOne) AddRoutineExercises(r ...*RoutineExercise) *RoutineUpdateOne {
-	ids := make([]string, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
+// AddExercises adds the "exercises" edges to the Exercise entity.
+func (ruo *RoutineUpdateOne) AddExercises(e ...*Exercise) *RoutineUpdateOne {
+	ids := make([]string, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
-	return ruo.AddRoutineExerciseIDs(ids...)
+	return ruo.AddExerciseIDs(ids...)
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
@@ -314,9 +417,51 @@ func (ruo *RoutineUpdateOne) SetUsers(u *User) *RoutineUpdateOne {
 	return ruo.SetUsersID(u.ID)
 }
 
+// AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
+func (ruo *RoutineUpdateOne) AddRoutineExerciseIDs(ids ...string) *RoutineUpdateOne {
+	ruo.mutation.AddRoutineExerciseIDs(ids...)
+	return ruo
+}
+
+// AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
+func (ruo *RoutineUpdateOne) AddRoutineExercises(r ...*RoutineExercise) *RoutineUpdateOne {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ruo.AddRoutineExerciseIDs(ids...)
+}
+
 // Mutation returns the RoutineMutation object of the builder.
 func (ruo *RoutineUpdateOne) Mutation() *RoutineMutation {
 	return ruo.mutation
+}
+
+// ClearExercises clears all "exercises" edges to the Exercise entity.
+func (ruo *RoutineUpdateOne) ClearExercises() *RoutineUpdateOne {
+	ruo.mutation.ClearExercises()
+	return ruo
+}
+
+// RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
+func (ruo *RoutineUpdateOne) RemoveExerciseIDs(ids ...string) *RoutineUpdateOne {
+	ruo.mutation.RemoveExerciseIDs(ids...)
+	return ruo
+}
+
+// RemoveExercises removes "exercises" edges to Exercise entities.
+func (ruo *RoutineUpdateOne) RemoveExercises(e ...*Exercise) *RoutineUpdateOne {
+	ids := make([]string, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return ruo.RemoveExerciseIDs(ids...)
+}
+
+// ClearUsers clears the "users" edge to the User entity.
+func (ruo *RoutineUpdateOne) ClearUsers() *RoutineUpdateOne {
+	ruo.mutation.ClearUsers()
+	return ruo
 }
 
 // ClearRoutineExercises clears all "routine_exercises" edges to the RoutineExercise entity.
@@ -338,12 +483,6 @@ func (ruo *RoutineUpdateOne) RemoveRoutineExercises(r ...*RoutineExercise) *Rout
 		ids[i] = r[i].ID
 	}
 	return ruo.RemoveRoutineExerciseIDs(ids...)
-}
-
-// ClearUsers clears the "users" edge to the User entity.
-func (ruo *RoutineUpdateOne) ClearUsers() *RoutineUpdateOne {
-	ruo.mutation.ClearUsers()
-	return ruo
 }
 
 // Where appends a list predicates to the RoutineUpdate builder.
@@ -415,48 +554,69 @@ func (ruo *RoutineUpdateOne) sqlSave(ctx context.Context) (_node *Routine, err e
 	if value, ok := ruo.mutation.Name(); ok {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
 	}
-	if ruo.mutation.RoutineExercisesCleared() {
+	if ruo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   routine.RoutineExercisesTable,
-			Columns: []string{routine.RoutineExercisesColumn},
+			Table:   routine.ExercisesTable,
+			Columns: routine.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
+		}
+		createE := &RoutineExerciseCreate{config: ruo.config, mutation: newRoutineExerciseMutation(ruo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ruo.mutation.RemovedRoutineExercisesIDs(); len(nodes) > 0 && !ruo.mutation.RoutineExercisesCleared() {
+	if nodes := ruo.mutation.RemovedExercisesIDs(); len(nodes) > 0 && !ruo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   routine.RoutineExercisesTable,
-			Columns: []string{routine.RoutineExercisesColumn},
+			Table:   routine.ExercisesTable,
+			Columns: routine.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
+		createE := &RoutineExerciseCreate{config: ruo.config, mutation: newRoutineExerciseMutation(ruo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := ruo.mutation.RoutineExercisesIDs(); len(nodes) > 0 {
+	if nodes := ruo.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
-			Table:   routine.RoutineExercisesTable,
-			Columns: []string{routine.RoutineExercisesColumn},
+			Table:   routine.ExercisesTable,
+			Columns: routine.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoutineExerciseCreate{config: ruo.config, mutation: newRoutineExerciseMutation(ruo.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
@@ -482,6 +642,51 @@ func (ruo *RoutineUpdateOne) sqlSave(ctx context.Context) (_node *Routine, err e
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if ruo.mutation.RoutineExercisesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   routine.RoutineExercisesTable,
+			Columns: []string{routine.RoutineExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RemovedRoutineExercisesIDs(); len(nodes) > 0 && !ruo.mutation.RoutineExercisesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   routine.RoutineExercisesTable,
+			Columns: []string{routine.RoutineExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := ruo.mutation.RoutineExercisesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   routine.RoutineExercisesTable,
+			Columns: []string{routine.RoutineExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

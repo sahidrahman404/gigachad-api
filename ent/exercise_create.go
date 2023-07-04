@@ -13,6 +13,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
+	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -129,21 +130,6 @@ func (ec *ExerciseCreate) SetNillableID(s *string) *ExerciseCreate {
 	return ec
 }
 
-// AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (ec *ExerciseCreate) AddRoutineExerciseIDs(ids ...string) *ExerciseCreate {
-	ec.mutation.AddRoutineExerciseIDs(ids...)
-	return ec
-}
-
-// AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
-func (ec *ExerciseCreate) AddRoutineExercises(r ...*RoutineExercise) *ExerciseCreate {
-	ids := make([]string, len(r))
-	for i := range r {
-		ids[i] = r[i].ID
-	}
-	return ec.AddRoutineExerciseIDs(ids...)
-}
-
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
 func (ec *ExerciseCreate) AddWorkoutLogIDs(ids ...string) *ExerciseCreate {
 	ec.mutation.AddWorkoutLogIDs(ids...)
@@ -233,6 +219,36 @@ func (ec *ExerciseCreate) SetNillableExerciseTypesID(id *string) *ExerciseCreate
 // SetExerciseTypes sets the "exercise_types" edge to the ExerciseType entity.
 func (ec *ExerciseCreate) SetExerciseTypes(e *ExerciseType) *ExerciseCreate {
 	return ec.SetExerciseTypesID(e.ID)
+}
+
+// AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
+func (ec *ExerciseCreate) AddRoutineIDs(ids ...string) *ExerciseCreate {
+	ec.mutation.AddRoutineIDs(ids...)
+	return ec
+}
+
+// AddRoutines adds the "routines" edges to the Routine entity.
+func (ec *ExerciseCreate) AddRoutines(r ...*Routine) *ExerciseCreate {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ec.AddRoutineIDs(ids...)
+}
+
+// AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
+func (ec *ExerciseCreate) AddRoutineExerciseIDs(ids ...string) *ExerciseCreate {
+	ec.mutation.AddRoutineExerciseIDs(ids...)
+	return ec
+}
+
+// AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
+func (ec *ExerciseCreate) AddRoutineExercises(r ...*RoutineExercise) *ExerciseCreate {
+	ids := make([]string, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return ec.AddRoutineExerciseIDs(ids...)
 }
 
 // Mutation returns the ExerciseMutation object of the builder.
@@ -332,22 +348,6 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		_spec.SetField(exercise.FieldEquipmentID, field.TypeString, value)
 		_node.EquipmentID = value
 	}
-	if nodes := ec.mutation.RoutineExercisesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   exercise.RoutineExercisesTable,
-			Columns: []string{exercise.RoutineExercisesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
 	if nodes := ec.mutation.WorkoutLogsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -430,6 +430,45 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.ExerciseTypeID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.RoutinesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   exercise.RoutinesTable,
+			Columns: exercise.RoutinesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routine.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &RoutineExerciseCreate{config: ec.config, mutation: newRoutineExerciseMutation(ec.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := ec.mutation.RoutineExercisesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   exercise.RoutineExercisesTable,
+			Columns: []string{exercise.RoutineExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

@@ -394,12 +394,12 @@ table "routine_exercises" {
     null = false
     type = json
   }
-  column "exercise_id" {
-    null = true
+  column "routine_id" {
+    null = false
     type = text
   }
-  column "routine_id" {
-    null = true
+  column "exercise_id" {
+    null = false
     type = text
   }
   column "user_id" {
@@ -415,17 +415,25 @@ table "routine_exercises" {
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  foreign_key "routine_exercises_routines_routine_exercises" {
+  foreign_key "routine_exercises_exercises_exercises" {
+    columns     = [column.exercise_id]
+    ref_columns = [table.exercises.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "routine_exercises_routines_routines" {
     columns     = [column.routine_id]
     ref_columns = [table.routines.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }
-  foreign_key "routine_exercises_exercises_routine_exercises" {
-    columns     = [column.exercise_id]
-    ref_columns = [table.exercises.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
+  index "routineexercise_routine_id" {
+    unique  = true
+    columns = [column.routine_id]
+  }
+  index "routineexercise_routine_id_exercise_id" {
+    unique  = true
+    columns = [column.routine_id, column.exercise_id]
   }
 }
 schema "main" {

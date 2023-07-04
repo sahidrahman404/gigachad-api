@@ -16,19 +16,19 @@ const (
 	FieldName = "name"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
-	// EdgeRoutineExercises holds the string denoting the routine_exercises edge name in mutations.
-	EdgeRoutineExercises = "routine_exercises"
+	// EdgeExercises holds the string denoting the exercises edge name in mutations.
+	EdgeExercises = "exercises"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
+	// EdgeRoutineExercises holds the string denoting the routine_exercises edge name in mutations.
+	EdgeRoutineExercises = "routine_exercises"
 	// Table holds the table name of the routine in the database.
 	Table = "routines"
-	// RoutineExercisesTable is the table that holds the routine_exercises relation/edge.
-	RoutineExercisesTable = "routine_exercises"
-	// RoutineExercisesInverseTable is the table name for the RoutineExercise entity.
-	// It exists in this package in order to avoid circular dependency with the "routineexercise" package.
-	RoutineExercisesInverseTable = "routine_exercises"
-	// RoutineExercisesColumn is the table column denoting the routine_exercises relation/edge.
-	RoutineExercisesColumn = "routine_id"
+	// ExercisesTable is the table that holds the exercises relation/edge. The primary key declared below.
+	ExercisesTable = "routine_exercises"
+	// ExercisesInverseTable is the table name for the Exercise entity.
+	// It exists in this package in order to avoid circular dependency with the "exercise" package.
+	ExercisesInverseTable = "exercises"
 	// UsersTable is the table that holds the users relation/edge.
 	UsersTable = "routines"
 	// UsersInverseTable is the table name for the User entity.
@@ -36,6 +36,13 @@ const (
 	UsersInverseTable = "users"
 	// UsersColumn is the table column denoting the users relation/edge.
 	UsersColumn = "user_id"
+	// RoutineExercisesTable is the table that holds the routine_exercises relation/edge.
+	RoutineExercisesTable = "routine_exercises"
+	// RoutineExercisesInverseTable is the table name for the RoutineExercise entity.
+	// It exists in this package in order to avoid circular dependency with the "routineexercise" package.
+	RoutineExercisesInverseTable = "routine_exercises"
+	// RoutineExercisesColumn is the table column denoting the routine_exercises relation/edge.
+	RoutineExercisesColumn = "routine_id"
 )
 
 // Columns holds all SQL columns for routine fields.
@@ -44,6 +51,12 @@ var Columns = []string{
 	FieldName,
 	FieldUserID,
 }
+
+var (
+	// ExercisesPrimaryKey and ExercisesColumn2 are the table columns denoting the
+	// primary key for the exercises relation (M2M).
+	ExercisesPrimaryKey = []string{"routine_id", "exercise_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
@@ -78,6 +91,27 @@ func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
+// ByExercisesCount orders the results by exercises count.
+func ByExercisesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newExercisesStep(), opts...)
+	}
+}
+
+// ByExercises orders the results by exercises terms.
+func ByExercises(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newExercisesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByUsersField orders the results by users field.
+func ByUsersField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUsersStep(), sql.OrderByField(field, opts...))
+	}
+}
+
 // ByRoutineExercisesCount orders the results by routine_exercises count.
 func ByRoutineExercisesCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -91,18 +125,11 @@ func ByRoutineExercises(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption 
 		sqlgraph.OrderByNeighborTerms(s, newRoutineExercisesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
-
-// ByUsersField orders the results by users field.
-func ByUsersField(field string, opts ...sql.OrderTermOption) OrderOption {
-	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newUsersStep(), sql.OrderByField(field, opts...))
-	}
-}
-func newRoutineExercisesStep() *sqlgraph.Step {
+func newExercisesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(RoutineExercisesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, RoutineExercisesTable, RoutineExercisesColumn),
+		sqlgraph.To(ExercisesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, false, ExercisesTable, ExercisesPrimaryKey...),
 	)
 }
 func newUsersStep() *sqlgraph.Step {
@@ -110,5 +137,12 @@ func newUsersStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(UsersInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, true, UsersTable, UsersColumn),
+	)
+}
+func newRoutineExercisesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(RoutineExercisesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, true, RoutineExercisesTable, RoutineExercisesColumn),
 	)
 }

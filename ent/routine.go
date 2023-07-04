@@ -29,22 +29,24 @@ type Routine struct {
 
 // RoutineEdges holds the relations/edges for other nodes in the graph.
 type RoutineEdges struct {
-	// RoutineExercises holds the value of the routine_exercises edge.
-	RoutineExercises []*RoutineExercise `json:"routine_exercises,omitempty"`
+	// Exercises holds the value of the exercises edge.
+	Exercises []*Exercise `json:"exercises,omitempty"`
 	// Users holds the value of the users edge.
 	Users *User `json:"users,omitempty"`
+	// RoutineExercises holds the value of the routine_exercises edge.
+	RoutineExercises []*RoutineExercise `json:"routine_exercises,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
-// RoutineExercisesOrErr returns the RoutineExercises value or an error if the edge
+// ExercisesOrErr returns the Exercises value or an error if the edge
 // was not loaded in eager-loading.
-func (e RoutineEdges) RoutineExercisesOrErr() ([]*RoutineExercise, error) {
+func (e RoutineEdges) ExercisesOrErr() ([]*Exercise, error) {
 	if e.loadedTypes[0] {
-		return e.RoutineExercises, nil
+		return e.Exercises, nil
 	}
-	return nil, &NotLoadedError{edge: "routine_exercises"}
+	return nil, &NotLoadedError{edge: "exercises"}
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -58,6 +60,15 @@ func (e RoutineEdges) UsersOrErr() (*User, error) {
 		return e.Users, nil
 	}
 	return nil, &NotLoadedError{edge: "users"}
+}
+
+// RoutineExercisesOrErr returns the RoutineExercises value or an error if the edge
+// was not loaded in eager-loading.
+func (e RoutineEdges) RoutineExercisesOrErr() ([]*RoutineExercise, error) {
+	if e.loadedTypes[2] {
+		return e.RoutineExercises, nil
+	}
+	return nil, &NotLoadedError{edge: "routine_exercises"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -113,14 +124,19 @@ func (r *Routine) Value(name string) (ent.Value, error) {
 	return r.selectValues.Get(name)
 }
 
-// QueryRoutineExercises queries the "routine_exercises" edge of the Routine entity.
-func (r *Routine) QueryRoutineExercises() *RoutineExerciseQuery {
-	return NewRoutineClient(r.config).QueryRoutineExercises(r)
+// QueryExercises queries the "exercises" edge of the Routine entity.
+func (r *Routine) QueryExercises() *ExerciseQuery {
+	return NewRoutineClient(r.config).QueryExercises(r)
 }
 
 // QueryUsers queries the "users" edge of the Routine entity.
 func (r *Routine) QueryUsers() *UserQuery {
 	return NewRoutineClient(r.config).QueryUsers(r)
+}
+
+// QueryRoutineExercises queries the "routine_exercises" edge of the Routine entity.
+func (r *Routine) QueryRoutineExercises() *RoutineExerciseQuery {
+	return NewRoutineClient(r.config).QueryRoutineExercises(r)
 }
 
 // Update returns a builder for updating this Routine.

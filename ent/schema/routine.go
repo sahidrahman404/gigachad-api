@@ -24,7 +24,9 @@ func (Routine) Fields() []ent.Field {
 // Edges of the Routine.
 func (Routine) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("routine_exercises", RoutineExercise.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("exercises", Exercise.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)).
+			Through("routine_exercises", RoutineExercise.Type),
 		edge.From("users", User.Type).Ref("routines").Field("user_id").Unique(),
 	}
 }

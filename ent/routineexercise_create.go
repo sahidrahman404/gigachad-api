@@ -49,25 +49,9 @@ func (rec *RoutineExerciseCreate) SetRoutineID(s string) *RoutineExerciseCreate 
 	return rec
 }
 
-// SetNillableRoutineID sets the "routine_id" field if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableRoutineID(s *string) *RoutineExerciseCreate {
-	if s != nil {
-		rec.SetRoutineID(*s)
-	}
-	return rec
-}
-
 // SetExerciseID sets the "exercise_id" field.
 func (rec *RoutineExerciseCreate) SetExerciseID(s string) *RoutineExerciseCreate {
 	rec.mutation.SetExerciseID(s)
-	return rec
-}
-
-// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableExerciseID(s *string) *RoutineExerciseCreate {
-	if s != nil {
-		rec.SetExerciseID(*s)
-	}
 	return rec
 }
 
@@ -105,14 +89,6 @@ func (rec *RoutineExerciseCreate) SetRoutinesID(id string) *RoutineExerciseCreat
 	return rec
 }
 
-// SetNillableRoutinesID sets the "routines" edge to the Routine entity by ID if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableRoutinesID(id *string) *RoutineExerciseCreate {
-	if id != nil {
-		rec = rec.SetRoutinesID(*id)
-	}
-	return rec
-}
-
 // SetRoutines sets the "routines" edge to the Routine entity.
 func (rec *RoutineExerciseCreate) SetRoutines(r *Routine) *RoutineExerciseCreate {
 	return rec.SetRoutinesID(r.ID)
@@ -121,14 +97,6 @@ func (rec *RoutineExerciseCreate) SetRoutines(r *Routine) *RoutineExerciseCreate
 // SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
 func (rec *RoutineExerciseCreate) SetExercisesID(id string) *RoutineExerciseCreate {
 	rec.mutation.SetExercisesID(id)
-	return rec
-}
-
-// SetNillableExercisesID sets the "exercises" edge to the Exercise entity by ID if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableExercisesID(id *string) *RoutineExerciseCreate {
-	if id != nil {
-		rec = rec.SetExercisesID(*id)
-	}
 	return rec
 }
 
@@ -202,6 +170,18 @@ func (rec *RoutineExerciseCreate) check() error {
 	if _, ok := rec.mutation.Sets(); !ok {
 		return &ValidationError{Name: "sets", err: errors.New(`ent: missing required field "RoutineExercise.sets"`)}
 	}
+	if _, ok := rec.mutation.RoutineID(); !ok {
+		return &ValidationError{Name: "routine_id", err: errors.New(`ent: missing required field "RoutineExercise.routine_id"`)}
+	}
+	if _, ok := rec.mutation.ExerciseID(); !ok {
+		return &ValidationError{Name: "exercise_id", err: errors.New(`ent: missing required field "RoutineExercise.exercise_id"`)}
+	}
+	if _, ok := rec.mutation.RoutinesID(); !ok {
+		return &ValidationError{Name: "routines", err: errors.New(`ent: missing required edge "RoutineExercise.routines"`)}
+	}
+	if _, ok := rec.mutation.ExercisesID(); !ok {
+		return &ValidationError{Name: "exercises", err: errors.New(`ent: missing required edge "RoutineExercise.exercises"`)}
+	}
 	return nil
 }
 
@@ -248,7 +228,7 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 	if nodes := rec.mutation.RoutinesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.RoutinesTable,
 			Columns: []string{routineexercise.RoutinesColumn},
 			Bidi:    false,
@@ -265,7 +245,7 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 	if nodes := rec.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   routineexercise.ExercisesTable,
 			Columns: []string{routineexercise.ExercisesColumn},
 			Bidi:    false,
