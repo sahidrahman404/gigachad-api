@@ -12,6 +12,7 @@ type MusclesGroupStorer interface {
 	Update(ctx context.Context, m *types.MusclesGroup) error
 	Delete(ctx context.Context, id string) error
 	Get(ctx context.Context, id string) (*types.MusclesGroup, error)
+	GetAll(ctx context.Context) ([]*types.MusclesGroup, error)
 }
 
 type MusclesGroupStore struct {
@@ -60,4 +61,18 @@ func (e MusclesGroupStore) Get(ctx context.Context, id string) (*types.MusclesGr
 	return &types.MusclesGroup{
 		Ent: mg,
 	}, err
+}
+
+func (e MusclesGroupStore) GetAll(ctx context.Context) ([]*types.MusclesGroup, error) {
+	mg, err := e.Client.MusclesGroup.Query().All(ctx)
+	if err != nil {
+		return nil, err
+	}
+	musclesGroup := []*types.MusclesGroup{}
+	for _, v := range mg {
+		musclesGroup = append(musclesGroup, &types.MusclesGroup{
+			Ent: v,
+		})
+	}
+	return musclesGroup, err
 }
