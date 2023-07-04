@@ -11,7 +11,7 @@ type EquipmentStorer interface {
 	Insert(ctx context.Context, eq *types.Equipment) error
 	Get(ctx context.Context, id string) (*types.Equipment, error)
 	Update(ctx context.Context, eq *types.Equipment) error
-	GetAll(ctx context.Context) (*[]types.Equipment, error)
+	GetAll(ctx context.Context) ([]*types.Equipment, error)
 }
 
 type EquipmentStore struct {
@@ -52,16 +52,18 @@ func (e *EquipmentStore) Update(ctx context.Context, eq *types.Equipment) error 
 	return nil
 }
 
-func (e *EquipmentStore) GetAll(ctx context.Context) (*[]types.Equipment, error) {
+func (e *EquipmentStore) GetAll(ctx context.Context) ([]*types.Equipment, error) {
 	equipment, err := e.Client.Equipment.Query().All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	var eq *[]types.Equipment
+	eq := []*types.Equipment{}
 	for _, v := range equipment {
-		*eq = append(*eq, types.Equipment{
-			Ent: v,
-		})
+		if v != nil {
+			eq = append(eq, &types.Equipment{
+				Ent: v,
+			})
+		}
 	}
-	return eq, err
+	return eq, nil
 }

@@ -14,7 +14,7 @@ type RoutineStorer interface {
 	Get(ctx context.Context, id string) (*types.Routine, error)
 	Update(ctx context.Context, r *types.Routine) error
 	Delete(ctx context.Context, id string) error
-	GetAllForUser(ctx context.Context, userID string) (*[]types.Routine, error)
+	GetAllForUser(ctx context.Context, userID string) ([]*types.Routine, error)
 }
 
 type RoutineStore struct {
@@ -62,7 +62,7 @@ func (e *RoutineStore) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (e *RoutineStore) GetAllForUser(ctx context.Context, userID string) (*[]types.Routine, error) {
+func (e *RoutineStore) GetAllForUser(ctx context.Context, userID string) ([]*types.Routine, error) {
 	routine, err := e.Client.Routine.Query().
 		Where(routine.HasUsersWith(user.ID(userID))).
 		All(ctx)
@@ -70,9 +70,9 @@ func (e *RoutineStore) GetAllForUser(ctx context.Context, userID string) (*[]typ
 		return nil, err
 	}
 
-	var r *[]types.Routine
+	r := []*types.Routine{}
 	for _, v := range routine {
-		*r = append(*r, types.Routine{
+		r = append(r, &types.Routine{
 			Ent: v,
 		})
 

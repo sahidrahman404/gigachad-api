@@ -14,7 +14,7 @@ type RoutineExerciseStorer interface {
 	Get(ctx context.Context, id string) (*types.Routine, error)
 	Update(ctx context.Context, r *types.Routine) error
 	Delete(ctx context.Context, id string) error
-	GetAllForRoutine(ctx context.Context, routineID string) (*[]types.RoutineExercise, error)
+	GetAllForRoutine(ctx context.Context, routineID string) ([]*types.RoutineExercise, error)
 }
 
 type RoutineExerciseStore struct {
@@ -62,7 +62,7 @@ func (e *RoutineExerciseStore) Delete(ctx context.Context, id string) error {
 	return nil
 }
 
-func (e *RoutineExerciseStore) GetAllForRoutine(ctx context.Context, routineID string) (*[]types.RoutineExercise, error) {
+func (e *RoutineExerciseStore) GetAllForRoutine(ctx context.Context, routineID string) ([]*types.RoutineExercise, error) {
 	routine, err := e.Client.RoutineExercise.Query().
 		Where(routineexercise.HasRoutinesWith(routine.ID(routineID))).
 		WithExercises().
@@ -72,9 +72,9 @@ func (e *RoutineExerciseStore) GetAllForRoutine(ctx context.Context, routineID s
 		return nil, err
 	}
 
-	var r *[]types.RoutineExercise
+	r := []*types.RoutineExercise{}
 	for _, v := range routine {
-		*r = append(*r, types.RoutineExercise{
+		r = append(r, &types.RoutineExercise{
 			Ent: v,
 		})
 

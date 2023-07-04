@@ -9,7 +9,7 @@ import (
 
 type WorkoutStorer interface {
 	Insert(ctx context.Context, w *types.Workout) error
-	GetAll(ctx context.Context) (*[]types.Workout, error)
+	GetAll(ctx context.Context) ([]*types.Workout, error)
 }
 
 type WorkoutStore struct {
@@ -35,16 +35,16 @@ func (e *WorkoutStore) Insert(ctx context.Context, w *types.Workout) error {
 	return nil
 }
 
-func (e *WorkoutStore) GetAll(ctx context.Context) (*[]types.Workout, error) {
+func (e *WorkoutStore) GetAll(ctx context.Context) ([]*types.Workout, error) {
 	w, err := e.Client.Workout.Query().WithWorkoutLogs(func(wlq *ent.WorkoutLogQuery) {
 		wlq.WithExercises()
 	}).All(ctx)
 	if err != nil {
 		return nil, err
 	}
-	var workout *[]types.Workout
+	workout := []*types.Workout{}
 	for _, v := range w {
-		*workout = append(*workout, types.Workout{
+		workout = append(workout, &types.Workout{
 			Ent: v,
 		})
 	}
