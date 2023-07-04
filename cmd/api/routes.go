@@ -63,6 +63,13 @@ func (app *application) routes() http.Handler {
 			r.Get("/", app.listExerciseTypeHandler)
 			r.Put("/{exercisetypeID}", app.updateExerciseTypeHandler)
 		})
+
+		// Exercises resources
+		r.Route("/exercises", func(r chi.Router) {
+			r.Post("/", app.createExerciseHandler)
+			r.Get("/", app.listExerciseHandler)
+			r.Put("/{exerciseID}", app.updateExerciseHandler)
+		})
 	})
 
 	return mux
