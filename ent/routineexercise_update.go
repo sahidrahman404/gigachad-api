@@ -14,7 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -58,9 +58,9 @@ func (reu *RoutineExerciseUpdate) ClearRestTimer() *RoutineExerciseUpdate {
 	return reu
 }
 
-// SetSet sets the "set" field.
-func (reu *RoutineExerciseUpdate) SetSet(s *[]set.Set) *RoutineExerciseUpdate {
-	reu.mutation.SetSet(s)
+// SetSets sets the "sets" field.
+func (reu *RoutineExerciseUpdate) SetSets(s *schematype.Sets) *RoutineExerciseUpdate {
+	reu.mutation.SetSets(s)
 	return reu
 }
 
@@ -249,8 +249,8 @@ func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error
 	if reu.mutation.RestTimerCleared() {
 		_spec.ClearField(routineexercise.FieldRestTimer, field.TypeInt)
 	}
-	if value, ok := reu.mutation.Set(); ok {
-		_spec.SetField(routineexercise.FieldSet, field.TypeJSON, value)
+	if value, ok := reu.mutation.Sets(); ok {
+		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)
 	}
 	if reu.mutation.RoutinesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -386,9 +386,9 @@ func (reuo *RoutineExerciseUpdateOne) ClearRestTimer() *RoutineExerciseUpdateOne
 	return reuo
 }
 
-// SetSet sets the "set" field.
-func (reuo *RoutineExerciseUpdateOne) SetSet(s *[]set.Set) *RoutineExerciseUpdateOne {
-	reuo.mutation.SetSet(s)
+// SetSets sets the "sets" field.
+func (reuo *RoutineExerciseUpdateOne) SetSets(s *schematype.Sets) *RoutineExerciseUpdateOne {
+	reuo.mutation.SetSets(s)
 	return reuo
 }
 
@@ -607,8 +607,8 @@ func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Routi
 	if reuo.mutation.RestTimerCleared() {
 		_spec.ClearField(routineexercise.FieldRestTimer, field.TypeInt)
 	}
-	if value, ok := reuo.mutation.Set(); ok {
-		_spec.SetField(routineexercise.FieldSet, field.TypeJSON, value)
+	if value, ok := reuo.mutation.Sets(); ok {
+		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)
 	}
 	if reuo.mutation.RoutinesCleared() {
 		edge := &sqlgraph.EdgeSpec{

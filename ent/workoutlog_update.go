@@ -12,7 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -32,7 +32,7 @@ func (wlu *WorkoutLogUpdate) Where(ps ...predicate.WorkoutLog) *WorkoutLogUpdate
 }
 
 // SetSets sets the "sets" field.
-func (wlu *WorkoutLogUpdate) SetSets(s *[]set.Set) *WorkoutLogUpdate {
+func (wlu *WorkoutLogUpdate) SetSets(s *schematype.Sets) *WorkoutLogUpdate {
 	wlu.mutation.SetSets(s)
 	return wlu
 }
@@ -341,7 +341,7 @@ type WorkoutLogUpdateOne struct {
 }
 
 // SetSets sets the "sets" field.
-func (wluo *WorkoutLogUpdateOne) SetSets(s *[]set.Set) *WorkoutLogUpdateOne {
+func (wluo *WorkoutLogUpdateOne) SetSets(s *schematype.Sets) *WorkoutLogUpdateOne {
 	wluo.mutation.SetSets(s)
 	return wluo
 }

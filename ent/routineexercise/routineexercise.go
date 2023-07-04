@@ -14,8 +14,8 @@ const (
 	FieldID = "id"
 	// FieldRestTimer holds the string denoting the rest_timer field in the database.
 	FieldRestTimer = "rest_timer"
-	// FieldSet holds the string denoting the set field in the database.
-	FieldSet = "set"
+	// FieldSets holds the string denoting the sets field in the database.
+	FieldSets = "sets"
 	// FieldRoutineID holds the string denoting the routine_id field in the database.
 	FieldRoutineID = "routine_id"
 	// FieldExerciseID holds the string denoting the exercise_id field in the database.
@@ -57,7 +57,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldRestTimer,
-	FieldSet,
+	FieldSets,
 	FieldRoutineID,
 	FieldExerciseID,
 	FieldUserID,

@@ -200,54 +200,6 @@ table "routines" {
     on_delete   = CASCADE
   }
 }
-table "routine_exercises" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "rest_timer" {
-    null = true
-    type = integer
-  }
-  column "set" {
-    null = false
-    type = json
-  }
-  column "exercise_id" {
-    null = true
-    type = text
-  }
-  column "routine_id" {
-    null = true
-    type = text
-  }
-  column "user_id" {
-    null = true
-    type = text
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "routine_exercises_users_routine_exercises" {
-    columns     = [column.user_id]
-    ref_columns = [table.users.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "routine_exercises_routines_routine_exercises" {
-    columns     = [column.routine_id]
-    ref_columns = [table.routines.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "routine_exercises_exercises_routine_exercises" {
-    columns     = [column.exercise_id]
-    ref_columns = [table.exercises.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-}
 table "workout_logs" {
   schema = schema.main
   column "id" {
@@ -426,6 +378,54 @@ table "equipment" {
   }
   primary_key {
     columns = [column.id]
+  }
+}
+table "routine_exercises" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "rest_timer" {
+    null = true
+    type = integer
+  }
+  column "sets" {
+    null = false
+    type = json
+  }
+  column "exercise_id" {
+    null = true
+    type = text
+  }
+  column "routine_id" {
+    null = true
+    type = text
+  }
+  column "user_id" {
+    null = true
+    type = text
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "routine_exercises_users_routine_exercises" {
+    columns     = [column.user_id]
+    ref_columns = [table.users.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "routine_exercises_routines_routine_exercises" {
+    columns     = [column.routine_id]
+    ref_columns = [table.routines.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "routine_exercises_exercises_routine_exercises" {
+    columns     = [column.exercise_id]
+    ref_columns = [table.exercises.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
   }
 }
 schema "main" {

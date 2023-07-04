@@ -112,7 +112,7 @@ var (
 	RoutineExercisesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "rest_timer", Type: field.TypeInt, Nullable: true},
-		{Name: "set", Type: field.TypeJSON},
+		{Name: "sets", Type: field.TypeJSON},
 		{Name: "exercise_id", Type: field.TypeString, Nullable: true},
 		{Name: "routine_id", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString, Nullable: true},

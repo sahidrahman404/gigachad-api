@@ -12,7 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -23,8 +23,8 @@ type RoutineExercise struct {
 	ID string `json:"id,omitempty"`
 	// RestTimer holds the value of the "rest_timer" field.
 	RestTimer int `json:"rest_timer,omitempty"`
-	// Set holds the value of the "set" field.
-	Set *[]set.Set `json:"set,omitempty"`
+	// Sets holds the value of the "sets" field.
+	Sets *schematype.Sets `json:"sets,omitempty"`
 	// RoutineID holds the value of the "routine_id" field.
 	RoutineID string `json:"routine_id,omitempty"`
 	// ExerciseID holds the value of the "exercise_id" field.
@@ -94,7 +94,7 @@ func (*RoutineExercise) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case routineexercise.FieldSet:
+		case routineexercise.FieldSets:
 			values[i] = new([]byte)
 		case routineexercise.FieldRestTimer:
 			values[i] = new(sql.NullInt64)
@@ -127,12 +127,12 @@ func (re *RoutineExercise) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				re.RestTimer = int(value.Int64)
 			}
-		case routineexercise.FieldSet:
+		case routineexercise.FieldSets:
 			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field set", values[i])
+				return fmt.Errorf("unexpected type %T for field sets", values[i])
 			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &re.Set); err != nil {
-					return fmt.Errorf("unmarshal field set: %w", err)
+				if err := json.Unmarshal(*value, &re.Sets); err != nil {
+					return fmt.Errorf("unmarshal field sets: %w", err)
 				}
 			}
 		case routineexercise.FieldRoutineID:
@@ -207,8 +207,8 @@ func (re *RoutineExercise) String() string {
 	builder.WriteString("rest_timer=")
 	builder.WriteString(fmt.Sprintf("%v", re.RestTimer))
 	builder.WriteString(", ")
-	builder.WriteString("set=")
-	builder.WriteString(fmt.Sprintf("%v", re.Set))
+	builder.WriteString("sets=")
+	builder.WriteString(fmt.Sprintf("%v", re.Sets))
 	builder.WriteString(", ")
 	builder.WriteString("routine_id=")
 	builder.WriteString(re.RoutineID)
