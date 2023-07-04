@@ -50,9 +50,9 @@ func (p CreateExerciseParams) Validate(v *validator.Validator) {
 	v.CheckField(p.MusclesGroupID != "", "musclesGroupID", "musclesGroupID must be provided")
 	v.CheckField(p.ExerciseTypeID != "", "exerciseTypeID", "exerciseTypeID must be provided")
 
-	v.CheckField(len(p.EquipmentID) != 27, "equipmentID", "please add valid equipmentID")
-	v.CheckField(len(p.MusclesGroupID) != 27, "musclesGroupID", "please add valid musclesGroupID")
-	v.CheckField(len(p.ExerciseTypeID) != 27, "exerciseTypeID", "please add valid exerciseTypeID")
+	v.CheckField(len(p.EquipmentID) == 27, "equipmentID", "please add valid equipmentID")
+	v.CheckField(len(p.MusclesGroupID) == 27, "musclesGroupID", "please add valid musclesGroupID")
+	v.CheckField(len(p.ExerciseTypeID) == 27, "exerciseTypeID", "please add valid exerciseTypeID")
 }
 
 func UpdateExerciseFromParams(e *UpdateExerciseParams, ex *Exercise) {
