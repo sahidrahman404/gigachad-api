@@ -53,6 +53,15 @@ type UserEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [6]bool
+	// totalCount holds the count of the edges above.
+	totalCount [6]map[string]int
+
+	namedTokens           map[string][]*Token
+	namedExercises        map[string][]*Exercise
+	namedRoutines         map[string][]*Routine
+	namedWorkouts         map[string][]*Workout
+	namedWorkoutLogs      map[string][]*WorkoutLog
+	namedRoutineExercises map[string][]*RoutineExercise
 }
 
 // TokensOrErr returns the Tokens value or an error if the edge
@@ -269,6 +278,150 @@ func (u *User) String() string {
 	builder.WriteString(fmt.Sprintf("%v", u.Version))
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedTokens returns the Tokens named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedTokens(name string) ([]*Token, error) {
+	if u.Edges.namedTokens == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedTokens[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedTokens(name string, edges ...*Token) {
+	if u.Edges.namedTokens == nil {
+		u.Edges.namedTokens = make(map[string][]*Token)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedTokens[name] = []*Token{}
+	} else {
+		u.Edges.namedTokens[name] = append(u.Edges.namedTokens[name], edges...)
+	}
+}
+
+// NamedExercises returns the Exercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedExercises(name string) ([]*Exercise, error) {
+	if u.Edges.namedExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedExercises(name string, edges ...*Exercise) {
+	if u.Edges.namedExercises == nil {
+		u.Edges.namedExercises = make(map[string][]*Exercise)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedExercises[name] = []*Exercise{}
+	} else {
+		u.Edges.namedExercises[name] = append(u.Edges.namedExercises[name], edges...)
+	}
+}
+
+// NamedRoutines returns the Routines named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedRoutines(name string) ([]*Routine, error) {
+	if u.Edges.namedRoutines == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedRoutines[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedRoutines(name string, edges ...*Routine) {
+	if u.Edges.namedRoutines == nil {
+		u.Edges.namedRoutines = make(map[string][]*Routine)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedRoutines[name] = []*Routine{}
+	} else {
+		u.Edges.namedRoutines[name] = append(u.Edges.namedRoutines[name], edges...)
+	}
+}
+
+// NamedWorkouts returns the Workouts named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedWorkouts(name string) ([]*Workout, error) {
+	if u.Edges.namedWorkouts == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedWorkouts[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedWorkouts(name string, edges ...*Workout) {
+	if u.Edges.namedWorkouts == nil {
+		u.Edges.namedWorkouts = make(map[string][]*Workout)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedWorkouts[name] = []*Workout{}
+	} else {
+		u.Edges.namedWorkouts[name] = append(u.Edges.namedWorkouts[name], edges...)
+	}
+}
+
+// NamedWorkoutLogs returns the WorkoutLogs named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedWorkoutLogs(name string) ([]*WorkoutLog, error) {
+	if u.Edges.namedWorkoutLogs == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedWorkoutLogs[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedWorkoutLogs(name string, edges ...*WorkoutLog) {
+	if u.Edges.namedWorkoutLogs == nil {
+		u.Edges.namedWorkoutLogs = make(map[string][]*WorkoutLog)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedWorkoutLogs[name] = []*WorkoutLog{}
+	} else {
+		u.Edges.namedWorkoutLogs[name] = append(u.Edges.namedWorkoutLogs[name], edges...)
+	}
+}
+
+// NamedRoutineExercises returns the RoutineExercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedRoutineExercises(name string) ([]*RoutineExercise, error) {
+	if u.Edges.namedRoutineExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedRoutineExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedRoutineExercises(name string, edges ...*RoutineExercise) {
+	if u.Edges.namedRoutineExercises == nil {
+		u.Edges.namedRoutineExercises = make(map[string][]*RoutineExercise)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedRoutineExercises[name] = []*RoutineExercise{}
+	} else {
+		u.Edges.namedRoutineExercises[name] = append(u.Edges.namedRoutineExercises[name], edges...)
+	}
 }
 
 // Users is a parsable slice of User.

@@ -24,16 +24,24 @@ import (
 // UserQuery is the builder for querying User entities.
 type UserQuery struct {
 	config
-	ctx                  *QueryContext
-	order                []user.OrderOption
-	inters               []Interceptor
-	predicates           []predicate.User
-	withTokens           *TokenQuery
-	withExercises        *ExerciseQuery
-	withRoutines         *RoutineQuery
-	withWorkouts         *WorkoutQuery
-	withWorkoutLogs      *WorkoutLogQuery
-	withRoutineExercises *RoutineExerciseQuery
+	ctx                       *QueryContext
+	order                     []user.OrderOption
+	inters                    []Interceptor
+	predicates                []predicate.User
+	withTokens                *TokenQuery
+	withExercises             *ExerciseQuery
+	withRoutines              *RoutineQuery
+	withWorkouts              *WorkoutQuery
+	withWorkoutLogs           *WorkoutLogQuery
+	withRoutineExercises      *RoutineExerciseQuery
+	modifiers                 []func(*sql.Selector)
+	loadTotal                 []func(context.Context, []*User) error
+	withNamedTokens           map[string]*TokenQuery
+	withNamedExercises        map[string]*ExerciseQuery
+	withNamedRoutines         map[string]*RoutineQuery
+	withNamedWorkouts         map[string]*WorkoutQuery
+	withNamedWorkoutLogs      map[string]*WorkoutLogQuery
+	withNamedRoutineExercises map[string]*RoutineExerciseQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -568,6 +576,9 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(uq.modifiers) > 0 {
+		_spec.Modifiers = uq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -616,6 +627,53 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 		if err := uq.loadRoutineExercises(ctx, query, nodes,
 			func(n *User) { n.Edges.RoutineExercises = []*RoutineExercise{} },
 			func(n *User, e *RoutineExercise) { n.Edges.RoutineExercises = append(n.Edges.RoutineExercises, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range uq.withNamedTokens {
+		if err := uq.loadTokens(ctx, query, nodes,
+			func(n *User) { n.appendNamedTokens(name) },
+			func(n *User, e *Token) { n.appendNamedTokens(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range uq.withNamedExercises {
+		if err := uq.loadExercises(ctx, query, nodes,
+			func(n *User) { n.appendNamedExercises(name) },
+			func(n *User, e *Exercise) { n.appendNamedExercises(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range uq.withNamedRoutines {
+		if err := uq.loadRoutines(ctx, query, nodes,
+			func(n *User) { n.appendNamedRoutines(name) },
+			func(n *User, e *Routine) { n.appendNamedRoutines(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range uq.withNamedWorkouts {
+		if err := uq.loadWorkouts(ctx, query, nodes,
+			func(n *User) { n.appendNamedWorkouts(name) },
+			func(n *User, e *Workout) { n.appendNamedWorkouts(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range uq.withNamedWorkoutLogs {
+		if err := uq.loadWorkoutLogs(ctx, query, nodes,
+			func(n *User) { n.appendNamedWorkoutLogs(name) },
+			func(n *User, e *WorkoutLog) { n.appendNamedWorkoutLogs(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range uq.withNamedRoutineExercises {
+		if err := uq.loadRoutineExercises(ctx, query, nodes,
+			func(n *User) { n.appendNamedRoutineExercises(name) },
+			func(n *User, e *RoutineExercise) { n.appendNamedRoutineExercises(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range uq.loadTotal {
+		if err := uq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -808,6 +866,9 @@ func (uq *UserQuery) loadRoutineExercises(ctx context.Context, query *RoutineExe
 
 func (uq *UserQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := uq.querySpec()
+	if len(uq.modifiers) > 0 {
+		_spec.Modifiers = uq.modifiers
+	}
 	_spec.Node.Columns = uq.ctx.Fields
 	if len(uq.ctx.Fields) > 0 {
 		_spec.Unique = uq.ctx.Unique != nil && *uq.ctx.Unique
@@ -885,6 +946,90 @@ func (uq *UserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// WithNamedTokens tells the query-builder to eager-load the nodes that are connected to the "tokens"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithNamedTokens(name string, opts ...func(*TokenQuery)) *UserQuery {
+	query := (&TokenClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if uq.withNamedTokens == nil {
+		uq.withNamedTokens = make(map[string]*TokenQuery)
+	}
+	uq.withNamedTokens[name] = query
+	return uq
+}
+
+// WithNamedExercises tells the query-builder to eager-load the nodes that are connected to the "exercises"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithNamedExercises(name string, opts ...func(*ExerciseQuery)) *UserQuery {
+	query := (&ExerciseClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if uq.withNamedExercises == nil {
+		uq.withNamedExercises = make(map[string]*ExerciseQuery)
+	}
+	uq.withNamedExercises[name] = query
+	return uq
+}
+
+// WithNamedRoutines tells the query-builder to eager-load the nodes that are connected to the "routines"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithNamedRoutines(name string, opts ...func(*RoutineQuery)) *UserQuery {
+	query := (&RoutineClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if uq.withNamedRoutines == nil {
+		uq.withNamedRoutines = make(map[string]*RoutineQuery)
+	}
+	uq.withNamedRoutines[name] = query
+	return uq
+}
+
+// WithNamedWorkouts tells the query-builder to eager-load the nodes that are connected to the "workouts"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithNamedWorkouts(name string, opts ...func(*WorkoutQuery)) *UserQuery {
+	query := (&WorkoutClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if uq.withNamedWorkouts == nil {
+		uq.withNamedWorkouts = make(map[string]*WorkoutQuery)
+	}
+	uq.withNamedWorkouts[name] = query
+	return uq
+}
+
+// WithNamedWorkoutLogs tells the query-builder to eager-load the nodes that are connected to the "workout_logs"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithNamedWorkoutLogs(name string, opts ...func(*WorkoutLogQuery)) *UserQuery {
+	query := (&WorkoutLogClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if uq.withNamedWorkoutLogs == nil {
+		uq.withNamedWorkoutLogs = make(map[string]*WorkoutLogQuery)
+	}
+	uq.withNamedWorkoutLogs[name] = query
+	return uq
+}
+
+// WithNamedRoutineExercises tells the query-builder to eager-load the nodes that are connected to the "routine_exercises"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (uq *UserQuery) WithNamedRoutineExercises(name string, opts ...func(*RoutineExerciseQuery)) *UserQuery {
+	query := (&RoutineExerciseClient{config: uq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if uq.withNamedRoutineExercises == nil {
+		uq.withNamedRoutineExercises = make(map[string]*RoutineExerciseQuery)
+	}
+	uq.withNamedRoutineExercises[name] = query
+	return uq
 }
 
 // UserGroupBy is the group-by builder for User entities.

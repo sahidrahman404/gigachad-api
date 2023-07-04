@@ -50,6 +50,10 @@ type WorkoutEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
+	// totalCount holds the count of the edges above.
+	totalCount [2]map[string]int
+
+	namedWorkoutLogs map[string][]*WorkoutLog
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -235,6 +239,30 @@ func (w *Workout) String() string {
 	builder.WriteString(w.UserID)
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedWorkoutLogs returns the WorkoutLogs named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (w *Workout) NamedWorkoutLogs(name string) ([]*WorkoutLog, error) {
+	if w.Edges.namedWorkoutLogs == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := w.Edges.namedWorkoutLogs[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (w *Workout) appendNamedWorkoutLogs(name string, edges ...*WorkoutLog) {
+	if w.Edges.namedWorkoutLogs == nil {
+		w.Edges.namedWorkoutLogs = make(map[string][]*WorkoutLog)
+	}
+	if len(edges) == 0 {
+		w.Edges.namedWorkoutLogs[name] = []*WorkoutLog{}
+	} else {
+		w.Edges.namedWorkoutLogs[name] = append(w.Edges.namedWorkoutLogs[name], edges...)
+	}
 }
 
 // Workouts is a parsable slice of Workout.

@@ -20,12 +20,15 @@ import (
 // RoutineQuery is the builder for querying Routine entities.
 type RoutineQuery struct {
 	config
-	ctx                  *QueryContext
-	order                []routine.OrderOption
-	inters               []Interceptor
-	predicates           []predicate.Routine
-	withRoutineExercises *RoutineExerciseQuery
-	withUsers            *UserQuery
+	ctx                       *QueryContext
+	order                     []routine.OrderOption
+	inters                    []Interceptor
+	predicates                []predicate.Routine
+	withRoutineExercises      *RoutineExerciseQuery
+	withUsers                 *UserQuery
+	modifiers                 []func(*sql.Selector)
+	loadTotal                 []func(context.Context, []*Routine) error
+	withNamedRoutineExercises map[string]*RoutineExerciseQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -420,6 +423,9 @@ func (rq *RoutineQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Rout
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(rq.modifiers) > 0 {
+		_spec.Modifiers = rq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -439,6 +445,18 @@ func (rq *RoutineQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Rout
 	if query := rq.withUsers; query != nil {
 		if err := rq.loadUsers(ctx, query, nodes, nil,
 			func(n *Routine, e *User) { n.Edges.Users = e }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range rq.withNamedRoutineExercises {
+		if err := rq.loadRoutineExercises(ctx, query, nodes,
+			func(n *Routine) { n.appendNamedRoutineExercises(name) },
+			func(n *Routine, e *RoutineExercise) { n.appendNamedRoutineExercises(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range rq.loadTotal {
+		if err := rq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -507,6 +525,9 @@ func (rq *RoutineQuery) loadUsers(ctx context.Context, query *UserQuery, nodes [
 
 func (rq *RoutineQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := rq.querySpec()
+	if len(rq.modifiers) > 0 {
+		_spec.Modifiers = rq.modifiers
+	}
 	_spec.Node.Columns = rq.ctx.Fields
 	if len(rq.ctx.Fields) > 0 {
 		_spec.Unique = rq.ctx.Unique != nil && *rq.ctx.Unique
@@ -587,6 +608,20 @@ func (rq *RoutineQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// WithNamedRoutineExercises tells the query-builder to eager-load the nodes that are connected to the "routine_exercises"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoutineQuery) WithNamedRoutineExercises(name string, opts ...func(*RoutineExerciseQuery)) *RoutineQuery {
+	query := (&RoutineExerciseClient{config: rq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if rq.withNamedRoutineExercises == nil {
+		rq.withNamedRoutineExercises = make(map[string]*RoutineExerciseQuery)
+	}
+	rq.withNamedRoutineExercises[name] = query
+	return rq
 }
 
 // RoutineGroupBy is the group-by builder for Routine entities.

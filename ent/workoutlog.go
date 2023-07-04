@@ -10,7 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -22,7 +22,7 @@ type WorkoutLog struct {
 	// ID of the ent.
 	ID string `json:"id,omitempty"`
 	// Sets holds the value of the "sets" field.
-	Sets *[]set.Set `json:"sets,omitempty"`
+	Sets *schematype.Sets `json:"sets,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt string `json:"created_at,omitempty"`
 	// ExerciseID holds the value of the "exercise_id" field.
@@ -48,6 +48,8 @@ type WorkoutLogEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [3]bool
+	// totalCount holds the count of the edges above.
+	totalCount [3]map[string]int
 }
 
 // UsersOrErr returns the Users value or an error if the edge

@@ -24,16 +24,20 @@ import (
 // ExerciseQuery is the builder for querying Exercise entities.
 type ExerciseQuery struct {
 	config
-	ctx                  *QueryContext
-	order                []exercise.OrderOption
-	inters               []Interceptor
-	predicates           []predicate.Exercise
-	withRoutineExercises *RoutineExerciseQuery
-	withWorkoutLogs      *WorkoutLogQuery
-	withUsers            *UserQuery
-	withEquipments       *EquipmentQuery
-	withMusclesGroups    *MusclesGroupQuery
-	withExerciseTypes    *ExerciseTypeQuery
+	ctx                       *QueryContext
+	order                     []exercise.OrderOption
+	inters                    []Interceptor
+	predicates                []predicate.Exercise
+	withRoutineExercises      *RoutineExerciseQuery
+	withWorkoutLogs           *WorkoutLogQuery
+	withUsers                 *UserQuery
+	withEquipments            *EquipmentQuery
+	withMusclesGroups         *MusclesGroupQuery
+	withExerciseTypes         *ExerciseTypeQuery
+	modifiers                 []func(*sql.Selector)
+	loadTotal                 []func(context.Context, []*Exercise) error
+	withNamedRoutineExercises map[string]*RoutineExerciseQuery
+	withNamedWorkoutLogs      map[string]*WorkoutLogQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -568,6 +572,9 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(eq.modifiers) > 0 {
+		_spec.Modifiers = eq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -612,6 +619,25 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 	if query := eq.withExerciseTypes; query != nil {
 		if err := eq.loadExerciseTypes(ctx, query, nodes, nil,
 			func(n *Exercise, e *ExerciseType) { n.Edges.ExerciseTypes = e }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range eq.withNamedRoutineExercises {
+		if err := eq.loadRoutineExercises(ctx, query, nodes,
+			func(n *Exercise) { n.appendNamedRoutineExercises(name) },
+			func(n *Exercise, e *RoutineExercise) { n.appendNamedRoutineExercises(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range eq.withNamedWorkoutLogs {
+		if err := eq.loadWorkoutLogs(ctx, query, nodes,
+			func(n *Exercise) { n.appendNamedWorkoutLogs(name) },
+			func(n *Exercise, e *WorkoutLog) { n.appendNamedWorkoutLogs(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range eq.loadTotal {
+		if err := eq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -800,6 +826,9 @@ func (eq *ExerciseQuery) loadExerciseTypes(ctx context.Context, query *ExerciseT
 
 func (eq *ExerciseQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := eq.querySpec()
+	if len(eq.modifiers) > 0 {
+		_spec.Modifiers = eq.modifiers
+	}
 	_spec.Node.Columns = eq.ctx.Fields
 	if len(eq.ctx.Fields) > 0 {
 		_spec.Unique = eq.ctx.Unique != nil && *eq.ctx.Unique
@@ -889,6 +918,34 @@ func (eq *ExerciseQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// WithNamedRoutineExercises tells the query-builder to eager-load the nodes that are connected to the "routine_exercises"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (eq *ExerciseQuery) WithNamedRoutineExercises(name string, opts ...func(*RoutineExerciseQuery)) *ExerciseQuery {
+	query := (&RoutineExerciseClient{config: eq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if eq.withNamedRoutineExercises == nil {
+		eq.withNamedRoutineExercises = make(map[string]*RoutineExerciseQuery)
+	}
+	eq.withNamedRoutineExercises[name] = query
+	return eq
+}
+
+// WithNamedWorkoutLogs tells the query-builder to eager-load the nodes that are connected to the "workout_logs"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (eq *ExerciseQuery) WithNamedWorkoutLogs(name string, opts ...func(*WorkoutLogQuery)) *ExerciseQuery {
+	query := (&WorkoutLogClient{config: eq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if eq.withNamedWorkoutLogs == nil {
+		eq.withNamedWorkoutLogs = make(map[string]*WorkoutLogQuery)
+	}
+	eq.withNamedWorkoutLogs[name] = query
+	return eq
 }
 
 // ExerciseGroupBy is the group-by builder for Exercise entities.

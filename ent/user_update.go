@@ -114,14 +114,14 @@ func (uu *UserUpdate) AddVersion(i int) *UserUpdate {
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by IDs.
-func (uu *UserUpdate) AddTokenIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) AddTokenIDs(ids ...string) *UserUpdate {
 	uu.mutation.AddTokenIDs(ids...)
 	return uu
 }
 
 // AddTokens adds the "tokens" edges to the Token entity.
 func (uu *UserUpdate) AddTokens(t ...*Token) *UserUpdate {
-	ids := make([]int, len(t))
+	ids := make([]string, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -215,14 +215,14 @@ func (uu *UserUpdate) ClearTokens() *UserUpdate {
 }
 
 // RemoveTokenIDs removes the "tokens" edge to Token entities by IDs.
-func (uu *UserUpdate) RemoveTokenIDs(ids ...int) *UserUpdate {
+func (uu *UserUpdate) RemoveTokenIDs(ids ...string) *UserUpdate {
 	uu.mutation.RemoveTokenIDs(ids...)
 	return uu
 }
 
 // RemoveTokens removes "tokens" edges to Token entities.
 func (uu *UserUpdate) RemoveTokens(t ...*Token) *UserUpdate {
-	ids := make([]int, len(t))
+	ids := make([]string, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -405,7 +405,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.TokensColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -418,7 +418,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.TokensColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -434,7 +434,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{user.TokensColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -768,14 +768,14 @@ func (uuo *UserUpdateOne) AddVersion(i int) *UserUpdateOne {
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by IDs.
-func (uuo *UserUpdateOne) AddTokenIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddTokenIDs(ids ...string) *UserUpdateOne {
 	uuo.mutation.AddTokenIDs(ids...)
 	return uuo
 }
 
 // AddTokens adds the "tokens" edges to the Token entity.
 func (uuo *UserUpdateOne) AddTokens(t ...*Token) *UserUpdateOne {
-	ids := make([]int, len(t))
+	ids := make([]string, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -869,14 +869,14 @@ func (uuo *UserUpdateOne) ClearTokens() *UserUpdateOne {
 }
 
 // RemoveTokenIDs removes the "tokens" edge to Token entities by IDs.
-func (uuo *UserUpdateOne) RemoveTokenIDs(ids ...int) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveTokenIDs(ids ...string) *UserUpdateOne {
 	uuo.mutation.RemoveTokenIDs(ids...)
 	return uuo
 }
 
 // RemoveTokens removes "tokens" edges to Token entities.
 func (uuo *UserUpdateOne) RemoveTokens(t ...*Token) *UserUpdateOne {
-	ids := make([]int, len(t))
+	ids := make([]string, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -1089,7 +1089,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.TokensColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeString),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -1102,7 +1102,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.TokensColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -1118,7 +1118,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 			Columns: []string{user.TokensColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(token.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

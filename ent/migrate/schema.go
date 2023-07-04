@@ -112,7 +112,7 @@ var (
 	RoutineExercisesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "rest_timer", Type: field.TypeInt, Nullable: true},
-		{Name: "set", Type: field.TypeJSON},
+		{Name: "sets", Type: field.TypeJSON},
 		{Name: "exercise_id", Type: field.TypeString, Nullable: true},
 		{Name: "routine_id", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString, Nullable: true},
@@ -145,7 +145,7 @@ var (
 	}
 	// TokensColumns holds the columns for the "tokens" table.
 	TokensColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeString},
 		{Name: "hash", Type: field.TypeBytes},
 		{Name: "expiry", Type: field.TypeString},
 		{Name: "scope", Type: field.TypeString},

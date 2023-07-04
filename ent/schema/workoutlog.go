@@ -1,10 +1,11 @@
 package schema
 
 import (
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // WorkoutLog holds the schema definition for the WorkoutLog entity.
@@ -16,7 +17,7 @@ type WorkoutLog struct {
 func (WorkoutLog) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").DefaultFunc(generateKSUID),
-		field.JSON("sets", &[]set.Set{}),
+		field.JSON("sets", &schematype.Sets{}).Annotations(entgql.Type("Map")),
 		field.String("created_at").DefaultFunc(generateTime),
 		field.String("exercise_id").Optional(),
 		field.String("workout_id").Optional(),

@@ -19,11 +19,14 @@ import (
 // EquipmentQuery is the builder for querying Equipment entities.
 type EquipmentQuery struct {
 	config
-	ctx           *QueryContext
-	order         []equipment.OrderOption
-	inters        []Interceptor
-	predicates    []predicate.Equipment
-	withExercises *ExerciseQuery
+	ctx                *QueryContext
+	order              []equipment.OrderOption
+	inters             []Interceptor
+	predicates         []predicate.Equipment
+	withExercises      *ExerciseQuery
+	modifiers          []func(*sql.Selector)
+	loadTotal          []func(context.Context, []*Equipment) error
+	withNamedExercises map[string]*ExerciseQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -383,6 +386,9 @@ func (eq *EquipmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Eq
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(eq.modifiers) > 0 {
+		_spec.Modifiers = eq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -396,6 +402,18 @@ func (eq *EquipmentQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Eq
 		if err := eq.loadExercises(ctx, query, nodes,
 			func(n *Equipment) { n.Edges.Exercises = []*Exercise{} },
 			func(n *Equipment, e *Exercise) { n.Edges.Exercises = append(n.Edges.Exercises, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range eq.withNamedExercises {
+		if err := eq.loadExercises(ctx, query, nodes,
+			func(n *Equipment) { n.appendNamedExercises(name) },
+			func(n *Equipment, e *Exercise) { n.appendNamedExercises(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range eq.loadTotal {
+		if err := eq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -435,6 +453,9 @@ func (eq *EquipmentQuery) loadExercises(ctx context.Context, query *ExerciseQuer
 
 func (eq *EquipmentQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := eq.querySpec()
+	if len(eq.modifiers) > 0 {
+		_spec.Modifiers = eq.modifiers
+	}
 	_spec.Node.Columns = eq.ctx.Fields
 	if len(eq.ctx.Fields) > 0 {
 		_spec.Unique = eq.ctx.Unique != nil && *eq.ctx.Unique
@@ -512,6 +533,20 @@ func (eq *EquipmentQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// WithNamedExercises tells the query-builder to eager-load the nodes that are connected to the "exercises"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (eq *EquipmentQuery) WithNamedExercises(name string, opts ...func(*ExerciseQuery)) *EquipmentQuery {
+	query := (&ExerciseClient{config: eq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if eq.withNamedExercises == nil {
+		eq.withNamedExercises = make(map[string]*ExerciseQuery)
+	}
+	eq.withNamedExercises[name] = query
+	return eq
 }
 
 // EquipmentGroupBy is the group-by builder for Equipment entities.

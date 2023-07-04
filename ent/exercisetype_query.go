@@ -19,11 +19,14 @@ import (
 // ExerciseTypeQuery is the builder for querying ExerciseType entities.
 type ExerciseTypeQuery struct {
 	config
-	ctx           *QueryContext
-	order         []exercisetype.OrderOption
-	inters        []Interceptor
-	predicates    []predicate.ExerciseType
-	withExercises *ExerciseQuery
+	ctx                *QueryContext
+	order              []exercisetype.OrderOption
+	inters             []Interceptor
+	predicates         []predicate.ExerciseType
+	withExercises      *ExerciseQuery
+	modifiers          []func(*sql.Selector)
+	loadTotal          []func(context.Context, []*ExerciseType) error
+	withNamedExercises map[string]*ExerciseQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -383,6 +386,9 @@ func (etq *ExerciseTypeQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(etq.modifiers) > 0 {
+		_spec.Modifiers = etq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -396,6 +402,18 @@ func (etq *ExerciseTypeQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 		if err := etq.loadExercises(ctx, query, nodes,
 			func(n *ExerciseType) { n.Edges.Exercises = []*Exercise{} },
 			func(n *ExerciseType, e *Exercise) { n.Edges.Exercises = append(n.Edges.Exercises, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range etq.withNamedExercises {
+		if err := etq.loadExercises(ctx, query, nodes,
+			func(n *ExerciseType) { n.appendNamedExercises(name) },
+			func(n *ExerciseType, e *Exercise) { n.appendNamedExercises(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range etq.loadTotal {
+		if err := etq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -435,6 +453,9 @@ func (etq *ExerciseTypeQuery) loadExercises(ctx context.Context, query *Exercise
 
 func (etq *ExerciseTypeQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := etq.querySpec()
+	if len(etq.modifiers) > 0 {
+		_spec.Modifiers = etq.modifiers
+	}
 	_spec.Node.Columns = etq.ctx.Fields
 	if len(etq.ctx.Fields) > 0 {
 		_spec.Unique = etq.ctx.Unique != nil && *etq.ctx.Unique
@@ -512,6 +533,20 @@ func (etq *ExerciseTypeQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// WithNamedExercises tells the query-builder to eager-load the nodes that are connected to the "exercises"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (etq *ExerciseTypeQuery) WithNamedExercises(name string, opts ...func(*ExerciseQuery)) *ExerciseTypeQuery {
+	query := (&ExerciseClient{config: etq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if etq.withNamedExercises == nil {
+		etq.withNamedExercises = make(map[string]*ExerciseQuery)
+	}
+	etq.withNamedExercises[name] = query
+	return etq
 }
 
 // ExerciseTypeGroupBy is the group-by builder for ExerciseType entities.

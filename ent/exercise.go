@@ -57,6 +57,11 @@ type ExerciseEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [6]bool
+	// totalCount holds the count of the edges above.
+	totalCount [6]map[string]int
+
+	namedRoutineExercises map[string][]*RoutineExercise
+	namedWorkoutLogs      map[string][]*WorkoutLog
 }
 
 // RoutineExercisesOrErr returns the RoutineExercises value or an error if the edge
@@ -296,6 +301,54 @@ func (e *Exercise) String() string {
 	}
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedRoutineExercises returns the RoutineExercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (e *Exercise) NamedRoutineExercises(name string) ([]*RoutineExercise, error) {
+	if e.Edges.namedRoutineExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := e.Edges.namedRoutineExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (e *Exercise) appendNamedRoutineExercises(name string, edges ...*RoutineExercise) {
+	if e.Edges.namedRoutineExercises == nil {
+		e.Edges.namedRoutineExercises = make(map[string][]*RoutineExercise)
+	}
+	if len(edges) == 0 {
+		e.Edges.namedRoutineExercises[name] = []*RoutineExercise{}
+	} else {
+		e.Edges.namedRoutineExercises[name] = append(e.Edges.namedRoutineExercises[name], edges...)
+	}
+}
+
+// NamedWorkoutLogs returns the WorkoutLogs named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (e *Exercise) NamedWorkoutLogs(name string) ([]*WorkoutLog, error) {
+	if e.Edges.namedWorkoutLogs == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := e.Edges.namedWorkoutLogs[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (e *Exercise) appendNamedWorkoutLogs(name string, edges ...*WorkoutLog) {
+	if e.Edges.namedWorkoutLogs == nil {
+		e.Edges.namedWorkoutLogs = make(map[string][]*WorkoutLog)
+	}
+	if len(edges) == 0 {
+		e.Edges.namedWorkoutLogs[name] = []*WorkoutLog{}
+	} else {
+		e.Edges.namedWorkoutLogs[name] = append(e.Edges.namedWorkoutLogs[name], edges...)
+	}
 }
 
 // Exercises is a parsable slice of Exercise.

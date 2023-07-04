@@ -12,7 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -37,9 +37,9 @@ func (rec *RoutineExerciseCreate) SetNillableRestTimer(i *int) *RoutineExerciseC
 	return rec
 }
 
-// SetSet sets the "set" field.
-func (rec *RoutineExerciseCreate) SetSet(s *[]set.Set) *RoutineExerciseCreate {
-	rec.mutation.SetSet(s)
+// SetSets sets the "sets" field.
+func (rec *RoutineExerciseCreate) SetSets(s *schematype.Sets) *RoutineExerciseCreate {
+	rec.mutation.SetSets(s)
 	return rec
 }
 
@@ -199,8 +199,8 @@ func (rec *RoutineExerciseCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (rec *RoutineExerciseCreate) check() error {
-	if _, ok := rec.mutation.Set(); !ok {
-		return &ValidationError{Name: "set", err: errors.New(`ent: missing required field "RoutineExercise.set"`)}
+	if _, ok := rec.mutation.Sets(); !ok {
+		return &ValidationError{Name: "sets", err: errors.New(`ent: missing required field "RoutineExercise.sets"`)}
 	}
 	return nil
 }
@@ -241,9 +241,9 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 		_spec.SetField(routineexercise.FieldRestTimer, field.TypeInt, value)
 		_node.RestTimer = value
 	}
-	if value, ok := rec.mutation.Set(); ok {
-		_spec.SetField(routineexercise.FieldSet, field.TypeJSON, value)
-		_node.Set = value
+	if value, ok := rec.mutation.Sets(); ok {
+		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)
+		_node.Sets = value
 	}
 	if nodes := rec.mutation.RoutinesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

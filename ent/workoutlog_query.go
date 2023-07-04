@@ -27,6 +27,8 @@ type WorkoutLogQuery struct {
 	withUsers     *UserQuery
 	withExercises *ExerciseQuery
 	withWorkouts  *WorkoutQuery
+	modifiers     []func(*sql.Selector)
+	loadTotal     []func(context.Context, []*WorkoutLog) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -369,7 +371,7 @@ func (wlq *WorkoutLogQuery) WithWorkouts(opts ...func(*WorkoutQuery)) *WorkoutLo
 // Example:
 //
 //	var v []struct {
-//		Sets *[]set.Set `json:"sets,omitempty"`
+//		Sets *schematype.Sets `json:"sets,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -392,7 +394,7 @@ func (wlq *WorkoutLogQuery) GroupBy(field string, fields ...string) *WorkoutLogG
 // Example:
 //
 //	var v []struct {
-//		Sets *[]set.Set `json:"sets,omitempty"`
+//		Sets *schematype.Sets `json:"sets,omitempty"`
 //	}
 //
 //	client.WorkoutLog.Query().
@@ -456,6 +458,9 @@ func (wlq *WorkoutLogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(wlq.modifiers) > 0 {
+		_spec.Modifiers = wlq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -480,6 +485,11 @@ func (wlq *WorkoutLogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 	if query := wlq.withWorkouts; query != nil {
 		if err := wlq.loadWorkouts(ctx, query, nodes, nil,
 			func(n *WorkoutLog, e *Workout) { n.Edges.Workouts = e }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range wlq.loadTotal {
+		if err := wlq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -576,6 +586,9 @@ func (wlq *WorkoutLogQuery) loadWorkouts(ctx context.Context, query *WorkoutQuer
 
 func (wlq *WorkoutLogQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wlq.querySpec()
+	if len(wlq.modifiers) > 0 {
+		_spec.Modifiers = wlq.modifiers
+	}
 	_spec.Node.Columns = wlq.ctx.Fields
 	if len(wlq.ctx.Fields) > 0 {
 		_spec.Unique = wlq.ctx.Unique != nil && *wlq.ctx.Unique

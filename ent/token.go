@@ -16,7 +16,7 @@ import (
 type Token struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID string `json:"id,omitempty"`
 	// Hash holds the value of the "hash" field.
 	Hash []byte `json:"hash,omitempty"`
 	// Expiry holds the value of the "expiry" field.
@@ -38,6 +38,8 @@ type TokenEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
+	// totalCount holds the count of the edges above.
+	totalCount [1]map[string]int
 }
 
 // UsersOrErr returns the Users value or an error if the edge
@@ -60,9 +62,7 @@ func (*Token) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case token.FieldHash:
 			values[i] = new([]byte)
-		case token.FieldID:
-			values[i] = new(sql.NullInt64)
-		case token.FieldExpiry, token.FieldScope, token.FieldUserID:
+		case token.FieldID, token.FieldExpiry, token.FieldScope, token.FieldUserID:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -80,11 +80,11 @@ func (t *Token) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case token.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value.Valid {
+				t.ID = value.String
 			}
-			t.ID = int(value.Int64)
 		case token.FieldHash:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field hash", values[i])

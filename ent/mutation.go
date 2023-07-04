@@ -17,7 +17,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -3301,7 +3301,7 @@ type RoutineExerciseMutation struct {
 	id               *string
 	rest_timer       *int
 	addrest_timer    *int
-	set              **[]set.Set
+	sets             **schematype.Sets
 	clearedFields    map[string]struct{}
 	routines         *string
 	clearedroutines  bool
@@ -3488,40 +3488,40 @@ func (m *RoutineExerciseMutation) ResetRestTimer() {
 	delete(m.clearedFields, routineexercise.FieldRestTimer)
 }
 
-// SetSet sets the "set" field.
-func (m *RoutineExerciseMutation) SetSet(s *[]set.Set) {
-	m.set = &s
+// SetSets sets the "sets" field.
+func (m *RoutineExerciseMutation) SetSets(s *schematype.Sets) {
+	m.sets = &s
 }
 
-// Set returns the value of the "set" field in the mutation.
-func (m *RoutineExerciseMutation) Set() (r *[]set.Set, exists bool) {
-	v := m.set
+// Sets returns the value of the "sets" field in the mutation.
+func (m *RoutineExerciseMutation) Sets() (r *schematype.Sets, exists bool) {
+	v := m.sets
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldSet returns the old "set" field's value of the RoutineExercise entity.
+// OldSets returns the old "sets" field's value of the RoutineExercise entity.
 // If the RoutineExercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoutineExerciseMutation) OldSet(ctx context.Context) (v *[]set.Set, err error) {
+func (m *RoutineExerciseMutation) OldSets(ctx context.Context) (v *schematype.Sets, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldSet is only allowed on UpdateOne operations")
+		return v, errors.New("OldSets is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldSet requires an ID field in the mutation")
+		return v, errors.New("OldSets requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldSet: %w", err)
+		return v, fmt.Errorf("querying old value for OldSets: %w", err)
 	}
-	return oldValue.Set, nil
+	return oldValue.Sets, nil
 }
 
-// ResetSet resets all changes to the "set" field.
-func (m *RoutineExerciseMutation) ResetSet() {
-	m.set = nil
+// ResetSets resets all changes to the "sets" field.
+func (m *RoutineExerciseMutation) ResetSets() {
+	m.sets = nil
 }
 
 // SetRoutineID sets the "routine_id" field.
@@ -3826,8 +3826,8 @@ func (m *RoutineExerciseMutation) Fields() []string {
 	if m.rest_timer != nil {
 		fields = append(fields, routineexercise.FieldRestTimer)
 	}
-	if m.set != nil {
-		fields = append(fields, routineexercise.FieldSet)
+	if m.sets != nil {
+		fields = append(fields, routineexercise.FieldSets)
 	}
 	if m.routines != nil {
 		fields = append(fields, routineexercise.FieldRoutineID)
@@ -3848,8 +3848,8 @@ func (m *RoutineExerciseMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case routineexercise.FieldRestTimer:
 		return m.RestTimer()
-	case routineexercise.FieldSet:
-		return m.Set()
+	case routineexercise.FieldSets:
+		return m.Sets()
 	case routineexercise.FieldRoutineID:
 		return m.RoutineID()
 	case routineexercise.FieldExerciseID:
@@ -3867,8 +3867,8 @@ func (m *RoutineExerciseMutation) OldField(ctx context.Context, name string) (en
 	switch name {
 	case routineexercise.FieldRestTimer:
 		return m.OldRestTimer(ctx)
-	case routineexercise.FieldSet:
-		return m.OldSet(ctx)
+	case routineexercise.FieldSets:
+		return m.OldSets(ctx)
 	case routineexercise.FieldRoutineID:
 		return m.OldRoutineID(ctx)
 	case routineexercise.FieldExerciseID:
@@ -3891,12 +3891,12 @@ func (m *RoutineExerciseMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetRestTimer(v)
 		return nil
-	case routineexercise.FieldSet:
-		v, ok := value.(*[]set.Set)
+	case routineexercise.FieldSets:
+		v, ok := value.(*schematype.Sets)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetSet(v)
+		m.SetSets(v)
 		return nil
 	case routineexercise.FieldRoutineID:
 		v, ok := value.(string)
@@ -4013,8 +4013,8 @@ func (m *RoutineExerciseMutation) ResetField(name string) error {
 	case routineexercise.FieldRestTimer:
 		m.ResetRestTimer()
 		return nil
-	case routineexercise.FieldSet:
-		m.ResetSet()
+	case routineexercise.FieldSets:
+		m.ResetSets()
 		return nil
 	case routineexercise.FieldRoutineID:
 		m.ResetRoutineID()
@@ -4144,7 +4144,7 @@ type TokenMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *string
 	hash          *[]byte
 	expiry        *string
 	scope         *string
@@ -4176,7 +4176,7 @@ func newTokenMutation(c config, op Op, opts ...tokenOption) *TokenMutation {
 }
 
 // withTokenID sets the ID field of the mutation.
-func withTokenID(id int) tokenOption {
+func withTokenID(id string) tokenOption {
 	return func(m *TokenMutation) {
 		var (
 			err   error
@@ -4226,9 +4226,15 @@ func (m TokenMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Token entities.
+func (m *TokenMutation) SetID(id string) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *TokenMutation) ID() (id int, exists bool) {
+func (m *TokenMutation) ID() (id string, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -4239,12 +4245,12 @@ func (m *TokenMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *TokenMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *TokenMutation) IDs(ctx context.Context) ([]string, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []string{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -4731,8 +4737,8 @@ type UserMutation struct {
 	version                  *int
 	addversion               *int
 	clearedFields            map[string]struct{}
-	tokens                   map[int]struct{}
-	removedtokens            map[int]struct{}
+	tokens                   map[string]struct{}
+	removedtokens            map[string]struct{}
 	clearedtokens            bool
 	exercises                map[string]struct{}
 	removedexercises         map[string]struct{}
@@ -5151,9 +5157,9 @@ func (m *UserMutation) ResetVersion() {
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by ids.
-func (m *UserMutation) AddTokenIDs(ids ...int) {
+func (m *UserMutation) AddTokenIDs(ids ...string) {
 	if m.tokens == nil {
-		m.tokens = make(map[int]struct{})
+		m.tokens = make(map[string]struct{})
 	}
 	for i := range ids {
 		m.tokens[ids[i]] = struct{}{}
@@ -5171,9 +5177,9 @@ func (m *UserMutation) TokensCleared() bool {
 }
 
 // RemoveTokenIDs removes the "tokens" edge to the Token entity by IDs.
-func (m *UserMutation) RemoveTokenIDs(ids ...int) {
+func (m *UserMutation) RemoveTokenIDs(ids ...string) {
 	if m.removedtokens == nil {
-		m.removedtokens = make(map[int]struct{})
+		m.removedtokens = make(map[string]struct{})
 	}
 	for i := range ids {
 		delete(m.tokens, ids[i])
@@ -5182,7 +5188,7 @@ func (m *UserMutation) RemoveTokenIDs(ids ...int) {
 }
 
 // RemovedTokens returns the removed IDs of the "tokens" edge to the Token entity.
-func (m *UserMutation) RemovedTokensIDs() (ids []int) {
+func (m *UserMutation) RemovedTokensIDs() (ids []string) {
 	for id := range m.removedtokens {
 		ids = append(ids, id)
 	}
@@ -5190,7 +5196,7 @@ func (m *UserMutation) RemovedTokensIDs() (ids []int) {
 }
 
 // TokensIDs returns the "tokens" edge IDs in the mutation.
-func (m *UserMutation) TokensIDs() (ids []int) {
+func (m *UserMutation) TokensIDs() (ids []string) {
 	for id := range m.tokens {
 		ids = append(ids, id)
 	}
@@ -7031,7 +7037,7 @@ type WorkoutLogMutation struct {
 	op               Op
 	typ              string
 	id               *string
-	sets             **[]set.Set
+	sets             **schematype.Sets
 	created_at       *string
 	clearedFields    map[string]struct{}
 	users            *string
@@ -7150,12 +7156,12 @@ func (m *WorkoutLogMutation) IDs(ctx context.Context) ([]string, error) {
 }
 
 // SetSets sets the "sets" field.
-func (m *WorkoutLogMutation) SetSets(s *[]set.Set) {
+func (m *WorkoutLogMutation) SetSets(s *schematype.Sets) {
 	m.sets = &s
 }
 
 // Sets returns the value of the "sets" field in the mutation.
-func (m *WorkoutLogMutation) Sets() (r *[]set.Set, exists bool) {
+func (m *WorkoutLogMutation) Sets() (r *schematype.Sets, exists bool) {
 	v := m.sets
 	if v == nil {
 		return
@@ -7166,7 +7172,7 @@ func (m *WorkoutLogMutation) Sets() (r *[]set.Set, exists bool) {
 // OldSets returns the old "sets" field's value of the WorkoutLog entity.
 // If the WorkoutLog object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutLogMutation) OldSets(ctx context.Context) (v *[]set.Set, err error) {
+func (m *WorkoutLogMutation) OldSets(ctx context.Context) (v *schematype.Sets, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldSets is only allowed on UpdateOne operations")
 	}
@@ -7582,7 +7588,7 @@ func (m *WorkoutLogMutation) OldField(ctx context.Context, name string) (ent.Val
 func (m *WorkoutLogMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case workoutlog.FieldSets:
-		v, ok := value.(*[]set.Set)
+		v, ok := value.(*schematype.Sets)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

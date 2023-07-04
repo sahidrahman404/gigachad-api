@@ -1,10 +1,11 @@
 package schema
 
 import (
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/set"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // RoutineExercise holds the schema definition for the RoutineExercise entity.
@@ -17,7 +18,7 @@ func (RoutineExercise) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").DefaultFunc(generateKSUID),
 		field.Int("rest_timer").Optional(),
-		field.JSON("set", &[]set.Set{}),
+		field.JSON("sets", &schematype.Sets{}).Annotations(entgql.Type("Map")),
 		field.String("routine_id").Optional(),
 		field.String("exercise_id").Optional(),
 		field.String("user_id").Optional(),

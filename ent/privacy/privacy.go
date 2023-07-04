@@ -8,6 +8,7 @@ import (
 
 	"github.com/sahidrahman404/gigachad-api/ent"
 
+	"entgo.io/ent/entql"
 	"entgo.io/ent/privacy"
 )
 
@@ -387,4 +388,91 @@ func (f WorkoutLogMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Muta
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.WorkoutLogMutation", m)
+}
+
+type (
+	// Filter is the interface that wraps the Where function
+	// for filtering nodes in queries and mutations.
+	Filter interface {
+		// Where applies a filter on the executed query/mutation.
+		Where(entql.P)
+	}
+
+	// The FilterFunc type is an adapter that allows the use of ordinary
+	// functions as filters for query and mutation types.
+	FilterFunc func(context.Context, Filter) error
+)
+
+// EvalQuery calls f(ctx, q) if the query implements the Filter interface, otherwise it is denied.
+func (f FilterFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	fr, err := queryFilter(q)
+	if err != nil {
+		return err
+	}
+	return f(ctx, fr)
+}
+
+// EvalMutation calls f(ctx, q) if the mutation implements the Filter interface, otherwise it is denied.
+func (f FilterFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	fr, err := mutationFilter(m)
+	if err != nil {
+		return err
+	}
+	return f(ctx, fr)
+}
+
+var _ QueryMutationRule = FilterFunc(nil)
+
+func queryFilter(q ent.Query) (Filter, error) {
+	switch q := q.(type) {
+	case *ent.EquipmentQuery:
+		return q.Filter(), nil
+	case *ent.ExerciseQuery:
+		return q.Filter(), nil
+	case *ent.ExerciseTypeQuery:
+		return q.Filter(), nil
+	case *ent.MusclesGroupQuery:
+		return q.Filter(), nil
+	case *ent.RoutineQuery:
+		return q.Filter(), nil
+	case *ent.RoutineExerciseQuery:
+		return q.Filter(), nil
+	case *ent.TokenQuery:
+		return q.Filter(), nil
+	case *ent.UserQuery:
+		return q.Filter(), nil
+	case *ent.WorkoutQuery:
+		return q.Filter(), nil
+	case *ent.WorkoutLogQuery:
+		return q.Filter(), nil
+	default:
+		return nil, Denyf("ent/privacy: unexpected query type %T for query filter", q)
+	}
+}
+
+func mutationFilter(m ent.Mutation) (Filter, error) {
+	switch m := m.(type) {
+	case *ent.EquipmentMutation:
+		return m.Filter(), nil
+	case *ent.ExerciseMutation:
+		return m.Filter(), nil
+	case *ent.ExerciseTypeMutation:
+		return m.Filter(), nil
+	case *ent.MusclesGroupMutation:
+		return m.Filter(), nil
+	case *ent.RoutineMutation:
+		return m.Filter(), nil
+	case *ent.RoutineExerciseMutation:
+		return m.Filter(), nil
+	case *ent.TokenMutation:
+		return m.Filter(), nil
+	case *ent.UserMutation:
+		return m.Filter(), nil
+	case *ent.WorkoutMutation:
+		return m.Filter(), nil
+	case *ent.WorkoutLogMutation:
+		return m.Filter(), nil
+	default:
+		return nil, Denyf("ent/privacy: unexpected mutation type %T for mutation filter", m)
+	}
 }
