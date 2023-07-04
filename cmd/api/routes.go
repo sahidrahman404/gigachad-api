@@ -46,6 +46,7 @@ func (app *application) routes() http.Handler {
 		r.Route("/equipments", func(r chi.Router) {
 			r.Post("/", app.createEquipmentHandler)
 			r.Get("/", app.listEquipmentHandler)
+			r.Put("/{equipmentID}", app.updateEquipmentHandler)
 		})
 	})
 

@@ -53,7 +53,46 @@ func (app *application) listEquipmentHandler(w http.ResponseWriter, r *http.Requ
 	equipment, err := app.storage.Equipment.GetAll(ctx)
 	if err != nil {
 		app.serverError(w, r, err)
+		return
 	}
+	err = response.JSON(w, http.StatusOK, equipment)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+}
+
+func (app *application) updateEquipmentHandler(w http.ResponseWriter, r *http.Request) {
+	equipmentID, err := app.readParams("equipmentID", r)
+	if err != nil {
+		app.badRequest(w, r, err)
+		return
+	}
+
+	equipmentParams := types.UpdateEquipmentParams{}
+	err = request.DecodeJSON(w, r, &equipmentParams)
+	if err != nil {
+		app.badRequest(w, r, err)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	equipment, err := app.storage.Equipment.Get(ctx, equipmentID)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	types.UpdateEquipmentFromParams(&equipmentParams, equipment)
+
+	ctx, cancel = context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	err = app.storage.Equipment.Update(ctx, equipment)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
 	err = response.JSON(w, http.StatusOK, equipment)
 	if err != nil {
 		app.serverError(w, r, err)
