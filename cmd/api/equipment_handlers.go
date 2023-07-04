@@ -29,10 +29,10 @@ func (app *application) createEquipmentHandler(w http.ResponseWriter, r *http.Re
 
 	equipment := types.NewEquipmentFromParams(params)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	err = app.storage.Equipment.Insert(ctx, equipment)
-	if err != nil{
+	if err != nil {
 		app.serverError(w, r, err)
 		return
 	}
@@ -42,6 +42,19 @@ func (app *application) createEquipmentHandler(w http.ResponseWriter, r *http.Re
 		http.StatusCreated,
 		"an email will be sent to you containing password instruction",
 	)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+}
+
+func (app *application) listEquipmentHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	equipment, err := app.storage.Equipment.GetAll(ctx)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+	err = response.JSON(w, http.StatusOK, equipment)
 	if err != nil {
 		app.serverError(w, r, err)
 	}
