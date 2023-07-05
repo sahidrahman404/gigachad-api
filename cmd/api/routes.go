@@ -77,6 +77,20 @@ func (app *application) routes() http.Handler {
 			r.Put("/{routineID}", app.requireActivatedUser(app.updateRoutineHandler))
 			r.Delete("/{routineID}", app.requireActivatedUser(app.deleteRoutineHandler))
 		})
+
+		// RoutineExercise resources
+		r.Route("/routineExercises", func(r chi.Router) {
+			r.Post("/", app.requireActivatedUser(app.createRoutineExerciseHandler))
+			r.Get("/{routineID}", app.requireActivatedUser(app.getRoutineExerciseHandler))
+			r.Put(
+				"/{routineExerciseID}",
+				app.requireActivatedUser(app.updateRoutineExerciseHandler),
+			)
+			r.Delete(
+				"/{routineExerciseID}",
+				app.requireActivatedUser(app.deleteRoutineExerciseHandler),
+			)
+		})
 	})
 
 	return mux
