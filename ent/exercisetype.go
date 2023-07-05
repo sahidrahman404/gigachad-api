@@ -36,6 +36,10 @@ type ExerciseTypeEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
+	// totalCount holds the count of the edges above.
+	totalCount [1]map[string]int
+
+	namedExercises map[string][]*Exercise
 }
 
 // ExercisesOrErr returns the Exercises value or an error if the edge
@@ -148,6 +152,30 @@ func (et *ExerciseType) String() string {
 	builder.WriteString(et.Description)
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedExercises returns the Exercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (et *ExerciseType) NamedExercises(name string) ([]*Exercise, error) {
+	if et.Edges.namedExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := et.Edges.namedExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (et *ExerciseType) appendNamedExercises(name string, edges ...*Exercise) {
+	if et.Edges.namedExercises == nil {
+		et.Edges.namedExercises = make(map[string][]*Exercise)
+	}
+	if len(edges) == 0 {
+		et.Edges.namedExercises[name] = []*Exercise{}
+	} else {
+		et.Edges.namedExercises[name] = append(et.Edges.namedExercises[name], edges...)
+	}
 }
 
 // ExerciseTypes is a parsable slice of ExerciseType.

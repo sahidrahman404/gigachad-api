@@ -33,6 +33,10 @@ type MusclesGroupEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
+	// totalCount holds the count of the edges above.
+	totalCount [1]map[string]int
+
+	namedExercises map[string][]*Exercise
 }
 
 // ExercisesOrErr returns the Exercises value or an error if the edge
@@ -132,6 +136,30 @@ func (mg *MusclesGroup) String() string {
 	builder.WriteString(mg.Image)
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedExercises returns the Exercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (mg *MusclesGroup) NamedExercises(name string) ([]*Exercise, error) {
+	if mg.Edges.namedExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := mg.Edges.namedExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (mg *MusclesGroup) appendNamedExercises(name string, edges ...*Exercise) {
+	if mg.Edges.namedExercises == nil {
+		mg.Edges.namedExercises = make(map[string][]*Exercise)
+	}
+	if len(edges) == 0 {
+		mg.Edges.namedExercises[name] = []*Exercise{}
+	} else {
+		mg.Edges.namedExercises[name] = append(mg.Edges.namedExercises[name], edges...)
+	}
 }
 
 // MusclesGroups is a parsable slice of MusclesGroup.

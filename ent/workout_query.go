@@ -20,12 +20,15 @@ import (
 // WorkoutQuery is the builder for querying Workout entities.
 type WorkoutQuery struct {
 	config
-	ctx             *QueryContext
-	order           []workout.OrderOption
-	inters          []Interceptor
-	predicates      []predicate.Workout
-	withUsers       *UserQuery
-	withWorkoutLogs *WorkoutLogQuery
+	ctx                  *QueryContext
+	order                []workout.OrderOption
+	inters               []Interceptor
+	predicates           []predicate.Workout
+	withUsers            *UserQuery
+	withWorkoutLogs      *WorkoutLogQuery
+	modifiers            []func(*sql.Selector)
+	loadTotal            []func(context.Context, []*Workout) error
+	withNamedWorkoutLogs map[string]*WorkoutLogQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -420,6 +423,9 @@ func (wq *WorkoutQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Work
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(wq.modifiers) > 0 {
+		_spec.Modifiers = wq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -439,6 +445,18 @@ func (wq *WorkoutQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Work
 		if err := wq.loadWorkoutLogs(ctx, query, nodes,
 			func(n *Workout) { n.Edges.WorkoutLogs = []*WorkoutLog{} },
 			func(n *Workout, e *WorkoutLog) { n.Edges.WorkoutLogs = append(n.Edges.WorkoutLogs, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range wq.withNamedWorkoutLogs {
+		if err := wq.loadWorkoutLogs(ctx, query, nodes,
+			func(n *Workout) { n.appendNamedWorkoutLogs(name) },
+			func(n *Workout, e *WorkoutLog) { n.appendNamedWorkoutLogs(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range wq.loadTotal {
+		if err := wq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -507,6 +525,9 @@ func (wq *WorkoutQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQu
 
 func (wq *WorkoutQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := wq.querySpec()
+	if len(wq.modifiers) > 0 {
+		_spec.Modifiers = wq.modifiers
+	}
 	_spec.Node.Columns = wq.ctx.Fields
 	if len(wq.ctx.Fields) > 0 {
 		_spec.Unique = wq.ctx.Unique != nil && *wq.ctx.Unique
@@ -587,6 +608,20 @@ func (wq *WorkoutQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// WithNamedWorkoutLogs tells the query-builder to eager-load the nodes that are connected to the "workout_logs"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (wq *WorkoutQuery) WithNamedWorkoutLogs(name string, opts ...func(*WorkoutLogQuery)) *WorkoutQuery {
+	query := (&WorkoutLogClient{config: wq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if wq.withNamedWorkoutLogs == nil {
+		wq.withNamedWorkoutLogs = make(map[string]*WorkoutLogQuery)
+	}
+	wq.withNamedWorkoutLogs[name] = query
+	return wq
 }
 
 // WorkoutGroupBy is the group-by builder for Workout entities.

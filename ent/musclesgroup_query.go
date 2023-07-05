@@ -19,11 +19,14 @@ import (
 // MusclesGroupQuery is the builder for querying MusclesGroup entities.
 type MusclesGroupQuery struct {
 	config
-	ctx           *QueryContext
-	order         []musclesgroup.OrderOption
-	inters        []Interceptor
-	predicates    []predicate.MusclesGroup
-	withExercises *ExerciseQuery
+	ctx                *QueryContext
+	order              []musclesgroup.OrderOption
+	inters             []Interceptor
+	predicates         []predicate.MusclesGroup
+	withExercises      *ExerciseQuery
+	modifiers          []func(*sql.Selector)
+	loadTotal          []func(context.Context, []*MusclesGroup) error
+	withNamedExercises map[string]*ExerciseQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -383,6 +386,9 @@ func (mgq *MusclesGroupQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(mgq.modifiers) > 0 {
+		_spec.Modifiers = mgq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -396,6 +402,18 @@ func (mgq *MusclesGroupQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 		if err := mgq.loadExercises(ctx, query, nodes,
 			func(n *MusclesGroup) { n.Edges.Exercises = []*Exercise{} },
 			func(n *MusclesGroup, e *Exercise) { n.Edges.Exercises = append(n.Edges.Exercises, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range mgq.withNamedExercises {
+		if err := mgq.loadExercises(ctx, query, nodes,
+			func(n *MusclesGroup) { n.appendNamedExercises(name) },
+			func(n *MusclesGroup, e *Exercise) { n.appendNamedExercises(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range mgq.loadTotal {
+		if err := mgq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -435,6 +453,9 @@ func (mgq *MusclesGroupQuery) loadExercises(ctx context.Context, query *Exercise
 
 func (mgq *MusclesGroupQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := mgq.querySpec()
+	if len(mgq.modifiers) > 0 {
+		_spec.Modifiers = mgq.modifiers
+	}
 	_spec.Node.Columns = mgq.ctx.Fields
 	if len(mgq.ctx.Fields) > 0 {
 		_spec.Unique = mgq.ctx.Unique != nil && *mgq.ctx.Unique
@@ -512,6 +533,20 @@ func (mgq *MusclesGroupQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
+}
+
+// WithNamedExercises tells the query-builder to eager-load the nodes that are connected to the "exercises"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (mgq *MusclesGroupQuery) WithNamedExercises(name string, opts ...func(*ExerciseQuery)) *MusclesGroupQuery {
+	query := (&ExerciseClient{config: mgq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if mgq.withNamedExercises == nil {
+		mgq.withNamedExercises = make(map[string]*ExerciseQuery)
+	}
+	mgq.withNamedExercises[name] = query
+	return mgq
 }
 
 // MusclesGroupGroupBy is the group-by builder for MusclesGroup entities.

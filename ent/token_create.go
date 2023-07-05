@@ -52,6 +52,20 @@ func (tc *TokenCreate) SetNillableUserID(s *string) *TokenCreate {
 	return tc
 }
 
+// SetID sets the "id" field.
+func (tc *TokenCreate) SetID(s string) *TokenCreate {
+	tc.mutation.SetID(s)
+	return tc
+}
+
+// SetNillableID sets the "id" field if the given value is not nil.
+func (tc *TokenCreate) SetNillableID(s *string) *TokenCreate {
+	if s != nil {
+		tc.SetID(*s)
+	}
+	return tc
+}
+
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (tc *TokenCreate) SetUsersID(id string) *TokenCreate {
 	tc.mutation.SetUsersID(id)
@@ -78,6 +92,7 @@ func (tc *TokenCreate) Mutation() *TokenMutation {
 
 // Save creates the Token in the database.
 func (tc *TokenCreate) Save(ctx context.Context) (*Token, error) {
+	tc.defaults()
 	return withHooks(ctx, tc.sqlSave, tc.mutation, tc.hooks)
 }
 
@@ -100,6 +115,14 @@ func (tc *TokenCreate) Exec(ctx context.Context) error {
 func (tc *TokenCreate) ExecX(ctx context.Context) {
 	if err := tc.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (tc *TokenCreate) defaults() {
+	if _, ok := tc.mutation.ID(); !ok {
+		v := token.DefaultID()
+		tc.mutation.SetID(v)
 	}
 }
 
@@ -128,8 +151,13 @@ func (tc *TokenCreate) sqlSave(ctx context.Context) (*Token, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
+	if _spec.ID.Value != nil {
+		if id, ok := _spec.ID.Value.(string); ok {
+			_node.ID = id
+		} else {
+			return nil, fmt.Errorf("unexpected Token.ID type: %T", _spec.ID.Value)
+		}
+	}
 	tc.mutation.id = &_node.ID
 	tc.mutation.done = true
 	return _node, nil
@@ -138,8 +166,12 @@ func (tc *TokenCreate) sqlSave(ctx context.Context) (*Token, error) {
 func (tc *TokenCreate) createSpec() (*Token, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Token{config: tc.config}
-		_spec = sqlgraph.NewCreateSpec(token.Table, sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt))
+		_spec = sqlgraph.NewCreateSpec(token.Table, sqlgraph.NewFieldSpec(token.FieldID, field.TypeString))
 	)
+	if id, ok := tc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
 	if value, ok := tc.mutation.Hash(); ok {
 		_spec.SetField(token.FieldHash, field.TypeBytes, value)
 		_node.Hash = value
@@ -186,6 +218,7 @@ func (tcb *TokenCreateBulk) Save(ctx context.Context) ([]*Token, error) {
 	for i := range tcb.builders {
 		func(i int, root context.Context) {
 			builder := tcb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*TokenMutation)
 				if !ok {
@@ -212,10 +245,6 @@ func (tcb *TokenCreateBulk) Save(ctx context.Context) ([]*Token, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
-				if specs[i].ID.Value != nil {
-					id := specs[i].ID.Value.(int64)
-					nodes[i].ID = int(id)
-				}
 				mutation.done = true
 				return nodes[i], nil
 			})

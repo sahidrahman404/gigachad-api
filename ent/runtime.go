@@ -10,6 +10,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema"
+	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -55,6 +56,12 @@ func init() {
 	routineexerciseDescID := routineexerciseFields[0].Descriptor()
 	// routineexercise.DefaultID holds the default value on creation for the id field.
 	routineexercise.DefaultID = routineexerciseDescID.Default.(func() string)
+	tokenFields := schema.Token{}.Fields()
+	_ = tokenFields
+	// tokenDescID is the schema descriptor for id field.
+	tokenDescID := tokenFields[0].Descriptor()
+	// token.DefaultID holds the default value on creation for the id field.
+	token.DefaultID = tokenDescID.Default.(func() string)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.

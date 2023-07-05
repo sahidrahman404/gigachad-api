@@ -33,6 +33,10 @@ type EquipmentEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
+	// totalCount holds the count of the edges above.
+	totalCount [1]map[string]int
+
+	namedExercises map[string][]*Exercise
 }
 
 // ExercisesOrErr returns the Exercises value or an error if the edge
@@ -132,6 +136,30 @@ func (e *Equipment) String() string {
 	builder.WriteString(e.Image)
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedExercises returns the Exercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (e *Equipment) NamedExercises(name string) ([]*Exercise, error) {
+	if e.Edges.namedExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := e.Edges.namedExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (e *Equipment) appendNamedExercises(name string, edges ...*Exercise) {
+	if e.Edges.namedExercises == nil {
+		e.Edges.namedExercises = make(map[string][]*Exercise)
+	}
+	if len(edges) == 0 {
+		e.Edges.namedExercises[name] = []*Exercise{}
+	} else {
+		e.Edges.namedExercises[name] = append(e.Edges.namedExercises[name], edges...)
+	}
 }
 
 // EquipmentSlice is a parsable slice of Equipment.

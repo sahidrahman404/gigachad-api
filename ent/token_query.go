@@ -23,6 +23,8 @@ type TokenQuery struct {
 	inters     []Interceptor
 	predicates []predicate.Token
 	withUsers  *UserQuery
+	modifiers  []func(*sql.Selector)
+	loadTotal  []func(context.Context, []*Token) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -105,8 +107,8 @@ func (tq *TokenQuery) FirstX(ctx context.Context) *Token {
 
 // FirstID returns the first Token ID from the query.
 // Returns a *NotFoundError when no Token ID was found.
-func (tq *TokenQuery) FirstID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (tq *TokenQuery) FirstID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = tq.Limit(1).IDs(setContextOp(ctx, tq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -118,7 +120,7 @@ func (tq *TokenQuery) FirstID(ctx context.Context) (id int, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (tq *TokenQuery) FirstIDX(ctx context.Context) int {
+func (tq *TokenQuery) FirstIDX(ctx context.Context) string {
 	id, err := tq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -156,8 +158,8 @@ func (tq *TokenQuery) OnlyX(ctx context.Context) *Token {
 // OnlyID is like Only, but returns the only Token ID in the query.
 // Returns a *NotSingularError when more than one Token ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (tq *TokenQuery) OnlyID(ctx context.Context) (id int, err error) {
-	var ids []int
+func (tq *TokenQuery) OnlyID(ctx context.Context) (id string, err error) {
+	var ids []string
 	if ids, err = tq.Limit(2).IDs(setContextOp(ctx, tq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -173,7 +175,7 @@ func (tq *TokenQuery) OnlyID(ctx context.Context) (id int, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (tq *TokenQuery) OnlyIDX(ctx context.Context) int {
+func (tq *TokenQuery) OnlyIDX(ctx context.Context) string {
 	id, err := tq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -201,7 +203,7 @@ func (tq *TokenQuery) AllX(ctx context.Context) []*Token {
 }
 
 // IDs executes the query and returns a list of Token IDs.
-func (tq *TokenQuery) IDs(ctx context.Context) (ids []int, err error) {
+func (tq *TokenQuery) IDs(ctx context.Context) (ids []string, err error) {
 	if tq.ctx.Unique == nil && tq.path != nil {
 		tq.Unique(true)
 	}
@@ -213,7 +215,7 @@ func (tq *TokenQuery) IDs(ctx context.Context) (ids []int, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (tq *TokenQuery) IDsX(ctx context.Context) []int {
+func (tq *TokenQuery) IDsX(ctx context.Context) []string {
 	ids, err := tq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -382,6 +384,9 @@ func (tq *TokenQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Token,
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(tq.modifiers) > 0 {
+		_spec.Modifiers = tq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -394,6 +399,11 @@ func (tq *TokenQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Token,
 	if query := tq.withUsers; query != nil {
 		if err := tq.loadUsers(ctx, query, nodes, nil,
 			func(n *Token, e *User) { n.Edges.Users = e }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range tq.loadTotal {
+		if err := tq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -432,6 +442,9 @@ func (tq *TokenQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*
 
 func (tq *TokenQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := tq.querySpec()
+	if len(tq.modifiers) > 0 {
+		_spec.Modifiers = tq.modifiers
+	}
 	_spec.Node.Columns = tq.ctx.Fields
 	if len(tq.ctx.Fields) > 0 {
 		_spec.Unique = tq.ctx.Unique != nil && *tq.ctx.Unique
@@ -440,7 +453,7 @@ func (tq *TokenQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (tq *TokenQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := sqlgraph.NewQuerySpec(token.Table, token.Columns, sqlgraph.NewFieldSpec(token.FieldID, field.TypeInt))
+	_spec := sqlgraph.NewQuerySpec(token.Table, token.Columns, sqlgraph.NewFieldSpec(token.FieldID, field.TypeString))
 	_spec.From = tq.sql
 	if unique := tq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique

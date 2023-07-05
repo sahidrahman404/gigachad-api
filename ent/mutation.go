@@ -4271,7 +4271,7 @@ type TokenMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *int
+	id            *string
 	hash          *[]byte
 	expiry        *string
 	scope         *string
@@ -4303,7 +4303,7 @@ func newTokenMutation(c config, op Op, opts ...tokenOption) *TokenMutation {
 }
 
 // withTokenID sets the ID field of the mutation.
-func withTokenID(id int) tokenOption {
+func withTokenID(id string) tokenOption {
 	return func(m *TokenMutation) {
 		var (
 			err   error
@@ -4353,9 +4353,15 @@ func (m TokenMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of Token entities.
+func (m *TokenMutation) SetID(id string) {
+	m.id = &id
+}
+
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *TokenMutation) ID() (id int, exists bool) {
+func (m *TokenMutation) ID() (id string, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -4366,12 +4372,12 @@ func (m *TokenMutation) ID() (id int, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *TokenMutation) IDs(ctx context.Context) ([]int, error) {
+func (m *TokenMutation) IDs(ctx context.Context) ([]string, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []int{id}, nil
+			return []string{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -4858,8 +4864,8 @@ type UserMutation struct {
 	version                  *int
 	addversion               *int
 	clearedFields            map[string]struct{}
-	tokens                   map[int]struct{}
-	removedtokens            map[int]struct{}
+	tokens                   map[string]struct{}
+	removedtokens            map[string]struct{}
 	clearedtokens            bool
 	exercises                map[string]struct{}
 	removedexercises         map[string]struct{}
@@ -5278,9 +5284,9 @@ func (m *UserMutation) ResetVersion() {
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by ids.
-func (m *UserMutation) AddTokenIDs(ids ...int) {
+func (m *UserMutation) AddTokenIDs(ids ...string) {
 	if m.tokens == nil {
-		m.tokens = make(map[int]struct{})
+		m.tokens = make(map[string]struct{})
 	}
 	for i := range ids {
 		m.tokens[ids[i]] = struct{}{}
@@ -5298,9 +5304,9 @@ func (m *UserMutation) TokensCleared() bool {
 }
 
 // RemoveTokenIDs removes the "tokens" edge to the Token entity by IDs.
-func (m *UserMutation) RemoveTokenIDs(ids ...int) {
+func (m *UserMutation) RemoveTokenIDs(ids ...string) {
 	if m.removedtokens == nil {
-		m.removedtokens = make(map[int]struct{})
+		m.removedtokens = make(map[string]struct{})
 	}
 	for i := range ids {
 		delete(m.tokens, ids[i])
@@ -5309,7 +5315,7 @@ func (m *UserMutation) RemoveTokenIDs(ids ...int) {
 }
 
 // RemovedTokens returns the removed IDs of the "tokens" edge to the Token entity.
-func (m *UserMutation) RemovedTokensIDs() (ids []int) {
+func (m *UserMutation) RemovedTokensIDs() (ids []string) {
 	for id := range m.removedtokens {
 		ids = append(ids, id)
 	}
@@ -5317,7 +5323,7 @@ func (m *UserMutation) RemovedTokensIDs() (ids []int) {
 }
 
 // TokensIDs returns the "tokens" edge IDs in the mutation.
-func (m *UserMutation) TokensIDs() (ids []int) {
+func (m *UserMutation) TokensIDs() (ids []string) {
 	for id := range m.tokens {
 		ids = append(ids, id)
 	}

@@ -38,6 +38,11 @@ type RoutineEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [3]bool
+	// totalCount holds the count of the edges above.
+	totalCount [3]map[string]int
+
+	namedExercises        map[string][]*Exercise
+	namedRoutineExercises map[string][]*RoutineExercise
 }
 
 // ExercisesOrErr returns the Exercises value or an error if the edge
@@ -169,6 +174,54 @@ func (r *Routine) String() string {
 	builder.WriteString(r.UserID)
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedExercises returns the Exercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (r *Routine) NamedExercises(name string) ([]*Exercise, error) {
+	if r.Edges.namedExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := r.Edges.namedExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (r *Routine) appendNamedExercises(name string, edges ...*Exercise) {
+	if r.Edges.namedExercises == nil {
+		r.Edges.namedExercises = make(map[string][]*Exercise)
+	}
+	if len(edges) == 0 {
+		r.Edges.namedExercises[name] = []*Exercise{}
+	} else {
+		r.Edges.namedExercises[name] = append(r.Edges.namedExercises[name], edges...)
+	}
+}
+
+// NamedRoutineExercises returns the RoutineExercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (r *Routine) NamedRoutineExercises(name string) ([]*RoutineExercise, error) {
+	if r.Edges.namedRoutineExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := r.Edges.namedRoutineExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (r *Routine) appendNamedRoutineExercises(name string, edges ...*RoutineExercise) {
+	if r.Edges.namedRoutineExercises == nil {
+		r.Edges.namedRoutineExercises = make(map[string][]*RoutineExercise)
+	}
+	if len(edges) == 0 {
+		r.Edges.namedRoutineExercises[name] = []*RoutineExercise{}
+	} else {
+		r.Edges.namedRoutineExercises[name] = append(r.Edges.namedRoutineExercises[name], edges...)
+	}
 }
 
 // Routines is a parsable slice of Routine.

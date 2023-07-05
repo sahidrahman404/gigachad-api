@@ -1,8 +1,10 @@
 package schema
 
 import (
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
@@ -21,9 +23,15 @@ func (User) Fields() []ent.Field {
 		field.String("username"),
 		field.String("hashed_password"),
 		field.String("name"),
-		field.String("created_at").DefaultFunc(generateTime),
-		field.Int("activated").Default(0),
-		field.Int("version").Default(1),
+		field.String("created_at").
+			DefaultFunc(generateTime).
+			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
+		field.Int("activated").
+			Default(0).
+			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
+		field.Int("version").
+			Default(1).
+			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 	}
 }
 
@@ -42,6 +50,15 @@ func (User) Edges() []ent.Edge {
 		edge.To("routines", Routine.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.To("workouts", Workout.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
 		edge.To("workout_logs", WorkoutLog.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
-		edge.To("routine_exercises", RoutineExercise.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("routine_exercises", RoutineExercise.Type).
+			Annotations(entsql.OnDelete(entsql.Cascade)),
+	}
+}
+
+func (User) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entgql.RelayConnection(),
+		entgql.QueryField(),
+		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

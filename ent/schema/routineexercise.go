@@ -1,8 +1,10 @@
 package schema
 
 import (
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
@@ -19,7 +21,7 @@ func (RoutineExercise) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").DefaultFunc(generateKSUID),
 		field.Int("rest_timer").Optional(),
-		field.JSON("sets", &schematype.Sets{}),
+		field.JSON("sets", &schematype.Sets{}).Annotations(entgql.Type("Map")),
 		field.String("routine_id"),
 		field.String("exercise_id"),
 		field.String("user_id").Optional(),
@@ -40,5 +42,13 @@ func (RoutineExercise) Edges() []ent.Edge {
 func (RoutineExercise) Indexes() []ent.Index {
 	return []ent.Index{
 		index.Fields("routine_id").Unique(),
+	}
+}
+
+func (RoutineExercise) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entgql.RelayConnection(),
+		entgql.QueryField(),
+		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

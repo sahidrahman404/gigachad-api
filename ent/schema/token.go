@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -15,7 +16,8 @@ type Token struct {
 // Fields of the Token.
 func (Token) Fields() []ent.Field {
 	return []ent.Field{
-		field.Bytes("hash"),
+		field.String("id").DefaultFunc(generateKSUID),
+		field.Bytes("hash").Annotations(entgql.Skip()),
 		field.String("expiry"),
 		field.String("scope"),
 		field.String("user_id").Optional(),

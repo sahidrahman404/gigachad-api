@@ -9,48 +9,58 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id int) predicate.Token {
+func ID(id string) predicate.Token {
 	return predicate.Token(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id int) predicate.Token {
+func IDEQ(id string) predicate.Token {
 	return predicate.Token(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id int) predicate.Token {
+func IDNEQ(id string) predicate.Token {
 	return predicate.Token(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...int) predicate.Token {
+func IDIn(ids ...string) predicate.Token {
 	return predicate.Token(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...int) predicate.Token {
+func IDNotIn(ids ...string) predicate.Token {
 	return predicate.Token(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id int) predicate.Token {
+func IDGT(id string) predicate.Token {
 	return predicate.Token(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id int) predicate.Token {
+func IDGTE(id string) predicate.Token {
 	return predicate.Token(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id int) predicate.Token {
+func IDLT(id string) predicate.Token {
 	return predicate.Token(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id int) predicate.Token {
+func IDLTE(id string) predicate.Token {
 	return predicate.Token(sql.FieldLTE(FieldID, id))
+}
+
+// IDEqualFold applies the EqualFold predicate on the ID field.
+func IDEqualFold(id string) predicate.Token {
+	return predicate.Token(sql.FieldEqualFold(FieldID, id))
+}
+
+// IDContainsFold applies the ContainsFold predicate on the ID field.
+func IDContainsFold(id string) predicate.Token {
+	return predicate.Token(sql.FieldContainsFold(FieldID, id))
 }
 
 // Hash applies equality check predicate on the "hash" field. It's identical to HashEQ.

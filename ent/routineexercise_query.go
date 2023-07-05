@@ -27,6 +27,8 @@ type RoutineExerciseQuery struct {
 	withRoutines  *RoutineQuery
 	withExercises *ExerciseQuery
 	withUsers     *UserQuery
+	modifiers     []func(*sql.Selector)
+	loadTotal     []func(context.Context, []*RoutineExercise) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -456,6 +458,9 @@ func (req *RoutineExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(req.modifiers) > 0 {
+		_spec.Modifiers = req.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -480,6 +485,11 @@ func (req *RoutineExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 	if query := req.withUsers; query != nil {
 		if err := req.loadUsers(ctx, query, nodes, nil,
 			func(n *RoutineExercise, e *User) { n.Edges.Users = e }); err != nil {
+			return nil, err
+		}
+	}
+	for i := range req.loadTotal {
+		if err := req.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -576,6 +586,9 @@ func (req *RoutineExerciseQuery) loadUsers(ctx context.Context, query *UserQuery
 
 func (req *RoutineExerciseQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := req.querySpec()
+	if len(req.modifiers) > 0 {
+		_spec.Modifiers = req.modifiers
+	}
 	_spec.Node.Columns = req.ctx.Fields
 	if len(req.ctx.Fields) > 0 {
 		_spec.Unique = req.ctx.Unique != nil && *req.ctx.Unique

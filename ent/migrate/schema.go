@@ -157,7 +157,7 @@ var (
 	}
 	// TokensColumns holds the columns for the "tokens" table.
 	TokensColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "id", Type: field.TypeString},
 		{Name: "hash", Type: field.TypeBytes},
 		{Name: "expiry", Type: field.TypeString},
 		{Name: "scope", Type: field.TypeString},
