@@ -99,6 +99,11 @@ func (app *application) routes() http.Handler {
 			r.Get("/", app.requireActivatedUser(app.listWorkoutHandler))
 			r.Get("/{workoutID}", app.requireActivatedUser(app.getWorkoutHandler))
 		})
+
+		// WorkoutLog resources
+		r.Route("/workoutLogs", func(r chi.Router) {
+			r.Post("/", app.requireActivatedUser(app.createWorkoutLogHandler))
+		})
 	})
 
 	return mux
