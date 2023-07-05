@@ -92,6 +92,13 @@ func (app *application) routes() http.Handler {
 				app.requireActivatedUser(app.deleteRoutineExerciseHandler),
 			)
 		})
+
+		// Workout resources
+		r.Route("/workouts", func(r chi.Router) {
+			r.Post("/", app.requireActivatedUser(app.createWorkoutHandler))
+			r.Get("/", app.requireActivatedUser(app.listWorkoutHandler))
+			r.Get("/{workoutID}", app.requireActivatedUser(app.getWorkoutHandler))
+		})
 	})
 
 	return mux
