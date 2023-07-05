@@ -10,11 +10,10 @@ import (
 )
 
 type RoutineExerciseStorer interface {
-	Insert(ctx context.Context, r *types.Routine) error
-	Get(ctx context.Context, id string) (*types.Routine, error)
-	Update(ctx context.Context, r *types.Routine) error
-	Delete(ctx context.Context, id string) error
-	GetAllForRoutine(ctx context.Context, routineID string) ([]*types.RoutineExercise, error)
+	InsertMany(context.Context, []*types.RoutineExercise, string) error
+	Update(context.Context, *types.RoutineExercise, string) error
+	Delete(context.Context, string) error
+	GetAllForRoutine(context.Context, string) ([]*types.RoutineExercise, error)
 }
 
 type RoutineExerciseStore struct {
@@ -27,45 +26,64 @@ func NewEntRoutineExerciseStore(c *ent.Client) *RoutineExerciseStore {
 	}
 }
 
-func (e *RoutineExerciseStore) Insert(ctx context.Context, r *types.Routine) error {
-	routine, err := e.Client.Routine.Create().SetName(r.Ent.Name).SetUserID(r.Ent.UserID).Save(ctx)
+func (e *RoutineExerciseStore) InsertMany(
+	ctx context.Context,
+	re []*types.RoutineExercise,
+	userID string,
+) error {
+	bulk := make([]*ent.RoutineExerciseCreate, len(re))
+	for i, v := range re {
+		bulk[i] = e.Client.RoutineExercise.Create().
+			SetNillableRestTimer(&v.Ent.RestTimer).
+			SetSets(v.Ent.Sets).
+			SetRoutineID(v.Ent.RoutineID).
+			SetExerciseID(v.Ent.ExerciseID).
+			SetUserID(userID)
+	}
+	routine, err := e.Client.RoutineExercise.CreateBulk(bulk...).Save(ctx)
 	if err != nil {
 		return err
 	}
-	r.Ent.ID = routine.ID
-	return nil
-}
-
-func (e *RoutineExerciseStore) Get(ctx context.Context, id string) (*types.Routine, error) {
-	r, err := e.Client.Routine.Get(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-	return &types.Routine{
-		Ent: r,
-	}, nil
-}
-
-func (e *RoutineExerciseStore) Update(ctx context.Context, r *types.Routine) error {
-	_, err := e.Client.Routine.UpdateOneID(r.Ent.ID).SetName(r.Ent.Name).SetUserID(r.Ent.UserID).Save(ctx)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (e *RoutineExerciseStore) Delete(ctx context.Context, id string) error {
-	err := e.Client.Routine.DeleteOneID(id).Exec(ctx)
-	if err != nil {
-		return err
+	for i, v := range routine {
+		re[i].Ent.ID = v.ID
 	}
 	return nil
 }
 
-func (e *RoutineExerciseStore) GetAllForRoutine(ctx context.Context, routineID string) ([]*types.RoutineExercise, error) {
+func (e *RoutineExerciseStore) Update(
+	ctx context.Context,
+	re *types.RoutineExercise,
+	routineExerciseID string,
+) error {
+	_, err := e.Client.RoutineExercise.UpdateOneID(routineExerciseID).
+		SetNillableRestTimer(&re.Ent.RestTimer).
+		SetSets(re.Ent.Sets).Save(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (e *RoutineExerciseStore) Delete(
+	ctx context.Context,
+	routineExerciseID string,
+) error {
+	err := e.Client.RoutineExercise.DeleteOneID(routineExerciseID).Exec(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (e *RoutineExerciseStore) GetAllForRoutine(
+	ctx context.Context,
+	routineID string,
+) ([]*types.RoutineExercise, error) {
 	routine, err := e.Client.RoutineExercise.Query().
 		Where(routineexercise.HasRoutinesWith(routine.ID(routineID))).
-		WithExercises().
+		WithExercises(func(eq *ent.ExerciseQuery) {
+			eq.WithExerciseTypes()
+		}).
 		WithRoutines().
 		All(ctx)
 	if err != nil {
