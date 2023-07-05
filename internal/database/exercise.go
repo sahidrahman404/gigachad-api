@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
@@ -64,7 +65,7 @@ func (e *ExerciseStore) Delete(ctx context.Context, ex *types.Exercise) error {
 
 func (e *ExerciseStore) Get(ctx context.Context, id string) (*types.Exercise, error) {
 	exercise, err := e.Client.Exercise.Get(ctx, id)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	return &types.Exercise{
@@ -73,12 +74,12 @@ func (e *ExerciseStore) Get(ctx context.Context, id string) (*types.Exercise, er
 }
 
 func (e *ExerciseStore) GetAll(ctx context.Context) ([]*types.Exercise, error) {
-	exercises, err := e.Client.Exercise.Query().All(ctx)
-	if err != nil{
+	exercises, err := e.Client.Exercise.Query().Where(exercise.UserIDIsNil()).All(ctx)
+	if err != nil {
 		return nil, err
 	}
 	exs := []*types.Exercise{}
-	for _, v := range exercises{
+	for _, v := range exercises {
 		exs = append(exs, &types.Exercise{
 			Ent: v,
 		})
