@@ -121,3 +121,22 @@ func (app *application) deleteRoutineHandler(w http.ResponseWriter, r *http.Requ
 		app.serverError(w, r, err)
 	}
 }
+
+func (app *application) getRoutineHandler(w http.ResponseWriter, r *http.Request) {
+	routineID, err := app.readParams("routineID", r)
+	if err != nil {
+		app.badRequest(w, r, err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	user := app.contextGetUser(r)
+	routine, err := app.storage.Routine.GetForUser(ctx, routineID, user.Ent.ID)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+	err = response.JSON(w, http.StatusOK, routine)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+}

@@ -74,6 +74,7 @@ func (app *application) routes() http.Handler {
 		r.Route("/routines", func(r chi.Router) {
 			r.Post("/", app.requireActivatedUser(app.createRoutineHandler))
 			r.Get("/", app.requireActivatedUser(app.listRoutineHandler))
+			r.Get("/{routineID}", app.requireActivatedUser(app.getRoutineHandler))
 			r.Put("/{routineID}", app.requireActivatedUser(app.updateRoutineHandler))
 			r.Delete("/{routineID}", app.requireActivatedUser(app.deleteRoutineHandler))
 		})
