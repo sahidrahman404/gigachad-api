@@ -10,9 +10,9 @@ require (
 	github.com/libsql/libsql-client-go v0.0.0-20230701171611-68694a37813e
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/segmentio/ksuid v1.0.4
-	golang.org/x/crypto v0.0.0-20220517005047-85d78b3ac167
+	golang.org/x/crypto v0.11.0
 	golang.org/x/exp v0.0.0-20230626212559-97b1e661b5df
-	golang.org/x/text v0.10.0
+	golang.org/x/text v0.11.0
 )
 
 require (
@@ -29,9 +29,10 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
+	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/zclconf/go-cty v1.8.0 // indirect
 	golang.org/x/mod v0.11.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/mail.v2 v2.3.1 // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
