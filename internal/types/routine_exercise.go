@@ -6,6 +6,11 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
 
+type UpdateRoutineExerciseParams struct {
+	RestTimer *int            `json:"restTimer"`
+	Sets      schematype.Sets `json:"set"`
+}
+
 type CreateRoutineExerciseParams struct {
 	RoutineID        string `json:"routineID"`
 	RoutineExercises []RE   `json:"routineExercises"`
@@ -19,6 +24,15 @@ type RE struct {
 
 type RoutineExercise struct {
 	Ent *ent.RoutineExercise
+}
+
+func UpdateRoutineExerciseFromParams(p UpdateRoutineExerciseParams) *RoutineExercise {
+	return &RoutineExercise{
+		Ent: &ent.RoutineExercise{
+			RestTimer: *p.RestTimer,
+			Sets:      &p.Sets,
+		},
+	}
 }
 
 func NewRoutineExerciseFromParams(p CreateRoutineExerciseParams, userID string) []*RoutineExercise {
