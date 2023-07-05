@@ -4,12 +4,14 @@ import (
 	"context"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 type WorkoutStorer interface {
-	Insert(ctx context.Context, w *types.Workout) error
-	GetAll(ctx context.Context) ([]*types.Workout, error)
+	Insert(context.Context, *types.Workout) error
+	GetAllForUser(context.Context, string) ([]*types.Workout, error)
+	GetForUser(ctx context.Context, workoutID string, userID string) (*types.Workout, error)
 }
 
 type WorkoutStore struct {
@@ -35,10 +37,15 @@ func (e *WorkoutStore) Insert(ctx context.Context, w *types.Workout) error {
 	return nil
 }
 
-func (e *WorkoutStore) GetAll(ctx context.Context) ([]*types.Workout, error) {
-	w, err := e.Client.Workout.Query().WithWorkoutLogs(func(wlq *ent.WorkoutLogQuery) {
-		wlq.WithExercises()
-	}).All(ctx)
+func (e *WorkoutStore) GetAllForUser(ctx context.Context, userID string) ([]*types.Workout, error) {
+	w, err := e.Client.Workout.Query().
+		Where(workout.UserID(userID)).
+		WithWorkoutLogs(func(wlq *ent.WorkoutLogQuery) {
+			wlq.WithExercises(func(eq *ent.ExerciseQuery) {
+				eq.WithExerciseTypes()
+			})
+		}).
+		All(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -49,4 +56,25 @@ func (e *WorkoutStore) GetAll(ctx context.Context) ([]*types.Workout, error) {
 		})
 	}
 	return workout, nil
+}
+
+func (e *WorkoutStore) GetForUser(
+	ctx context.Context,
+	workoutID string,
+	userID string,
+) (*types.Workout, error) {
+	w, err := e.Client.Workout.Query().
+		Where(workout.ID(workoutID), workout.UserID(userID)).
+		WithWorkoutLogs(func(wlq *ent.WorkoutLogQuery) {
+			wlq.WithExercises(func(eq *ent.ExerciseQuery) {
+				eq.WithExerciseTypes()
+			})
+		}).
+		Only(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &types.Workout{
+		Ent: w,
+	}, nil
 }
