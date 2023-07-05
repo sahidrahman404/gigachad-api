@@ -11,7 +11,7 @@ import (
 
 type RoutineStorer interface {
 	Insert(context.Context, *types.Routine) error
-	Get(context.Context, string) (*types.Routine, error)
+	GetForUser(context.Context, string, string) (*types.Routine, error)
 	Update(context.Context, *types.Routine, string) error
 	Delete(context.Context, string) error
 	GetAllForUser(context.Context, string) ([]*types.Routine, error)
@@ -36,8 +36,19 @@ func (e *RoutineStore) Insert(ctx context.Context, r *types.Routine) error {
 	return nil
 }
 
-func (e *RoutineStore) Get(ctx context.Context, routineID string) (*types.Routine, error) {
-	r, err := e.Client.Routine.Get(ctx, routineID)
+func (e *RoutineStore) GetForUser(
+	ctx context.Context,
+	routineID string,
+	userID string,
+) (*types.Routine, error) {
+	r, err := e.Client.Routine.Query().
+		Where(routine.ID(routineID), routine.UserID(userID)).
+		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
+			req.WithExercises(func(eq *ent.ExerciseQuery) {
+				eq.WithExerciseTypes()
+			})
+		}).
+		Only(ctx)
 	if err != nil {
 		return nil, err
 	}
