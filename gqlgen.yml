@@ -1,0 +1,35 @@
+# schema tells gqlgen where the GraphQL schema is located.
+schema:
+  - ent.graphql
+
+# resolver reports where the resolver implementations go.
+resolver:
+  layout: follow-schema
+  dir: .
+
+# gqlgen will search for any type names in the schema in these go packages
+# if they match it will use them, otherwise it will generate them.
+
+# autobind tells gqngen to search for any type names in the GraphQL schema in the
+# provided package. If they match it will use them, otherwise it will generate new.
+autobind:
+  - github.com/sahidrahman404/gigachad-api/ent
+  - github.com/sahidrahman404/gigachad-api/ent/user
+  - github.com/sahidrahman404/gigachad-api/ent/token
+  - github.com/sahidrahman404/gigachad-api/ent/exercise
+  - github.com/sahidrahman404/gigachad-api/ent/equipment
+  - github.com/sahidrahman404/gigachad-api/ent/musclesgroup
+  - github.com/sahidrahman404/gigachad-api/ent/exercisetype
+  - github.com/sahidrahman404/gigachad-api/ent/routine
+  - github.com/sahidrahman404/gigachad-api/ent/routineexercise
+  - github.com/sahidrahman404/gigachad-api/ent/workout
+  - github.com/sahidrahman404/gigachad-api/ent/workoutlog
+
+# This section declares type mapping between the GraphQL and Go type systems.
+models:
+  Node:
+    model:
+      - github.com/sahidrahman404/gigachad-api/ent.Noder
+  Sets:
+    model:
+      - github.com/sahidrahman404/gigachad-api/ent/schema/schematype.Sets
