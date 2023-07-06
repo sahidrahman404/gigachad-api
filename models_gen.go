@@ -6,6 +6,10 @@ type ActivateUser struct {
 	TokenPlainText string `json:"tokenPlainText"`
 }
 
+type ActivationTokenParams struct {
+	Email string `json:"email"`
+}
+
 type Login struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`

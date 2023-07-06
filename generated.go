@@ -138,6 +138,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		ActivateUser              func(childComplexity int, input ActivateUser) int
+		CreateActivationToken     func(childComplexity int, input ActivationTokenParams) int
 		CreateAuthenticationToken func(childComplexity int, input Login) int
 		CreateUser                func(childComplexity int, input ent.CreateUserInput) int
 	}
@@ -296,6 +297,7 @@ type MutationResolver interface {
 	CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error)
 	ActivateUser(ctx context.Context, input ActivateUser) (*ent.User, error)
 	CreateAuthenticationToken(ctx context.Context, input Login) (*string, error)
+	CreateActivationToken(ctx context.Context, input ActivationTokenParams) (*string, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id string) (ent.Noder, error)
@@ -692,6 +694,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.ActivateUser(childComplexity, args["input"].(ActivateUser)), true
+
+	case "Mutation.createActivationToken":
+		if e.complexity.Mutation.CreateActivationToken == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createActivationToken_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateActivationToken(childComplexity, args["input"].(ActivationTokenParams)), true
 
 	case "Mutation.createAuthenticationToken":
 		if e.complexity.Mutation.CreateAuthenticationToken == nil {
@@ -1446,6 +1460,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputActivateUser,
+		ec.unmarshalInputActivationTokenParams,
 		ec.unmarshalInputCreateEquipmentInput,
 		ec.unmarshalInputCreateExerciseInput,
 		ec.unmarshalInputCreateExerciseTypeInput,
@@ -1602,6 +1617,21 @@ func (ec *executionContext) field_Mutation_activateUser_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNActivateUser2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivateUser(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createActivationToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 ActivationTokenParams
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNActivationTokenParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivationTokenParams(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4796,6 +4826,58 @@ func (ec *executionContext) fieldContext_Mutation_createAuthenticationToken(ctx 
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createAuthenticationToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createActivationToken(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createActivationToken(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateActivationToken(rctx, fc.Args["input"].(ActivationTokenParams))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createActivationToken(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createActivationToken_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -11623,6 +11705,35 @@ func (ec *executionContext) unmarshalInputActivateUser(ctx context.Context, obj 
 				return it, err
 			}
 			it.TokenPlainText = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputActivationTokenParams(ctx context.Context, obj interface{}) (ActivationTokenParams, error) {
+	var it ActivationTokenParams
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"email"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "email":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Email = data
 		}
 	}
 
@@ -20734,6 +20845,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createAuthenticationToken(ctx, field)
 			})
+		case "createActivationToken":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createActivationToken(ctx, field)
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -22878,6 +22993,11 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 func (ec *executionContext) unmarshalNActivateUser2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivateUser(ctx context.Context, v interface{}) (ActivateUser, error) {
 	res, err := ec.unmarshalInputActivateUser(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNActivationTokenParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivationTokenParams(ctx context.Context, v interface{}) (ActivationTokenParams, error) {
+	res, err := ec.unmarshalInputActivationTokenParams(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

@@ -3,6 +3,11 @@ input Login {
   password: String!
 }
 
+input ActivationTokenParams {
+  email: String!
+}
+
 extend type Mutation {
   createAuthenticationToken(input: Login!): String
+  createActivationToken(input: ActivationTokenParams!): String
 }

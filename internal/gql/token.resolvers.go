@@ -52,3 +52,44 @@ func (r *mutationResolver) CreateAuthenticationToken(ctx context.Context, input 
 	}
 	return &token.Plaintext, nil
 }
+
+// CreateActivationToken is the resolver for the createActivationToken field.
+func (r *mutationResolver) CreateActivationToken(ctx context.Context, input gigachad.ActivationTokenParams) (*string, error) {
+	v := validator.NewValidator()
+
+	if types.ValidateEmail(v, input.Email); v.HasErrors() {
+		return nil, r.errorMessage(v)
+	}
+
+	user, err := r.storage.Users.GetByEmail(input.Email)
+	if err != nil {
+		switch {
+		case errors.Is(err, database.ErrRecordNotFound):
+			return nil, r.invalidCredentials()
+		default:
+			return nil, r.serverError(err)
+		}
+	}
+
+	if user.Ent.Activated == 1 {
+		v.AddFieldError("email", "user has already been activated")
+		return nil, r.errorMessage(v)
+	}
+
+	token, err := r.storage.Tokens.New(user.Ent.ID, 3*24*time.Hour, database.ScopeActivation)
+	if err != nil {
+		return nil, r.serverError(err)
+	}
+
+	r.backgroundTask(func() error {
+		data := map[string]interface{}{
+			"activationToken": token.Plaintext,
+		}
+
+		return r.mailer.Send(user.Ent.Email, data, "token_activation.tmpl")
+	})
+
+	message := "an email will be sent to you containing activation instructions"
+
+	return &message, nil
+}
