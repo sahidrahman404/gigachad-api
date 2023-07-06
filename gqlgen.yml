@@ -20,6 +20,9 @@ autobind:
 
 # This section declares type mapping between the GraphQL and Go type systems.
 models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
   Node:
     model:
       - github.com/sahidrahman404/gigachad-api/ent.Noder

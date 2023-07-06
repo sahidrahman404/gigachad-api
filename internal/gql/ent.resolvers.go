@@ -16,42 +16,42 @@ import (
 
 // Node is the resolver for the node field.
 func (r *queryResolver) Node(ctx context.Context, id string) (ent.Noder, error) {
-	panic(fmt.Errorf("not implemented: Node - node"))
+	return r.client.Noder(ctx, id)
 }
 
 // Nodes is the resolver for the nodes field.
 func (r *queryResolver) Nodes(ctx context.Context, ids []string) ([]ent.Noder, error) {
-	panic(fmt.Errorf("not implemented: Nodes - nodes"))
+	return r.client.Noders(ctx, ids)
 }
 
 // EquipmentSlice is the resolver for the equipmentSlice field.
 func (r *queryResolver) EquipmentSlice(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *ent.EquipmentWhereInput) (*ent.EquipmentConnection, error) {
-	panic(fmt.Errorf("not implemented: EquipmentSlice - equipmentSlice"))
+	return r.client.Equipment.Query().Paginate(ctx, after, first, before, last, ent.WithEquipmentFilter(where.Filter))
 }
 
 // Exercises is the resolver for the exercises field.
 func (r *queryResolver) Exercises(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *ent.ExerciseWhereInput) (*ent.ExerciseConnection, error) {
-	panic(fmt.Errorf("not implemented: Exercises - exercises"))
+	return r.client.Exercise.Query().Paginate(ctx, after, first, before, last, ent.WithExerciseFilter(where.Filter))
 }
 
 // ExerciseTypes is the resolver for the exerciseTypes field.
 func (r *queryResolver) ExerciseTypes(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *ent.ExerciseTypeWhereInput) (*ent.ExerciseTypeConnection, error) {
-	panic(fmt.Errorf("not implemented: ExerciseTypes - exerciseTypes"))
+	return r.client.ExerciseType.Query().Paginate(ctx, after, first, before, last, ent.WithExerciseTypeFilter(where.Filter))
 }
 
 // MusclesGroups is the resolver for the musclesGroups field.
 func (r *queryResolver) MusclesGroups(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *ent.MusclesGroupWhereInput) (*ent.MusclesGroupConnection, error) {
-	panic(fmt.Errorf("not implemented: MusclesGroups - musclesGroups"))
+	return r.client.MusclesGroup.Query().Paginate(ctx, after, first, before, last, ent.WithMusclesGroupFilter(where.Filter))
 }
 
 // Routines is the resolver for the routines field.
 func (r *queryResolver) Routines(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *ent.RoutineWhereInput) (*ent.RoutineConnection, error) {
-	panic(fmt.Errorf("not implemented: Routines - routines"))
+	return r.client.Routine.Query().Paginate(ctx, after, first, before, last, ent.WithRoutineFilter(where.Filter))
 }
 
 // RoutineExercises is the resolver for the routineExercises field.
 func (r *queryResolver) RoutineExercises(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *ent.RoutineExerciseWhereInput) (*ent.RoutineExerciseConnection, error) {
-	panic(fmt.Errorf("not implemented: RoutineExercises - routineExercises"))
+	return r.client.RoutineExercise.Query().Paginate(ctx, after, first, before, last, ent.WithRoutineExerciseFilter(where.Filter))
 }
 
 // Users is the resolver for the users field.
@@ -61,12 +61,12 @@ func (r *queryResolver) Users(ctx context.Context, after *entgql.Cursor[string],
 
 // Workouts is the resolver for the workouts field.
 func (r *queryResolver) Workouts(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, orderBy *ent.WorkoutOrder, where *ent.WorkoutWhereInput) (*ent.WorkoutConnection, error) {
-	panic(fmt.Errorf("not implemented: Workouts - workouts"))
+	return r.client.Workout.Query().Paginate(ctx, after, first, before, last, ent.WithWorkoutFilter(where.Filter), ent.WithWorkoutOrder(orderBy))
 }
 
 // WorkoutLogs is the resolver for the workoutLogs field.
 func (r *queryResolver) WorkoutLogs(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) (*ent.WorkoutLogConnection, error) {
-	panic(fmt.Errorf("not implemented: WorkoutLogs - workoutLogs"))
+	return r.client.WorkoutLog.Query().Paginate(ctx, after, first, before, last, ent.WithWorkoutLogFilter(where.Filter), ent.WithWorkoutLogOrder(orderBy))
 }
 
 // Sets is the resolver for the sets field.
