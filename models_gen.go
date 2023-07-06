@@ -5,3 +5,8 @@ package gigachad
 type ActivateUser struct {
 	TokenPlainText string `json:"tokenPlainText"`
 }
+
+type Login struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}

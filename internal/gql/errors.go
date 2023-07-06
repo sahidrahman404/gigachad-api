@@ -33,3 +33,8 @@ func (r *Resolver) editConflict() *gqlerror.Error {
 	message := "unable to update the record due to an edit conflict, please try again"
 	return gqlerror.Errorf(message)
 }
+
+func (r *Resolver) invalidCredentials() *gqlerror.Error {
+	message := "invalid authentication credentials"
+	return gqlerror.Errorf(message)
+}

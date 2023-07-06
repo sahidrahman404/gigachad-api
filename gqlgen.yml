@@ -1,6 +1,7 @@
 # schema tells gqlgen where the GraphQL schema is located.
 schema:
   - ./internal/gql/user.graphql
+  - ./internal/gql/token.graphql
   - ./internal/gql/ent.graphql
 
 # resolver reports where the resolver implementations go.
