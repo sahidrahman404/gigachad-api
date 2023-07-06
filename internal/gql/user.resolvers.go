@@ -110,6 +110,62 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 	return user.Ent, nil
 }
 
+// UpdateUserPassword is the resolver for the updateUserPassword field.
+func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigachad.ResetUserPasswordParams) (*string, error) {
+	v := validator.NewValidator()
+
+	types.ValidatePasswordPlaintext(v, input.Password)
+	types.ValidateTokenPlaintext(v, input.TokenPlainText)
+
+	if v.HasErrors() {
+		return nil, r.errorMessage(v)
+	}
+
+	user, err := r.storage.Users.GetForToken(database.ScopePasswordReset, input.TokenPlainText)
+	if err != nil {
+		switch {
+		case errors.Is(err, database.ErrRecordNotFound):
+			v.AddFieldError("token", "invalid or expired password reset token")
+			return nil, r.errorMessage(v)
+		default:
+			return nil, r.serverError(err)
+		}
+	}
+
+	err = user.SetPassword(input.Password)
+	if err != nil {
+		return nil, r.serverError(err)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	allow := privacy.DecisionContext(ctx, privacy.Allow)
+	err = r.storage.Users.Update(user, allow)
+	if err != nil {
+		switch {
+		case errors.Is(err, database.ErrDuplicateUsername):
+			v.AddFieldError("username", "a user with this username already exists")
+			return nil, r.errorMessage(v)
+		case errors.Is(err, database.ErrDuplicateEmail):
+			v.AddFieldError("email", "a user with this email address already exists")
+			return nil, r.errorMessage(v)
+		case errors.Is(err, database.ErrEditConflict):
+			return nil, r.editConflict()
+		default:
+			return nil, r.serverError(err)
+		}
+	}
+
+	err = r.storage.Tokens.DeleteAllForUser(database.ScopePasswordReset, user.Ent.ID)
+	if err != nil {
+		return nil, r.serverError(err)
+	}
+
+	message := "your password was successfully reset"
+	return &message, nil
+}
+
 // Mutation returns gigachad.MutationResolver implementation.
 func (r *Resolver) Mutation() gigachad.MutationResolver { return &mutationResolver{r} }
 

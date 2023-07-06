@@ -142,6 +142,7 @@ type ComplexityRoot struct {
 		CreateAuthenticationToken func(childComplexity int, input Login) int
 		CreatePasswordResetToken  func(childComplexity int, input ResetPasswordParams) int
 		CreateUser                func(childComplexity int, input ent.CreateUserInput) int
+		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordParams) int
 	}
 
 	PageInfo struct {
@@ -297,6 +298,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error)
 	ActivateUser(ctx context.Context, input ActivateUser) (*ent.User, error)
+	UpdateUserPassword(ctx context.Context, input ResetUserPasswordParams) (*string, error)
 	CreateAuthenticationToken(ctx context.Context, input Login) (*string, error)
 	CreateActivationToken(ctx context.Context, input ActivationTokenParams) (*string, error)
 	CreatePasswordResetToken(ctx context.Context, input ResetPasswordParams) (*string, error)
@@ -744,6 +746,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(ent.CreateUserInput)), true
+
+	case "Mutation.updateUserPassword":
+		if e.complexity.Mutation.UpdateUserPassword == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateUserPassword_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateUserPassword(childComplexity, args["input"].(ResetUserPasswordParams)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -1490,6 +1504,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputLogin,
 		ec.unmarshalInputMusclesGroupWhereInput,
 		ec.unmarshalInputResetPasswordParams,
+		ec.unmarshalInputResetUserPasswordParams,
 		ec.unmarshalInputRoutineExerciseWhereInput,
 		ec.unmarshalInputRoutineWhereInput,
 		ec.unmarshalInputTokenWhereInput,
@@ -1692,6 +1707,21 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐCreateUserInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateUserPassword_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 ResetUserPasswordParams
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNResetUserPasswordParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordParams(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4804,6 +4834,58 @@ func (ec *executionContext) fieldContext_Mutation_activateUser(ctx context.Conte
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_activateUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateUserPassword(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateUserPassword(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateUserPassword(rctx, fc.Args["input"].(ResetUserPasswordParams))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateUserPassword(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateUserPassword_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -14871,6 +14953,44 @@ func (ec *executionContext) unmarshalInputResetPasswordParams(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputResetUserPasswordParams(ctx context.Context, obj interface{}) (ResetUserPasswordParams, error) {
+	var it ResetUserPasswordParams
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"password", "tokenPlainText"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "password":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Password = data
+		case "tokenPlainText":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenPlainText"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.TokenPlainText = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputRoutineExerciseWhereInput(ctx context.Context, obj interface{}) (ent.RoutineExerciseWhereInput, error) {
 	var it ent.RoutineExerciseWhereInput
 	asMap := map[string]interface{}{}
@@ -20952,6 +21072,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "updateUserPassword":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateUserPassword(ctx, field)
+			})
 		case "createAuthenticationToken":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createAuthenticationToken(ctx, field)
@@ -23374,6 +23498,11 @@ func (ec *executionContext) marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPag
 
 func (ec *executionContext) unmarshalNResetPasswordParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetPasswordParams(ctx context.Context, v interface{}) (ResetPasswordParams, error) {
 	res, err := ec.unmarshalInputResetPasswordParams(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNResetUserPasswordParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordParams(ctx context.Context, v interface{}) (ResetUserPasswordParams, error) {
+	res, err := ec.unmarshalInputResetUserPasswordParams(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

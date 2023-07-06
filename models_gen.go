@@ -18,3 +18,8 @@ type Login struct {
 type ResetPasswordParams struct {
 	Email string `json:"email"`
 }
+
+type ResetUserPasswordParams struct {
+	Password       string `json:"password"`
+	TokenPlainText string `json:"tokenPlainText"`
+}
