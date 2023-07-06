@@ -93,3 +93,44 @@ func (r *mutationResolver) CreateActivationToken(ctx context.Context, input giga
 
 	return &message, nil
 }
+
+// CreatePasswordResetToken is the resolver for the createPasswordResetToken field.
+func (r *mutationResolver) CreatePasswordResetToken(ctx context.Context, input gigachad.ResetPasswordParams) (*string, error) {
+	v := validator.NewValidator()
+
+	if types.ValidateEmail(v, input.Email); v.HasErrors() {
+		return nil, r.errorMessage(v)
+	}
+
+	user, err := r.storage.Users.GetByEmail(input.Email)
+	if err != nil {
+		switch {
+		case errors.Is(err, database.ErrRecordNotFound):
+			v.AddFieldError("email", "no matching email address found")
+			return nil, r.errorMessage(v)
+		default:
+			return nil, r.serverError(err)
+		}
+	}
+
+	if user.Ent.Activated == 0 {
+		v.AddFieldError("email", "user account must be activated")
+		return nil, r.errorMessage(v)
+	}
+
+	token, err := r.storage.Tokens.New(user.Ent.ID, 45*time.Minute, database.ScopePasswordReset)
+	if err != nil {
+		return nil, r.serverError(err)
+	}
+
+	r.backgroundTask(func() error {
+		data := map[string]interface{}{
+			"passwordResetToken": token.Plaintext,
+		}
+
+		return r.mailer.Send(user.Ent.Email, data, "token_password_reset.tmpl")
+	})
+
+	message := "an email will be sent to you containing password instruction"
+	return &message, nil
+}

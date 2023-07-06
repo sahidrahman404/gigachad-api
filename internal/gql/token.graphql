@@ -7,7 +7,12 @@ input ActivationTokenParams {
   email: String!
 }
 
+input ResetPasswordParams {
+  email: String!
+}
+
 extend type Mutation {
   createAuthenticationToken(input: Login!): String
   createActivationToken(input: ActivationTokenParams!): String
+  createPasswordResetToken(input: ResetPasswordParams!): String
 }
