@@ -1,4 +1,4 @@
-package gigachad
+package gql
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"entgo.io/contrib/entgql"
+	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 )
 
@@ -97,32 +98,34 @@ func (r *updateWorkoutLogInputResolver) Sets(ctx context.Context, obj *ent.Updat
 	panic(fmt.Errorf("not implemented: Sets - sets"))
 }
 
-// Query returns QueryResolver implementation.
-func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
+// Query returns gigachad.QueryResolver implementation.
+func (r *Resolver) Query() gigachad.QueryResolver { return &queryResolver{r} }
 
-// RoutineExercise returns RoutineExerciseResolver implementation.
-func (r *Resolver) RoutineExercise() RoutineExerciseResolver { return &routineExerciseResolver{r} }
+// RoutineExercise returns gigachad.RoutineExerciseResolver implementation.
+func (r *Resolver) RoutineExercise() gigachad.RoutineExerciseResolver {
+	return &routineExerciseResolver{r}
+}
 
-// WorkoutLog returns WorkoutLogResolver implementation.
-func (r *Resolver) WorkoutLog() WorkoutLogResolver { return &workoutLogResolver{r} }
+// WorkoutLog returns gigachad.WorkoutLogResolver implementation.
+func (r *Resolver) WorkoutLog() gigachad.WorkoutLogResolver { return &workoutLogResolver{r} }
 
-// CreateRoutineExerciseInput returns CreateRoutineExerciseInputResolver implementation.
-func (r *Resolver) CreateRoutineExerciseInput() CreateRoutineExerciseInputResolver {
+// CreateRoutineExerciseInput returns gigachad.CreateRoutineExerciseInputResolver implementation.
+func (r *Resolver) CreateRoutineExerciseInput() gigachad.CreateRoutineExerciseInputResolver {
 	return &createRoutineExerciseInputResolver{r}
 }
 
-// CreateWorkoutLogInput returns CreateWorkoutLogInputResolver implementation.
-func (r *Resolver) CreateWorkoutLogInput() CreateWorkoutLogInputResolver {
+// CreateWorkoutLogInput returns gigachad.CreateWorkoutLogInputResolver implementation.
+func (r *Resolver) CreateWorkoutLogInput() gigachad.CreateWorkoutLogInputResolver {
 	return &createWorkoutLogInputResolver{r}
 }
 
-// UpdateRoutineExerciseInput returns UpdateRoutineExerciseInputResolver implementation.
-func (r *Resolver) UpdateRoutineExerciseInput() UpdateRoutineExerciseInputResolver {
+// UpdateRoutineExerciseInput returns gigachad.UpdateRoutineExerciseInputResolver implementation.
+func (r *Resolver) UpdateRoutineExerciseInput() gigachad.UpdateRoutineExerciseInputResolver {
 	return &updateRoutineExerciseInputResolver{r}
 }
 
-// UpdateWorkoutLogInput returns UpdateWorkoutLogInputResolver implementation.
-func (r *Resolver) UpdateWorkoutLogInput() UpdateWorkoutLogInputResolver {
+// UpdateWorkoutLogInput returns gigachad.UpdateWorkoutLogInputResolver implementation.
+func (r *Resolver) UpdateWorkoutLogInput() gigachad.UpdateWorkoutLogInputResolver {
 	return &updateWorkoutLogInputResolver{r}
 }
 

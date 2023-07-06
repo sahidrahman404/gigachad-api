@@ -71,7 +71,7 @@ ent/schema:
 ## ent/sql: generate sql schema
 .PHONY: ent/sql
 ent/sql:
-		go run -mod=mod entgo.io/ent/cmd/ent generate --feature privacy,schema/snapshot ./ent/schema
+		go generate .
 
 ## atlas/migrate/diff name=$1
 .PHONY: atlas/migrate/diff

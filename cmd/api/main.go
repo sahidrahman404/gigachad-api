@@ -7,6 +7,7 @@ import (
 	"runtime/debug"
 	"sync"
 
+	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/env"
 	"github.com/sahidrahman404/gigachad-api/internal/leveledlog"
@@ -45,6 +46,7 @@ type application struct {
 	mailer  *smtp.Mailer
 	wg      sync.WaitGroup
 	storage *database.Storage
+	ent     *ent.Client
 }
 
 func run(logger *leveledlog.Logger) error {
@@ -87,6 +89,7 @@ func run(logger *leveledlog.Logger) error {
 		logger:  logger,
 		mailer:  mailer,
 		storage: database.NewStorage(db.Ent),
+		ent:     db.Ent,
 	}
 
 	return app.serveHTTP()

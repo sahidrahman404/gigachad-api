@@ -55,39 +55,6 @@ table "atlas_schema_revisions" {
     columns = [column.version]
   }
 }
-table "tokens" {
-  schema = schema.main
-  column "id" {
-    null           = false
-    type           = integer
-    auto_increment = true
-  }
-  column "hash" {
-    null = false
-    type = blob
-  }
-  column "expiry" {
-    null = false
-    type = text
-  }
-  column "scope" {
-    null = false
-    type = text
-  }
-  column "user_id" {
-    null = true
-    type = text
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "tokens_users_tokens" {
-    columns     = [column.user_id]
-    ref_columns = [table.users.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-}
 table "users" {
   schema = schema.main
   column "id" {
@@ -432,6 +399,38 @@ table "exercises" {
   foreign_key "exercises_equipment_exercises" {
     columns     = [column.equipment_id]
     ref_columns = [table.equipment.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+}
+table "tokens" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "hash" {
+    null = false
+    type = blob
+  }
+  column "expiry" {
+    null = false
+    type = text
+  }
+  column "scope" {
+    null = false
+    type = text
+  }
+  column "user_id" {
+    null = true
+    type = text
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "tokens_users_tokens" {
+    columns     = [column.user_id]
+    ref_columns = [table.users.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
   }

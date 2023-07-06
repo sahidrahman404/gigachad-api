@@ -1,11 +1,12 @@
 # schema tells gqlgen where the GraphQL schema is located.
 schema:
-  - ent.graphql
+  - ./internal/gql/user.graphql
+  - ./internal/gql/ent.graphql
 
 # resolver reports where the resolver implementations go.
 resolver:
   layout: follow-schema
-  dir: .
+  dir: ./internal/gql/
 
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.

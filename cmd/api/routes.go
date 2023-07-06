@@ -3,7 +3,10 @@ package main
 import (
 	"net/http"
 
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi/v5"
+	"github.com/sahidrahman404/gigachad-api/internal/gql"
 )
 
 func (app *application) routes() http.Handler {
@@ -15,6 +18,12 @@ func (app *application) routes() http.Handler {
 	mux.Use(app.recoverPanic)
 
 	mux.Get("/status", app.status)
+
+	srv := handler.NewDefaultServer(
+		gql.NewSchema(app.ent, app.mailer, app.storage, app.logger, &app.wg),
+	)
+	mux.Handle("/gql", playground.Handler("Gigachad", "/query"))
+	mux.Handle("/query", srv)
 
 	mux.Route("/v1", func(r chi.Router) {
 		// users resources
