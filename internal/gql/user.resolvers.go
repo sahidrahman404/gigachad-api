@@ -6,14 +6,15 @@ package gql
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/privacy"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
-	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 // CreateUser is the resolver for the createUser field.
@@ -28,11 +29,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 	v := validator.NewValidator()
 
 	if params.ValidateUser(v); v.HasErrors() {
-		errList := gqlerror.List{}
-		for _, v := range v.FieldErrors {
-			errList = append(errList, gqlerror.Errorf(v))
-		}
-		return nil, errList
+		return nil, r.errorMessage(v)
 	}
 
 	user, err := types.NewUserFromParams(params)
@@ -60,6 +57,55 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 
 		return r.mailer.Send(user.Ent.Email, data, "user_welcome.tmpl")
 	})
+
+	return user.Ent, nil
+}
+
+// ActivateUser is the resolver for the activateUser field.
+func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.ActivateUser) (*ent.User, error) {
+	v := validator.NewValidator()
+
+	if types.ValidateTokenPlaintext(v, input.TokenPlainText); v.HasErrors() {
+		return nil, r.errorMessage(v)
+	}
+
+	user, err := r.storage.Users.GetForToken(database.ScopeActivation, input.TokenPlainText)
+	if err != nil {
+		switch {
+		case errors.Is(err, database.ErrRecordNotFound):
+			v.AddFieldError("token", "invalid or expired activation token")
+			return nil, r.errorMessage(v)
+		default:
+			return nil, r.serverError(err)
+		}
+	}
+
+	user.Ent.Activated = 1
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	allow := privacy.DecisionContext(ctx, privacy.Allow)
+	err = r.storage.Users.Update(user, allow)
+	if err != nil {
+		switch {
+		case errors.Is(err, database.ErrDuplicateUsername):
+			v.AddFieldError("username", "a user with this username already exists")
+			return nil, r.errorMessage(v)
+		case errors.Is(err, database.ErrDuplicateEmail):
+			v.AddFieldError("email", "a user with this email address already exists")
+			return nil, r.errorMessage(v)
+		case errors.Is(err, database.ErrEditConflict):
+			return nil, r.editConflict()
+		default:
+			return nil, r.serverError(err)
+		}
+	}
+
+	err = r.storage.Tokens.DeleteAllForUser(database.ScopeActivation, user.Ent.ID)
+	if err != nil {
+		return nil, r.serverError(err)
+	}
 
 	return user.Ent, nil
 }
