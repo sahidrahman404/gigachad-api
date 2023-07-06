@@ -18,7 +18,8 @@ type WorkoutLog struct {
 func (WorkoutLog) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").DefaultFunc(generateKSUID).Annotations(entgql.OrderField("ID")),
-		field.JSON("sets", &schematype.Sets{}).Annotations(entgql.Type("Map")),
+		field.JSON("sets", &schematype.Sets{}).
+			Annotations(entgql.Type("[Set!]"), entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.String("created_at").DefaultFunc(generateTime).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.String("exercise_id").Optional(),

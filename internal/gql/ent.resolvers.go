@@ -11,6 +11,7 @@ import (
 	"entgo.io/contrib/entgql"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // Node is the resolver for the node field.
@@ -69,32 +70,12 @@ func (r *queryResolver) WorkoutLogs(ctx context.Context, after *entgql.Cursor[st
 }
 
 // Sets is the resolver for the sets field.
-func (r *routineExerciseResolver) Sets(ctx context.Context, obj *ent.RoutineExercise) (map[string]interface{}, error) {
+func (r *routineExerciseResolver) Sets(ctx context.Context, obj *ent.RoutineExercise) ([]*schematype.Set, error) {
 	panic(fmt.Errorf("not implemented: Sets - sets"))
 }
 
 // Sets is the resolver for the sets field.
-func (r *workoutLogResolver) Sets(ctx context.Context, obj *ent.WorkoutLog) (map[string]interface{}, error) {
-	panic(fmt.Errorf("not implemented: Sets - sets"))
-}
-
-// Sets is the resolver for the sets field.
-func (r *createRoutineExerciseInputResolver) Sets(ctx context.Context, obj *ent.CreateRoutineExerciseInput, data map[string]interface{}) error {
-	panic(fmt.Errorf("not implemented: Sets - sets"))
-}
-
-// Sets is the resolver for the sets field.
-func (r *createWorkoutLogInputResolver) Sets(ctx context.Context, obj *ent.CreateWorkoutLogInput, data map[string]interface{}) error {
-	panic(fmt.Errorf("not implemented: Sets - sets"))
-}
-
-// Sets is the resolver for the sets field.
-func (r *updateRoutineExerciseInputResolver) Sets(ctx context.Context, obj *ent.UpdateRoutineExerciseInput, data map[string]interface{}) error {
-	panic(fmt.Errorf("not implemented: Sets - sets"))
-}
-
-// Sets is the resolver for the sets field.
-func (r *updateWorkoutLogInputResolver) Sets(ctx context.Context, obj *ent.UpdateWorkoutLogInput, data map[string]interface{}) error {
+func (r *workoutLogResolver) Sets(ctx context.Context, obj *ent.WorkoutLog) ([]*schematype.Set, error) {
 	panic(fmt.Errorf("not implemented: Sets - sets"))
 }
 

@@ -16,6 +16,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -209,6 +210,14 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	Set struct {
+		Kg   func(childComplexity int) int
+		Km   func(childComplexity int) int
+		Reps func(childComplexity int) int
+		Set  func(childComplexity int) int
+		Time func(childComplexity int) int
+	}
+
 	Token struct {
 		Expiry func(childComplexity int) int
 		ID     func(childComplexity int) int
@@ -317,23 +326,23 @@ type QueryResolver interface {
 	WorkoutLogs(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) (*ent.WorkoutLogConnection, error)
 }
 type RoutineExerciseResolver interface {
-	Sets(ctx context.Context, obj *ent.RoutineExercise) (map[string]interface{}, error)
+	Sets(ctx context.Context, obj *ent.RoutineExercise) ([]*schematype.Set, error)
 }
 type WorkoutLogResolver interface {
-	Sets(ctx context.Context, obj *ent.WorkoutLog) (map[string]interface{}, error)
+	Sets(ctx context.Context, obj *ent.WorkoutLog) ([]*schematype.Set, error)
 }
 
 type CreateRoutineExerciseInputResolver interface {
-	Sets(ctx context.Context, obj *ent.CreateRoutineExerciseInput, data map[string]interface{}) error
+	CreateSets(ctx context.Context, obj *ent.CreateRoutineExerciseInput, data []*schematype.Set) error
 }
 type CreateWorkoutLogInputResolver interface {
-	Sets(ctx context.Context, obj *ent.CreateWorkoutLogInput, data map[string]interface{}) error
+	CreateSets(ctx context.Context, obj *ent.CreateWorkoutLogInput, data []*schematype.Set) error
 }
 type UpdateRoutineExerciseInputResolver interface {
-	Sets(ctx context.Context, obj *ent.UpdateRoutineExerciseInput, data map[string]interface{}) error
+	CreateSets(ctx context.Context, obj *ent.UpdateRoutineExerciseInput, data []*schematype.Set) error
 }
 type UpdateWorkoutLogInputResolver interface {
-	Sets(ctx context.Context, obj *ent.UpdateWorkoutLogInput, data map[string]interface{}) error
+	CreateSets(ctx context.Context, obj *ent.UpdateWorkoutLogInput, data []*schematype.Set) error
 }
 
 type executableSchema struct {
@@ -1094,6 +1103,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RoutineExerciseEdge.Node(childComplexity), true
 
+	case "Set.Kg":
+		if e.complexity.Set.Kg == nil {
+			break
+		}
+
+		return e.complexity.Set.Kg(childComplexity), true
+
+	case "Set.Km":
+		if e.complexity.Set.Km == nil {
+			break
+		}
+
+		return e.complexity.Set.Km(childComplexity), true
+
+	case "Set.Reps":
+		if e.complexity.Set.Reps == nil {
+			break
+		}
+
+		return e.complexity.Set.Reps(childComplexity), true
+
+	case "Set.Set":
+		if e.complexity.Set.Set == nil {
+			break
+		}
+
+		return e.complexity.Set.Set(childComplexity), true
+
+	case "Set.Time":
+		if e.complexity.Set.Time == nil {
+			break
+		}
+
+		return e.complexity.Set.Time(childComplexity), true
+
 	case "Token.expiry":
 		if e.complexity.Token.Expiry == nil {
 			break
@@ -1507,6 +1551,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputResetUserPasswordParams,
 		ec.unmarshalInputRoutineExerciseWhereInput,
 		ec.unmarshalInputRoutineWhereInput,
+		ec.unmarshalInputSetInput,
 		ec.unmarshalInputTokenWhereInput,
 		ec.unmarshalInputUpdateEquipmentInput,
 		ec.unmarshalInputUpdateExerciseInput,
@@ -1618,7 +1663,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "internal/gql/user.graphql" "internal/gql/token.graphql" "internal/gql/ent.graphql"
+//go:embed "internal/gql/user.graphql" "internal/gql/token.graphql" "internal/gql/ent.graphql" "internal/gql/routine_exercise.graphql"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -1633,6 +1678,7 @@ var sources = []*ast.Source{
 	{Name: "internal/gql/user.graphql", Input: sourceData("internal/gql/user.graphql"), BuiltIn: false},
 	{Name: "internal/gql/token.graphql", Input: sourceData("internal/gql/token.graphql"), BuiltIn: false},
 	{Name: "internal/gql/ent.graphql", Input: sourceData("internal/gql/ent.graphql"), BuiltIn: false},
+	{Name: "internal/gql/routine_exercise.graphql", Input: sourceData("internal/gql/routine_exercise.graphql"), BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -6710,9 +6756,9 @@ func (ec *executionContext) _RoutineExercise_sets(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(map[string]interface{})
+	res := resTmp.([]*schematype.Set)
 	fc.Result = res
-	return ec.marshalNMap2map(ctx, field.Selections, res)
+	return ec.marshalNSet2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_RoutineExercise_sets(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6722,7 +6768,19 @@ func (ec *executionContext) fieldContext_RoutineExercise_sets(ctx context.Contex
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Map does not have child fields")
+			switch field.Name {
+			case "Set":
+				return ec.fieldContext_Set_Set(ctx, field)
+			case "Reps":
+				return ec.fieldContext_Set_Reps(ctx, field)
+			case "Kg":
+				return ec.fieldContext_Set_Kg(ctx, field)
+			case "Time":
+				return ec.fieldContext_Set_Time(ctx, field)
+			case "Km":
+				return ec.fieldContext_Set_Km(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Set", field.Name)
 		},
 	}
 	return fc, nil
@@ -7307,6 +7365,214 @@ func (ec *executionContext) fieldContext_RoutineExerciseEdge_cursor(ctx context.
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Cursor does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Set_Set(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_Set(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Set, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Set_Set(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Set",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Set_Reps(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_Reps(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reps, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Set_Reps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Set",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Set_Kg(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_Kg(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Kg, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Set_Kg(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Set",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Set_Time(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_Time(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Time, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Set_Time(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Set",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Set_Km(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_Km(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Km, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Set_Km(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Set",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -9427,9 +9693,9 @@ func (ec *executionContext) _WorkoutLog_sets(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(map[string]interface{})
+	res := resTmp.([]*schematype.Set)
 	fc.Result = res
-	return ec.marshalNMap2map(ctx, field.Selections, res)
+	return ec.marshalNSet2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_WorkoutLog_sets(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9439,7 +9705,19 @@ func (ec *executionContext) fieldContext_WorkoutLog_sets(ctx context.Context, fi
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Map does not have child fields")
+			switch field.Name {
+			case "Set":
+				return ec.fieldContext_Set_Set(ctx, field)
+			case "Reps":
+				return ec.fieldContext_Set_Reps(ctx, field)
+			case "Kg":
+				return ec.fieldContext_Set_Kg(ctx, field)
+			case "Time":
+				return ec.fieldContext_Set_Time(ctx, field)
+			case "Km":
+				return ec.fieldContext_Set_Km(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Set", field.Name)
 		},
 	}
 	return fc, nil
@@ -12162,7 +12440,7 @@ func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"restTimer", "sets", "routinesID", "exercisesID", "usersID"}
+	fieldsInOrder := [...]string{"restTimer", "routinesID", "exercisesID", "usersID", "createSets"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -12178,17 +12456,6 @@ func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context
 				return it, err
 			}
 			it.RestTimer = data
-		case "sets":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
-			data, err := ec.unmarshalNMap2map(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			if err = ec.resolvers.CreateRoutineExerciseInput().Sets(ctx, &it, data); err != nil {
-				return it, err
-			}
 		case "routinesID":
 			var err error
 
@@ -12216,6 +12483,17 @@ func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context
 				return it, err
 			}
 			it.UsersID = data
+		case "createSets":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createSets"))
+			data, err := ec.unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			if err = ec.resolvers.CreateRoutineExerciseInput().CreateSets(ctx, &it, data); err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -12478,24 +12756,13 @@ func (ec *executionContext) unmarshalInputCreateWorkoutLogInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"sets", "usersID", "exercisesID", "workoutsID"}
+	fieldsInOrder := [...]string{"usersID", "exercisesID", "workoutsID", "createSets"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "sets":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
-			data, err := ec.unmarshalNMap2map(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			if err = ec.resolvers.CreateWorkoutLogInput().Sets(ctx, &it, data); err != nil {
-				return it, err
-			}
 		case "usersID":
 			var err error
 
@@ -12523,6 +12790,17 @@ func (ec *executionContext) unmarshalInputCreateWorkoutLogInput(ctx context.Cont
 				return it, err
 			}
 			it.WorkoutsID = data
+		case "createSets":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createSets"))
+			data, err := ec.unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			if err = ec.resolvers.CreateWorkoutLogInput().CreateSets(ctx, &it, data); err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -15661,6 +15939,71 @@ func (ec *executionContext) unmarshalInputRoutineWhereInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSetInput(ctx context.Context, obj interface{}) (schematype.Set, error) {
+	var it schematype.Set
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"Set", "Reps", "Kg", "Time", "Km"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "Set":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Set"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Set = data
+		case "Reps":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Reps"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Reps = data
+		case "Kg":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Kg"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Kg = data
+		case "Time":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Time"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Time = data
+		case "Km":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Km"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Km = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputTokenWhereInput(ctx context.Context, obj interface{}) (ent.TokenWhereInput, error) {
 	var it ent.TokenWhereInput
 	asMap := map[string]interface{}{}
@@ -16596,7 +16939,7 @@ func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"restTimer", "clearRestTimer", "sets", "routinesID", "exercisesID", "usersID", "clearUsers"}
+	fieldsInOrder := [...]string{"restTimer", "clearRestTimer", "routinesID", "exercisesID", "usersID", "clearUsers", "createSets"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -16621,17 +16964,6 @@ func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context
 				return it, err
 			}
 			it.ClearRestTimer = data
-		case "sets":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
-			data, err := ec.unmarshalOMap2map(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			if err = ec.resolvers.UpdateRoutineExerciseInput().Sets(ctx, &it, data); err != nil {
-				return it, err
-			}
 		case "routinesID":
 			var err error
 
@@ -16668,6 +17000,17 @@ func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context
 				return it, err
 			}
 			it.ClearUsers = data
+		case "createSets":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createSets"))
+			data, err := ec.unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			if err = ec.resolvers.UpdateRoutineExerciseInput().CreateSets(ctx, &it, data); err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -17092,24 +17435,13 @@ func (ec *executionContext) unmarshalInputUpdateWorkoutLogInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"sets", "usersID", "clearUsers", "exercisesID", "clearExercises", "workoutsID", "clearWorkouts"}
+	fieldsInOrder := [...]string{"usersID", "clearUsers", "exercisesID", "clearExercises", "workoutsID", "clearWorkouts", "createSets"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "sets":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
-			data, err := ec.unmarshalOMap2map(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			if err = ec.resolvers.UpdateWorkoutLogInput().Sets(ctx, &it, data); err != nil {
-				return it, err
-			}
 		case "usersID":
 			var err error
 
@@ -17164,6 +17496,17 @@ func (ec *executionContext) unmarshalInputUpdateWorkoutLogInput(ctx context.Cont
 				return it, err
 			}
 			it.ClearWorkouts = data
+		case "createSets":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createSets"))
+			data, err := ec.unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			if err = ec.resolvers.UpdateWorkoutLogInput().CreateSets(ctx, &it, data); err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -21961,6 +22304,53 @@ func (ec *executionContext) _RoutineExerciseEdge(ctx context.Context, sel ast.Se
 	return out
 }
 
+var setImplementors = []string{"Set"}
+
+func (ec *executionContext) _Set(ctx context.Context, sel ast.SelectionSet, obj *schematype.Set) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, setImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Set")
+		case "Set":
+			out.Values[i] = ec._Set_Set(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "Reps":
+			out.Values[i] = ec._Set_Reps(ctx, field, obj)
+		case "Kg":
+			out.Values[i] = ec._Set_Kg(ctx, field, obj)
+		case "Time":
+			out.Values[i] = ec._Set_Time(ctx, field, obj)
+		case "Km":
+			out.Values[i] = ec._Set_Km(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var tokenImplementors = []string{"Token", "Node"}
 
 func (ec *executionContext) _Token(ctx context.Context, sel ast.SelectionSet, obj *ent.Token) graphql.Marshaler {
@@ -23404,27 +23794,6 @@ func (ec *executionContext) unmarshalNLogin2githubᚗcomᚋsahidrahman404ᚋgiga
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNMap2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
-	res, err := graphql.UnmarshalMap(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNMap2map(ctx context.Context, sel ast.SelectionSet, v map[string]interface{}) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	res := graphql.MarshalMap(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) marshalNMusclesGroupConnection2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupConnection(ctx context.Context, sel ast.SelectionSet, v ent.MusclesGroupConnection) graphql.Marshaler {
 	return ec._MusclesGroupConnection(ctx, sel, &v)
 }
@@ -23561,6 +23930,82 @@ func (ec *executionContext) unmarshalNRoutineExerciseWhereInput2ᚖgithubᚗcom�
 
 func (ec *executionContext) unmarshalNRoutineWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineWhereInput(ctx context.Context, v interface{}) (*ent.RoutineWhereInput, error) {
 	res, err := ec.unmarshalInputRoutineWhereInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSet2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx context.Context, sel ast.SelectionSet, v []*schematype.Set) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSet2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSet(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNSet2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSet(ctx context.Context, sel ast.SelectionSet, v *schematype.Set) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Set(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx context.Context, v interface{}) ([]*schematype.Set, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*schematype.Set, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNSetInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSet(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNSetInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSet(ctx context.Context, v interface{}) (*schematype.Set, error) {
+	res, err := ec.unmarshalInputSetInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -24465,22 +24910,6 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	res := graphql.MarshalInt(*v)
-	return res
-}
-
-func (ec *executionContext) unmarshalOMap2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := graphql.UnmarshalMap(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOMap2map(ctx context.Context, sel ast.SelectionSet, v map[string]interface{}) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	res := graphql.MarshalMap(v)
 	return res
 }
 

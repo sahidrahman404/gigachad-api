@@ -2,10 +2,6 @@
 
 package ent
 
-import (
-	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
-)
-
 // CreateEquipmentInput represents a mutation input for creating equipmentslice.
 type CreateEquipmentInput struct {
 	Name        string
@@ -419,7 +415,6 @@ func (c *RoutineUpdateOne) SetInput(i UpdateRoutineInput) *RoutineUpdateOne {
 // CreateRoutineExerciseInput represents a mutation input for creating routineexercises.
 type CreateRoutineExerciseInput struct {
 	RestTimer   *int
-	Sets        *schematype.Sets
 	RoutinesID  string
 	ExercisesID string
 	UsersID     *string
@@ -429,9 +424,6 @@ type CreateRoutineExerciseInput struct {
 func (i *CreateRoutineExerciseInput) Mutate(m *RoutineExerciseMutation) {
 	if v := i.RestTimer; v != nil {
 		m.SetRestTimer(*v)
-	}
-	if v := i.Sets; v != nil {
-		m.SetSets(v)
 	}
 	m.SetRoutinesID(i.RoutinesID)
 	m.SetExercisesID(i.ExercisesID)
@@ -450,7 +442,6 @@ func (c *RoutineExerciseCreate) SetInput(i CreateRoutineExerciseInput) *RoutineE
 type UpdateRoutineExerciseInput struct {
 	ClearRestTimer bool
 	RestTimer      *int
-	Sets           *schematype.Sets
 	RoutinesID     *string
 	ExercisesID    *string
 	ClearUsers     bool
@@ -464,9 +455,6 @@ func (i *UpdateRoutineExerciseInput) Mutate(m *RoutineExerciseMutation) {
 	}
 	if v := i.RestTimer; v != nil {
 		m.SetRestTimer(*v)
-	}
-	if v := i.Sets; v != nil {
-		m.SetSets(v)
 	}
 	if v := i.RoutinesID; v != nil {
 		m.SetRoutinesID(*v)
@@ -750,7 +738,6 @@ func (c *WorkoutUpdateOne) SetInput(i UpdateWorkoutInput) *WorkoutUpdateOne {
 
 // CreateWorkoutLogInput represents a mutation input for creating workoutlogs.
 type CreateWorkoutLogInput struct {
-	Sets        *schematype.Sets
 	UsersID     *string
 	ExercisesID *string
 	WorkoutsID  *string
@@ -758,9 +745,6 @@ type CreateWorkoutLogInput struct {
 
 // Mutate applies the CreateWorkoutLogInput on the WorkoutLogMutation builder.
 func (i *CreateWorkoutLogInput) Mutate(m *WorkoutLogMutation) {
-	if v := i.Sets; v != nil {
-		m.SetSets(v)
-	}
 	if v := i.UsersID; v != nil {
 		m.SetUsersID(*v)
 	}
@@ -780,7 +764,6 @@ func (c *WorkoutLogCreate) SetInput(i CreateWorkoutLogInput) *WorkoutLogCreate {
 
 // UpdateWorkoutLogInput represents a mutation input for updating workoutlogs.
 type UpdateWorkoutLogInput struct {
-	Sets           *schematype.Sets
 	ClearUsers     bool
 	UsersID        *string
 	ClearExercises bool
@@ -791,9 +774,6 @@ type UpdateWorkoutLogInput struct {
 
 // Mutate applies the UpdateWorkoutLogInput on the WorkoutLogMutation builder.
 func (i *UpdateWorkoutLogInput) Mutate(m *WorkoutLogMutation) {
-	if v := i.Sets; v != nil {
-		m.SetSets(v)
-	}
 	if i.ClearUsers {
 		m.ClearUsers()
 	}
