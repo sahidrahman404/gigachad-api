@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
@@ -58,27 +59,27 @@ func (reu *RoutineExerciseUpdate) SetSets(s *schematype.Sets) *RoutineExerciseUp
 }
 
 // SetRoutineID sets the "routine_id" field.
-func (reu *RoutineExerciseUpdate) SetRoutineID(s string) *RoutineExerciseUpdate {
-	reu.mutation.SetRoutineID(s)
+func (reu *RoutineExerciseUpdate) SetRoutineID(pk pksuid.ID) *RoutineExerciseUpdate {
+	reu.mutation.SetRoutineID(pk)
 	return reu
 }
 
 // SetExerciseID sets the "exercise_id" field.
-func (reu *RoutineExerciseUpdate) SetExerciseID(s string) *RoutineExerciseUpdate {
-	reu.mutation.SetExerciseID(s)
+func (reu *RoutineExerciseUpdate) SetExerciseID(pk pksuid.ID) *RoutineExerciseUpdate {
+	reu.mutation.SetExerciseID(pk)
 	return reu
 }
 
 // SetUserID sets the "user_id" field.
-func (reu *RoutineExerciseUpdate) SetUserID(s string) *RoutineExerciseUpdate {
-	reu.mutation.SetUserID(s)
+func (reu *RoutineExerciseUpdate) SetUserID(pk pksuid.ID) *RoutineExerciseUpdate {
+	reu.mutation.SetUserID(pk)
 	return reu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableUserID(s *string) *RoutineExerciseUpdate {
-	if s != nil {
-		reu.SetUserID(*s)
+func (reu *RoutineExerciseUpdate) SetNillableUserID(pk *pksuid.ID) *RoutineExerciseUpdate {
+	if pk != nil {
+		reu.SetUserID(*pk)
 	}
 	return reu
 }
@@ -90,7 +91,7 @@ func (reu *RoutineExerciseUpdate) ClearUserID() *RoutineExerciseUpdate {
 }
 
 // SetRoutinesID sets the "routines" edge to the Routine entity by ID.
-func (reu *RoutineExerciseUpdate) SetRoutinesID(id string) *RoutineExerciseUpdate {
+func (reu *RoutineExerciseUpdate) SetRoutinesID(id pksuid.ID) *RoutineExerciseUpdate {
 	reu.mutation.SetRoutinesID(id)
 	return reu
 }
@@ -101,7 +102,7 @@ func (reu *RoutineExerciseUpdate) SetRoutines(r *Routine) *RoutineExerciseUpdate
 }
 
 // SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
-func (reu *RoutineExerciseUpdate) SetExercisesID(id string) *RoutineExerciseUpdate {
+func (reu *RoutineExerciseUpdate) SetExercisesID(id pksuid.ID) *RoutineExerciseUpdate {
 	reu.mutation.SetExercisesID(id)
 	return reu
 }
@@ -112,13 +113,13 @@ func (reu *RoutineExerciseUpdate) SetExercises(e *Exercise) *RoutineExerciseUpda
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (reu *RoutineExerciseUpdate) SetUsersID(id string) *RoutineExerciseUpdate {
+func (reu *RoutineExerciseUpdate) SetUsersID(id pksuid.ID) *RoutineExerciseUpdate {
 	reu.mutation.SetUsersID(id)
 	return reu
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableUsersID(id *string) *RoutineExerciseUpdate {
+func (reu *RoutineExerciseUpdate) SetNillableUsersID(id *pksuid.ID) *RoutineExerciseUpdate {
 	if id != nil {
 		reu = reu.SetUsersID(*id)
 	}
@@ -346,27 +347,27 @@ func (reuo *RoutineExerciseUpdateOne) SetSets(s *schematype.Sets) *RoutineExerci
 }
 
 // SetRoutineID sets the "routine_id" field.
-func (reuo *RoutineExerciseUpdateOne) SetRoutineID(s string) *RoutineExerciseUpdateOne {
-	reuo.mutation.SetRoutineID(s)
+func (reuo *RoutineExerciseUpdateOne) SetRoutineID(pk pksuid.ID) *RoutineExerciseUpdateOne {
+	reuo.mutation.SetRoutineID(pk)
 	return reuo
 }
 
 // SetExerciseID sets the "exercise_id" field.
-func (reuo *RoutineExerciseUpdateOne) SetExerciseID(s string) *RoutineExerciseUpdateOne {
-	reuo.mutation.SetExerciseID(s)
+func (reuo *RoutineExerciseUpdateOne) SetExerciseID(pk pksuid.ID) *RoutineExerciseUpdateOne {
+	reuo.mutation.SetExerciseID(pk)
 	return reuo
 }
 
 // SetUserID sets the "user_id" field.
-func (reuo *RoutineExerciseUpdateOne) SetUserID(s string) *RoutineExerciseUpdateOne {
-	reuo.mutation.SetUserID(s)
+func (reuo *RoutineExerciseUpdateOne) SetUserID(pk pksuid.ID) *RoutineExerciseUpdateOne {
+	reuo.mutation.SetUserID(pk)
 	return reuo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableUserID(s *string) *RoutineExerciseUpdateOne {
-	if s != nil {
-		reuo.SetUserID(*s)
+func (reuo *RoutineExerciseUpdateOne) SetNillableUserID(pk *pksuid.ID) *RoutineExerciseUpdateOne {
+	if pk != nil {
+		reuo.SetUserID(*pk)
 	}
 	return reuo
 }
@@ -378,7 +379,7 @@ func (reuo *RoutineExerciseUpdateOne) ClearUserID() *RoutineExerciseUpdateOne {
 }
 
 // SetRoutinesID sets the "routines" edge to the Routine entity by ID.
-func (reuo *RoutineExerciseUpdateOne) SetRoutinesID(id string) *RoutineExerciseUpdateOne {
+func (reuo *RoutineExerciseUpdateOne) SetRoutinesID(id pksuid.ID) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetRoutinesID(id)
 	return reuo
 }
@@ -389,7 +390,7 @@ func (reuo *RoutineExerciseUpdateOne) SetRoutines(r *Routine) *RoutineExerciseUp
 }
 
 // SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
-func (reuo *RoutineExerciseUpdateOne) SetExercisesID(id string) *RoutineExerciseUpdateOne {
+func (reuo *RoutineExerciseUpdateOne) SetExercisesID(id pksuid.ID) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetExercisesID(id)
 	return reuo
 }
@@ -400,13 +401,13 @@ func (reuo *RoutineExerciseUpdateOne) SetExercises(e *Exercise) *RoutineExercise
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (reuo *RoutineExerciseUpdateOne) SetUsersID(id string) *RoutineExerciseUpdateOne {
+func (reuo *RoutineExerciseUpdateOne) SetUsersID(id pksuid.ID) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetUsersID(id)
 	return reuo
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableUsersID(id *string) *RoutineExerciseUpdateOne {
+func (reuo *RoutineExerciseUpdateOne) SetNillableUsersID(id *pksuid.ID) *RoutineExerciseUpdateOne {
 	if id != nil {
 		reuo = reuo.SetUsersID(*id)
 	}

@@ -10,13 +10,14 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // ExerciseType is the model entity for the ExerciseType schema.
 type ExerciseType struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Properties holds the value of the "properties" field.
@@ -58,7 +59,9 @@ func (*ExerciseType) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case exercisetype.FieldProperties:
 			values[i] = new([]byte)
-		case exercisetype.FieldID, exercisetype.FieldName, exercisetype.FieldDescription:
+		case exercisetype.FieldID:
+			values[i] = new(pksuid.ID)
+		case exercisetype.FieldName, exercisetype.FieldDescription:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -76,10 +79,10 @@ func (et *ExerciseType) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case exercisetype.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				et.ID = value.String
+			} else if value != nil {
+				et.ID = *value
 			}
 		case exercisetype.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {

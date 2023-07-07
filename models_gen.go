@@ -3,6 +3,7 @@
 package gigachad
 
 import (
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
@@ -17,9 +18,9 @@ type ActivationTokenInput struct {
 type CreateRoutineExerciseInput struct {
 	RestTimer  *string           `json:"restTimer,omitempty"`
 	Sets       []*schematype.Set `json:"sets"`
-	RoutineID  string            `json:"routineID"`
-	ExerciseID string            `json:"exerciseID"`
-	UserID     *string           `json:"userID,omitempty"`
+	RoutineID  pksuid.ID         `json:"routineID"`
+	ExerciseID pksuid.ID         `json:"exerciseID"`
+	UserID     *pksuid.ID        `json:"userID,omitempty"`
 }
 
 type LoginInput struct {

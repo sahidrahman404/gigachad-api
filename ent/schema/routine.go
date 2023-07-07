@@ -7,6 +7,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // Routine holds the schema definition for the Routine entity.
@@ -14,12 +15,17 @@ type Routine struct {
 	ent.Schema
 }
 
+func (Routine) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		pksuid.MixinWithPrefix("RO"),
+	}
+}
+
 // Fields of the Routine.
 func (Routine) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").DefaultFunc(generateKSUID),
 		field.String("name"),
-		field.String("user_id").Optional(),
+		field.String("user_id").Optional().GoType(pksuid.ID("")),
 	}
 }
 

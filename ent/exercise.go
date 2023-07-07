@@ -12,6 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -19,7 +20,7 @@ import (
 type Exercise struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Image holds the value of the "image" field.
@@ -27,13 +28,13 @@ type Exercise struct {
 	// HowTo holds the value of the "how_to" field.
 	HowTo *string `json:"how_to,omitempty"`
 	// EquipmentID holds the value of the "equipment_id" field.
-	EquipmentID string `json:"equipment_id,omitempty"`
+	EquipmentID pksuid.ID `json:"equipment_id,omitempty"`
 	// MusclesGroupID holds the value of the "muscles_group_id" field.
-	MusclesGroupID string `json:"muscles_group_id,omitempty"`
+	MusclesGroupID pksuid.ID `json:"muscles_group_id,omitempty"`
 	// ExerciseTypeID holds the value of the "exercise_type_id" field.
-	ExerciseTypeID string `json:"exercise_type_id,omitempty"`
+	ExerciseTypeID pksuid.ID `json:"exercise_type_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID *string `json:"user_id,omitempty"`
+	UserID *pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ExerciseQuery when eager-loading is set.
 	Edges        ExerciseEdges `json:"edges"`
@@ -151,7 +152,11 @@ func (*Exercise) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case exercise.FieldID, exercise.FieldName, exercise.FieldImage, exercise.FieldHowTo, exercise.FieldEquipmentID, exercise.FieldMusclesGroupID, exercise.FieldExerciseTypeID, exercise.FieldUserID:
+		case exercise.FieldUserID:
+			values[i] = &sql.NullScanner{S: new(pksuid.ID)}
+		case exercise.FieldID, exercise.FieldEquipmentID, exercise.FieldMusclesGroupID, exercise.FieldExerciseTypeID:
+			values[i] = new(pksuid.ID)
+		case exercise.FieldName, exercise.FieldImage, exercise.FieldHowTo:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -169,10 +174,10 @@ func (e *Exercise) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case exercise.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				e.ID = value.String
+			} else if value != nil {
+				e.ID = *value
 			}
 		case exercise.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -195,29 +200,29 @@ func (e *Exercise) assignValues(columns []string, values []any) error {
 				*e.HowTo = value.String
 			}
 		case exercise.FieldEquipmentID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field equipment_id", values[i])
-			} else if value.Valid {
-				e.EquipmentID = value.String
+			} else if value != nil {
+				e.EquipmentID = *value
 			}
 		case exercise.FieldMusclesGroupID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field muscles_group_id", values[i])
-			} else if value.Valid {
-				e.MusclesGroupID = value.String
+			} else if value != nil {
+				e.MusclesGroupID = *value
 			}
 		case exercise.FieldExerciseTypeID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field exercise_type_id", values[i])
-			} else if value.Valid {
-				e.ExerciseTypeID = value.String
+			} else if value != nil {
+				e.ExerciseTypeID = *value
 			}
 		case exercise.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullScanner); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value.Valid {
-				e.UserID = new(string)
-				*e.UserID = value.String
+				e.UserID = new(pksuid.ID)
+				*e.UserID = *value.S.(*pksuid.ID)
 			}
 		default:
 			e.selectValues.Set(columns[i], values[i])
@@ -304,17 +309,17 @@ func (e *Exercise) String() string {
 	}
 	builder.WriteString(", ")
 	builder.WriteString("equipment_id=")
-	builder.WriteString(e.EquipmentID)
+	builder.WriteString(fmt.Sprintf("%v", e.EquipmentID))
 	builder.WriteString(", ")
 	builder.WriteString("muscles_group_id=")
-	builder.WriteString(e.MusclesGroupID)
+	builder.WriteString(fmt.Sprintf("%v", e.MusclesGroupID))
 	builder.WriteString(", ")
 	builder.WriteString("exercise_type_id=")
-	builder.WriteString(e.ExerciseTypeID)
+	builder.WriteString(fmt.Sprintf("%v", e.ExerciseTypeID))
 	builder.WriteString(", ")
 	if v := e.UserID; v != nil {
 		builder.WriteString("user_id=")
-		builder.WriteString(*v)
+		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteByte(')')
 	return builder.String()

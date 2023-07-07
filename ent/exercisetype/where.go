@@ -6,61 +6,52 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // ID filters vertices based on their ID field.
-func ID(id string) predicate.ExerciseType {
+func ID(id pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id string) predicate.ExerciseType {
+func IDEQ(id pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id string) predicate.ExerciseType {
+func IDNEQ(id pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...string) predicate.ExerciseType {
+func IDIn(ids ...pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...string) predicate.ExerciseType {
+func IDNotIn(ids ...pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id string) predicate.ExerciseType {
+func IDGT(id pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id string) predicate.ExerciseType {
+func IDGTE(id pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id string) predicate.ExerciseType {
+func IDLT(id pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id string) predicate.ExerciseType {
+func IDLTE(id pksuid.ID) predicate.ExerciseType {
 	return predicate.ExerciseType(sql.FieldLTE(FieldID, id))
-}
-
-// IDEqualFold applies the EqualFold predicate on the ID field.
-func IDEqualFold(id string) predicate.ExerciseType {
-	return predicate.ExerciseType(sql.FieldEqualFold(FieldID, id))
-}
-
-// IDContainsFold applies the ContainsFold predicate on the ID field.
-func IDContainsFold(id string) predicate.ExerciseType {
-	return predicate.ExerciseType(sql.FieldContainsFold(FieldID, id))
 }
 
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.

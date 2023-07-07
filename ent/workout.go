@@ -8,6 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 )
@@ -16,7 +17,7 @@ import (
 type Workout struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Volume holds the value of the "volume" field.
@@ -34,7 +35,7 @@ type Workout struct {
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID string `json:"user_id,omitempty"`
+	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the WorkoutQuery when eager-loading is set.
 	Edges        WorkoutEdges `json:"edges"`
@@ -83,9 +84,11 @@ func (*Workout) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case workout.FieldID, workout.FieldUserID:
+			values[i] = new(pksuid.ID)
 		case workout.FieldVolume, workout.FieldReps, workout.FieldSets:
 			values[i] = new(sql.NullInt64)
-		case workout.FieldID, workout.FieldName, workout.FieldTime, workout.FieldCreatedAt, workout.FieldImage, workout.FieldDescription, workout.FieldUserID:
+		case workout.FieldName, workout.FieldTime, workout.FieldCreatedAt, workout.FieldImage, workout.FieldDescription:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -103,10 +106,10 @@ func (w *Workout) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case workout.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				w.ID = value.String
+			} else if value != nil {
+				w.ID = *value
 			}
 		case workout.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -158,10 +161,10 @@ func (w *Workout) assignValues(columns []string, values []any) error {
 				w.Description = value.String
 			}
 		case workout.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value.Valid {
-				w.UserID = value.String
+			} else if value != nil {
+				w.UserID = *value
 			}
 		default:
 			w.selectValues.Set(columns[i], values[i])
@@ -236,7 +239,7 @@ func (w *Workout) String() string {
 	builder.WriteString(w.Description)
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(w.UserID)
+	builder.WriteString(fmt.Sprintf("%v", w.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

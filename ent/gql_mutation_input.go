@@ -2,11 +2,15 @@
 
 package ent
 
+import (
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+)
+
 // CreateEquipmentInput represents a mutation input for creating equipmentslice.
 type CreateEquipmentInput struct {
 	Name        string
 	Image       string
-	ExerciseIDs []string
+	ExerciseIDs []pksuid.ID
 }
 
 // Mutate applies the CreateEquipmentInput on the EquipmentMutation builder.
@@ -29,8 +33,8 @@ type UpdateEquipmentInput struct {
 	Name              *string
 	Image             *string
 	ClearExercises    bool
-	AddExerciseIDs    []string
-	RemoveExerciseIDs []string
+	AddExerciseIDs    []pksuid.ID
+	RemoveExerciseIDs []pksuid.ID
 }
 
 // Mutate applies the UpdateEquipmentInput on the EquipmentMutation builder.
@@ -69,12 +73,12 @@ type CreateExerciseInput struct {
 	Name            string
 	Image           *string
 	HowTo           *string
-	WorkoutLogIDs   []string
-	UsersID         *string
-	EquipmentsID    *string
-	MusclesGroupsID *string
-	ExerciseTypesID *string
-	RoutineIDs      []string
+	WorkoutLogIDs   []pksuid.ID
+	UsersID         *pksuid.ID
+	EquipmentsID    *pksuid.ID
+	MusclesGroupsID *pksuid.ID
+	ExerciseTypesID *pksuid.ID
+	RoutineIDs      []pksuid.ID
 }
 
 // Mutate applies the CreateExerciseInput on the ExerciseMutation builder.
@@ -120,19 +124,19 @@ type UpdateExerciseInput struct {
 	ClearHowTo          bool
 	HowTo               *string
 	ClearWorkoutLogs    bool
-	AddWorkoutLogIDs    []string
-	RemoveWorkoutLogIDs []string
+	AddWorkoutLogIDs    []pksuid.ID
+	RemoveWorkoutLogIDs []pksuid.ID
 	ClearUsers          bool
-	UsersID             *string
+	UsersID             *pksuid.ID
 	ClearEquipments     bool
-	EquipmentsID        *string
+	EquipmentsID        *pksuid.ID
 	ClearMusclesGroups  bool
-	MusclesGroupsID     *string
+	MusclesGroupsID     *pksuid.ID
 	ClearExerciseTypes  bool
-	ExerciseTypesID     *string
+	ExerciseTypesID     *pksuid.ID
 	ClearRoutines       bool
-	AddRoutineIDs       []string
-	RemoveRoutineIDs    []string
+	AddRoutineIDs       []pksuid.ID
+	RemoveRoutineIDs    []pksuid.ID
 }
 
 // Mutate applies the UpdateExerciseInput on the ExerciseMutation builder.
@@ -213,7 +217,7 @@ type CreateExerciseTypeInput struct {
 	Name        string
 	Properties  []string
 	Description string
-	ExerciseIDs []string
+	ExerciseIDs []pksuid.ID
 }
 
 // Mutate applies the CreateExerciseTypeInput on the ExerciseTypeMutation builder.
@@ -241,8 +245,8 @@ type UpdateExerciseTypeInput struct {
 	AppendProperties  []string
 	Description       *string
 	ClearExercises    bool
-	AddExerciseIDs    []string
-	RemoveExerciseIDs []string
+	AddExerciseIDs    []pksuid.ID
+	RemoveExerciseIDs []pksuid.ID
 }
 
 // Mutate applies the UpdateExerciseTypeInput on the ExerciseTypeMutation builder.
@@ -286,7 +290,7 @@ func (c *ExerciseTypeUpdateOne) SetInput(i UpdateExerciseTypeInput) *ExerciseTyp
 type CreateMusclesGroupInput struct {
 	Name        string
 	Image       string
-	ExerciseIDs []string
+	ExerciseIDs []pksuid.ID
 }
 
 // Mutate applies the CreateMusclesGroupInput on the MusclesGroupMutation builder.
@@ -309,8 +313,8 @@ type UpdateMusclesGroupInput struct {
 	Name              *string
 	Image             *string
 	ClearExercises    bool
-	AddExerciseIDs    []string
-	RemoveExerciseIDs []string
+	AddExerciseIDs    []pksuid.ID
+	RemoveExerciseIDs []pksuid.ID
 }
 
 // Mutate applies the UpdateMusclesGroupInput on the MusclesGroupMutation builder.
@@ -347,8 +351,8 @@ func (c *MusclesGroupUpdateOne) SetInput(i UpdateMusclesGroupInput) *MusclesGrou
 // CreateRoutineInput represents a mutation input for creating routines.
 type CreateRoutineInput struct {
 	Name        string
-	ExerciseIDs []string
-	UsersID     *string
+	ExerciseIDs []pksuid.ID
+	UsersID     *pksuid.ID
 }
 
 // Mutate applies the CreateRoutineInput on the RoutineMutation builder.
@@ -372,10 +376,10 @@ func (c *RoutineCreate) SetInput(i CreateRoutineInput) *RoutineCreate {
 type UpdateRoutineInput struct {
 	Name              *string
 	ClearExercises    bool
-	AddExerciseIDs    []string
-	RemoveExerciseIDs []string
+	AddExerciseIDs    []pksuid.ID
+	RemoveExerciseIDs []pksuid.ID
 	ClearUsers        bool
-	UsersID           *string
+	UsersID           *pksuid.ID
 }
 
 // Mutate applies the UpdateRoutineInput on the RoutineMutation builder.
@@ -418,11 +422,11 @@ type CreateUserInput struct {
 	Username       string
 	HashedPassword string
 	Name           string
-	TokenIDs       []string
-	ExerciseIDs    []string
-	RoutineIDs     []string
-	WorkoutIDs     []string
-	WorkoutLogIDs  []string
+	TokenIDs       []pksuid.ID
+	ExerciseIDs    []pksuid.ID
+	RoutineIDs     []pksuid.ID
+	WorkoutIDs     []pksuid.ID
+	WorkoutLogIDs  []pksuid.ID
 }
 
 // Mutate applies the CreateUserInput on the UserMutation builder.
@@ -461,20 +465,20 @@ type UpdateUserInput struct {
 	HashedPassword      *string
 	Name                *string
 	ClearTokens         bool
-	AddTokenIDs         []string
-	RemoveTokenIDs      []string
+	AddTokenIDs         []pksuid.ID
+	RemoveTokenIDs      []pksuid.ID
 	ClearExercises      bool
-	AddExerciseIDs      []string
-	RemoveExerciseIDs   []string
+	AddExerciseIDs      []pksuid.ID
+	RemoveExerciseIDs   []pksuid.ID
 	ClearRoutines       bool
-	AddRoutineIDs       []string
-	RemoveRoutineIDs    []string
+	AddRoutineIDs       []pksuid.ID
+	RemoveRoutineIDs    []pksuid.ID
 	ClearWorkouts       bool
-	AddWorkoutIDs       []string
-	RemoveWorkoutIDs    []string
+	AddWorkoutIDs       []pksuid.ID
+	RemoveWorkoutIDs    []pksuid.ID
 	ClearWorkoutLogs    bool
-	AddWorkoutLogIDs    []string
-	RemoveWorkoutLogIDs []string
+	AddWorkoutLogIDs    []pksuid.ID
+	RemoveWorkoutLogIDs []pksuid.ID
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -559,8 +563,8 @@ type CreateWorkoutInput struct {
 	Sets          int
 	Image         *string
 	Description   string
-	UsersID       *string
-	WorkoutLogIDs []string
+	UsersID       *pksuid.ID
+	WorkoutLogIDs []pksuid.ID
 }
 
 // Mutate applies the CreateWorkoutInput on the WorkoutMutation builder.
@@ -602,10 +606,10 @@ type UpdateWorkoutInput struct {
 	Image               *string
 	Description         *string
 	ClearUsers          bool
-	UsersID             *string
+	UsersID             *pksuid.ID
 	ClearWorkoutLogs    bool
-	AddWorkoutLogIDs    []string
-	RemoveWorkoutLogIDs []string
+	AddWorkoutLogIDs    []pksuid.ID
+	RemoveWorkoutLogIDs []pksuid.ID
 }
 
 // Mutate applies the UpdateWorkoutInput on the WorkoutMutation builder.

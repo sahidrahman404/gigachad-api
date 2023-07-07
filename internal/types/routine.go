@@ -2,6 +2,7 @@ package types
 
 import (
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
 
@@ -13,7 +14,7 @@ type Routine struct {
 	Ent *ent.Routine
 }
 
-func NewRoutineFromParams(p CreateRoutineParams, userID string) *Routine {
+func NewRoutineFromParams(p CreateRoutineParams, userID pksuid.ID) *Routine {
 	r := &Routine{
 		Ent: &ent.Routine{
 			Name:   p.Name,

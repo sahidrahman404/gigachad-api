@@ -9,13 +9,14 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // MusclesGroup is the model entity for the MusclesGroup schema.
 type MusclesGroup struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Image holds the value of the "image" field.
@@ -53,7 +54,9 @@ func (*MusclesGroup) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case musclesgroup.FieldID, musclesgroup.FieldName, musclesgroup.FieldImage:
+		case musclesgroup.FieldID:
+			values[i] = new(pksuid.ID)
+		case musclesgroup.FieldName, musclesgroup.FieldImage:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -71,10 +74,10 @@ func (mg *MusclesGroup) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case musclesgroup.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				mg.ID = value.String
+			} else if value != nil {
+				mg.ID = *value
 			}
 		case musclesgroup.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {

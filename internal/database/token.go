@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
@@ -17,9 +18,9 @@ const (
 )
 
 type TokenStorer interface {
-	New(userID string, ttl time.Duration, scope string) (*types.Token, error)
+	New(userID pksuid.ID, ttl time.Duration, scope string) (*types.Token, error)
 	Insert(token *types.Token) error
-	DeleteAllForUser(scope string, userID string) error
+	DeleteAllForUser(scope string, userID pksuid.ID) error
 }
 
 type EntTokenStore struct {
@@ -30,7 +31,11 @@ func NewEntTokenStore(c *ent.Client) *EntTokenStore {
 	return &EntTokenStore{Client: c}
 }
 
-func (e *EntTokenStore) New(userID string, ttl time.Duration, scope string) (*types.Token, error) {
+func (e *EntTokenStore) New(
+	userID pksuid.ID,
+	ttl time.Duration,
+	scope string,
+) (*types.Token, error) {
 	token, err := types.GenerateToken(userID, ttl, scope)
 	if err != nil {
 		return nil, err
@@ -59,7 +64,7 @@ func (e *EntTokenStore) Insert(t *types.Token) error {
 	return err
 }
 
-func (e *EntTokenStore) DeleteAllForUser(scope string, userID string) error {
+func (e *EntTokenStore) DeleteAllForUser(scope string, userID pksuid.ID) error {
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
 

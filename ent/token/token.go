@@ -5,6 +5,7 @@ package token
 import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 const (
@@ -54,7 +55,7 @@ func ValidColumn(column string) bool {
 
 var (
 	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() string
+	DefaultID func() pksuid.ID
 )
 
 // OrderOption defines the ordering options for the Token queries.

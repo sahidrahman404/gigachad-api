@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -44,69 +45,69 @@ func (wlc *WorkoutLogCreate) SetNillableCreatedAt(s *string) *WorkoutLogCreate {
 }
 
 // SetExerciseID sets the "exercise_id" field.
-func (wlc *WorkoutLogCreate) SetExerciseID(s string) *WorkoutLogCreate {
-	wlc.mutation.SetExerciseID(s)
+func (wlc *WorkoutLogCreate) SetExerciseID(pk pksuid.ID) *WorkoutLogCreate {
+	wlc.mutation.SetExerciseID(pk)
 	return wlc
 }
 
 // SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableExerciseID(s *string) *WorkoutLogCreate {
-	if s != nil {
-		wlc.SetExerciseID(*s)
+func (wlc *WorkoutLogCreate) SetNillableExerciseID(pk *pksuid.ID) *WorkoutLogCreate {
+	if pk != nil {
+		wlc.SetExerciseID(*pk)
 	}
 	return wlc
 }
 
 // SetWorkoutID sets the "workout_id" field.
-func (wlc *WorkoutLogCreate) SetWorkoutID(s string) *WorkoutLogCreate {
-	wlc.mutation.SetWorkoutID(s)
+func (wlc *WorkoutLogCreate) SetWorkoutID(pk pksuid.ID) *WorkoutLogCreate {
+	wlc.mutation.SetWorkoutID(pk)
 	return wlc
 }
 
 // SetNillableWorkoutID sets the "workout_id" field if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableWorkoutID(s *string) *WorkoutLogCreate {
-	if s != nil {
-		wlc.SetWorkoutID(*s)
+func (wlc *WorkoutLogCreate) SetNillableWorkoutID(pk *pksuid.ID) *WorkoutLogCreate {
+	if pk != nil {
+		wlc.SetWorkoutID(*pk)
 	}
 	return wlc
 }
 
 // SetUserID sets the "user_id" field.
-func (wlc *WorkoutLogCreate) SetUserID(s string) *WorkoutLogCreate {
-	wlc.mutation.SetUserID(s)
+func (wlc *WorkoutLogCreate) SetUserID(pk pksuid.ID) *WorkoutLogCreate {
+	wlc.mutation.SetUserID(pk)
 	return wlc
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableUserID(s *string) *WorkoutLogCreate {
-	if s != nil {
-		wlc.SetUserID(*s)
+func (wlc *WorkoutLogCreate) SetNillableUserID(pk *pksuid.ID) *WorkoutLogCreate {
+	if pk != nil {
+		wlc.SetUserID(*pk)
 	}
 	return wlc
 }
 
 // SetID sets the "id" field.
-func (wlc *WorkoutLogCreate) SetID(s string) *WorkoutLogCreate {
-	wlc.mutation.SetID(s)
+func (wlc *WorkoutLogCreate) SetID(pk pksuid.ID) *WorkoutLogCreate {
+	wlc.mutation.SetID(pk)
 	return wlc
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableID(s *string) *WorkoutLogCreate {
-	if s != nil {
-		wlc.SetID(*s)
+func (wlc *WorkoutLogCreate) SetNillableID(pk *pksuid.ID) *WorkoutLogCreate {
+	if pk != nil {
+		wlc.SetID(*pk)
 	}
 	return wlc
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (wlc *WorkoutLogCreate) SetUsersID(id string) *WorkoutLogCreate {
+func (wlc *WorkoutLogCreate) SetUsersID(id pksuid.ID) *WorkoutLogCreate {
 	wlc.mutation.SetUsersID(id)
 	return wlc
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableUsersID(id *string) *WorkoutLogCreate {
+func (wlc *WorkoutLogCreate) SetNillableUsersID(id *pksuid.ID) *WorkoutLogCreate {
 	if id != nil {
 		wlc = wlc.SetUsersID(*id)
 	}
@@ -119,13 +120,13 @@ func (wlc *WorkoutLogCreate) SetUsers(u *User) *WorkoutLogCreate {
 }
 
 // SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
-func (wlc *WorkoutLogCreate) SetExercisesID(id string) *WorkoutLogCreate {
+func (wlc *WorkoutLogCreate) SetExercisesID(id pksuid.ID) *WorkoutLogCreate {
 	wlc.mutation.SetExercisesID(id)
 	return wlc
 }
 
 // SetNillableExercisesID sets the "exercises" edge to the Exercise entity by ID if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableExercisesID(id *string) *WorkoutLogCreate {
+func (wlc *WorkoutLogCreate) SetNillableExercisesID(id *pksuid.ID) *WorkoutLogCreate {
 	if id != nil {
 		wlc = wlc.SetExercisesID(*id)
 	}
@@ -138,13 +139,13 @@ func (wlc *WorkoutLogCreate) SetExercises(e *Exercise) *WorkoutLogCreate {
 }
 
 // SetWorkoutsID sets the "workouts" edge to the Workout entity by ID.
-func (wlc *WorkoutLogCreate) SetWorkoutsID(id string) *WorkoutLogCreate {
+func (wlc *WorkoutLogCreate) SetWorkoutsID(id pksuid.ID) *WorkoutLogCreate {
 	wlc.mutation.SetWorkoutsID(id)
 	return wlc
 }
 
 // SetNillableWorkoutsID sets the "workouts" edge to the Workout entity by ID if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableWorkoutsID(id *string) *WorkoutLogCreate {
+func (wlc *WorkoutLogCreate) SetNillableWorkoutsID(id *pksuid.ID) *WorkoutLogCreate {
 	if id != nil {
 		wlc = wlc.SetWorkoutsID(*id)
 	}
@@ -224,10 +225,10 @@ func (wlc *WorkoutLogCreate) sqlSave(ctx context.Context) (*WorkoutLog, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected WorkoutLog.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	wlc.mutation.id = &_node.ID
@@ -242,7 +243,7 @@ func (wlc *WorkoutLogCreate) createSpec() (*WorkoutLog, *sqlgraph.CreateSpec) {
 	)
 	if id, ok := wlc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := wlc.mutation.Sets(); ok {
 		_spec.SetField(workoutlog.FieldSets, field.TypeJSON, value)

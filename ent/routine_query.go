@@ -15,6 +15,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -158,8 +159,8 @@ func (rq *RoutineQuery) FirstX(ctx context.Context) *Routine {
 
 // FirstID returns the first Routine ID from the query.
 // Returns a *NotFoundError when no Routine ID was found.
-func (rq *RoutineQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (rq *RoutineQuery) FirstID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = rq.Limit(1).IDs(setContextOp(ctx, rq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -171,7 +172,7 @@ func (rq *RoutineQuery) FirstID(ctx context.Context) (id string, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rq *RoutineQuery) FirstIDX(ctx context.Context) string {
+func (rq *RoutineQuery) FirstIDX(ctx context.Context) pksuid.ID {
 	id, err := rq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -209,8 +210,8 @@ func (rq *RoutineQuery) OnlyX(ctx context.Context) *Routine {
 // OnlyID is like Only, but returns the only Routine ID in the query.
 // Returns a *NotSingularError when more than one Routine ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rq *RoutineQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (rq *RoutineQuery) OnlyID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = rq.Limit(2).IDs(setContextOp(ctx, rq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -226,7 +227,7 @@ func (rq *RoutineQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rq *RoutineQuery) OnlyIDX(ctx context.Context) string {
+func (rq *RoutineQuery) OnlyIDX(ctx context.Context) pksuid.ID {
 	id, err := rq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -254,7 +255,7 @@ func (rq *RoutineQuery) AllX(ctx context.Context) []*Routine {
 }
 
 // IDs executes the query and returns a list of Routine IDs.
-func (rq *RoutineQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (rq *RoutineQuery) IDs(ctx context.Context) (ids []pksuid.ID, err error) {
 	if rq.ctx.Unique == nil && rq.path != nil {
 		rq.Unique(true)
 	}
@@ -266,7 +267,7 @@ func (rq *RoutineQuery) IDs(ctx context.Context) (ids []string, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rq *RoutineQuery) IDsX(ctx context.Context) []string {
+func (rq *RoutineQuery) IDsX(ctx context.Context) []pksuid.ID {
 	ids, err := rq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -517,8 +518,8 @@ func (rq *RoutineQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Rout
 
 func (rq *RoutineQuery) loadExercises(ctx context.Context, query *ExerciseQuery, nodes []*Routine, init func(*Routine), assign func(*Routine, *Exercise)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[string]*Routine)
-	nids := make(map[string]map[*Routine]struct{})
+	byID := make(map[pksuid.ID]*Routine)
+	nids := make(map[pksuid.ID]map[*Routine]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -547,11 +548,11 @@ func (rq *RoutineQuery) loadExercises(ctx context.Context, query *ExerciseQuery,
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullString)}, values...), nil
+				return append([]any{new(pksuid.ID)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := values[0].(*sql.NullString).String
-				inValue := values[1].(*sql.NullString).String
+				outValue := *values[0].(*pksuid.ID)
+				inValue := *values[1].(*pksuid.ID)
 				if nids[inValue] == nil {
 					nids[inValue] = map[*Routine]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -577,8 +578,8 @@ func (rq *RoutineQuery) loadExercises(ctx context.Context, query *ExerciseQuery,
 	return nil
 }
 func (rq *RoutineQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*Routine, init func(*Routine), assign func(*Routine, *User)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*Routine)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*Routine)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
@@ -607,7 +608,7 @@ func (rq *RoutineQuery) loadUsers(ctx context.Context, query *UserQuery, nodes [
 }
 func (rq *RoutineQuery) loadRoutineExercises(ctx context.Context, query *RoutineExerciseQuery, nodes []*Routine, init func(*Routine), assign func(*Routine, *RoutineExercise)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Routine)
+	nodeids := make(map[pksuid.ID]*Routine)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]

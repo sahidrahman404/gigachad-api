@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -155,8 +156,8 @@ func (wlq *WorkoutLogQuery) FirstX(ctx context.Context) *WorkoutLog {
 
 // FirstID returns the first WorkoutLog ID from the query.
 // Returns a *NotFoundError when no WorkoutLog ID was found.
-func (wlq *WorkoutLogQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (wlq *WorkoutLogQuery) FirstID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = wlq.Limit(1).IDs(setContextOp(ctx, wlq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -168,7 +169,7 @@ func (wlq *WorkoutLogQuery) FirstID(ctx context.Context) (id string, err error) 
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wlq *WorkoutLogQuery) FirstIDX(ctx context.Context) string {
+func (wlq *WorkoutLogQuery) FirstIDX(ctx context.Context) pksuid.ID {
 	id, err := wlq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -206,8 +207,8 @@ func (wlq *WorkoutLogQuery) OnlyX(ctx context.Context) *WorkoutLog {
 // OnlyID is like Only, but returns the only WorkoutLog ID in the query.
 // Returns a *NotSingularError when more than one WorkoutLog ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wlq *WorkoutLogQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (wlq *WorkoutLogQuery) OnlyID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = wlq.Limit(2).IDs(setContextOp(ctx, wlq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -223,7 +224,7 @@ func (wlq *WorkoutLogQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wlq *WorkoutLogQuery) OnlyIDX(ctx context.Context) string {
+func (wlq *WorkoutLogQuery) OnlyIDX(ctx context.Context) pksuid.ID {
 	id, err := wlq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -251,7 +252,7 @@ func (wlq *WorkoutLogQuery) AllX(ctx context.Context) []*WorkoutLog {
 }
 
 // IDs executes the query and returns a list of WorkoutLog IDs.
-func (wlq *WorkoutLogQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (wlq *WorkoutLogQuery) IDs(ctx context.Context) (ids []pksuid.ID, err error) {
 	if wlq.ctx.Unique == nil && wlq.path != nil {
 		wlq.Unique(true)
 	}
@@ -263,7 +264,7 @@ func (wlq *WorkoutLogQuery) IDs(ctx context.Context) (ids []string, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wlq *WorkoutLogQuery) IDsX(ctx context.Context) []string {
+func (wlq *WorkoutLogQuery) IDsX(ctx context.Context) []pksuid.ID {
 	ids, err := wlq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -497,8 +498,8 @@ func (wlq *WorkoutLogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 }
 
 func (wlq *WorkoutLogQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*WorkoutLog, init func(*WorkoutLog), assign func(*WorkoutLog, *User)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*WorkoutLog)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*WorkoutLog)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
@@ -526,8 +527,8 @@ func (wlq *WorkoutLogQuery) loadUsers(ctx context.Context, query *UserQuery, nod
 	return nil
 }
 func (wlq *WorkoutLogQuery) loadExercises(ctx context.Context, query *ExerciseQuery, nodes []*WorkoutLog, init func(*WorkoutLog), assign func(*WorkoutLog, *Exercise)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*WorkoutLog)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*WorkoutLog)
 	for i := range nodes {
 		fk := nodes[i].ExerciseID
 		if _, ok := nodeids[fk]; !ok {
@@ -555,8 +556,8 @@ func (wlq *WorkoutLogQuery) loadExercises(ctx context.Context, query *ExerciseQu
 	return nil
 }
 func (wlq *WorkoutLogQuery) loadWorkouts(ctx context.Context, query *WorkoutQuery, nodes []*WorkoutLog, init func(*WorkoutLog), assign func(*WorkoutLog, *Workout)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*WorkoutLog)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*WorkoutLog)
 	for i := range nodes {
 		fk := nodes[i].WorkoutID
 		if _, ok := nodeids[fk]; !ok {

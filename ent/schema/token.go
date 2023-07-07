@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // Token holds the schema definition for the Token entity.
@@ -13,14 +14,19 @@ type Token struct {
 	ent.Schema
 }
 
+func (Token) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		pksuid.MixinWithPrefix("TK"),
+	}
+}
+
 // Fields of the Token.
 func (Token) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").DefaultFunc(generateKSUID),
 		field.Bytes("hash").Annotations(entgql.Skip()),
 		field.String("expiry"),
 		field.String("scope"),
-		field.String("user_id").Optional(),
+		field.String("user_id").Optional().GoType(pksuid.ID("")),
 	}
 }
 

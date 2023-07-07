@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // User holds the schema definition for the User entity.
@@ -15,10 +16,15 @@ type User struct {
 	ent.Schema
 }
 
+func (User) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		pksuid.MixinWithPrefix("UR"),
+	}
+}
+
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").DefaultFunc(generateKSUID),
 		field.String("email"),
 		field.String("username"),
 		field.String("hashed_password").Sensitive(),

@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -155,8 +156,8 @@ func (req *RoutineExerciseQuery) FirstX(ctx context.Context) *RoutineExercise {
 
 // FirstID returns the first RoutineExercise ID from the query.
 // Returns a *NotFoundError when no RoutineExercise ID was found.
-func (req *RoutineExerciseQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (req *RoutineExerciseQuery) FirstID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = req.Limit(1).IDs(setContextOp(ctx, req.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -168,7 +169,7 @@ func (req *RoutineExerciseQuery) FirstID(ctx context.Context) (id string, err er
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (req *RoutineExerciseQuery) FirstIDX(ctx context.Context) string {
+func (req *RoutineExerciseQuery) FirstIDX(ctx context.Context) pksuid.ID {
 	id, err := req.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -206,8 +207,8 @@ func (req *RoutineExerciseQuery) OnlyX(ctx context.Context) *RoutineExercise {
 // OnlyID is like Only, but returns the only RoutineExercise ID in the query.
 // Returns a *NotSingularError when more than one RoutineExercise ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (req *RoutineExerciseQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (req *RoutineExerciseQuery) OnlyID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = req.Limit(2).IDs(setContextOp(ctx, req.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -223,7 +224,7 @@ func (req *RoutineExerciseQuery) OnlyID(ctx context.Context) (id string, err err
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (req *RoutineExerciseQuery) OnlyIDX(ctx context.Context) string {
+func (req *RoutineExerciseQuery) OnlyIDX(ctx context.Context) pksuid.ID {
 	id, err := req.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -251,7 +252,7 @@ func (req *RoutineExerciseQuery) AllX(ctx context.Context) []*RoutineExercise {
 }
 
 // IDs executes the query and returns a list of RoutineExercise IDs.
-func (req *RoutineExerciseQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (req *RoutineExerciseQuery) IDs(ctx context.Context) (ids []pksuid.ID, err error) {
 	if req.ctx.Unique == nil && req.path != nil {
 		req.Unique(true)
 	}
@@ -263,7 +264,7 @@ func (req *RoutineExerciseQuery) IDs(ctx context.Context) (ids []string, err err
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (req *RoutineExerciseQuery) IDsX(ctx context.Context) []string {
+func (req *RoutineExerciseQuery) IDsX(ctx context.Context) []pksuid.ID {
 	ids, err := req.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -497,8 +498,8 @@ func (req *RoutineExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 }
 
 func (req *RoutineExerciseQuery) loadRoutines(ctx context.Context, query *RoutineQuery, nodes []*RoutineExercise, init func(*RoutineExercise), assign func(*RoutineExercise, *Routine)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*RoutineExercise)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*RoutineExercise)
 	for i := range nodes {
 		fk := nodes[i].RoutineID
 		if _, ok := nodeids[fk]; !ok {
@@ -526,8 +527,8 @@ func (req *RoutineExerciseQuery) loadRoutines(ctx context.Context, query *Routin
 	return nil
 }
 func (req *RoutineExerciseQuery) loadExercises(ctx context.Context, query *ExerciseQuery, nodes []*RoutineExercise, init func(*RoutineExercise), assign func(*RoutineExercise, *Exercise)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*RoutineExercise)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*RoutineExercise)
 	for i := range nodes {
 		fk := nodes[i].ExerciseID
 		if _, ok := nodeids[fk]; !ok {
@@ -555,8 +556,8 @@ func (req *RoutineExerciseQuery) loadExercises(ctx context.Context, query *Exerc
 	return nil
 }
 func (req *RoutineExerciseQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*RoutineExercise, init func(*RoutineExercise), assign func(*RoutineExercise, *User)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*RoutineExercise)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*RoutineExercise)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {

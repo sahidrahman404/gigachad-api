@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 type EquipmentStorer interface {
 	Insert(ctx context.Context, eq *types.Equipment) error
-	Get(ctx context.Context, id string) (*types.Equipment, error)
+	Get(ctx context.Context, id pksuid.ID) (*types.Equipment, error)
 	Update(ctx context.Context, eq *types.Equipment) error
 	GetAll(ctx context.Context) ([]*types.Equipment, error)
 }
@@ -25,7 +26,10 @@ func NewEntEquipmentStore(c *ent.Client) *EquipmentStore {
 }
 
 func (e *EquipmentStore) Insert(ctx context.Context, eq *types.Equipment) error {
-	equipment, err := e.Client.Equipment.Create().SetName(eq.Ent.Name).SetImage(eq.Ent.Image).Save(ctx)
+	equipment, err := e.Client.Equipment.Create().
+		SetName(eq.Ent.Name).
+		SetImage(eq.Ent.Image).
+		Save(ctx)
 	if err != nil {
 		return err
 	}
@@ -33,7 +37,7 @@ func (e *EquipmentStore) Insert(ctx context.Context, eq *types.Equipment) error 
 	return nil
 }
 
-func (e *EquipmentStore) Get(ctx context.Context, id string) (*types.Equipment, error) {
+func (e *EquipmentStore) Get(ctx context.Context, id pksuid.ID) (*types.Equipment, error) {
 	equipment, err := e.Client.Equipment.Get(ctx, id)
 	if err != nil {
 		return nil, err

@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
@@ -16,15 +17,20 @@ type RoutineExercise struct {
 	ent.Schema
 }
 
+func (RoutineExercise) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		pksuid.MixinWithPrefix("RE"),
+	}
+}
+
 // Fields of the RoutineExercise.
 func (RoutineExercise) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").DefaultFunc(generateKSUID),
 		field.String("rest_timer").Optional(),
 		field.JSON("sets", &schematype.Sets{}).Annotations(entgql.Type("[Set!]")),
-		field.String("routine_id"),
-		field.String("exercise_id"),
-		field.String("user_id").Optional(),
+		field.String("routine_id").GoType(pksuid.ID("")),
+		field.String("exercise_id").GoType(pksuid.ID("")),
+		field.String("user_id").Optional().GoType(pksuid.ID("")),
 	}
 }
 

@@ -12,6 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -29,42 +30,42 @@ func (rc *RoutineCreate) SetName(s string) *RoutineCreate {
 }
 
 // SetUserID sets the "user_id" field.
-func (rc *RoutineCreate) SetUserID(s string) *RoutineCreate {
-	rc.mutation.SetUserID(s)
+func (rc *RoutineCreate) SetUserID(pk pksuid.ID) *RoutineCreate {
+	rc.mutation.SetUserID(pk)
 	return rc
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (rc *RoutineCreate) SetNillableUserID(s *string) *RoutineCreate {
-	if s != nil {
-		rc.SetUserID(*s)
+func (rc *RoutineCreate) SetNillableUserID(pk *pksuid.ID) *RoutineCreate {
+	if pk != nil {
+		rc.SetUserID(*pk)
 	}
 	return rc
 }
 
 // SetID sets the "id" field.
-func (rc *RoutineCreate) SetID(s string) *RoutineCreate {
-	rc.mutation.SetID(s)
+func (rc *RoutineCreate) SetID(pk pksuid.ID) *RoutineCreate {
+	rc.mutation.SetID(pk)
 	return rc
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (rc *RoutineCreate) SetNillableID(s *string) *RoutineCreate {
-	if s != nil {
-		rc.SetID(*s)
+func (rc *RoutineCreate) SetNillableID(pk *pksuid.ID) *RoutineCreate {
+	if pk != nil {
+		rc.SetID(*pk)
 	}
 	return rc
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (rc *RoutineCreate) AddExerciseIDs(ids ...string) *RoutineCreate {
+func (rc *RoutineCreate) AddExerciseIDs(ids ...pksuid.ID) *RoutineCreate {
 	rc.mutation.AddExerciseIDs(ids...)
 	return rc
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (rc *RoutineCreate) AddExercises(e ...*Exercise) *RoutineCreate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -72,13 +73,13 @@ func (rc *RoutineCreate) AddExercises(e ...*Exercise) *RoutineCreate {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (rc *RoutineCreate) SetUsersID(id string) *RoutineCreate {
+func (rc *RoutineCreate) SetUsersID(id pksuid.ID) *RoutineCreate {
 	rc.mutation.SetUsersID(id)
 	return rc
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (rc *RoutineCreate) SetNillableUsersID(id *string) *RoutineCreate {
+func (rc *RoutineCreate) SetNillableUsersID(id *pksuid.ID) *RoutineCreate {
 	if id != nil {
 		rc = rc.SetUsersID(*id)
 	}
@@ -91,14 +92,14 @@ func (rc *RoutineCreate) SetUsers(u *User) *RoutineCreate {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (rc *RoutineCreate) AddRoutineExerciseIDs(ids ...string) *RoutineCreate {
+func (rc *RoutineCreate) AddRoutineExerciseIDs(ids ...pksuid.ID) *RoutineCreate {
 	rc.mutation.AddRoutineExerciseIDs(ids...)
 	return rc
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (rc *RoutineCreate) AddRoutineExercises(r ...*RoutineExercise) *RoutineCreate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -166,10 +167,10 @@ func (rc *RoutineCreate) sqlSave(ctx context.Context) (*Routine, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Routine.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	rc.mutation.id = &_node.ID
@@ -184,7 +185,7 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 	)
 	if id, ok := rc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := rc.mutation.Name(); ok {
 		_spec.SetField(routine.FieldName, field.TypeString, value)

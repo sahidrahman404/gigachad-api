@@ -6,61 +6,52 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // ID filters vertices based on their ID field.
-func ID(id string) predicate.RoutineExercise {
+func ID(id pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id string) predicate.RoutineExercise {
+func IDEQ(id pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id string) predicate.RoutineExercise {
+func IDNEQ(id pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...string) predicate.RoutineExercise {
+func IDIn(ids ...pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...string) predicate.RoutineExercise {
+func IDNotIn(ids ...pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id string) predicate.RoutineExercise {
+func IDGT(id pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id string) predicate.RoutineExercise {
+func IDGTE(id pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id string) predicate.RoutineExercise {
+func IDLT(id pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id string) predicate.RoutineExercise {
+func IDLTE(id pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLTE(FieldID, id))
-}
-
-// IDEqualFold applies the EqualFold predicate on the ID field.
-func IDEqualFold(id string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldEqualFold(FieldID, id))
-}
-
-// IDContainsFold applies the ContainsFold predicate on the ID field.
-func IDContainsFold(id string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldContainsFold(FieldID, id))
 }
 
 // RestTimer applies equality check predicate on the "rest_timer" field. It's identical to RestTimerEQ.
@@ -69,17 +60,17 @@ func RestTimer(v string) predicate.RoutineExercise {
 }
 
 // RoutineID applies equality check predicate on the "routine_id" field. It's identical to RoutineIDEQ.
-func RoutineID(v string) predicate.RoutineExercise {
+func RoutineID(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldRoutineID, v))
 }
 
 // ExerciseID applies equality check predicate on the "exercise_id" field. It's identical to ExerciseIDEQ.
-func ExerciseID(v string) predicate.RoutineExercise {
+func ExerciseID(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldExerciseID, v))
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v string) predicate.RoutineExercise {
+func UserID(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldUserID, v))
 }
 
@@ -159,188 +150,201 @@ func RestTimerContainsFold(v string) predicate.RoutineExercise {
 }
 
 // RoutineIDEQ applies the EQ predicate on the "routine_id" field.
-func RoutineIDEQ(v string) predicate.RoutineExercise {
+func RoutineIDEQ(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldRoutineID, v))
 }
 
 // RoutineIDNEQ applies the NEQ predicate on the "routine_id" field.
-func RoutineIDNEQ(v string) predicate.RoutineExercise {
+func RoutineIDNEQ(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNEQ(FieldRoutineID, v))
 }
 
 // RoutineIDIn applies the In predicate on the "routine_id" field.
-func RoutineIDIn(vs ...string) predicate.RoutineExercise {
+func RoutineIDIn(vs ...pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldIn(FieldRoutineID, vs...))
 }
 
 // RoutineIDNotIn applies the NotIn predicate on the "routine_id" field.
-func RoutineIDNotIn(vs ...string) predicate.RoutineExercise {
+func RoutineIDNotIn(vs ...pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNotIn(FieldRoutineID, vs...))
 }
 
 // RoutineIDGT applies the GT predicate on the "routine_id" field.
-func RoutineIDGT(v string) predicate.RoutineExercise {
+func RoutineIDGT(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGT(FieldRoutineID, v))
 }
 
 // RoutineIDGTE applies the GTE predicate on the "routine_id" field.
-func RoutineIDGTE(v string) predicate.RoutineExercise {
+func RoutineIDGTE(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGTE(FieldRoutineID, v))
 }
 
 // RoutineIDLT applies the LT predicate on the "routine_id" field.
-func RoutineIDLT(v string) predicate.RoutineExercise {
+func RoutineIDLT(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLT(FieldRoutineID, v))
 }
 
 // RoutineIDLTE applies the LTE predicate on the "routine_id" field.
-func RoutineIDLTE(v string) predicate.RoutineExercise {
+func RoutineIDLTE(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLTE(FieldRoutineID, v))
 }
 
 // RoutineIDContains applies the Contains predicate on the "routine_id" field.
-func RoutineIDContains(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldContains(FieldRoutineID, v))
+func RoutineIDContains(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldContains(FieldRoutineID, vc))
 }
 
 // RoutineIDHasPrefix applies the HasPrefix predicate on the "routine_id" field.
-func RoutineIDHasPrefix(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldHasPrefix(FieldRoutineID, v))
+func RoutineIDHasPrefix(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldHasPrefix(FieldRoutineID, vc))
 }
 
 // RoutineIDHasSuffix applies the HasSuffix predicate on the "routine_id" field.
-func RoutineIDHasSuffix(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldRoutineID, v))
+func RoutineIDHasSuffix(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldRoutineID, vc))
 }
 
 // RoutineIDEqualFold applies the EqualFold predicate on the "routine_id" field.
-func RoutineIDEqualFold(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldEqualFold(FieldRoutineID, v))
+func RoutineIDEqualFold(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldEqualFold(FieldRoutineID, vc))
 }
 
 // RoutineIDContainsFold applies the ContainsFold predicate on the "routine_id" field.
-func RoutineIDContainsFold(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldContainsFold(FieldRoutineID, v))
+func RoutineIDContainsFold(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldContainsFold(FieldRoutineID, vc))
 }
 
 // ExerciseIDEQ applies the EQ predicate on the "exercise_id" field.
-func ExerciseIDEQ(v string) predicate.RoutineExercise {
+func ExerciseIDEQ(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldExerciseID, v))
 }
 
 // ExerciseIDNEQ applies the NEQ predicate on the "exercise_id" field.
-func ExerciseIDNEQ(v string) predicate.RoutineExercise {
+func ExerciseIDNEQ(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNEQ(FieldExerciseID, v))
 }
 
 // ExerciseIDIn applies the In predicate on the "exercise_id" field.
-func ExerciseIDIn(vs ...string) predicate.RoutineExercise {
+func ExerciseIDIn(vs ...pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldIn(FieldExerciseID, vs...))
 }
 
 // ExerciseIDNotIn applies the NotIn predicate on the "exercise_id" field.
-func ExerciseIDNotIn(vs ...string) predicate.RoutineExercise {
+func ExerciseIDNotIn(vs ...pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNotIn(FieldExerciseID, vs...))
 }
 
 // ExerciseIDGT applies the GT predicate on the "exercise_id" field.
-func ExerciseIDGT(v string) predicate.RoutineExercise {
+func ExerciseIDGT(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGT(FieldExerciseID, v))
 }
 
 // ExerciseIDGTE applies the GTE predicate on the "exercise_id" field.
-func ExerciseIDGTE(v string) predicate.RoutineExercise {
+func ExerciseIDGTE(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGTE(FieldExerciseID, v))
 }
 
 // ExerciseIDLT applies the LT predicate on the "exercise_id" field.
-func ExerciseIDLT(v string) predicate.RoutineExercise {
+func ExerciseIDLT(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLT(FieldExerciseID, v))
 }
 
 // ExerciseIDLTE applies the LTE predicate on the "exercise_id" field.
-func ExerciseIDLTE(v string) predicate.RoutineExercise {
+func ExerciseIDLTE(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLTE(FieldExerciseID, v))
 }
 
 // ExerciseIDContains applies the Contains predicate on the "exercise_id" field.
-func ExerciseIDContains(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldContains(FieldExerciseID, v))
+func ExerciseIDContains(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldContains(FieldExerciseID, vc))
 }
 
 // ExerciseIDHasPrefix applies the HasPrefix predicate on the "exercise_id" field.
-func ExerciseIDHasPrefix(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldHasPrefix(FieldExerciseID, v))
+func ExerciseIDHasPrefix(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldHasPrefix(FieldExerciseID, vc))
 }
 
 // ExerciseIDHasSuffix applies the HasSuffix predicate on the "exercise_id" field.
-func ExerciseIDHasSuffix(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldExerciseID, v))
+func ExerciseIDHasSuffix(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldExerciseID, vc))
 }
 
 // ExerciseIDEqualFold applies the EqualFold predicate on the "exercise_id" field.
-func ExerciseIDEqualFold(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldEqualFold(FieldExerciseID, v))
+func ExerciseIDEqualFold(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldEqualFold(FieldExerciseID, vc))
 }
 
 // ExerciseIDContainsFold applies the ContainsFold predicate on the "exercise_id" field.
-func ExerciseIDContainsFold(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldContainsFold(FieldExerciseID, v))
+func ExerciseIDContainsFold(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldContainsFold(FieldExerciseID, vc))
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v string) predicate.RoutineExercise {
+func UserIDEQ(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldUserID, v))
 }
 
 // UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v string) predicate.RoutineExercise {
+func UserIDNEQ(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNEQ(FieldUserID, v))
 }
 
 // UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...string) predicate.RoutineExercise {
+func UserIDIn(vs ...pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldIn(FieldUserID, vs...))
 }
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...string) predicate.RoutineExercise {
+func UserIDNotIn(vs ...pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNotIn(FieldUserID, vs...))
 }
 
 // UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v string) predicate.RoutineExercise {
+func UserIDGT(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGT(FieldUserID, v))
 }
 
 // UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v string) predicate.RoutineExercise {
+func UserIDGTE(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGTE(FieldUserID, v))
 }
 
 // UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v string) predicate.RoutineExercise {
+func UserIDLT(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLT(FieldUserID, v))
 }
 
 // UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v string) predicate.RoutineExercise {
+func UserIDLTE(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLTE(FieldUserID, v))
 }
 
 // UserIDContains applies the Contains predicate on the "user_id" field.
-func UserIDContains(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldContains(FieldUserID, v))
+func UserIDContains(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldContains(FieldUserID, vc))
 }
 
 // UserIDHasPrefix applies the HasPrefix predicate on the "user_id" field.
-func UserIDHasPrefix(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldHasPrefix(FieldUserID, v))
+func UserIDHasPrefix(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldHasPrefix(FieldUserID, vc))
 }
 
 // UserIDHasSuffix applies the HasSuffix predicate on the "user_id" field.
-func UserIDHasSuffix(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldUserID, v))
+func UserIDHasSuffix(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldUserID, vc))
 }
 
 // UserIDIsNil applies the IsNil predicate on the "user_id" field.
@@ -354,13 +358,15 @@ func UserIDNotNil() predicate.RoutineExercise {
 }
 
 // UserIDEqualFold applies the EqualFold predicate on the "user_id" field.
-func UserIDEqualFold(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldEqualFold(FieldUserID, v))
+func UserIDEqualFold(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldEqualFold(FieldUserID, vc))
 }
 
 // UserIDContainsFold applies the ContainsFold predicate on the "user_id" field.
-func UserIDContainsFold(v string) predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldContainsFold(FieldUserID, v))
+func UserIDContainsFold(v pksuid.ID) predicate.RoutineExercise {
+	vc := string(v)
+	return predicate.RoutineExercise(sql.FieldContainsFold(FieldUserID, vc))
 }
 
 // HasRoutines applies the HasEdge predicate on the "routines" edge.

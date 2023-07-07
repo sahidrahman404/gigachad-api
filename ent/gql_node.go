@@ -15,6 +15,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -84,7 +85,7 @@ type NodeOption func(*nodeOptions)
 // WithNodeType sets the node Type resolver function (i.e. the table to query).
 // If was not provided, the table will be derived from the universal-id
 // configuration as described in: https://entgo.io/docs/migrate/#universal-ids.
-func WithNodeType(f func(context.Context, string) (string, error)) NodeOption {
+func WithNodeType(f func(context.Context, pksuid.ID) (string, error)) NodeOption {
 	return func(o *nodeOptions) {
 		o.nodeType = f
 	}
@@ -92,13 +93,13 @@ func WithNodeType(f func(context.Context, string) (string, error)) NodeOption {
 
 // WithFixedNodeType sets the Type of the node to a fixed value.
 func WithFixedNodeType(t string) NodeOption {
-	return WithNodeType(func(context.Context, string) (string, error) {
+	return WithNodeType(func(context.Context, pksuid.ID) (string, error) {
 		return t, nil
 	})
 }
 
 type nodeOptions struct {
-	nodeType func(context.Context, string) (string, error)
+	nodeType func(context.Context, pksuid.ID) (string, error)
 }
 
 func (c *Client) newNodeOpts(opts []NodeOption) *nodeOptions {
@@ -107,7 +108,7 @@ func (c *Client) newNodeOpts(opts []NodeOption) *nodeOptions {
 		opt(nopts)
 	}
 	if nopts.nodeType == nil {
-		nopts.nodeType = func(ctx context.Context, id string) (string, error) {
+		nopts.nodeType = func(ctx context.Context, id pksuid.ID) (string, error) {
 			return "", fmt.Errorf("cannot resolve noder (%v) without its type", id)
 		}
 	}
@@ -119,7 +120,7 @@ func (c *Client) newNodeOpts(opts []NodeOption) *nodeOptions {
 //
 //	c.Noder(ctx, id)
 //	c.Noder(ctx, id, ent.WithNodeType(typeResolver))
-func (c *Client) Noder(ctx context.Context, id string, opts ...NodeOption) (_ Noder, err error) {
+func (c *Client) Noder(ctx context.Context, id pksuid.ID, opts ...NodeOption) (_ Noder, err error) {
 	defer func() {
 		if IsNotFound(err) {
 			err = multierror.Append(err, entgql.ErrNodeNotFound(id))
@@ -132,11 +133,15 @@ func (c *Client) Noder(ctx context.Context, id string, opts ...NodeOption) (_ No
 	return c.noder(ctx, table, id)
 }
 
-func (c *Client) noder(ctx context.Context, table string, id string) (Noder, error) {
+func (c *Client) noder(ctx context.Context, table string, id pksuid.ID) (Noder, error) {
 	switch table {
 	case equipment.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Equipment.Query().
-			Where(equipment.ID(id))
+			Where(equipment.ID(uid))
 		query, err := query.CollectFields(ctx, equipmentImplementors...)
 		if err != nil {
 			return nil, err
@@ -147,8 +152,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case exercise.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Exercise.Query().
-			Where(exercise.ID(id))
+			Where(exercise.ID(uid))
 		query, err := query.CollectFields(ctx, exerciseImplementors...)
 		if err != nil {
 			return nil, err
@@ -159,8 +168,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case exercisetype.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.ExerciseType.Query().
-			Where(exercisetype.ID(id))
+			Where(exercisetype.ID(uid))
 		query, err := query.CollectFields(ctx, exercisetypeImplementors...)
 		if err != nil {
 			return nil, err
@@ -171,8 +184,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case musclesgroup.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.MusclesGroup.Query().
-			Where(musclesgroup.ID(id))
+			Where(musclesgroup.ID(uid))
 		query, err := query.CollectFields(ctx, musclesgroupImplementors...)
 		if err != nil {
 			return nil, err
@@ -183,8 +200,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case routine.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Routine.Query().
-			Where(routine.ID(id))
+			Where(routine.ID(uid))
 		query, err := query.CollectFields(ctx, routineImplementors...)
 		if err != nil {
 			return nil, err
@@ -195,8 +216,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case routineexercise.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.RoutineExercise.Query().
-			Where(routineexercise.ID(id))
+			Where(routineexercise.ID(uid))
 		query, err := query.CollectFields(ctx, routineexerciseImplementors...)
 		if err != nil {
 			return nil, err
@@ -207,8 +232,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case token.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Token.Query().
-			Where(token.ID(id))
+			Where(token.ID(uid))
 		query, err := query.CollectFields(ctx, tokenImplementors...)
 		if err != nil {
 			return nil, err
@@ -219,8 +248,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case user.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.User.Query().
-			Where(user.ID(id))
+			Where(user.ID(uid))
 		query, err := query.CollectFields(ctx, userImplementors...)
 		if err != nil {
 			return nil, err
@@ -231,8 +264,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case workout.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.Workout.Query().
-			Where(workout.ID(id))
+			Where(workout.ID(uid))
 		query, err := query.CollectFields(ctx, workoutImplementors...)
 		if err != nil {
 			return nil, err
@@ -243,8 +280,12 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 		}
 		return n, nil
 	case workoutlog.Table:
+		var uid pksuid.ID
+		if err := uid.UnmarshalGQL(id); err != nil {
+			return nil, err
+		}
 		query := c.WorkoutLog.Query().
-			Where(workoutlog.ID(id))
+			Where(workoutlog.ID(uid))
 		query, err := query.CollectFields(ctx, workoutlogImplementors...)
 		if err != nil {
 			return nil, err
@@ -259,7 +300,7 @@ func (c *Client) noder(ctx context.Context, table string, id string) (Noder, err
 	}
 }
 
-func (c *Client) Noders(ctx context.Context, ids []string, opts ...NodeOption) ([]Noder, error) {
+func (c *Client) Noders(ctx context.Context, ids []pksuid.ID, opts ...NodeOption) ([]Noder, error) {
 	switch len(ids) {
 	case 1:
 		noder, err := c.Noder(ctx, ids[0], opts...)
@@ -273,8 +314,8 @@ func (c *Client) Noders(ctx context.Context, ids []string, opts ...NodeOption) (
 
 	noders := make([]Noder, len(ids))
 	errors := make([]error, len(ids))
-	tables := make(map[string][]string)
-	id2idx := make(map[string][]int, len(ids))
+	tables := make(map[string][]pksuid.ID)
+	id2idx := make(map[pksuid.ID][]int, len(ids))
 	nopts := c.newNodeOpts(opts)
 	for i, id := range ids {
 		table, err := nopts.nodeType(ctx, id)
@@ -320,9 +361,9 @@ func (c *Client) Noders(ctx context.Context, ids []string, opts ...NodeOption) (
 	return noders, nil
 }
 
-func (c *Client) noders(ctx context.Context, table string, ids []string) ([]Noder, error) {
+func (c *Client) noders(ctx context.Context, table string, ids []pksuid.ID) ([]Noder, error) {
 	noders := make([]Noder, len(ids))
-	idmap := make(map[string][]*Noder, len(ids))
+	idmap := make(map[pksuid.ID][]*Noder, len(ids))
 	for i, id := range ids {
 		idmap[id] = append(idmap[id], &noders[i])
 	}

@@ -4,14 +4,15 @@ import (
 	"context"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 type WorkoutStorer interface {
 	Insert(context.Context, *types.Workout) error
-	GetAllForUser(context.Context, string) ([]*types.Workout, error)
-	GetForUser(ctx context.Context, workoutID string, userID string) (*types.Workout, error)
+	GetAllForUser(context.Context, pksuid.ID) ([]*types.Workout, error)
+	GetForUser(ctx context.Context, workoutID pksuid.ID, userID pksuid.ID) (*types.Workout, error)
 }
 
 type WorkoutStore struct {
@@ -37,7 +38,10 @@ func (e *WorkoutStore) Insert(ctx context.Context, w *types.Workout) error {
 	return nil
 }
 
-func (e *WorkoutStore) GetAllForUser(ctx context.Context, userID string) ([]*types.Workout, error) {
+func (e *WorkoutStore) GetAllForUser(
+	ctx context.Context,
+	userID pksuid.ID,
+) ([]*types.Workout, error) {
 	w, err := e.Client.Workout.Query().
 		Where(workout.UserID(userID)).
 		WithWorkoutLogs(func(wlq *ent.WorkoutLogQuery) {
@@ -60,8 +64,8 @@ func (e *WorkoutStore) GetAllForUser(ctx context.Context, userID string) ([]*typ
 
 func (e *WorkoutStore) GetForUser(
 	ctx context.Context,
-	workoutID string,
-	userID string,
+	workoutID pksuid.ID,
+	userID pksuid.ID,
 ) (*types.Workout, error) {
 	w, err := e.Client.Workout.Query().
 		Where(workout.ID(workoutID), workout.UserID(userID)).

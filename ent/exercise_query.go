@@ -18,6 +18,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
 )
@@ -255,8 +256,8 @@ func (eq *ExerciseQuery) FirstX(ctx context.Context) *Exercise {
 
 // FirstID returns the first Exercise ID from the query.
 // Returns a *NotFoundError when no Exercise ID was found.
-func (eq *ExerciseQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (eq *ExerciseQuery) FirstID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = eq.Limit(1).IDs(setContextOp(ctx, eq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -268,7 +269,7 @@ func (eq *ExerciseQuery) FirstID(ctx context.Context) (id string, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (eq *ExerciseQuery) FirstIDX(ctx context.Context) string {
+func (eq *ExerciseQuery) FirstIDX(ctx context.Context) pksuid.ID {
 	id, err := eq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -306,8 +307,8 @@ func (eq *ExerciseQuery) OnlyX(ctx context.Context) *Exercise {
 // OnlyID is like Only, but returns the only Exercise ID in the query.
 // Returns a *NotSingularError when more than one Exercise ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (eq *ExerciseQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (eq *ExerciseQuery) OnlyID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = eq.Limit(2).IDs(setContextOp(ctx, eq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -323,7 +324,7 @@ func (eq *ExerciseQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (eq *ExerciseQuery) OnlyIDX(ctx context.Context) string {
+func (eq *ExerciseQuery) OnlyIDX(ctx context.Context) pksuid.ID {
 	id, err := eq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -351,7 +352,7 @@ func (eq *ExerciseQuery) AllX(ctx context.Context) []*Exercise {
 }
 
 // IDs executes the query and returns a list of Exercise IDs.
-func (eq *ExerciseQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (eq *ExerciseQuery) IDs(ctx context.Context) (ids []pksuid.ID, err error) {
 	if eq.ctx.Unique == nil && eq.path != nil {
 		eq.Unique(true)
 	}
@@ -363,7 +364,7 @@ func (eq *ExerciseQuery) IDs(ctx context.Context) (ids []string, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (eq *ExerciseQuery) IDsX(ctx context.Context) []string {
+func (eq *ExerciseQuery) IDsX(ctx context.Context) []pksuid.ID {
 	ids, err := eq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -698,7 +699,7 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 
 func (eq *ExerciseQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *WorkoutLog)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Exercise)
+	nodeids := make(map[pksuid.ID]*Exercise)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]
@@ -727,8 +728,8 @@ func (eq *ExerciseQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQ
 	return nil
 }
 func (eq *ExerciseQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *User)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*Exercise)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*Exercise)
 	for i := range nodes {
 		if nodes[i].UserID == nil {
 			continue
@@ -759,8 +760,8 @@ func (eq *ExerciseQuery) loadUsers(ctx context.Context, query *UserQuery, nodes 
 	return nil
 }
 func (eq *ExerciseQuery) loadEquipments(ctx context.Context, query *EquipmentQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *Equipment)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*Exercise)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*Exercise)
 	for i := range nodes {
 		fk := nodes[i].EquipmentID
 		if _, ok := nodeids[fk]; !ok {
@@ -788,8 +789,8 @@ func (eq *ExerciseQuery) loadEquipments(ctx context.Context, query *EquipmentQue
 	return nil
 }
 func (eq *ExerciseQuery) loadMusclesGroups(ctx context.Context, query *MusclesGroupQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *MusclesGroup)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*Exercise)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*Exercise)
 	for i := range nodes {
 		fk := nodes[i].MusclesGroupID
 		if _, ok := nodeids[fk]; !ok {
@@ -817,8 +818,8 @@ func (eq *ExerciseQuery) loadMusclesGroups(ctx context.Context, query *MusclesGr
 	return nil
 }
 func (eq *ExerciseQuery) loadExerciseTypes(ctx context.Context, query *ExerciseTypeQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *ExerciseType)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*Exercise)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*Exercise)
 	for i := range nodes {
 		fk := nodes[i].ExerciseTypeID
 		if _, ok := nodeids[fk]; !ok {
@@ -847,8 +848,8 @@ func (eq *ExerciseQuery) loadExerciseTypes(ctx context.Context, query *ExerciseT
 }
 func (eq *ExerciseQuery) loadRoutines(ctx context.Context, query *RoutineQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *Routine)) error {
 	edgeIDs := make([]driver.Value, len(nodes))
-	byID := make(map[string]*Exercise)
-	nids := make(map[string]map[*Exercise]struct{})
+	byID := make(map[pksuid.ID]*Exercise)
+	nids := make(map[pksuid.ID]map[*Exercise]struct{})
 	for i, node := range nodes {
 		edgeIDs[i] = node.ID
 		byID[node.ID] = node
@@ -877,11 +878,11 @@ func (eq *ExerciseQuery) loadRoutines(ctx context.Context, query *RoutineQuery, 
 				if err != nil {
 					return nil, err
 				}
-				return append([]any{new(sql.NullString)}, values...), nil
+				return append([]any{new(pksuid.ID)}, values...), nil
 			}
 			spec.Assign = func(columns []string, values []any) error {
-				outValue := values[0].(*sql.NullString).String
-				inValue := values[1].(*sql.NullString).String
+				outValue := *values[0].(*pksuid.ID)
+				inValue := *values[1].(*pksuid.ID)
 				if nids[inValue] == nil {
 					nids[inValue] = map[*Exercise]struct{}{byID[outValue]: {}}
 					return assign(columns[1:], values[1:])
@@ -908,7 +909,7 @@ func (eq *ExerciseQuery) loadRoutines(ctx context.Context, query *RoutineQuery, 
 }
 func (eq *ExerciseQuery) loadRoutineExercises(ctx context.Context, query *RoutineExerciseQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *RoutineExercise)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Exercise)
+	nodeids := make(map[pksuid.ID]*Exercise)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]

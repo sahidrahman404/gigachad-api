@@ -5,6 +5,7 @@ package workoutlog
 import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 const (
@@ -77,7 +78,7 @@ var (
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() string
 	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() string
+	DefaultID func() pksuid.ID
 )
 
 // OrderOption defines the ordering options for the WorkoutLog queries.

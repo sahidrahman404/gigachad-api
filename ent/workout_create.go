@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -94,41 +95,41 @@ func (wc *WorkoutCreate) SetDescription(s string) *WorkoutCreate {
 }
 
 // SetUserID sets the "user_id" field.
-func (wc *WorkoutCreate) SetUserID(s string) *WorkoutCreate {
-	wc.mutation.SetUserID(s)
+func (wc *WorkoutCreate) SetUserID(pk pksuid.ID) *WorkoutCreate {
+	wc.mutation.SetUserID(pk)
 	return wc
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wc *WorkoutCreate) SetNillableUserID(s *string) *WorkoutCreate {
-	if s != nil {
-		wc.SetUserID(*s)
+func (wc *WorkoutCreate) SetNillableUserID(pk *pksuid.ID) *WorkoutCreate {
+	if pk != nil {
+		wc.SetUserID(*pk)
 	}
 	return wc
 }
 
 // SetID sets the "id" field.
-func (wc *WorkoutCreate) SetID(s string) *WorkoutCreate {
-	wc.mutation.SetID(s)
+func (wc *WorkoutCreate) SetID(pk pksuid.ID) *WorkoutCreate {
+	wc.mutation.SetID(pk)
 	return wc
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (wc *WorkoutCreate) SetNillableID(s *string) *WorkoutCreate {
-	if s != nil {
-		wc.SetID(*s)
+func (wc *WorkoutCreate) SetNillableID(pk *pksuid.ID) *WorkoutCreate {
+	if pk != nil {
+		wc.SetID(*pk)
 	}
 	return wc
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (wc *WorkoutCreate) SetUsersID(id string) *WorkoutCreate {
+func (wc *WorkoutCreate) SetUsersID(id pksuid.ID) *WorkoutCreate {
 	wc.mutation.SetUsersID(id)
 	return wc
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wc *WorkoutCreate) SetNillableUsersID(id *string) *WorkoutCreate {
+func (wc *WorkoutCreate) SetNillableUsersID(id *pksuid.ID) *WorkoutCreate {
 	if id != nil {
 		wc = wc.SetUsersID(*id)
 	}
@@ -141,14 +142,14 @@ func (wc *WorkoutCreate) SetUsers(u *User) *WorkoutCreate {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (wc *WorkoutCreate) AddWorkoutLogIDs(ids ...string) *WorkoutCreate {
+func (wc *WorkoutCreate) AddWorkoutLogIDs(ids ...pksuid.ID) *WorkoutCreate {
 	wc.mutation.AddWorkoutLogIDs(ids...)
 	return wc
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (wc *WorkoutCreate) AddWorkoutLogs(w ...*WorkoutLog) *WorkoutCreate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -235,10 +236,10 @@ func (wc *WorkoutCreate) sqlSave(ctx context.Context) (*Workout, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Workout.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	wc.mutation.id = &_node.ID
@@ -253,7 +254,7 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 	)
 	if id, ok := wc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := wc.mutation.Name(); ok {
 		_spec.SetField(workout.FieldName, field.TypeString, value)

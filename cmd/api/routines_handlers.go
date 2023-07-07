@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/request"
 	"github.com/sahidrahman404/gigachad-api/internal/response"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
@@ -90,7 +91,7 @@ func (app *application) updateRoutineHandler(w http.ResponseWriter, r *http.Requ
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	err = app.storage.Routine.Update(ctx, routine, routineID)
+	err = app.storage.Routine.Update(ctx, routine, pksuid.ID(routineID))
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -111,7 +112,7 @@ func (app *application) deleteRoutineHandler(w http.ResponseWriter, r *http.Requ
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	err = app.storage.Routine.Delete(ctx, routineID)
+	err = app.storage.Routine.Delete(ctx, pksuid.ID(routineID))
 	if err != nil {
 		app.serverError(w, r, err)
 	}
@@ -130,7 +131,7 @@ func (app *application) getRoutineHandler(w http.ResponseWriter, r *http.Request
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	user := app.contextGetUser(r)
-	routine, err := app.storage.Routine.GetForUser(ctx, routineID, user.Ent.ID)
+	routine, err := app.storage.Routine.GetForUser(ctx, pksuid.ID(routineID), user.Ent.ID)
 	if err != nil {
 		app.serverError(w, r, err)
 		return

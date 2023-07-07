@@ -17,6 +17,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
@@ -50,12 +51,12 @@ type EquipmentMutation struct {
 	config
 	op               Op
 	typ              string
-	id               *string
+	id               *pksuid.ID
 	name             *string
 	image            *string
 	clearedFields    map[string]struct{}
-	exercises        map[string]struct{}
-	removedexercises map[string]struct{}
+	exercises        map[pksuid.ID]struct{}
+	removedexercises map[pksuid.ID]struct{}
 	clearedexercises bool
 	done             bool
 	oldValue         func(context.Context) (*Equipment, error)
@@ -82,7 +83,7 @@ func newEquipmentMutation(c config, op Op, opts ...equipmentOption) *EquipmentMu
 }
 
 // withEquipmentID sets the ID field of the mutation.
-func withEquipmentID(id string) equipmentOption {
+func withEquipmentID(id pksuid.ID) equipmentOption {
 	return func(m *EquipmentMutation) {
 		var (
 			err   error
@@ -134,13 +135,13 @@ func (m EquipmentMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Equipment entities.
-func (m *EquipmentMutation) SetID(id string) {
+func (m *EquipmentMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *EquipmentMutation) ID() (id string, exists bool) {
+func (m *EquipmentMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -151,12 +152,12 @@ func (m *EquipmentMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *EquipmentMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *EquipmentMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -239,9 +240,9 @@ func (m *EquipmentMutation) ResetImage() {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by ids.
-func (m *EquipmentMutation) AddExerciseIDs(ids ...string) {
+func (m *EquipmentMutation) AddExerciseIDs(ids ...pksuid.ID) {
 	if m.exercises == nil {
-		m.exercises = make(map[string]struct{})
+		m.exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.exercises[ids[i]] = struct{}{}
@@ -259,9 +260,9 @@ func (m *EquipmentMutation) ExercisesCleared() bool {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to the Exercise entity by IDs.
-func (m *EquipmentMutation) RemoveExerciseIDs(ids ...string) {
+func (m *EquipmentMutation) RemoveExerciseIDs(ids ...pksuid.ID) {
 	if m.removedexercises == nil {
-		m.removedexercises = make(map[string]struct{})
+		m.removedexercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.exercises, ids[i])
@@ -270,7 +271,7 @@ func (m *EquipmentMutation) RemoveExerciseIDs(ids ...string) {
 }
 
 // RemovedExercises returns the removed IDs of the "exercises" edge to the Exercise entity.
-func (m *EquipmentMutation) RemovedExercisesIDs() (ids []string) {
+func (m *EquipmentMutation) RemovedExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.removedexercises {
 		ids = append(ids, id)
 	}
@@ -278,7 +279,7 @@ func (m *EquipmentMutation) RemovedExercisesIDs() (ids []string) {
 }
 
 // ExercisesIDs returns the "exercises" edge IDs in the mutation.
-func (m *EquipmentMutation) ExercisesIDs() (ids []string) {
+func (m *EquipmentMutation) ExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.exercises {
 		ids = append(ids, id)
 	}
@@ -529,27 +530,27 @@ type ExerciseMutation struct {
 	config
 	op                       Op
 	typ                      string
-	id                       *string
+	id                       *pksuid.ID
 	name                     *string
 	image                    *string
 	how_to                   *string
 	clearedFields            map[string]struct{}
-	workout_logs             map[string]struct{}
-	removedworkout_logs      map[string]struct{}
+	workout_logs             map[pksuid.ID]struct{}
+	removedworkout_logs      map[pksuid.ID]struct{}
 	clearedworkout_logs      bool
-	users                    *string
+	users                    *pksuid.ID
 	clearedusers             bool
-	equipments               *string
+	equipments               *pksuid.ID
 	clearedequipments        bool
-	muscles_groups           *string
+	muscles_groups           *pksuid.ID
 	clearedmuscles_groups    bool
-	exercise_types           *string
+	exercise_types           *pksuid.ID
 	clearedexercise_types    bool
-	routines                 map[string]struct{}
-	removedroutines          map[string]struct{}
+	routines                 map[pksuid.ID]struct{}
+	removedroutines          map[pksuid.ID]struct{}
 	clearedroutines          bool
-	routine_exercises        map[string]struct{}
-	removedroutine_exercises map[string]struct{}
+	routine_exercises        map[pksuid.ID]struct{}
+	removedroutine_exercises map[pksuid.ID]struct{}
 	clearedroutine_exercises bool
 	done                     bool
 	oldValue                 func(context.Context) (*Exercise, error)
@@ -576,7 +577,7 @@ func newExerciseMutation(c config, op Op, opts ...exerciseOption) *ExerciseMutat
 }
 
 // withExerciseID sets the ID field of the mutation.
-func withExerciseID(id string) exerciseOption {
+func withExerciseID(id pksuid.ID) exerciseOption {
 	return func(m *ExerciseMutation) {
 		var (
 			err   error
@@ -628,13 +629,13 @@ func (m ExerciseMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Exercise entities.
-func (m *ExerciseMutation) SetID(id string) {
+func (m *ExerciseMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *ExerciseMutation) ID() (id string, exists bool) {
+func (m *ExerciseMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -645,12 +646,12 @@ func (m *ExerciseMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *ExerciseMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *ExerciseMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -795,12 +796,12 @@ func (m *ExerciseMutation) ResetHowTo() {
 }
 
 // SetEquipmentID sets the "equipment_id" field.
-func (m *ExerciseMutation) SetEquipmentID(s string) {
-	m.equipments = &s
+func (m *ExerciseMutation) SetEquipmentID(pk pksuid.ID) {
+	m.equipments = &pk
 }
 
 // EquipmentID returns the value of the "equipment_id" field in the mutation.
-func (m *ExerciseMutation) EquipmentID() (r string, exists bool) {
+func (m *ExerciseMutation) EquipmentID() (r pksuid.ID, exists bool) {
 	v := m.equipments
 	if v == nil {
 		return
@@ -811,7 +812,7 @@ func (m *ExerciseMutation) EquipmentID() (r string, exists bool) {
 // OldEquipmentID returns the old "equipment_id" field's value of the Exercise entity.
 // If the Exercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExerciseMutation) OldEquipmentID(ctx context.Context) (v string, err error) {
+func (m *ExerciseMutation) OldEquipmentID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldEquipmentID is only allowed on UpdateOne operations")
 	}
@@ -844,12 +845,12 @@ func (m *ExerciseMutation) ResetEquipmentID() {
 }
 
 // SetMusclesGroupID sets the "muscles_group_id" field.
-func (m *ExerciseMutation) SetMusclesGroupID(s string) {
-	m.muscles_groups = &s
+func (m *ExerciseMutation) SetMusclesGroupID(pk pksuid.ID) {
+	m.muscles_groups = &pk
 }
 
 // MusclesGroupID returns the value of the "muscles_group_id" field in the mutation.
-func (m *ExerciseMutation) MusclesGroupID() (r string, exists bool) {
+func (m *ExerciseMutation) MusclesGroupID() (r pksuid.ID, exists bool) {
 	v := m.muscles_groups
 	if v == nil {
 		return
@@ -860,7 +861,7 @@ func (m *ExerciseMutation) MusclesGroupID() (r string, exists bool) {
 // OldMusclesGroupID returns the old "muscles_group_id" field's value of the Exercise entity.
 // If the Exercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExerciseMutation) OldMusclesGroupID(ctx context.Context) (v string, err error) {
+func (m *ExerciseMutation) OldMusclesGroupID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldMusclesGroupID is only allowed on UpdateOne operations")
 	}
@@ -893,12 +894,12 @@ func (m *ExerciseMutation) ResetMusclesGroupID() {
 }
 
 // SetExerciseTypeID sets the "exercise_type_id" field.
-func (m *ExerciseMutation) SetExerciseTypeID(s string) {
-	m.exercise_types = &s
+func (m *ExerciseMutation) SetExerciseTypeID(pk pksuid.ID) {
+	m.exercise_types = &pk
 }
 
 // ExerciseTypeID returns the value of the "exercise_type_id" field in the mutation.
-func (m *ExerciseMutation) ExerciseTypeID() (r string, exists bool) {
+func (m *ExerciseMutation) ExerciseTypeID() (r pksuid.ID, exists bool) {
 	v := m.exercise_types
 	if v == nil {
 		return
@@ -909,7 +910,7 @@ func (m *ExerciseMutation) ExerciseTypeID() (r string, exists bool) {
 // OldExerciseTypeID returns the old "exercise_type_id" field's value of the Exercise entity.
 // If the Exercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExerciseMutation) OldExerciseTypeID(ctx context.Context) (v string, err error) {
+func (m *ExerciseMutation) OldExerciseTypeID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldExerciseTypeID is only allowed on UpdateOne operations")
 	}
@@ -942,12 +943,12 @@ func (m *ExerciseMutation) ResetExerciseTypeID() {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *ExerciseMutation) SetUserID(s string) {
-	m.users = &s
+func (m *ExerciseMutation) SetUserID(pk pksuid.ID) {
+	m.users = &pk
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *ExerciseMutation) UserID() (r string, exists bool) {
+func (m *ExerciseMutation) UserID() (r pksuid.ID, exists bool) {
 	v := m.users
 	if v == nil {
 		return
@@ -958,7 +959,7 @@ func (m *ExerciseMutation) UserID() (r string, exists bool) {
 // OldUserID returns the old "user_id" field's value of the Exercise entity.
 // If the Exercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExerciseMutation) OldUserID(ctx context.Context) (v *string, err error) {
+func (m *ExerciseMutation) OldUserID(ctx context.Context) (v *pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -991,9 +992,9 @@ func (m *ExerciseMutation) ResetUserID() {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by ids.
-func (m *ExerciseMutation) AddWorkoutLogIDs(ids ...string) {
+func (m *ExerciseMutation) AddWorkoutLogIDs(ids ...pksuid.ID) {
 	if m.workout_logs == nil {
-		m.workout_logs = make(map[string]struct{})
+		m.workout_logs = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.workout_logs[ids[i]] = struct{}{}
@@ -1011,9 +1012,9 @@ func (m *ExerciseMutation) WorkoutLogsCleared() bool {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (m *ExerciseMutation) RemoveWorkoutLogIDs(ids ...string) {
+func (m *ExerciseMutation) RemoveWorkoutLogIDs(ids ...pksuid.ID) {
 	if m.removedworkout_logs == nil {
-		m.removedworkout_logs = make(map[string]struct{})
+		m.removedworkout_logs = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.workout_logs, ids[i])
@@ -1022,7 +1023,7 @@ func (m *ExerciseMutation) RemoveWorkoutLogIDs(ids ...string) {
 }
 
 // RemovedWorkoutLogs returns the removed IDs of the "workout_logs" edge to the WorkoutLog entity.
-func (m *ExerciseMutation) RemovedWorkoutLogsIDs() (ids []string) {
+func (m *ExerciseMutation) RemovedWorkoutLogsIDs() (ids []pksuid.ID) {
 	for id := range m.removedworkout_logs {
 		ids = append(ids, id)
 	}
@@ -1030,7 +1031,7 @@ func (m *ExerciseMutation) RemovedWorkoutLogsIDs() (ids []string) {
 }
 
 // WorkoutLogsIDs returns the "workout_logs" edge IDs in the mutation.
-func (m *ExerciseMutation) WorkoutLogsIDs() (ids []string) {
+func (m *ExerciseMutation) WorkoutLogsIDs() (ids []pksuid.ID) {
 	for id := range m.workout_logs {
 		ids = append(ids, id)
 	}
@@ -1045,7 +1046,7 @@ func (m *ExerciseMutation) ResetWorkoutLogs() {
 }
 
 // SetUsersID sets the "users" edge to the User entity by id.
-func (m *ExerciseMutation) SetUsersID(id string) {
+func (m *ExerciseMutation) SetUsersID(id pksuid.ID) {
 	m.users = &id
 }
 
@@ -1060,7 +1061,7 @@ func (m *ExerciseMutation) UsersCleared() bool {
 }
 
 // UsersID returns the "users" edge ID in the mutation.
-func (m *ExerciseMutation) UsersID() (id string, exists bool) {
+func (m *ExerciseMutation) UsersID() (id pksuid.ID, exists bool) {
 	if m.users != nil {
 		return *m.users, true
 	}
@@ -1070,7 +1071,7 @@ func (m *ExerciseMutation) UsersID() (id string, exists bool) {
 // UsersIDs returns the "users" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // UsersID instead. It exists only for internal usage by the builders.
-func (m *ExerciseMutation) UsersIDs() (ids []string) {
+func (m *ExerciseMutation) UsersIDs() (ids []pksuid.ID) {
 	if id := m.users; id != nil {
 		ids = append(ids, *id)
 	}
@@ -1084,7 +1085,7 @@ func (m *ExerciseMutation) ResetUsers() {
 }
 
 // SetEquipmentsID sets the "equipments" edge to the Equipment entity by id.
-func (m *ExerciseMutation) SetEquipmentsID(id string) {
+func (m *ExerciseMutation) SetEquipmentsID(id pksuid.ID) {
 	m.equipments = &id
 }
 
@@ -1099,7 +1100,7 @@ func (m *ExerciseMutation) EquipmentsCleared() bool {
 }
 
 // EquipmentsID returns the "equipments" edge ID in the mutation.
-func (m *ExerciseMutation) EquipmentsID() (id string, exists bool) {
+func (m *ExerciseMutation) EquipmentsID() (id pksuid.ID, exists bool) {
 	if m.equipments != nil {
 		return *m.equipments, true
 	}
@@ -1109,7 +1110,7 @@ func (m *ExerciseMutation) EquipmentsID() (id string, exists bool) {
 // EquipmentsIDs returns the "equipments" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // EquipmentsID instead. It exists only for internal usage by the builders.
-func (m *ExerciseMutation) EquipmentsIDs() (ids []string) {
+func (m *ExerciseMutation) EquipmentsIDs() (ids []pksuid.ID) {
 	if id := m.equipments; id != nil {
 		ids = append(ids, *id)
 	}
@@ -1123,7 +1124,7 @@ func (m *ExerciseMutation) ResetEquipments() {
 }
 
 // SetMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by id.
-func (m *ExerciseMutation) SetMusclesGroupsID(id string) {
+func (m *ExerciseMutation) SetMusclesGroupsID(id pksuid.ID) {
 	m.muscles_groups = &id
 }
 
@@ -1138,7 +1139,7 @@ func (m *ExerciseMutation) MusclesGroupsCleared() bool {
 }
 
 // MusclesGroupsID returns the "muscles_groups" edge ID in the mutation.
-func (m *ExerciseMutation) MusclesGroupsID() (id string, exists bool) {
+func (m *ExerciseMutation) MusclesGroupsID() (id pksuid.ID, exists bool) {
 	if m.muscles_groups != nil {
 		return *m.muscles_groups, true
 	}
@@ -1148,7 +1149,7 @@ func (m *ExerciseMutation) MusclesGroupsID() (id string, exists bool) {
 // MusclesGroupsIDs returns the "muscles_groups" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // MusclesGroupsID instead. It exists only for internal usage by the builders.
-func (m *ExerciseMutation) MusclesGroupsIDs() (ids []string) {
+func (m *ExerciseMutation) MusclesGroupsIDs() (ids []pksuid.ID) {
 	if id := m.muscles_groups; id != nil {
 		ids = append(ids, *id)
 	}
@@ -1162,7 +1163,7 @@ func (m *ExerciseMutation) ResetMusclesGroups() {
 }
 
 // SetExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by id.
-func (m *ExerciseMutation) SetExerciseTypesID(id string) {
+func (m *ExerciseMutation) SetExerciseTypesID(id pksuid.ID) {
 	m.exercise_types = &id
 }
 
@@ -1177,7 +1178,7 @@ func (m *ExerciseMutation) ExerciseTypesCleared() bool {
 }
 
 // ExerciseTypesID returns the "exercise_types" edge ID in the mutation.
-func (m *ExerciseMutation) ExerciseTypesID() (id string, exists bool) {
+func (m *ExerciseMutation) ExerciseTypesID() (id pksuid.ID, exists bool) {
 	if m.exercise_types != nil {
 		return *m.exercise_types, true
 	}
@@ -1187,7 +1188,7 @@ func (m *ExerciseMutation) ExerciseTypesID() (id string, exists bool) {
 // ExerciseTypesIDs returns the "exercise_types" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // ExerciseTypesID instead. It exists only for internal usage by the builders.
-func (m *ExerciseMutation) ExerciseTypesIDs() (ids []string) {
+func (m *ExerciseMutation) ExerciseTypesIDs() (ids []pksuid.ID) {
 	if id := m.exercise_types; id != nil {
 		ids = append(ids, *id)
 	}
@@ -1201,9 +1202,9 @@ func (m *ExerciseMutation) ResetExerciseTypes() {
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by ids.
-func (m *ExerciseMutation) AddRoutineIDs(ids ...string) {
+func (m *ExerciseMutation) AddRoutineIDs(ids ...pksuid.ID) {
 	if m.routines == nil {
-		m.routines = make(map[string]struct{})
+		m.routines = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.routines[ids[i]] = struct{}{}
@@ -1221,9 +1222,9 @@ func (m *ExerciseMutation) RoutinesCleared() bool {
 }
 
 // RemoveRoutineIDs removes the "routines" edge to the Routine entity by IDs.
-func (m *ExerciseMutation) RemoveRoutineIDs(ids ...string) {
+func (m *ExerciseMutation) RemoveRoutineIDs(ids ...pksuid.ID) {
 	if m.removedroutines == nil {
-		m.removedroutines = make(map[string]struct{})
+		m.removedroutines = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.routines, ids[i])
@@ -1232,7 +1233,7 @@ func (m *ExerciseMutation) RemoveRoutineIDs(ids ...string) {
 }
 
 // RemovedRoutines returns the removed IDs of the "routines" edge to the Routine entity.
-func (m *ExerciseMutation) RemovedRoutinesIDs() (ids []string) {
+func (m *ExerciseMutation) RemovedRoutinesIDs() (ids []pksuid.ID) {
 	for id := range m.removedroutines {
 		ids = append(ids, id)
 	}
@@ -1240,7 +1241,7 @@ func (m *ExerciseMutation) RemovedRoutinesIDs() (ids []string) {
 }
 
 // RoutinesIDs returns the "routines" edge IDs in the mutation.
-func (m *ExerciseMutation) RoutinesIDs() (ids []string) {
+func (m *ExerciseMutation) RoutinesIDs() (ids []pksuid.ID) {
 	for id := range m.routines {
 		ids = append(ids, id)
 	}
@@ -1255,9 +1256,9 @@ func (m *ExerciseMutation) ResetRoutines() {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by ids.
-func (m *ExerciseMutation) AddRoutineExerciseIDs(ids ...string) {
+func (m *ExerciseMutation) AddRoutineExerciseIDs(ids ...pksuid.ID) {
 	if m.routine_exercises == nil {
-		m.routine_exercises = make(map[string]struct{})
+		m.routine_exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.routine_exercises[ids[i]] = struct{}{}
@@ -1275,9 +1276,9 @@ func (m *ExerciseMutation) RoutineExercisesCleared() bool {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (m *ExerciseMutation) RemoveRoutineExerciseIDs(ids ...string) {
+func (m *ExerciseMutation) RemoveRoutineExerciseIDs(ids ...pksuid.ID) {
 	if m.removedroutine_exercises == nil {
-		m.removedroutine_exercises = make(map[string]struct{})
+		m.removedroutine_exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.routine_exercises, ids[i])
@@ -1286,7 +1287,7 @@ func (m *ExerciseMutation) RemoveRoutineExerciseIDs(ids ...string) {
 }
 
 // RemovedRoutineExercises returns the removed IDs of the "routine_exercises" edge to the RoutineExercise entity.
-func (m *ExerciseMutation) RemovedRoutineExercisesIDs() (ids []string) {
+func (m *ExerciseMutation) RemovedRoutineExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.removedroutine_exercises {
 		ids = append(ids, id)
 	}
@@ -1294,7 +1295,7 @@ func (m *ExerciseMutation) RemovedRoutineExercisesIDs() (ids []string) {
 }
 
 // RoutineExercisesIDs returns the "routine_exercises" edge IDs in the mutation.
-func (m *ExerciseMutation) RoutineExercisesIDs() (ids []string) {
+func (m *ExerciseMutation) RoutineExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.routine_exercises {
 		ids = append(ids, id)
 	}
@@ -1440,28 +1441,28 @@ func (m *ExerciseMutation) SetField(name string, value ent.Value) error {
 		m.SetHowTo(v)
 		return nil
 	case exercise.FieldEquipmentID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetEquipmentID(v)
 		return nil
 	case exercise.FieldMusclesGroupID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetMusclesGroupID(v)
 		return nil
 	case exercise.FieldExerciseTypeID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetExerciseTypeID(v)
 		return nil
 	case exercise.FieldUserID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1793,14 +1794,14 @@ type ExerciseTypeMutation struct {
 	config
 	op               Op
 	typ              string
-	id               *string
+	id               *pksuid.ID
 	name             *string
 	properties       *[]string
 	appendproperties []string
 	description      *string
 	clearedFields    map[string]struct{}
-	exercises        map[string]struct{}
-	removedexercises map[string]struct{}
+	exercises        map[pksuid.ID]struct{}
+	removedexercises map[pksuid.ID]struct{}
 	clearedexercises bool
 	done             bool
 	oldValue         func(context.Context) (*ExerciseType, error)
@@ -1827,7 +1828,7 @@ func newExerciseTypeMutation(c config, op Op, opts ...exercisetypeOption) *Exerc
 }
 
 // withExerciseTypeID sets the ID field of the mutation.
-func withExerciseTypeID(id string) exercisetypeOption {
+func withExerciseTypeID(id pksuid.ID) exercisetypeOption {
 	return func(m *ExerciseTypeMutation) {
 		var (
 			err   error
@@ -1879,13 +1880,13 @@ func (m ExerciseTypeMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of ExerciseType entities.
-func (m *ExerciseTypeMutation) SetID(id string) {
+func (m *ExerciseTypeMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *ExerciseTypeMutation) ID() (id string, exists bool) {
+func (m *ExerciseTypeMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -1896,12 +1897,12 @@ func (m *ExerciseTypeMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *ExerciseTypeMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *ExerciseTypeMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -2035,9 +2036,9 @@ func (m *ExerciseTypeMutation) ResetDescription() {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by ids.
-func (m *ExerciseTypeMutation) AddExerciseIDs(ids ...string) {
+func (m *ExerciseTypeMutation) AddExerciseIDs(ids ...pksuid.ID) {
 	if m.exercises == nil {
-		m.exercises = make(map[string]struct{})
+		m.exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.exercises[ids[i]] = struct{}{}
@@ -2055,9 +2056,9 @@ func (m *ExerciseTypeMutation) ExercisesCleared() bool {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to the Exercise entity by IDs.
-func (m *ExerciseTypeMutation) RemoveExerciseIDs(ids ...string) {
+func (m *ExerciseTypeMutation) RemoveExerciseIDs(ids ...pksuid.ID) {
 	if m.removedexercises == nil {
-		m.removedexercises = make(map[string]struct{})
+		m.removedexercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.exercises, ids[i])
@@ -2066,7 +2067,7 @@ func (m *ExerciseTypeMutation) RemoveExerciseIDs(ids ...string) {
 }
 
 // RemovedExercises returns the removed IDs of the "exercises" edge to the Exercise entity.
-func (m *ExerciseTypeMutation) RemovedExercisesIDs() (ids []string) {
+func (m *ExerciseTypeMutation) RemovedExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.removedexercises {
 		ids = append(ids, id)
 	}
@@ -2074,7 +2075,7 @@ func (m *ExerciseTypeMutation) RemovedExercisesIDs() (ids []string) {
 }
 
 // ExercisesIDs returns the "exercises" edge IDs in the mutation.
-func (m *ExerciseTypeMutation) ExercisesIDs() (ids []string) {
+func (m *ExerciseTypeMutation) ExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.exercises {
 		ids = append(ids, id)
 	}
@@ -2342,12 +2343,12 @@ type MusclesGroupMutation struct {
 	config
 	op               Op
 	typ              string
-	id               *string
+	id               *pksuid.ID
 	name             *string
 	image            *string
 	clearedFields    map[string]struct{}
-	exercises        map[string]struct{}
-	removedexercises map[string]struct{}
+	exercises        map[pksuid.ID]struct{}
+	removedexercises map[pksuid.ID]struct{}
 	clearedexercises bool
 	done             bool
 	oldValue         func(context.Context) (*MusclesGroup, error)
@@ -2374,7 +2375,7 @@ func newMusclesGroupMutation(c config, op Op, opts ...musclesgroupOption) *Muscl
 }
 
 // withMusclesGroupID sets the ID field of the mutation.
-func withMusclesGroupID(id string) musclesgroupOption {
+func withMusclesGroupID(id pksuid.ID) musclesgroupOption {
 	return func(m *MusclesGroupMutation) {
 		var (
 			err   error
@@ -2426,13 +2427,13 @@ func (m MusclesGroupMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of MusclesGroup entities.
-func (m *MusclesGroupMutation) SetID(id string) {
+func (m *MusclesGroupMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *MusclesGroupMutation) ID() (id string, exists bool) {
+func (m *MusclesGroupMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -2443,12 +2444,12 @@ func (m *MusclesGroupMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *MusclesGroupMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *MusclesGroupMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -2531,9 +2532,9 @@ func (m *MusclesGroupMutation) ResetImage() {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by ids.
-func (m *MusclesGroupMutation) AddExerciseIDs(ids ...string) {
+func (m *MusclesGroupMutation) AddExerciseIDs(ids ...pksuid.ID) {
 	if m.exercises == nil {
-		m.exercises = make(map[string]struct{})
+		m.exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.exercises[ids[i]] = struct{}{}
@@ -2551,9 +2552,9 @@ func (m *MusclesGroupMutation) ExercisesCleared() bool {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to the Exercise entity by IDs.
-func (m *MusclesGroupMutation) RemoveExerciseIDs(ids ...string) {
+func (m *MusclesGroupMutation) RemoveExerciseIDs(ids ...pksuid.ID) {
 	if m.removedexercises == nil {
-		m.removedexercises = make(map[string]struct{})
+		m.removedexercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.exercises, ids[i])
@@ -2562,7 +2563,7 @@ func (m *MusclesGroupMutation) RemoveExerciseIDs(ids ...string) {
 }
 
 // RemovedExercises returns the removed IDs of the "exercises" edge to the Exercise entity.
-func (m *MusclesGroupMutation) RemovedExercisesIDs() (ids []string) {
+func (m *MusclesGroupMutation) RemovedExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.removedexercises {
 		ids = append(ids, id)
 	}
@@ -2570,7 +2571,7 @@ func (m *MusclesGroupMutation) RemovedExercisesIDs() (ids []string) {
 }
 
 // ExercisesIDs returns the "exercises" edge IDs in the mutation.
-func (m *MusclesGroupMutation) ExercisesIDs() (ids []string) {
+func (m *MusclesGroupMutation) ExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.exercises {
 		ids = append(ids, id)
 	}
@@ -2821,16 +2822,16 @@ type RoutineMutation struct {
 	config
 	op                       Op
 	typ                      string
-	id                       *string
+	id                       *pksuid.ID
 	name                     *string
 	clearedFields            map[string]struct{}
-	exercises                map[string]struct{}
-	removedexercises         map[string]struct{}
+	exercises                map[pksuid.ID]struct{}
+	removedexercises         map[pksuid.ID]struct{}
 	clearedexercises         bool
-	users                    *string
+	users                    *pksuid.ID
 	clearedusers             bool
-	routine_exercises        map[string]struct{}
-	removedroutine_exercises map[string]struct{}
+	routine_exercises        map[pksuid.ID]struct{}
+	removedroutine_exercises map[pksuid.ID]struct{}
 	clearedroutine_exercises bool
 	done                     bool
 	oldValue                 func(context.Context) (*Routine, error)
@@ -2857,7 +2858,7 @@ func newRoutineMutation(c config, op Op, opts ...routineOption) *RoutineMutation
 }
 
 // withRoutineID sets the ID field of the mutation.
-func withRoutineID(id string) routineOption {
+func withRoutineID(id pksuid.ID) routineOption {
 	return func(m *RoutineMutation) {
 		var (
 			err   error
@@ -2909,13 +2910,13 @@ func (m RoutineMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Routine entities.
-func (m *RoutineMutation) SetID(id string) {
+func (m *RoutineMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *RoutineMutation) ID() (id string, exists bool) {
+func (m *RoutineMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -2926,12 +2927,12 @@ func (m *RoutineMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *RoutineMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *RoutineMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -2978,12 +2979,12 @@ func (m *RoutineMutation) ResetName() {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *RoutineMutation) SetUserID(s string) {
-	m.users = &s
+func (m *RoutineMutation) SetUserID(pk pksuid.ID) {
+	m.users = &pk
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *RoutineMutation) UserID() (r string, exists bool) {
+func (m *RoutineMutation) UserID() (r pksuid.ID, exists bool) {
 	v := m.users
 	if v == nil {
 		return
@@ -2994,7 +2995,7 @@ func (m *RoutineMutation) UserID() (r string, exists bool) {
 // OldUserID returns the old "user_id" field's value of the Routine entity.
 // If the Routine object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoutineMutation) OldUserID(ctx context.Context) (v string, err error) {
+func (m *RoutineMutation) OldUserID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -3027,9 +3028,9 @@ func (m *RoutineMutation) ResetUserID() {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by ids.
-func (m *RoutineMutation) AddExerciseIDs(ids ...string) {
+func (m *RoutineMutation) AddExerciseIDs(ids ...pksuid.ID) {
 	if m.exercises == nil {
-		m.exercises = make(map[string]struct{})
+		m.exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.exercises[ids[i]] = struct{}{}
@@ -3047,9 +3048,9 @@ func (m *RoutineMutation) ExercisesCleared() bool {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to the Exercise entity by IDs.
-func (m *RoutineMutation) RemoveExerciseIDs(ids ...string) {
+func (m *RoutineMutation) RemoveExerciseIDs(ids ...pksuid.ID) {
 	if m.removedexercises == nil {
-		m.removedexercises = make(map[string]struct{})
+		m.removedexercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.exercises, ids[i])
@@ -3058,7 +3059,7 @@ func (m *RoutineMutation) RemoveExerciseIDs(ids ...string) {
 }
 
 // RemovedExercises returns the removed IDs of the "exercises" edge to the Exercise entity.
-func (m *RoutineMutation) RemovedExercisesIDs() (ids []string) {
+func (m *RoutineMutation) RemovedExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.removedexercises {
 		ids = append(ids, id)
 	}
@@ -3066,7 +3067,7 @@ func (m *RoutineMutation) RemovedExercisesIDs() (ids []string) {
 }
 
 // ExercisesIDs returns the "exercises" edge IDs in the mutation.
-func (m *RoutineMutation) ExercisesIDs() (ids []string) {
+func (m *RoutineMutation) ExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.exercises {
 		ids = append(ids, id)
 	}
@@ -3081,7 +3082,7 @@ func (m *RoutineMutation) ResetExercises() {
 }
 
 // SetUsersID sets the "users" edge to the User entity by id.
-func (m *RoutineMutation) SetUsersID(id string) {
+func (m *RoutineMutation) SetUsersID(id pksuid.ID) {
 	m.users = &id
 }
 
@@ -3096,7 +3097,7 @@ func (m *RoutineMutation) UsersCleared() bool {
 }
 
 // UsersID returns the "users" edge ID in the mutation.
-func (m *RoutineMutation) UsersID() (id string, exists bool) {
+func (m *RoutineMutation) UsersID() (id pksuid.ID, exists bool) {
 	if m.users != nil {
 		return *m.users, true
 	}
@@ -3106,7 +3107,7 @@ func (m *RoutineMutation) UsersID() (id string, exists bool) {
 // UsersIDs returns the "users" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // UsersID instead. It exists only for internal usage by the builders.
-func (m *RoutineMutation) UsersIDs() (ids []string) {
+func (m *RoutineMutation) UsersIDs() (ids []pksuid.ID) {
 	if id := m.users; id != nil {
 		ids = append(ids, *id)
 	}
@@ -3120,9 +3121,9 @@ func (m *RoutineMutation) ResetUsers() {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by ids.
-func (m *RoutineMutation) AddRoutineExerciseIDs(ids ...string) {
+func (m *RoutineMutation) AddRoutineExerciseIDs(ids ...pksuid.ID) {
 	if m.routine_exercises == nil {
-		m.routine_exercises = make(map[string]struct{})
+		m.routine_exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.routine_exercises[ids[i]] = struct{}{}
@@ -3140,9 +3141,9 @@ func (m *RoutineMutation) RoutineExercisesCleared() bool {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (m *RoutineMutation) RemoveRoutineExerciseIDs(ids ...string) {
+func (m *RoutineMutation) RemoveRoutineExerciseIDs(ids ...pksuid.ID) {
 	if m.removedroutine_exercises == nil {
-		m.removedroutine_exercises = make(map[string]struct{})
+		m.removedroutine_exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.routine_exercises, ids[i])
@@ -3151,7 +3152,7 @@ func (m *RoutineMutation) RemoveRoutineExerciseIDs(ids ...string) {
 }
 
 // RemovedRoutineExercises returns the removed IDs of the "routine_exercises" edge to the RoutineExercise entity.
-func (m *RoutineMutation) RemovedRoutineExercisesIDs() (ids []string) {
+func (m *RoutineMutation) RemovedRoutineExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.removedroutine_exercises {
 		ids = append(ids, id)
 	}
@@ -3159,7 +3160,7 @@ func (m *RoutineMutation) RemovedRoutineExercisesIDs() (ids []string) {
 }
 
 // RoutineExercisesIDs returns the "routine_exercises" edge IDs in the mutation.
-func (m *RoutineMutation) RoutineExercisesIDs() (ids []string) {
+func (m *RoutineMutation) RoutineExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.routine_exercises {
 		ids = append(ids, id)
 	}
@@ -3256,7 +3257,7 @@ func (m *RoutineMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	case routine.FieldUserID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -3463,15 +3464,15 @@ type RoutineExerciseMutation struct {
 	config
 	op               Op
 	typ              string
-	id               *string
+	id               *pksuid.ID
 	rest_timer       *string
 	sets             **schematype.Sets
 	clearedFields    map[string]struct{}
-	routines         *string
+	routines         *pksuid.ID
 	clearedroutines  bool
-	exercises        *string
+	exercises        *pksuid.ID
 	clearedexercises bool
-	users            *string
+	users            *pksuid.ID
 	clearedusers     bool
 	done             bool
 	oldValue         func(context.Context) (*RoutineExercise, error)
@@ -3498,7 +3499,7 @@ func newRoutineExerciseMutation(c config, op Op, opts ...routineexerciseOption) 
 }
 
 // withRoutineExerciseID sets the ID field of the mutation.
-func withRoutineExerciseID(id string) routineexerciseOption {
+func withRoutineExerciseID(id pksuid.ID) routineexerciseOption {
 	return func(m *RoutineExerciseMutation) {
 		var (
 			err   error
@@ -3550,13 +3551,13 @@ func (m RoutineExerciseMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of RoutineExercise entities.
-func (m *RoutineExerciseMutation) SetID(id string) {
+func (m *RoutineExerciseMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *RoutineExerciseMutation) ID() (id string, exists bool) {
+func (m *RoutineExerciseMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -3567,12 +3568,12 @@ func (m *RoutineExerciseMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *RoutineExerciseMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *RoutineExerciseMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -3668,12 +3669,12 @@ func (m *RoutineExerciseMutation) ResetSets() {
 }
 
 // SetRoutineID sets the "routine_id" field.
-func (m *RoutineExerciseMutation) SetRoutineID(s string) {
-	m.routines = &s
+func (m *RoutineExerciseMutation) SetRoutineID(pk pksuid.ID) {
+	m.routines = &pk
 }
 
 // RoutineID returns the value of the "routine_id" field in the mutation.
-func (m *RoutineExerciseMutation) RoutineID() (r string, exists bool) {
+func (m *RoutineExerciseMutation) RoutineID() (r pksuid.ID, exists bool) {
 	v := m.routines
 	if v == nil {
 		return
@@ -3684,7 +3685,7 @@ func (m *RoutineExerciseMutation) RoutineID() (r string, exists bool) {
 // OldRoutineID returns the old "routine_id" field's value of the RoutineExercise entity.
 // If the RoutineExercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoutineExerciseMutation) OldRoutineID(ctx context.Context) (v string, err error) {
+func (m *RoutineExerciseMutation) OldRoutineID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldRoutineID is only allowed on UpdateOne operations")
 	}
@@ -3704,12 +3705,12 @@ func (m *RoutineExerciseMutation) ResetRoutineID() {
 }
 
 // SetExerciseID sets the "exercise_id" field.
-func (m *RoutineExerciseMutation) SetExerciseID(s string) {
-	m.exercises = &s
+func (m *RoutineExerciseMutation) SetExerciseID(pk pksuid.ID) {
+	m.exercises = &pk
 }
 
 // ExerciseID returns the value of the "exercise_id" field in the mutation.
-func (m *RoutineExerciseMutation) ExerciseID() (r string, exists bool) {
+func (m *RoutineExerciseMutation) ExerciseID() (r pksuid.ID, exists bool) {
 	v := m.exercises
 	if v == nil {
 		return
@@ -3720,7 +3721,7 @@ func (m *RoutineExerciseMutation) ExerciseID() (r string, exists bool) {
 // OldExerciseID returns the old "exercise_id" field's value of the RoutineExercise entity.
 // If the RoutineExercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoutineExerciseMutation) OldExerciseID(ctx context.Context) (v string, err error) {
+func (m *RoutineExerciseMutation) OldExerciseID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldExerciseID is only allowed on UpdateOne operations")
 	}
@@ -3740,12 +3741,12 @@ func (m *RoutineExerciseMutation) ResetExerciseID() {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *RoutineExerciseMutation) SetUserID(s string) {
-	m.users = &s
+func (m *RoutineExerciseMutation) SetUserID(pk pksuid.ID) {
+	m.users = &pk
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *RoutineExerciseMutation) UserID() (r string, exists bool) {
+func (m *RoutineExerciseMutation) UserID() (r pksuid.ID, exists bool) {
 	v := m.users
 	if v == nil {
 		return
@@ -3756,7 +3757,7 @@ func (m *RoutineExerciseMutation) UserID() (r string, exists bool) {
 // OldUserID returns the old "user_id" field's value of the RoutineExercise entity.
 // If the RoutineExercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoutineExerciseMutation) OldUserID(ctx context.Context) (v string, err error) {
+func (m *RoutineExerciseMutation) OldUserID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -3789,7 +3790,7 @@ func (m *RoutineExerciseMutation) ResetUserID() {
 }
 
 // SetRoutinesID sets the "routines" edge to the Routine entity by id.
-func (m *RoutineExerciseMutation) SetRoutinesID(id string) {
+func (m *RoutineExerciseMutation) SetRoutinesID(id pksuid.ID) {
 	m.routines = &id
 }
 
@@ -3804,7 +3805,7 @@ func (m *RoutineExerciseMutation) RoutinesCleared() bool {
 }
 
 // RoutinesID returns the "routines" edge ID in the mutation.
-func (m *RoutineExerciseMutation) RoutinesID() (id string, exists bool) {
+func (m *RoutineExerciseMutation) RoutinesID() (id pksuid.ID, exists bool) {
 	if m.routines != nil {
 		return *m.routines, true
 	}
@@ -3814,7 +3815,7 @@ func (m *RoutineExerciseMutation) RoutinesID() (id string, exists bool) {
 // RoutinesIDs returns the "routines" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // RoutinesID instead. It exists only for internal usage by the builders.
-func (m *RoutineExerciseMutation) RoutinesIDs() (ids []string) {
+func (m *RoutineExerciseMutation) RoutinesIDs() (ids []pksuid.ID) {
 	if id := m.routines; id != nil {
 		ids = append(ids, *id)
 	}
@@ -3828,7 +3829,7 @@ func (m *RoutineExerciseMutation) ResetRoutines() {
 }
 
 // SetExercisesID sets the "exercises" edge to the Exercise entity by id.
-func (m *RoutineExerciseMutation) SetExercisesID(id string) {
+func (m *RoutineExerciseMutation) SetExercisesID(id pksuid.ID) {
 	m.exercises = &id
 }
 
@@ -3843,7 +3844,7 @@ func (m *RoutineExerciseMutation) ExercisesCleared() bool {
 }
 
 // ExercisesID returns the "exercises" edge ID in the mutation.
-func (m *RoutineExerciseMutation) ExercisesID() (id string, exists bool) {
+func (m *RoutineExerciseMutation) ExercisesID() (id pksuid.ID, exists bool) {
 	if m.exercises != nil {
 		return *m.exercises, true
 	}
@@ -3853,7 +3854,7 @@ func (m *RoutineExerciseMutation) ExercisesID() (id string, exists bool) {
 // ExercisesIDs returns the "exercises" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // ExercisesID instead. It exists only for internal usage by the builders.
-func (m *RoutineExerciseMutation) ExercisesIDs() (ids []string) {
+func (m *RoutineExerciseMutation) ExercisesIDs() (ids []pksuid.ID) {
 	if id := m.exercises; id != nil {
 		ids = append(ids, *id)
 	}
@@ -3867,7 +3868,7 @@ func (m *RoutineExerciseMutation) ResetExercises() {
 }
 
 // SetUsersID sets the "users" edge to the User entity by id.
-func (m *RoutineExerciseMutation) SetUsersID(id string) {
+func (m *RoutineExerciseMutation) SetUsersID(id pksuid.ID) {
 	m.users = &id
 }
 
@@ -3882,7 +3883,7 @@ func (m *RoutineExerciseMutation) UsersCleared() bool {
 }
 
 // UsersID returns the "users" edge ID in the mutation.
-func (m *RoutineExerciseMutation) UsersID() (id string, exists bool) {
+func (m *RoutineExerciseMutation) UsersID() (id pksuid.ID, exists bool) {
 	if m.users != nil {
 		return *m.users, true
 	}
@@ -3892,7 +3893,7 @@ func (m *RoutineExerciseMutation) UsersID() (id string, exists bool) {
 // UsersIDs returns the "users" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // UsersID instead. It exists only for internal usage by the builders.
-func (m *RoutineExerciseMutation) UsersIDs() (ids []string) {
+func (m *RoutineExerciseMutation) UsersIDs() (ids []pksuid.ID) {
 	if id := m.users; id != nil {
 		ids = append(ids, *id)
 	}
@@ -4016,21 +4017,21 @@ func (m *RoutineExerciseMutation) SetField(name string, value ent.Value) error {
 		m.SetSets(v)
 		return nil
 	case routineexercise.FieldRoutineID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetRoutineID(v)
 		return nil
 	case routineexercise.FieldExerciseID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetExerciseID(v)
 		return nil
 	case routineexercise.FieldUserID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -4234,12 +4235,12 @@ type TokenMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *string
+	id            *pksuid.ID
 	hash          *[]byte
 	expiry        *string
 	scope         *string
 	clearedFields map[string]struct{}
-	users         *string
+	users         *pksuid.ID
 	clearedusers  bool
 	done          bool
 	oldValue      func(context.Context) (*Token, error)
@@ -4266,7 +4267,7 @@ func newTokenMutation(c config, op Op, opts ...tokenOption) *TokenMutation {
 }
 
 // withTokenID sets the ID field of the mutation.
-func withTokenID(id string) tokenOption {
+func withTokenID(id pksuid.ID) tokenOption {
 	return func(m *TokenMutation) {
 		var (
 			err   error
@@ -4318,13 +4319,13 @@ func (m TokenMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Token entities.
-func (m *TokenMutation) SetID(id string) {
+func (m *TokenMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *TokenMutation) ID() (id string, exists bool) {
+func (m *TokenMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -4335,12 +4336,12 @@ func (m *TokenMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *TokenMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *TokenMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -4459,12 +4460,12 @@ func (m *TokenMutation) ResetScope() {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *TokenMutation) SetUserID(s string) {
-	m.users = &s
+func (m *TokenMutation) SetUserID(pk pksuid.ID) {
+	m.users = &pk
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *TokenMutation) UserID() (r string, exists bool) {
+func (m *TokenMutation) UserID() (r pksuid.ID, exists bool) {
 	v := m.users
 	if v == nil {
 		return
@@ -4475,7 +4476,7 @@ func (m *TokenMutation) UserID() (r string, exists bool) {
 // OldUserID returns the old "user_id" field's value of the Token entity.
 // If the Token object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TokenMutation) OldUserID(ctx context.Context) (v string, err error) {
+func (m *TokenMutation) OldUserID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -4508,7 +4509,7 @@ func (m *TokenMutation) ResetUserID() {
 }
 
 // SetUsersID sets the "users" edge to the User entity by id.
-func (m *TokenMutation) SetUsersID(id string) {
+func (m *TokenMutation) SetUsersID(id pksuid.ID) {
 	m.users = &id
 }
 
@@ -4523,7 +4524,7 @@ func (m *TokenMutation) UsersCleared() bool {
 }
 
 // UsersID returns the "users" edge ID in the mutation.
-func (m *TokenMutation) UsersID() (id string, exists bool) {
+func (m *TokenMutation) UsersID() (id pksuid.ID, exists bool) {
 	if m.users != nil {
 		return *m.users, true
 	}
@@ -4533,7 +4534,7 @@ func (m *TokenMutation) UsersID() (id string, exists bool) {
 // UsersIDs returns the "users" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // UsersID instead. It exists only for internal usage by the builders.
-func (m *TokenMutation) UsersIDs() (ids []string) {
+func (m *TokenMutation) UsersIDs() (ids []pksuid.ID) {
 	if id := m.users; id != nil {
 		ids = append(ids, *id)
 	}
@@ -4657,7 +4658,7 @@ func (m *TokenMutation) SetField(name string, value ent.Value) error {
 		m.SetScope(v)
 		return nil
 	case token.FieldUserID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -4816,7 +4817,7 @@ type UserMutation struct {
 	config
 	op                       Op
 	typ                      string
-	id                       *string
+	id                       *pksuid.ID
 	email                    *string
 	username                 *string
 	hashed_password          *string
@@ -4827,23 +4828,23 @@ type UserMutation struct {
 	version                  *int
 	addversion               *int
 	clearedFields            map[string]struct{}
-	tokens                   map[string]struct{}
-	removedtokens            map[string]struct{}
+	tokens                   map[pksuid.ID]struct{}
+	removedtokens            map[pksuid.ID]struct{}
 	clearedtokens            bool
-	exercises                map[string]struct{}
-	removedexercises         map[string]struct{}
+	exercises                map[pksuid.ID]struct{}
+	removedexercises         map[pksuid.ID]struct{}
 	clearedexercises         bool
-	routines                 map[string]struct{}
-	removedroutines          map[string]struct{}
+	routines                 map[pksuid.ID]struct{}
+	removedroutines          map[pksuid.ID]struct{}
 	clearedroutines          bool
-	workouts                 map[string]struct{}
-	removedworkouts          map[string]struct{}
+	workouts                 map[pksuid.ID]struct{}
+	removedworkouts          map[pksuid.ID]struct{}
 	clearedworkouts          bool
-	workout_logs             map[string]struct{}
-	removedworkout_logs      map[string]struct{}
+	workout_logs             map[pksuid.ID]struct{}
+	removedworkout_logs      map[pksuid.ID]struct{}
 	clearedworkout_logs      bool
-	routine_exercises        map[string]struct{}
-	removedroutine_exercises map[string]struct{}
+	routine_exercises        map[pksuid.ID]struct{}
+	removedroutine_exercises map[pksuid.ID]struct{}
 	clearedroutine_exercises bool
 	done                     bool
 	oldValue                 func(context.Context) (*User, error)
@@ -4870,7 +4871,7 @@ func newUserMutation(c config, op Op, opts ...userOption) *UserMutation {
 }
 
 // withUserID sets the ID field of the mutation.
-func withUserID(id string) userOption {
+func withUserID(id pksuid.ID) userOption {
 	return func(m *UserMutation) {
 		var (
 			err   error
@@ -4922,13 +4923,13 @@ func (m UserMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of User entities.
-func (m *UserMutation) SetID(id string) {
+func (m *UserMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *UserMutation) ID() (id string, exists bool) {
+func (m *UserMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -4939,12 +4940,12 @@ func (m *UserMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *UserMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *UserMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -5247,9 +5248,9 @@ func (m *UserMutation) ResetVersion() {
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by ids.
-func (m *UserMutation) AddTokenIDs(ids ...string) {
+func (m *UserMutation) AddTokenIDs(ids ...pksuid.ID) {
 	if m.tokens == nil {
-		m.tokens = make(map[string]struct{})
+		m.tokens = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.tokens[ids[i]] = struct{}{}
@@ -5267,9 +5268,9 @@ func (m *UserMutation) TokensCleared() bool {
 }
 
 // RemoveTokenIDs removes the "tokens" edge to the Token entity by IDs.
-func (m *UserMutation) RemoveTokenIDs(ids ...string) {
+func (m *UserMutation) RemoveTokenIDs(ids ...pksuid.ID) {
 	if m.removedtokens == nil {
-		m.removedtokens = make(map[string]struct{})
+		m.removedtokens = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.tokens, ids[i])
@@ -5278,7 +5279,7 @@ func (m *UserMutation) RemoveTokenIDs(ids ...string) {
 }
 
 // RemovedTokens returns the removed IDs of the "tokens" edge to the Token entity.
-func (m *UserMutation) RemovedTokensIDs() (ids []string) {
+func (m *UserMutation) RemovedTokensIDs() (ids []pksuid.ID) {
 	for id := range m.removedtokens {
 		ids = append(ids, id)
 	}
@@ -5286,7 +5287,7 @@ func (m *UserMutation) RemovedTokensIDs() (ids []string) {
 }
 
 // TokensIDs returns the "tokens" edge IDs in the mutation.
-func (m *UserMutation) TokensIDs() (ids []string) {
+func (m *UserMutation) TokensIDs() (ids []pksuid.ID) {
 	for id := range m.tokens {
 		ids = append(ids, id)
 	}
@@ -5301,9 +5302,9 @@ func (m *UserMutation) ResetTokens() {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by ids.
-func (m *UserMutation) AddExerciseIDs(ids ...string) {
+func (m *UserMutation) AddExerciseIDs(ids ...pksuid.ID) {
 	if m.exercises == nil {
-		m.exercises = make(map[string]struct{})
+		m.exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.exercises[ids[i]] = struct{}{}
@@ -5321,9 +5322,9 @@ func (m *UserMutation) ExercisesCleared() bool {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to the Exercise entity by IDs.
-func (m *UserMutation) RemoveExerciseIDs(ids ...string) {
+func (m *UserMutation) RemoveExerciseIDs(ids ...pksuid.ID) {
 	if m.removedexercises == nil {
-		m.removedexercises = make(map[string]struct{})
+		m.removedexercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.exercises, ids[i])
@@ -5332,7 +5333,7 @@ func (m *UserMutation) RemoveExerciseIDs(ids ...string) {
 }
 
 // RemovedExercises returns the removed IDs of the "exercises" edge to the Exercise entity.
-func (m *UserMutation) RemovedExercisesIDs() (ids []string) {
+func (m *UserMutation) RemovedExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.removedexercises {
 		ids = append(ids, id)
 	}
@@ -5340,7 +5341,7 @@ func (m *UserMutation) RemovedExercisesIDs() (ids []string) {
 }
 
 // ExercisesIDs returns the "exercises" edge IDs in the mutation.
-func (m *UserMutation) ExercisesIDs() (ids []string) {
+func (m *UserMutation) ExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.exercises {
 		ids = append(ids, id)
 	}
@@ -5355,9 +5356,9 @@ func (m *UserMutation) ResetExercises() {
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by ids.
-func (m *UserMutation) AddRoutineIDs(ids ...string) {
+func (m *UserMutation) AddRoutineIDs(ids ...pksuid.ID) {
 	if m.routines == nil {
-		m.routines = make(map[string]struct{})
+		m.routines = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.routines[ids[i]] = struct{}{}
@@ -5375,9 +5376,9 @@ func (m *UserMutation) RoutinesCleared() bool {
 }
 
 // RemoveRoutineIDs removes the "routines" edge to the Routine entity by IDs.
-func (m *UserMutation) RemoveRoutineIDs(ids ...string) {
+func (m *UserMutation) RemoveRoutineIDs(ids ...pksuid.ID) {
 	if m.removedroutines == nil {
-		m.removedroutines = make(map[string]struct{})
+		m.removedroutines = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.routines, ids[i])
@@ -5386,7 +5387,7 @@ func (m *UserMutation) RemoveRoutineIDs(ids ...string) {
 }
 
 // RemovedRoutines returns the removed IDs of the "routines" edge to the Routine entity.
-func (m *UserMutation) RemovedRoutinesIDs() (ids []string) {
+func (m *UserMutation) RemovedRoutinesIDs() (ids []pksuid.ID) {
 	for id := range m.removedroutines {
 		ids = append(ids, id)
 	}
@@ -5394,7 +5395,7 @@ func (m *UserMutation) RemovedRoutinesIDs() (ids []string) {
 }
 
 // RoutinesIDs returns the "routines" edge IDs in the mutation.
-func (m *UserMutation) RoutinesIDs() (ids []string) {
+func (m *UserMutation) RoutinesIDs() (ids []pksuid.ID) {
 	for id := range m.routines {
 		ids = append(ids, id)
 	}
@@ -5409,9 +5410,9 @@ func (m *UserMutation) ResetRoutines() {
 }
 
 // AddWorkoutIDs adds the "workouts" edge to the Workout entity by ids.
-func (m *UserMutation) AddWorkoutIDs(ids ...string) {
+func (m *UserMutation) AddWorkoutIDs(ids ...pksuid.ID) {
 	if m.workouts == nil {
-		m.workouts = make(map[string]struct{})
+		m.workouts = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.workouts[ids[i]] = struct{}{}
@@ -5429,9 +5430,9 @@ func (m *UserMutation) WorkoutsCleared() bool {
 }
 
 // RemoveWorkoutIDs removes the "workouts" edge to the Workout entity by IDs.
-func (m *UserMutation) RemoveWorkoutIDs(ids ...string) {
+func (m *UserMutation) RemoveWorkoutIDs(ids ...pksuid.ID) {
 	if m.removedworkouts == nil {
-		m.removedworkouts = make(map[string]struct{})
+		m.removedworkouts = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.workouts, ids[i])
@@ -5440,7 +5441,7 @@ func (m *UserMutation) RemoveWorkoutIDs(ids ...string) {
 }
 
 // RemovedWorkouts returns the removed IDs of the "workouts" edge to the Workout entity.
-func (m *UserMutation) RemovedWorkoutsIDs() (ids []string) {
+func (m *UserMutation) RemovedWorkoutsIDs() (ids []pksuid.ID) {
 	for id := range m.removedworkouts {
 		ids = append(ids, id)
 	}
@@ -5448,7 +5449,7 @@ func (m *UserMutation) RemovedWorkoutsIDs() (ids []string) {
 }
 
 // WorkoutsIDs returns the "workouts" edge IDs in the mutation.
-func (m *UserMutation) WorkoutsIDs() (ids []string) {
+func (m *UserMutation) WorkoutsIDs() (ids []pksuid.ID) {
 	for id := range m.workouts {
 		ids = append(ids, id)
 	}
@@ -5463,9 +5464,9 @@ func (m *UserMutation) ResetWorkouts() {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by ids.
-func (m *UserMutation) AddWorkoutLogIDs(ids ...string) {
+func (m *UserMutation) AddWorkoutLogIDs(ids ...pksuid.ID) {
 	if m.workout_logs == nil {
-		m.workout_logs = make(map[string]struct{})
+		m.workout_logs = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.workout_logs[ids[i]] = struct{}{}
@@ -5483,9 +5484,9 @@ func (m *UserMutation) WorkoutLogsCleared() bool {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (m *UserMutation) RemoveWorkoutLogIDs(ids ...string) {
+func (m *UserMutation) RemoveWorkoutLogIDs(ids ...pksuid.ID) {
 	if m.removedworkout_logs == nil {
-		m.removedworkout_logs = make(map[string]struct{})
+		m.removedworkout_logs = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.workout_logs, ids[i])
@@ -5494,7 +5495,7 @@ func (m *UserMutation) RemoveWorkoutLogIDs(ids ...string) {
 }
 
 // RemovedWorkoutLogs returns the removed IDs of the "workout_logs" edge to the WorkoutLog entity.
-func (m *UserMutation) RemovedWorkoutLogsIDs() (ids []string) {
+func (m *UserMutation) RemovedWorkoutLogsIDs() (ids []pksuid.ID) {
 	for id := range m.removedworkout_logs {
 		ids = append(ids, id)
 	}
@@ -5502,7 +5503,7 @@ func (m *UserMutation) RemovedWorkoutLogsIDs() (ids []string) {
 }
 
 // WorkoutLogsIDs returns the "workout_logs" edge IDs in the mutation.
-func (m *UserMutation) WorkoutLogsIDs() (ids []string) {
+func (m *UserMutation) WorkoutLogsIDs() (ids []pksuid.ID) {
 	for id := range m.workout_logs {
 		ids = append(ids, id)
 	}
@@ -5517,9 +5518,9 @@ func (m *UserMutation) ResetWorkoutLogs() {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by ids.
-func (m *UserMutation) AddRoutineExerciseIDs(ids ...string) {
+func (m *UserMutation) AddRoutineExerciseIDs(ids ...pksuid.ID) {
 	if m.routine_exercises == nil {
-		m.routine_exercises = make(map[string]struct{})
+		m.routine_exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.routine_exercises[ids[i]] = struct{}{}
@@ -5537,9 +5538,9 @@ func (m *UserMutation) RoutineExercisesCleared() bool {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (m *UserMutation) RemoveRoutineExerciseIDs(ids ...string) {
+func (m *UserMutation) RemoveRoutineExerciseIDs(ids ...pksuid.ID) {
 	if m.removedroutine_exercises == nil {
-		m.removedroutine_exercises = make(map[string]struct{})
+		m.removedroutine_exercises = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.routine_exercises, ids[i])
@@ -5548,7 +5549,7 @@ func (m *UserMutation) RemoveRoutineExerciseIDs(ids ...string) {
 }
 
 // RemovedRoutineExercises returns the removed IDs of the "routine_exercises" edge to the RoutineExercise entity.
-func (m *UserMutation) RemovedRoutineExercisesIDs() (ids []string) {
+func (m *UserMutation) RemovedRoutineExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.removedroutine_exercises {
 		ids = append(ids, id)
 	}
@@ -5556,7 +5557,7 @@ func (m *UserMutation) RemovedRoutineExercisesIDs() (ids []string) {
 }
 
 // RoutineExercisesIDs returns the "routine_exercises" edge IDs in the mutation.
-func (m *UserMutation) RoutineExercisesIDs() (ids []string) {
+func (m *UserMutation) RoutineExercisesIDs() (ids []pksuid.ID) {
 	for id := range m.routine_exercises {
 		ids = append(ids, id)
 	}
@@ -6049,7 +6050,7 @@ type WorkoutMutation struct {
 	config
 	op                  Op
 	typ                 string
-	id                  *string
+	id                  *pksuid.ID
 	name                *string
 	volume              *int
 	addvolume           *int
@@ -6062,10 +6063,10 @@ type WorkoutMutation struct {
 	image               *string
 	description         *string
 	clearedFields       map[string]struct{}
-	users               *string
+	users               *pksuid.ID
 	clearedusers        bool
-	workout_logs        map[string]struct{}
-	removedworkout_logs map[string]struct{}
+	workout_logs        map[pksuid.ID]struct{}
+	removedworkout_logs map[pksuid.ID]struct{}
 	clearedworkout_logs bool
 	done                bool
 	oldValue            func(context.Context) (*Workout, error)
@@ -6092,7 +6093,7 @@ func newWorkoutMutation(c config, op Op, opts ...workoutOption) *WorkoutMutation
 }
 
 // withWorkoutID sets the ID field of the mutation.
-func withWorkoutID(id string) workoutOption {
+func withWorkoutID(id pksuid.ID) workoutOption {
 	return func(m *WorkoutMutation) {
 		var (
 			err   error
@@ -6144,13 +6145,13 @@ func (m WorkoutMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Workout entities.
-func (m *WorkoutMutation) SetID(id string) {
+func (m *WorkoutMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WorkoutMutation) ID() (id string, exists bool) {
+func (m *WorkoutMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -6161,12 +6162,12 @@ func (m *WorkoutMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WorkoutMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *WorkoutMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -6551,12 +6552,12 @@ func (m *WorkoutMutation) ResetDescription() {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *WorkoutMutation) SetUserID(s string) {
-	m.users = &s
+func (m *WorkoutMutation) SetUserID(pk pksuid.ID) {
+	m.users = &pk
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *WorkoutMutation) UserID() (r string, exists bool) {
+func (m *WorkoutMutation) UserID() (r pksuid.ID, exists bool) {
 	v := m.users
 	if v == nil {
 		return
@@ -6567,7 +6568,7 @@ func (m *WorkoutMutation) UserID() (r string, exists bool) {
 // OldUserID returns the old "user_id" field's value of the Workout entity.
 // If the Workout object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutMutation) OldUserID(ctx context.Context) (v string, err error) {
+func (m *WorkoutMutation) OldUserID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -6600,7 +6601,7 @@ func (m *WorkoutMutation) ResetUserID() {
 }
 
 // SetUsersID sets the "users" edge to the User entity by id.
-func (m *WorkoutMutation) SetUsersID(id string) {
+func (m *WorkoutMutation) SetUsersID(id pksuid.ID) {
 	m.users = &id
 }
 
@@ -6615,7 +6616,7 @@ func (m *WorkoutMutation) UsersCleared() bool {
 }
 
 // UsersID returns the "users" edge ID in the mutation.
-func (m *WorkoutMutation) UsersID() (id string, exists bool) {
+func (m *WorkoutMutation) UsersID() (id pksuid.ID, exists bool) {
 	if m.users != nil {
 		return *m.users, true
 	}
@@ -6625,7 +6626,7 @@ func (m *WorkoutMutation) UsersID() (id string, exists bool) {
 // UsersIDs returns the "users" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // UsersID instead. It exists only for internal usage by the builders.
-func (m *WorkoutMutation) UsersIDs() (ids []string) {
+func (m *WorkoutMutation) UsersIDs() (ids []pksuid.ID) {
 	if id := m.users; id != nil {
 		ids = append(ids, *id)
 	}
@@ -6639,9 +6640,9 @@ func (m *WorkoutMutation) ResetUsers() {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by ids.
-func (m *WorkoutMutation) AddWorkoutLogIDs(ids ...string) {
+func (m *WorkoutMutation) AddWorkoutLogIDs(ids ...pksuid.ID) {
 	if m.workout_logs == nil {
-		m.workout_logs = make(map[string]struct{})
+		m.workout_logs = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		m.workout_logs[ids[i]] = struct{}{}
@@ -6659,9 +6660,9 @@ func (m *WorkoutMutation) WorkoutLogsCleared() bool {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (m *WorkoutMutation) RemoveWorkoutLogIDs(ids ...string) {
+func (m *WorkoutMutation) RemoveWorkoutLogIDs(ids ...pksuid.ID) {
 	if m.removedworkout_logs == nil {
-		m.removedworkout_logs = make(map[string]struct{})
+		m.removedworkout_logs = make(map[pksuid.ID]struct{})
 	}
 	for i := range ids {
 		delete(m.workout_logs, ids[i])
@@ -6670,7 +6671,7 @@ func (m *WorkoutMutation) RemoveWorkoutLogIDs(ids ...string) {
 }
 
 // RemovedWorkoutLogs returns the removed IDs of the "workout_logs" edge to the WorkoutLog entity.
-func (m *WorkoutMutation) RemovedWorkoutLogsIDs() (ids []string) {
+func (m *WorkoutMutation) RemovedWorkoutLogsIDs() (ids []pksuid.ID) {
 	for id := range m.removedworkout_logs {
 		ids = append(ids, id)
 	}
@@ -6678,7 +6679,7 @@ func (m *WorkoutMutation) RemovedWorkoutLogsIDs() (ids []string) {
 }
 
 // WorkoutLogsIDs returns the "workout_logs" edge IDs in the mutation.
-func (m *WorkoutMutation) WorkoutLogsIDs() (ids []string) {
+func (m *WorkoutMutation) WorkoutLogsIDs() (ids []pksuid.ID) {
 	for id := range m.workout_logs {
 		ids = append(ids, id)
 	}
@@ -6873,7 +6874,7 @@ func (m *WorkoutMutation) SetField(name string, value ent.Value) error {
 		m.SetDescription(v)
 		return nil
 	case workout.FieldUserID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -7126,15 +7127,15 @@ type WorkoutLogMutation struct {
 	config
 	op               Op
 	typ              string
-	id               *string
+	id               *pksuid.ID
 	sets             **schematype.Sets
 	created_at       *string
 	clearedFields    map[string]struct{}
-	users            *string
+	users            *pksuid.ID
 	clearedusers     bool
-	exercises        *string
+	exercises        *pksuid.ID
 	clearedexercises bool
-	workouts         *string
+	workouts         *pksuid.ID
 	clearedworkouts  bool
 	done             bool
 	oldValue         func(context.Context) (*WorkoutLog, error)
@@ -7161,7 +7162,7 @@ func newWorkoutLogMutation(c config, op Op, opts ...workoutlogOption) *WorkoutLo
 }
 
 // withWorkoutLogID sets the ID field of the mutation.
-func withWorkoutLogID(id string) workoutlogOption {
+func withWorkoutLogID(id pksuid.ID) workoutlogOption {
 	return func(m *WorkoutLogMutation) {
 		var (
 			err   error
@@ -7213,13 +7214,13 @@ func (m WorkoutLogMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of WorkoutLog entities.
-func (m *WorkoutLogMutation) SetID(id string) {
+func (m *WorkoutLogMutation) SetID(id pksuid.ID) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *WorkoutLogMutation) ID() (id string, exists bool) {
+func (m *WorkoutLogMutation) ID() (id pksuid.ID, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -7230,12 +7231,12 @@ func (m *WorkoutLogMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *WorkoutLogMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *WorkoutLogMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []pksuid.ID{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -7318,12 +7319,12 @@ func (m *WorkoutLogMutation) ResetCreatedAt() {
 }
 
 // SetExerciseID sets the "exercise_id" field.
-func (m *WorkoutLogMutation) SetExerciseID(s string) {
-	m.exercises = &s
+func (m *WorkoutLogMutation) SetExerciseID(pk pksuid.ID) {
+	m.exercises = &pk
 }
 
 // ExerciseID returns the value of the "exercise_id" field in the mutation.
-func (m *WorkoutLogMutation) ExerciseID() (r string, exists bool) {
+func (m *WorkoutLogMutation) ExerciseID() (r pksuid.ID, exists bool) {
 	v := m.exercises
 	if v == nil {
 		return
@@ -7334,7 +7335,7 @@ func (m *WorkoutLogMutation) ExerciseID() (r string, exists bool) {
 // OldExerciseID returns the old "exercise_id" field's value of the WorkoutLog entity.
 // If the WorkoutLog object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutLogMutation) OldExerciseID(ctx context.Context) (v string, err error) {
+func (m *WorkoutLogMutation) OldExerciseID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldExerciseID is only allowed on UpdateOne operations")
 	}
@@ -7367,12 +7368,12 @@ func (m *WorkoutLogMutation) ResetExerciseID() {
 }
 
 // SetWorkoutID sets the "workout_id" field.
-func (m *WorkoutLogMutation) SetWorkoutID(s string) {
-	m.workouts = &s
+func (m *WorkoutLogMutation) SetWorkoutID(pk pksuid.ID) {
+	m.workouts = &pk
 }
 
 // WorkoutID returns the value of the "workout_id" field in the mutation.
-func (m *WorkoutLogMutation) WorkoutID() (r string, exists bool) {
+func (m *WorkoutLogMutation) WorkoutID() (r pksuid.ID, exists bool) {
 	v := m.workouts
 	if v == nil {
 		return
@@ -7383,7 +7384,7 @@ func (m *WorkoutLogMutation) WorkoutID() (r string, exists bool) {
 // OldWorkoutID returns the old "workout_id" field's value of the WorkoutLog entity.
 // If the WorkoutLog object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutLogMutation) OldWorkoutID(ctx context.Context) (v string, err error) {
+func (m *WorkoutLogMutation) OldWorkoutID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldWorkoutID is only allowed on UpdateOne operations")
 	}
@@ -7416,12 +7417,12 @@ func (m *WorkoutLogMutation) ResetWorkoutID() {
 }
 
 // SetUserID sets the "user_id" field.
-func (m *WorkoutLogMutation) SetUserID(s string) {
-	m.users = &s
+func (m *WorkoutLogMutation) SetUserID(pk pksuid.ID) {
+	m.users = &pk
 }
 
 // UserID returns the value of the "user_id" field in the mutation.
-func (m *WorkoutLogMutation) UserID() (r string, exists bool) {
+func (m *WorkoutLogMutation) UserID() (r pksuid.ID, exists bool) {
 	v := m.users
 	if v == nil {
 		return
@@ -7432,7 +7433,7 @@ func (m *WorkoutLogMutation) UserID() (r string, exists bool) {
 // OldUserID returns the old "user_id" field's value of the WorkoutLog entity.
 // If the WorkoutLog object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutLogMutation) OldUserID(ctx context.Context) (v string, err error) {
+func (m *WorkoutLogMutation) OldUserID(ctx context.Context) (v pksuid.ID, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
 	}
@@ -7465,7 +7466,7 @@ func (m *WorkoutLogMutation) ResetUserID() {
 }
 
 // SetUsersID sets the "users" edge to the User entity by id.
-func (m *WorkoutLogMutation) SetUsersID(id string) {
+func (m *WorkoutLogMutation) SetUsersID(id pksuid.ID) {
 	m.users = &id
 }
 
@@ -7480,7 +7481,7 @@ func (m *WorkoutLogMutation) UsersCleared() bool {
 }
 
 // UsersID returns the "users" edge ID in the mutation.
-func (m *WorkoutLogMutation) UsersID() (id string, exists bool) {
+func (m *WorkoutLogMutation) UsersID() (id pksuid.ID, exists bool) {
 	if m.users != nil {
 		return *m.users, true
 	}
@@ -7490,7 +7491,7 @@ func (m *WorkoutLogMutation) UsersID() (id string, exists bool) {
 // UsersIDs returns the "users" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // UsersID instead. It exists only for internal usage by the builders.
-func (m *WorkoutLogMutation) UsersIDs() (ids []string) {
+func (m *WorkoutLogMutation) UsersIDs() (ids []pksuid.ID) {
 	if id := m.users; id != nil {
 		ids = append(ids, *id)
 	}
@@ -7504,7 +7505,7 @@ func (m *WorkoutLogMutation) ResetUsers() {
 }
 
 // SetExercisesID sets the "exercises" edge to the Exercise entity by id.
-func (m *WorkoutLogMutation) SetExercisesID(id string) {
+func (m *WorkoutLogMutation) SetExercisesID(id pksuid.ID) {
 	m.exercises = &id
 }
 
@@ -7519,7 +7520,7 @@ func (m *WorkoutLogMutation) ExercisesCleared() bool {
 }
 
 // ExercisesID returns the "exercises" edge ID in the mutation.
-func (m *WorkoutLogMutation) ExercisesID() (id string, exists bool) {
+func (m *WorkoutLogMutation) ExercisesID() (id pksuid.ID, exists bool) {
 	if m.exercises != nil {
 		return *m.exercises, true
 	}
@@ -7529,7 +7530,7 @@ func (m *WorkoutLogMutation) ExercisesID() (id string, exists bool) {
 // ExercisesIDs returns the "exercises" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // ExercisesID instead. It exists only for internal usage by the builders.
-func (m *WorkoutLogMutation) ExercisesIDs() (ids []string) {
+func (m *WorkoutLogMutation) ExercisesIDs() (ids []pksuid.ID) {
 	if id := m.exercises; id != nil {
 		ids = append(ids, *id)
 	}
@@ -7543,7 +7544,7 @@ func (m *WorkoutLogMutation) ResetExercises() {
 }
 
 // SetWorkoutsID sets the "workouts" edge to the Workout entity by id.
-func (m *WorkoutLogMutation) SetWorkoutsID(id string) {
+func (m *WorkoutLogMutation) SetWorkoutsID(id pksuid.ID) {
 	m.workouts = &id
 }
 
@@ -7558,7 +7559,7 @@ func (m *WorkoutLogMutation) WorkoutsCleared() bool {
 }
 
 // WorkoutsID returns the "workouts" edge ID in the mutation.
-func (m *WorkoutLogMutation) WorkoutsID() (id string, exists bool) {
+func (m *WorkoutLogMutation) WorkoutsID() (id pksuid.ID, exists bool) {
 	if m.workouts != nil {
 		return *m.workouts, true
 	}
@@ -7568,7 +7569,7 @@ func (m *WorkoutLogMutation) WorkoutsID() (id string, exists bool) {
 // WorkoutsIDs returns the "workouts" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
 // WorkoutsID instead. It exists only for internal usage by the builders.
-func (m *WorkoutLogMutation) WorkoutsIDs() (ids []string) {
+func (m *WorkoutLogMutation) WorkoutsIDs() (ids []pksuid.ID) {
 	if id := m.workouts; id != nil {
 		ids = append(ids, *id)
 	}
@@ -7692,21 +7693,21 @@ func (m *WorkoutLogMutation) SetField(name string, value ent.Value) error {
 		m.SetCreatedAt(v)
 		return nil
 	case workoutlog.FieldExerciseID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetExerciseID(v)
 		return nil
 	case workoutlog.FieldWorkoutID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetWorkoutID(v)
 		return nil
 	case workoutlog.FieldUserID:
-		v, ok := value.(string)
+		v, ok := value.(pksuid.ID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

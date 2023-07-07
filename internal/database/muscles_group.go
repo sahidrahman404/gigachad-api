@@ -4,14 +4,15 @@ import (
 	"context"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 type MusclesGroupStorer interface {
 	Insert(ctx context.Context, m *types.MusclesGroup) error
 	Update(ctx context.Context, m *types.MusclesGroup) error
-	Delete(ctx context.Context, id string) error
-	Get(ctx context.Context, id string) (*types.MusclesGroup, error)
+	Delete(ctx context.Context, id pksuid.ID) error
+	Get(ctx context.Context, id pksuid.ID) (*types.MusclesGroup, error)
 	GetAll(ctx context.Context) ([]*types.MusclesGroup, error)
 }
 
@@ -48,12 +49,12 @@ func (e MusclesGroupStore) Update(ctx context.Context, m *types.MusclesGroup) er
 	return nil
 }
 
-func (e MusclesGroupStore) Delete(ctx context.Context, id string) error {
+func (e MusclesGroupStore) Delete(ctx context.Context, id pksuid.ID) error {
 	err := e.Client.MusclesGroup.DeleteOneID(id).Exec(ctx)
 	return err
 }
 
-func (e MusclesGroupStore) Get(ctx context.Context, id string) (*types.MusclesGroup, error) {
+func (e MusclesGroupStore) Get(ctx context.Context, id pksuid.ID) (*types.MusclesGroup, error) {
 	mg, err := e.Client.MusclesGroup.Get(ctx, id)
 	if err != nil {
 		return nil, err

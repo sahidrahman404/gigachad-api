@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // EquipmentCreate is the builder for creating a Equipment entity.
@@ -33,28 +34,28 @@ func (ec *EquipmentCreate) SetImage(s string) *EquipmentCreate {
 }
 
 // SetID sets the "id" field.
-func (ec *EquipmentCreate) SetID(s string) *EquipmentCreate {
-	ec.mutation.SetID(s)
+func (ec *EquipmentCreate) SetID(pk pksuid.ID) *EquipmentCreate {
+	ec.mutation.SetID(pk)
 	return ec
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (ec *EquipmentCreate) SetNillableID(s *string) *EquipmentCreate {
-	if s != nil {
-		ec.SetID(*s)
+func (ec *EquipmentCreate) SetNillableID(pk *pksuid.ID) *EquipmentCreate {
+	if pk != nil {
+		ec.SetID(*pk)
 	}
 	return ec
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (ec *EquipmentCreate) AddExerciseIDs(ids ...string) *EquipmentCreate {
+func (ec *EquipmentCreate) AddExerciseIDs(ids ...pksuid.ID) *EquipmentCreate {
 	ec.mutation.AddExerciseIDs(ids...)
 	return ec
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (ec *EquipmentCreate) AddExercises(e ...*Exercise) *EquipmentCreate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -125,10 +126,10 @@ func (ec *EquipmentCreate) sqlSave(ctx context.Context) (*Equipment, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Equipment.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	ec.mutation.id = &_node.ID
@@ -143,7 +144,7 @@ func (ec *EquipmentCreate) createSpec() (*Equipment, *sqlgraph.CreateSpec) {
 	)
 	if id, ok := ec.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := ec.mutation.Name(); ok {
 		_spec.SetField(equipment.FieldName, field.TypeString, value)

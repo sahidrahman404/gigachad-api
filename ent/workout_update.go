@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -135,15 +136,15 @@ func (wu *WorkoutUpdate) SetDescription(s string) *WorkoutUpdate {
 }
 
 // SetUserID sets the "user_id" field.
-func (wu *WorkoutUpdate) SetUserID(s string) *WorkoutUpdate {
-	wu.mutation.SetUserID(s)
+func (wu *WorkoutUpdate) SetUserID(pk pksuid.ID) *WorkoutUpdate {
+	wu.mutation.SetUserID(pk)
 	return wu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wu *WorkoutUpdate) SetNillableUserID(s *string) *WorkoutUpdate {
-	if s != nil {
-		wu.SetUserID(*s)
+func (wu *WorkoutUpdate) SetNillableUserID(pk *pksuid.ID) *WorkoutUpdate {
+	if pk != nil {
+		wu.SetUserID(*pk)
 	}
 	return wu
 }
@@ -155,13 +156,13 @@ func (wu *WorkoutUpdate) ClearUserID() *WorkoutUpdate {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (wu *WorkoutUpdate) SetUsersID(id string) *WorkoutUpdate {
+func (wu *WorkoutUpdate) SetUsersID(id pksuid.ID) *WorkoutUpdate {
 	wu.mutation.SetUsersID(id)
 	return wu
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wu *WorkoutUpdate) SetNillableUsersID(id *string) *WorkoutUpdate {
+func (wu *WorkoutUpdate) SetNillableUsersID(id *pksuid.ID) *WorkoutUpdate {
 	if id != nil {
 		wu = wu.SetUsersID(*id)
 	}
@@ -174,14 +175,14 @@ func (wu *WorkoutUpdate) SetUsers(u *User) *WorkoutUpdate {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (wu *WorkoutUpdate) AddWorkoutLogIDs(ids ...string) *WorkoutUpdate {
+func (wu *WorkoutUpdate) AddWorkoutLogIDs(ids ...pksuid.ID) *WorkoutUpdate {
 	wu.mutation.AddWorkoutLogIDs(ids...)
 	return wu
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (wu *WorkoutUpdate) AddWorkoutLogs(w ...*WorkoutLog) *WorkoutUpdate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -206,14 +207,14 @@ func (wu *WorkoutUpdate) ClearWorkoutLogs() *WorkoutUpdate {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to WorkoutLog entities by IDs.
-func (wu *WorkoutUpdate) RemoveWorkoutLogIDs(ids ...string) *WorkoutUpdate {
+func (wu *WorkoutUpdate) RemoveWorkoutLogIDs(ids ...pksuid.ID) *WorkoutUpdate {
 	wu.mutation.RemoveWorkoutLogIDs(ids...)
 	return wu
 }
 
 // RemoveWorkoutLogs removes "workout_logs" edges to WorkoutLog entities.
 func (wu *WorkoutUpdate) RemoveWorkoutLogs(w ...*WorkoutLog) *WorkoutUpdate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -495,15 +496,15 @@ func (wuo *WorkoutUpdateOne) SetDescription(s string) *WorkoutUpdateOne {
 }
 
 // SetUserID sets the "user_id" field.
-func (wuo *WorkoutUpdateOne) SetUserID(s string) *WorkoutUpdateOne {
-	wuo.mutation.SetUserID(s)
+func (wuo *WorkoutUpdateOne) SetUserID(pk pksuid.ID) *WorkoutUpdateOne {
+	wuo.mutation.SetUserID(pk)
 	return wuo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wuo *WorkoutUpdateOne) SetNillableUserID(s *string) *WorkoutUpdateOne {
-	if s != nil {
-		wuo.SetUserID(*s)
+func (wuo *WorkoutUpdateOne) SetNillableUserID(pk *pksuid.ID) *WorkoutUpdateOne {
+	if pk != nil {
+		wuo.SetUserID(*pk)
 	}
 	return wuo
 }
@@ -515,13 +516,13 @@ func (wuo *WorkoutUpdateOne) ClearUserID() *WorkoutUpdateOne {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (wuo *WorkoutUpdateOne) SetUsersID(id string) *WorkoutUpdateOne {
+func (wuo *WorkoutUpdateOne) SetUsersID(id pksuid.ID) *WorkoutUpdateOne {
 	wuo.mutation.SetUsersID(id)
 	return wuo
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wuo *WorkoutUpdateOne) SetNillableUsersID(id *string) *WorkoutUpdateOne {
+func (wuo *WorkoutUpdateOne) SetNillableUsersID(id *pksuid.ID) *WorkoutUpdateOne {
 	if id != nil {
 		wuo = wuo.SetUsersID(*id)
 	}
@@ -534,14 +535,14 @@ func (wuo *WorkoutUpdateOne) SetUsers(u *User) *WorkoutUpdateOne {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (wuo *WorkoutUpdateOne) AddWorkoutLogIDs(ids ...string) *WorkoutUpdateOne {
+func (wuo *WorkoutUpdateOne) AddWorkoutLogIDs(ids ...pksuid.ID) *WorkoutUpdateOne {
 	wuo.mutation.AddWorkoutLogIDs(ids...)
 	return wuo
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (wuo *WorkoutUpdateOne) AddWorkoutLogs(w ...*WorkoutLog) *WorkoutUpdateOne {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -566,14 +567,14 @@ func (wuo *WorkoutUpdateOne) ClearWorkoutLogs() *WorkoutUpdateOne {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to WorkoutLog entities by IDs.
-func (wuo *WorkoutUpdateOne) RemoveWorkoutLogIDs(ids ...string) *WorkoutUpdateOne {
+func (wuo *WorkoutUpdateOne) RemoveWorkoutLogIDs(ids ...pksuid.ID) *WorkoutUpdateOne {
 	wuo.mutation.RemoveWorkoutLogIDs(ids...)
 	return wuo
 }
 
 // RemoveWorkoutLogs removes "workout_logs" edges to WorkoutLog entities.
 func (wuo *WorkoutUpdateOne) RemoveWorkoutLogs(w ...*WorkoutLog) *WorkoutUpdateOne {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}

@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -114,14 +115,14 @@ func (uu *UserUpdate) AddVersion(i int) *UserUpdate {
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by IDs.
-func (uu *UserUpdate) AddTokenIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) AddTokenIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.AddTokenIDs(ids...)
 	return uu
 }
 
 // AddTokens adds the "tokens" edges to the Token entity.
 func (uu *UserUpdate) AddTokens(t ...*Token) *UserUpdate {
-	ids := make([]string, len(t))
+	ids := make([]pksuid.ID, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -129,14 +130,14 @@ func (uu *UserUpdate) AddTokens(t ...*Token) *UserUpdate {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (uu *UserUpdate) AddExerciseIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) AddExerciseIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.AddExerciseIDs(ids...)
 	return uu
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (uu *UserUpdate) AddExercises(e ...*Exercise) *UserUpdate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -144,14 +145,14 @@ func (uu *UserUpdate) AddExercises(e ...*Exercise) *UserUpdate {
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
-func (uu *UserUpdate) AddRoutineIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) AddRoutineIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.AddRoutineIDs(ids...)
 	return uu
 }
 
 // AddRoutines adds the "routines" edges to the Routine entity.
 func (uu *UserUpdate) AddRoutines(r ...*Routine) *UserUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -159,14 +160,14 @@ func (uu *UserUpdate) AddRoutines(r ...*Routine) *UserUpdate {
 }
 
 // AddWorkoutIDs adds the "workouts" edge to the Workout entity by IDs.
-func (uu *UserUpdate) AddWorkoutIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) AddWorkoutIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.AddWorkoutIDs(ids...)
 	return uu
 }
 
 // AddWorkouts adds the "workouts" edges to the Workout entity.
 func (uu *UserUpdate) AddWorkouts(w ...*Workout) *UserUpdate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -174,14 +175,14 @@ func (uu *UserUpdate) AddWorkouts(w ...*Workout) *UserUpdate {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (uu *UserUpdate) AddWorkoutLogIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) AddWorkoutLogIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.AddWorkoutLogIDs(ids...)
 	return uu
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (uu *UserUpdate) AddWorkoutLogs(w ...*WorkoutLog) *UserUpdate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -189,14 +190,14 @@ func (uu *UserUpdate) AddWorkoutLogs(w ...*WorkoutLog) *UserUpdate {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (uu *UserUpdate) AddRoutineExerciseIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) AddRoutineExerciseIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.AddRoutineExerciseIDs(ids...)
 	return uu
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (uu *UserUpdate) AddRoutineExercises(r ...*RoutineExercise) *UserUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -215,14 +216,14 @@ func (uu *UserUpdate) ClearTokens() *UserUpdate {
 }
 
 // RemoveTokenIDs removes the "tokens" edge to Token entities by IDs.
-func (uu *UserUpdate) RemoveTokenIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) RemoveTokenIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.RemoveTokenIDs(ids...)
 	return uu
 }
 
 // RemoveTokens removes "tokens" edges to Token entities.
 func (uu *UserUpdate) RemoveTokens(t ...*Token) *UserUpdate {
-	ids := make([]string, len(t))
+	ids := make([]pksuid.ID, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -236,14 +237,14 @@ func (uu *UserUpdate) ClearExercises() *UserUpdate {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
-func (uu *UserUpdate) RemoveExerciseIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) RemoveExerciseIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.RemoveExerciseIDs(ids...)
 	return uu
 }
 
 // RemoveExercises removes "exercises" edges to Exercise entities.
 func (uu *UserUpdate) RemoveExercises(e ...*Exercise) *UserUpdate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -257,14 +258,14 @@ func (uu *UserUpdate) ClearRoutines() *UserUpdate {
 }
 
 // RemoveRoutineIDs removes the "routines" edge to Routine entities by IDs.
-func (uu *UserUpdate) RemoveRoutineIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) RemoveRoutineIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.RemoveRoutineIDs(ids...)
 	return uu
 }
 
 // RemoveRoutines removes "routines" edges to Routine entities.
 func (uu *UserUpdate) RemoveRoutines(r ...*Routine) *UserUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -278,14 +279,14 @@ func (uu *UserUpdate) ClearWorkouts() *UserUpdate {
 }
 
 // RemoveWorkoutIDs removes the "workouts" edge to Workout entities by IDs.
-func (uu *UserUpdate) RemoveWorkoutIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) RemoveWorkoutIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.RemoveWorkoutIDs(ids...)
 	return uu
 }
 
 // RemoveWorkouts removes "workouts" edges to Workout entities.
 func (uu *UserUpdate) RemoveWorkouts(w ...*Workout) *UserUpdate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -299,14 +300,14 @@ func (uu *UserUpdate) ClearWorkoutLogs() *UserUpdate {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to WorkoutLog entities by IDs.
-func (uu *UserUpdate) RemoveWorkoutLogIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) RemoveWorkoutLogIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.RemoveWorkoutLogIDs(ids...)
 	return uu
 }
 
 // RemoveWorkoutLogs removes "workout_logs" edges to WorkoutLog entities.
 func (uu *UserUpdate) RemoveWorkoutLogs(w ...*WorkoutLog) *UserUpdate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -320,14 +321,14 @@ func (uu *UserUpdate) ClearRoutineExercises() *UserUpdate {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to RoutineExercise entities by IDs.
-func (uu *UserUpdate) RemoveRoutineExerciseIDs(ids ...string) *UserUpdate {
+func (uu *UserUpdate) RemoveRoutineExerciseIDs(ids ...pksuid.ID) *UserUpdate {
 	uu.mutation.RemoveRoutineExerciseIDs(ids...)
 	return uu
 }
 
 // RemoveRoutineExercises removes "routine_exercises" edges to RoutineExercise entities.
 func (uu *UserUpdate) RemoveRoutineExercises(r ...*RoutineExercise) *UserUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -768,14 +769,14 @@ func (uuo *UserUpdateOne) AddVersion(i int) *UserUpdateOne {
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by IDs.
-func (uuo *UserUpdateOne) AddTokenIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddTokenIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.AddTokenIDs(ids...)
 	return uuo
 }
 
 // AddTokens adds the "tokens" edges to the Token entity.
 func (uuo *UserUpdateOne) AddTokens(t ...*Token) *UserUpdateOne {
-	ids := make([]string, len(t))
+	ids := make([]pksuid.ID, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -783,14 +784,14 @@ func (uuo *UserUpdateOne) AddTokens(t ...*Token) *UserUpdateOne {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (uuo *UserUpdateOne) AddExerciseIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddExerciseIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.AddExerciseIDs(ids...)
 	return uuo
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (uuo *UserUpdateOne) AddExercises(e ...*Exercise) *UserUpdateOne {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -798,14 +799,14 @@ func (uuo *UserUpdateOne) AddExercises(e ...*Exercise) *UserUpdateOne {
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
-func (uuo *UserUpdateOne) AddRoutineIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddRoutineIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.AddRoutineIDs(ids...)
 	return uuo
 }
 
 // AddRoutines adds the "routines" edges to the Routine entity.
 func (uuo *UserUpdateOne) AddRoutines(r ...*Routine) *UserUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -813,14 +814,14 @@ func (uuo *UserUpdateOne) AddRoutines(r ...*Routine) *UserUpdateOne {
 }
 
 // AddWorkoutIDs adds the "workouts" edge to the Workout entity by IDs.
-func (uuo *UserUpdateOne) AddWorkoutIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddWorkoutIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.AddWorkoutIDs(ids...)
 	return uuo
 }
 
 // AddWorkouts adds the "workouts" edges to the Workout entity.
 func (uuo *UserUpdateOne) AddWorkouts(w ...*Workout) *UserUpdateOne {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -828,14 +829,14 @@ func (uuo *UserUpdateOne) AddWorkouts(w ...*Workout) *UserUpdateOne {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (uuo *UserUpdateOne) AddWorkoutLogIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddWorkoutLogIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.AddWorkoutLogIDs(ids...)
 	return uuo
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (uuo *UserUpdateOne) AddWorkoutLogs(w ...*WorkoutLog) *UserUpdateOne {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -843,14 +844,14 @@ func (uuo *UserUpdateOne) AddWorkoutLogs(w ...*WorkoutLog) *UserUpdateOne {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (uuo *UserUpdateOne) AddRoutineExerciseIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) AddRoutineExerciseIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.AddRoutineExerciseIDs(ids...)
 	return uuo
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (uuo *UserUpdateOne) AddRoutineExercises(r ...*RoutineExercise) *UserUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -869,14 +870,14 @@ func (uuo *UserUpdateOne) ClearTokens() *UserUpdateOne {
 }
 
 // RemoveTokenIDs removes the "tokens" edge to Token entities by IDs.
-func (uuo *UserUpdateOne) RemoveTokenIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveTokenIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.RemoveTokenIDs(ids...)
 	return uuo
 }
 
 // RemoveTokens removes "tokens" edges to Token entities.
 func (uuo *UserUpdateOne) RemoveTokens(t ...*Token) *UserUpdateOne {
-	ids := make([]string, len(t))
+	ids := make([]pksuid.ID, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -890,14 +891,14 @@ func (uuo *UserUpdateOne) ClearExercises() *UserUpdateOne {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
-func (uuo *UserUpdateOne) RemoveExerciseIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveExerciseIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.RemoveExerciseIDs(ids...)
 	return uuo
 }
 
 // RemoveExercises removes "exercises" edges to Exercise entities.
 func (uuo *UserUpdateOne) RemoveExercises(e ...*Exercise) *UserUpdateOne {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -911,14 +912,14 @@ func (uuo *UserUpdateOne) ClearRoutines() *UserUpdateOne {
 }
 
 // RemoveRoutineIDs removes the "routines" edge to Routine entities by IDs.
-func (uuo *UserUpdateOne) RemoveRoutineIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveRoutineIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.RemoveRoutineIDs(ids...)
 	return uuo
 }
 
 // RemoveRoutines removes "routines" edges to Routine entities.
 func (uuo *UserUpdateOne) RemoveRoutines(r ...*Routine) *UserUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -932,14 +933,14 @@ func (uuo *UserUpdateOne) ClearWorkouts() *UserUpdateOne {
 }
 
 // RemoveWorkoutIDs removes the "workouts" edge to Workout entities by IDs.
-func (uuo *UserUpdateOne) RemoveWorkoutIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveWorkoutIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.RemoveWorkoutIDs(ids...)
 	return uuo
 }
 
 // RemoveWorkouts removes "workouts" edges to Workout entities.
 func (uuo *UserUpdateOne) RemoveWorkouts(w ...*Workout) *UserUpdateOne {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -953,14 +954,14 @@ func (uuo *UserUpdateOne) ClearWorkoutLogs() *UserUpdateOne {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to WorkoutLog entities by IDs.
-func (uuo *UserUpdateOne) RemoveWorkoutLogIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveWorkoutLogIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.RemoveWorkoutLogIDs(ids...)
 	return uuo
 }
 
 // RemoveWorkoutLogs removes "workout_logs" edges to WorkoutLog entities.
 func (uuo *UserUpdateOne) RemoveWorkoutLogs(w ...*WorkoutLog) *UserUpdateOne {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -974,14 +975,14 @@ func (uuo *UserUpdateOne) ClearRoutineExercises() *UserUpdateOne {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to RoutineExercise entities by IDs.
-func (uuo *UserUpdateOne) RemoveRoutineExerciseIDs(ids ...string) *UserUpdateOne {
+func (uuo *UserUpdateOne) RemoveRoutineExerciseIDs(ids ...pksuid.ID) *UserUpdateOne {
 	uuo.mutation.RemoveRoutineExerciseIDs(ids...)
 	return uuo
 }
 
 // RemoveRoutineExercises removes "routine_exercises" edges to RoutineExercise entities.
 func (uuo *UserUpdateOne) RemoveRoutineExercises(r ...*RoutineExercise) *UserUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}

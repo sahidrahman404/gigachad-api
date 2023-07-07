@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
@@ -47,15 +48,15 @@ func (tu *TokenUpdate) SetScope(s string) *TokenUpdate {
 }
 
 // SetUserID sets the "user_id" field.
-func (tu *TokenUpdate) SetUserID(s string) *TokenUpdate {
-	tu.mutation.SetUserID(s)
+func (tu *TokenUpdate) SetUserID(pk pksuid.ID) *TokenUpdate {
+	tu.mutation.SetUserID(pk)
 	return tu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (tu *TokenUpdate) SetNillableUserID(s *string) *TokenUpdate {
-	if s != nil {
-		tu.SetUserID(*s)
+func (tu *TokenUpdate) SetNillableUserID(pk *pksuid.ID) *TokenUpdate {
+	if pk != nil {
+		tu.SetUserID(*pk)
 	}
 	return tu
 }
@@ -67,13 +68,13 @@ func (tu *TokenUpdate) ClearUserID() *TokenUpdate {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (tu *TokenUpdate) SetUsersID(id string) *TokenUpdate {
+func (tu *TokenUpdate) SetUsersID(id pksuid.ID) *TokenUpdate {
 	tu.mutation.SetUsersID(id)
 	return tu
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (tu *TokenUpdate) SetNillableUsersID(id *string) *TokenUpdate {
+func (tu *TokenUpdate) SetNillableUsersID(id *pksuid.ID) *TokenUpdate {
 	if id != nil {
 		tu = tu.SetUsersID(*id)
 	}
@@ -209,15 +210,15 @@ func (tuo *TokenUpdateOne) SetScope(s string) *TokenUpdateOne {
 }
 
 // SetUserID sets the "user_id" field.
-func (tuo *TokenUpdateOne) SetUserID(s string) *TokenUpdateOne {
-	tuo.mutation.SetUserID(s)
+func (tuo *TokenUpdateOne) SetUserID(pk pksuid.ID) *TokenUpdateOne {
+	tuo.mutation.SetUserID(pk)
 	return tuo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (tuo *TokenUpdateOne) SetNillableUserID(s *string) *TokenUpdateOne {
-	if s != nil {
-		tuo.SetUserID(*s)
+func (tuo *TokenUpdateOne) SetNillableUserID(pk *pksuid.ID) *TokenUpdateOne {
+	if pk != nil {
+		tuo.SetUserID(*pk)
 	}
 	return tuo
 }
@@ -229,13 +230,13 @@ func (tuo *TokenUpdateOne) ClearUserID() *TokenUpdateOne {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (tuo *TokenUpdateOne) SetUsersID(id string) *TokenUpdateOne {
+func (tuo *TokenUpdateOne) SetUsersID(id pksuid.ID) *TokenUpdateOne {
 	tuo.mutation.SetUsersID(id)
 	return tuo
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (tuo *TokenUpdateOne) SetNillableUsersID(id *string) *TokenUpdateOne {
+func (tuo *TokenUpdateOne) SetNillableUsersID(id *pksuid.ID) *TokenUpdateOne {
 	if id != nil {
 		tuo = tuo.SetUsersID(*id)
 	}

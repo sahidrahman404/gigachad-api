@@ -13,6 +13,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // MusclesGroupUpdate is the builder for updating MusclesGroup entities.
@@ -41,14 +42,14 @@ func (mgu *MusclesGroupUpdate) SetImage(s string) *MusclesGroupUpdate {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (mgu *MusclesGroupUpdate) AddExerciseIDs(ids ...string) *MusclesGroupUpdate {
+func (mgu *MusclesGroupUpdate) AddExerciseIDs(ids ...pksuid.ID) *MusclesGroupUpdate {
 	mgu.mutation.AddExerciseIDs(ids...)
 	return mgu
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (mgu *MusclesGroupUpdate) AddExercises(e ...*Exercise) *MusclesGroupUpdate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -67,14 +68,14 @@ func (mgu *MusclesGroupUpdate) ClearExercises() *MusclesGroupUpdate {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
-func (mgu *MusclesGroupUpdate) RemoveExerciseIDs(ids ...string) *MusclesGroupUpdate {
+func (mgu *MusclesGroupUpdate) RemoveExerciseIDs(ids ...pksuid.ID) *MusclesGroupUpdate {
 	mgu.mutation.RemoveExerciseIDs(ids...)
 	return mgu
 }
 
 // RemoveExercises removes "exercises" edges to Exercise entities.
 func (mgu *MusclesGroupUpdate) RemoveExercises(e ...*Exercise) *MusclesGroupUpdate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -201,14 +202,14 @@ func (mguo *MusclesGroupUpdateOne) SetImage(s string) *MusclesGroupUpdateOne {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (mguo *MusclesGroupUpdateOne) AddExerciseIDs(ids ...string) *MusclesGroupUpdateOne {
+func (mguo *MusclesGroupUpdateOne) AddExerciseIDs(ids ...pksuid.ID) *MusclesGroupUpdateOne {
 	mguo.mutation.AddExerciseIDs(ids...)
 	return mguo
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (mguo *MusclesGroupUpdateOne) AddExercises(e ...*Exercise) *MusclesGroupUpdateOne {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -227,14 +228,14 @@ func (mguo *MusclesGroupUpdateOne) ClearExercises() *MusclesGroupUpdateOne {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
-func (mguo *MusclesGroupUpdateOne) RemoveExerciseIDs(ids ...string) *MusclesGroupUpdateOne {
+func (mguo *MusclesGroupUpdateOne) RemoveExerciseIDs(ids ...pksuid.ID) *MusclesGroupUpdateOne {
 	mguo.mutation.RemoveExerciseIDs(ids...)
 	return mguo
 }
 
 // RemoveExercises removes "exercises" edges to Exercise entities.
 func (mguo *MusclesGroupUpdateOne) RemoveExercises(e ...*Exercise) *MusclesGroupUpdateOne {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}

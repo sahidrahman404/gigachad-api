@@ -5,6 +5,7 @@ import (
 
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
@@ -12,7 +13,7 @@ type ExerciseStorer interface {
 	Insert(ctx context.Context, ex *types.Exercise) error
 	Update(ctx context.Context, ex *types.Exercise) error
 	Delete(ctx context.Context, ex *types.Exercise) error
-	Get(ctx context.Context, id string) (*types.Exercise, error)
+	Get(ctx context.Context, id pksuid.ID) (*types.Exercise, error)
 	GetAll(ctx context.Context) ([]*types.Exercise, error)
 }
 
@@ -63,7 +64,7 @@ func (e *ExerciseStore) Delete(ctx context.Context, ex *types.Exercise) error {
 	return err
 }
 
-func (e *ExerciseStore) Get(ctx context.Context, id string) (*types.Exercise, error) {
+func (e *ExerciseStore) Get(ctx context.Context, id pksuid.ID) (*types.Exercise, error) {
 	exercise, err := e.Client.Exercise.Get(ctx, id)
 	if err != nil {
 		return nil, err

@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // MusclesGroupCreate is the builder for creating a MusclesGroup entity.
@@ -33,28 +34,28 @@ func (mgc *MusclesGroupCreate) SetImage(s string) *MusclesGroupCreate {
 }
 
 // SetID sets the "id" field.
-func (mgc *MusclesGroupCreate) SetID(s string) *MusclesGroupCreate {
-	mgc.mutation.SetID(s)
+func (mgc *MusclesGroupCreate) SetID(pk pksuid.ID) *MusclesGroupCreate {
+	mgc.mutation.SetID(pk)
 	return mgc
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (mgc *MusclesGroupCreate) SetNillableID(s *string) *MusclesGroupCreate {
-	if s != nil {
-		mgc.SetID(*s)
+func (mgc *MusclesGroupCreate) SetNillableID(pk *pksuid.ID) *MusclesGroupCreate {
+	if pk != nil {
+		mgc.SetID(*pk)
 	}
 	return mgc
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (mgc *MusclesGroupCreate) AddExerciseIDs(ids ...string) *MusclesGroupCreate {
+func (mgc *MusclesGroupCreate) AddExerciseIDs(ids ...pksuid.ID) *MusclesGroupCreate {
 	mgc.mutation.AddExerciseIDs(ids...)
 	return mgc
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (mgc *MusclesGroupCreate) AddExercises(e ...*Exercise) *MusclesGroupCreate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -125,10 +126,10 @@ func (mgc *MusclesGroupCreate) sqlSave(ctx context.Context) (*MusclesGroup, erro
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected MusclesGroup.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	mgc.mutation.id = &_node.ID
@@ -143,7 +144,7 @@ func (mgc *MusclesGroupCreate) createSpec() (*MusclesGroup, *sqlgraph.CreateSpec
 	)
 	if id, ok := mgc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := mgc.mutation.Name(); ok {
 		_spec.SetField(musclesgroup.FieldName, field.TypeString, value)

@@ -12,6 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
@@ -20,17 +21,17 @@ import (
 type RoutineExercise struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// RestTimer holds the value of the "rest_timer" field.
 	RestTimer string `json:"rest_timer,omitempty"`
 	// Sets holds the value of the "sets" field.
 	Sets *schematype.Sets `json:"sets,omitempty"`
 	// RoutineID holds the value of the "routine_id" field.
-	RoutineID string `json:"routine_id,omitempty"`
+	RoutineID pksuid.ID `json:"routine_id,omitempty"`
 	// ExerciseID holds the value of the "exercise_id" field.
-	ExerciseID string `json:"exercise_id,omitempty"`
+	ExerciseID pksuid.ID `json:"exercise_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID string `json:"user_id,omitempty"`
+	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoutineExerciseQuery when eager-loading is set.
 	Edges        RoutineExerciseEdges `json:"edges"`
@@ -98,7 +99,9 @@ func (*RoutineExercise) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case routineexercise.FieldSets:
 			values[i] = new([]byte)
-		case routineexercise.FieldID, routineexercise.FieldRestTimer, routineexercise.FieldRoutineID, routineexercise.FieldExerciseID, routineexercise.FieldUserID:
+		case routineexercise.FieldID, routineexercise.FieldRoutineID, routineexercise.FieldExerciseID, routineexercise.FieldUserID:
+			values[i] = new(pksuid.ID)
+		case routineexercise.FieldRestTimer:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -116,10 +119,10 @@ func (re *RoutineExercise) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case routineexercise.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				re.ID = value.String
+			} else if value != nil {
+				re.ID = *value
 			}
 		case routineexercise.FieldRestTimer:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -136,22 +139,22 @@ func (re *RoutineExercise) assignValues(columns []string, values []any) error {
 				}
 			}
 		case routineexercise.FieldRoutineID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field routine_id", values[i])
-			} else if value.Valid {
-				re.RoutineID = value.String
+			} else if value != nil {
+				re.RoutineID = *value
 			}
 		case routineexercise.FieldExerciseID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field exercise_id", values[i])
-			} else if value.Valid {
-				re.ExerciseID = value.String
+			} else if value != nil {
+				re.ExerciseID = *value
 			}
 		case routineexercise.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value.Valid {
-				re.UserID = value.String
+			} else if value != nil {
+				re.UserID = *value
 			}
 		default:
 			re.selectValues.Set(columns[i], values[i])
@@ -211,13 +214,13 @@ func (re *RoutineExercise) String() string {
 	builder.WriteString(fmt.Sprintf("%v", re.Sets))
 	builder.WriteString(", ")
 	builder.WriteString("routine_id=")
-	builder.WriteString(re.RoutineID)
+	builder.WriteString(fmt.Sprintf("%v", re.RoutineID))
 	builder.WriteString(", ")
 	builder.WriteString("exercise_id=")
-	builder.WriteString(re.ExerciseID)
+	builder.WriteString(fmt.Sprintf("%v", re.ExerciseID))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(re.UserID)
+	builder.WriteString(fmt.Sprintf("%v", re.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

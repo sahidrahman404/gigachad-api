@@ -1,6 +1,9 @@
 package types
 
-import "github.com/sahidrahman404/gigachad-api/ent"
+import (
+	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+)
 
 type CreateWorkoutParams struct {
 	Name        string  `json:"name"`
@@ -16,7 +19,7 @@ type Workout struct {
 	Ent *ent.Workout
 }
 
-func NewWorkoutFromParams(p CreateWorkoutParams, userID string) *Workout {
+func NewWorkoutFromParams(p CreateWorkoutParams, userID pksuid.ID) *Workout {
 	return &Workout{
 		Ent: &ent.Workout{
 			Name:        p.Name,

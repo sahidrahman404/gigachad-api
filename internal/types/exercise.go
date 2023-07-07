@@ -2,32 +2,33 @@ package types
 
 import (
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
 
 type CreateExerciseParams struct {
-	Name           string  `json:"name"`
-	HowTo          *string `json:"howTo"`
-	Image          *string `json:"image"`
-	EquipmentID    string  `json:"equipmentID"`
-	MusclesGroupID string  `json:"MusclesGroupID"`
-	ExerciseTypeID string  `json:"ExerciseTypeID"`
+	Name           string    `json:"name"`
+	HowTo          *string   `json:"howTo"`
+	Image          *string   `json:"image"`
+	EquipmentID    pksuid.ID `json:"equipmentID"`
+	MusclesGroupID pksuid.ID `json:"MusclesGroupID"`
+	ExerciseTypeID pksuid.ID `json:"ExerciseTypeID"`
 }
 
 type UpdateExerciseParams struct {
-	Name           *string `json:"name"`
-	HowTo          *string `json:"howTo"`
-	Image          *string `json:"image"`
-	EquipmentID    *string `json:"equipmentID"`
-	MusclesGroupID *string `json:"MusclesGroupID"`
-	ExerciseTypeID *string `json:"ExerciseTypeID"`
+	Name           *string    `json:"name"`
+	HowTo          *string    `json:"howTo"`
+	Image          *string    `json:"image"`
+	EquipmentID    *pksuid.ID `json:"equipmentID"`
+	MusclesGroupID *pksuid.ID `json:"MusclesGroupID"`
+	ExerciseTypeID *pksuid.ID `json:"ExerciseTypeID"`
 }
 
 type Exercise struct {
 	Ent *ent.Exercise
 }
 
-func NewExerciseFromParams(p CreateExerciseParams, userID *string) *Exercise {
+func NewExerciseFromParams(p CreateExerciseParams, userID *pksuid.ID) *Exercise {
 	e := &Exercise{
 		Ent: &ent.Exercise{
 			Name:           p.Name,
@@ -63,7 +64,6 @@ func UpdateExerciseFromParams(e *UpdateExerciseParams, ex *Exercise) {
 	if e.HowTo != nil {
 		ex.Ent.HowTo = e.HowTo
 	}
-
 
 	if e.Image != nil {
 		ex.Ent.Image = e.Image

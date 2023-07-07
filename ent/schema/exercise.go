@@ -7,6 +7,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // Exercise holds the schema definition for the Exercise entity.
@@ -14,17 +15,22 @@ type Exercise struct {
 	ent.Schema
 }
 
+func (Exercise) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		pksuid.MixinWithPrefix("EX"),
+	}
+}
+
 // Fields of the Exercise.
 func (Exercise) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").DefaultFunc(generateKSUID),
 		field.String("name"),
 		field.String("image").Optional().Nillable(),
 		field.String("how_to").Optional().Nillable(),
-		field.String("equipment_id").Optional(),
-		field.String("muscles_group_id").Optional(),
-		field.String("exercise_type_id").Optional(),
-		field.String("user_id").Optional().Nillable(),
+		field.String("equipment_id").Optional().GoType(pksuid.ID("")),
+		field.String("muscles_group_id").Optional().GoType(pksuid.ID("")),
+		field.String("exercise_type_id").Optional().GoType(pksuid.ID("")),
+		field.String("user_id").Optional().Nillable().GoType(pksuid.ID("")),
 	}
 }
 

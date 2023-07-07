@@ -13,6 +13,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -27,16 +28,14 @@ type EquipmentWhereInput struct {
 	And        []*EquipmentWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "name" field predicates.
 	Name             *string  `json:"name,omitempty"`
@@ -168,12 +167,6 @@ func (i *EquipmentWhereInput) P() (predicate.Equipment, error) {
 	if i.IDLTE != nil {
 		predicates = append(predicates, equipment.IDLTE(*i.IDLTE))
 	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, equipment.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, equipment.IDContainsFold(*i.IDContainsFold))
-	}
 	if i.Name != nil {
 		predicates = append(predicates, equipment.NameEQ(*i.Name))
 	}
@@ -289,16 +282,14 @@ type ExerciseWhereInput struct {
 	And        []*ExerciseWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "name" field predicates.
 	Name             *string  `json:"name,omitempty"`
@@ -350,72 +341,72 @@ type ExerciseWhereInput struct {
 	HowToContainsFold *string  `json:"howToContainsFold,omitempty"`
 
 	// "equipment_id" field predicates.
-	EquipmentID             *string  `json:"equipmentID,omitempty"`
-	EquipmentIDNEQ          *string  `json:"equipmentIDNEQ,omitempty"`
-	EquipmentIDIn           []string `json:"equipmentIDIn,omitempty"`
-	EquipmentIDNotIn        []string `json:"equipmentIDNotIn,omitempty"`
-	EquipmentIDGT           *string  `json:"equipmentIDGT,omitempty"`
-	EquipmentIDGTE          *string  `json:"equipmentIDGTE,omitempty"`
-	EquipmentIDLT           *string  `json:"equipmentIDLT,omitempty"`
-	EquipmentIDLTE          *string  `json:"equipmentIDLTE,omitempty"`
-	EquipmentIDContains     *string  `json:"equipmentIDContains,omitempty"`
-	EquipmentIDHasPrefix    *string  `json:"equipmentIDHasPrefix,omitempty"`
-	EquipmentIDHasSuffix    *string  `json:"equipmentIDHasSuffix,omitempty"`
-	EquipmentIDIsNil        bool     `json:"equipmentIDIsNil,omitempty"`
-	EquipmentIDNotNil       bool     `json:"equipmentIDNotNil,omitempty"`
-	EquipmentIDEqualFold    *string  `json:"equipmentIDEqualFold,omitempty"`
-	EquipmentIDContainsFold *string  `json:"equipmentIDContainsFold,omitempty"`
+	EquipmentID             *pksuid.ID  `json:"equipmentID,omitempty"`
+	EquipmentIDNEQ          *pksuid.ID  `json:"equipmentIDNEQ,omitempty"`
+	EquipmentIDIn           []pksuid.ID `json:"equipmentIDIn,omitempty"`
+	EquipmentIDNotIn        []pksuid.ID `json:"equipmentIDNotIn,omitempty"`
+	EquipmentIDGT           *pksuid.ID  `json:"equipmentIDGT,omitempty"`
+	EquipmentIDGTE          *pksuid.ID  `json:"equipmentIDGTE,omitempty"`
+	EquipmentIDLT           *pksuid.ID  `json:"equipmentIDLT,omitempty"`
+	EquipmentIDLTE          *pksuid.ID  `json:"equipmentIDLTE,omitempty"`
+	EquipmentIDContains     *pksuid.ID  `json:"equipmentIDContains,omitempty"`
+	EquipmentIDHasPrefix    *pksuid.ID  `json:"equipmentIDHasPrefix,omitempty"`
+	EquipmentIDHasSuffix    *pksuid.ID  `json:"equipmentIDHasSuffix,omitempty"`
+	EquipmentIDIsNil        bool        `json:"equipmentIDIsNil,omitempty"`
+	EquipmentIDNotNil       bool        `json:"equipmentIDNotNil,omitempty"`
+	EquipmentIDEqualFold    *pksuid.ID  `json:"equipmentIDEqualFold,omitempty"`
+	EquipmentIDContainsFold *pksuid.ID  `json:"equipmentIDContainsFold,omitempty"`
 
 	// "muscles_group_id" field predicates.
-	MusclesGroupID             *string  `json:"musclesGroupID,omitempty"`
-	MusclesGroupIDNEQ          *string  `json:"musclesGroupIDNEQ,omitempty"`
-	MusclesGroupIDIn           []string `json:"musclesGroupIDIn,omitempty"`
-	MusclesGroupIDNotIn        []string `json:"musclesGroupIDNotIn,omitempty"`
-	MusclesGroupIDGT           *string  `json:"musclesGroupIDGT,omitempty"`
-	MusclesGroupIDGTE          *string  `json:"musclesGroupIDGTE,omitempty"`
-	MusclesGroupIDLT           *string  `json:"musclesGroupIDLT,omitempty"`
-	MusclesGroupIDLTE          *string  `json:"musclesGroupIDLTE,omitempty"`
-	MusclesGroupIDContains     *string  `json:"musclesGroupIDContains,omitempty"`
-	MusclesGroupIDHasPrefix    *string  `json:"musclesGroupIDHasPrefix,omitempty"`
-	MusclesGroupIDHasSuffix    *string  `json:"musclesGroupIDHasSuffix,omitempty"`
-	MusclesGroupIDIsNil        bool     `json:"musclesGroupIDIsNil,omitempty"`
-	MusclesGroupIDNotNil       bool     `json:"musclesGroupIDNotNil,omitempty"`
-	MusclesGroupIDEqualFold    *string  `json:"musclesGroupIDEqualFold,omitempty"`
-	MusclesGroupIDContainsFold *string  `json:"musclesGroupIDContainsFold,omitempty"`
+	MusclesGroupID             *pksuid.ID  `json:"musclesGroupID,omitempty"`
+	MusclesGroupIDNEQ          *pksuid.ID  `json:"musclesGroupIDNEQ,omitempty"`
+	MusclesGroupIDIn           []pksuid.ID `json:"musclesGroupIDIn,omitempty"`
+	MusclesGroupIDNotIn        []pksuid.ID `json:"musclesGroupIDNotIn,omitempty"`
+	MusclesGroupIDGT           *pksuid.ID  `json:"musclesGroupIDGT,omitempty"`
+	MusclesGroupIDGTE          *pksuid.ID  `json:"musclesGroupIDGTE,omitempty"`
+	MusclesGroupIDLT           *pksuid.ID  `json:"musclesGroupIDLT,omitempty"`
+	MusclesGroupIDLTE          *pksuid.ID  `json:"musclesGroupIDLTE,omitempty"`
+	MusclesGroupIDContains     *pksuid.ID  `json:"musclesGroupIDContains,omitempty"`
+	MusclesGroupIDHasPrefix    *pksuid.ID  `json:"musclesGroupIDHasPrefix,omitempty"`
+	MusclesGroupIDHasSuffix    *pksuid.ID  `json:"musclesGroupIDHasSuffix,omitempty"`
+	MusclesGroupIDIsNil        bool        `json:"musclesGroupIDIsNil,omitempty"`
+	MusclesGroupIDNotNil       bool        `json:"musclesGroupIDNotNil,omitempty"`
+	MusclesGroupIDEqualFold    *pksuid.ID  `json:"musclesGroupIDEqualFold,omitempty"`
+	MusclesGroupIDContainsFold *pksuid.ID  `json:"musclesGroupIDContainsFold,omitempty"`
 
 	// "exercise_type_id" field predicates.
-	ExerciseTypeID             *string  `json:"exerciseTypeID,omitempty"`
-	ExerciseTypeIDNEQ          *string  `json:"exerciseTypeIDNEQ,omitempty"`
-	ExerciseTypeIDIn           []string `json:"exerciseTypeIDIn,omitempty"`
-	ExerciseTypeIDNotIn        []string `json:"exerciseTypeIDNotIn,omitempty"`
-	ExerciseTypeIDGT           *string  `json:"exerciseTypeIDGT,omitempty"`
-	ExerciseTypeIDGTE          *string  `json:"exerciseTypeIDGTE,omitempty"`
-	ExerciseTypeIDLT           *string  `json:"exerciseTypeIDLT,omitempty"`
-	ExerciseTypeIDLTE          *string  `json:"exerciseTypeIDLTE,omitempty"`
-	ExerciseTypeIDContains     *string  `json:"exerciseTypeIDContains,omitempty"`
-	ExerciseTypeIDHasPrefix    *string  `json:"exerciseTypeIDHasPrefix,omitempty"`
-	ExerciseTypeIDHasSuffix    *string  `json:"exerciseTypeIDHasSuffix,omitempty"`
-	ExerciseTypeIDIsNil        bool     `json:"exerciseTypeIDIsNil,omitempty"`
-	ExerciseTypeIDNotNil       bool     `json:"exerciseTypeIDNotNil,omitempty"`
-	ExerciseTypeIDEqualFold    *string  `json:"exerciseTypeIDEqualFold,omitempty"`
-	ExerciseTypeIDContainsFold *string  `json:"exerciseTypeIDContainsFold,omitempty"`
+	ExerciseTypeID             *pksuid.ID  `json:"exerciseTypeID,omitempty"`
+	ExerciseTypeIDNEQ          *pksuid.ID  `json:"exerciseTypeIDNEQ,omitempty"`
+	ExerciseTypeIDIn           []pksuid.ID `json:"exerciseTypeIDIn,omitempty"`
+	ExerciseTypeIDNotIn        []pksuid.ID `json:"exerciseTypeIDNotIn,omitempty"`
+	ExerciseTypeIDGT           *pksuid.ID  `json:"exerciseTypeIDGT,omitempty"`
+	ExerciseTypeIDGTE          *pksuid.ID  `json:"exerciseTypeIDGTE,omitempty"`
+	ExerciseTypeIDLT           *pksuid.ID  `json:"exerciseTypeIDLT,omitempty"`
+	ExerciseTypeIDLTE          *pksuid.ID  `json:"exerciseTypeIDLTE,omitempty"`
+	ExerciseTypeIDContains     *pksuid.ID  `json:"exerciseTypeIDContains,omitempty"`
+	ExerciseTypeIDHasPrefix    *pksuid.ID  `json:"exerciseTypeIDHasPrefix,omitempty"`
+	ExerciseTypeIDHasSuffix    *pksuid.ID  `json:"exerciseTypeIDHasSuffix,omitempty"`
+	ExerciseTypeIDIsNil        bool        `json:"exerciseTypeIDIsNil,omitempty"`
+	ExerciseTypeIDNotNil       bool        `json:"exerciseTypeIDNotNil,omitempty"`
+	ExerciseTypeIDEqualFold    *pksuid.ID  `json:"exerciseTypeIDEqualFold,omitempty"`
+	ExerciseTypeIDContainsFold *pksuid.ID  `json:"exerciseTypeIDContainsFold,omitempty"`
 
 	// "user_id" field predicates.
-	UserID             *string  `json:"userID,omitempty"`
-	UserIDNEQ          *string  `json:"userIDNEQ,omitempty"`
-	UserIDIn           []string `json:"userIDIn,omitempty"`
-	UserIDNotIn        []string `json:"userIDNotIn,omitempty"`
-	UserIDGT           *string  `json:"userIDGT,omitempty"`
-	UserIDGTE          *string  `json:"userIDGTE,omitempty"`
-	UserIDLT           *string  `json:"userIDLT,omitempty"`
-	UserIDLTE          *string  `json:"userIDLTE,omitempty"`
-	UserIDContains     *string  `json:"userIDContains,omitempty"`
-	UserIDHasPrefix    *string  `json:"userIDHasPrefix,omitempty"`
-	UserIDHasSuffix    *string  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool     `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool     `json:"userIDNotNil,omitempty"`
-	UserIDEqualFold    *string  `json:"userIDEqualFold,omitempty"`
-	UserIDContainsFold *string  `json:"userIDContainsFold,omitempty"`
+	UserID             *pksuid.ID  `json:"userID,omitempty"`
+	UserIDNEQ          *pksuid.ID  `json:"userIDNEQ,omitempty"`
+	UserIDIn           []pksuid.ID `json:"userIDIn,omitempty"`
+	UserIDNotIn        []pksuid.ID `json:"userIDNotIn,omitempty"`
+	UserIDGT           *pksuid.ID  `json:"userIDGT,omitempty"`
+	UserIDGTE          *pksuid.ID  `json:"userIDGTE,omitempty"`
+	UserIDLT           *pksuid.ID  `json:"userIDLT,omitempty"`
+	UserIDLTE          *pksuid.ID  `json:"userIDLTE,omitempty"`
+	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
+	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
+	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
+	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
+	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
+	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
+	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
 	// "workout_logs" edge predicates.
 	HasWorkoutLogs     *bool                   `json:"hasWorkoutLogs,omitempty"`
@@ -540,12 +531,6 @@ func (i *ExerciseWhereInput) P() (predicate.Exercise, error) {
 	}
 	if i.IDLTE != nil {
 		predicates = append(predicates, exercise.IDLTE(*i.IDLTE))
-	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, exercise.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, exercise.IDContainsFold(*i.IDContainsFold))
 	}
 	if i.Name != nil {
 		predicates = append(predicates, exercise.NameEQ(*i.Name))
@@ -1001,16 +986,14 @@ type ExerciseTypeWhereInput struct {
 	And        []*ExerciseTypeWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "name" field predicates.
 	Name             *string  `json:"name,omitempty"`
@@ -1142,12 +1125,6 @@ func (i *ExerciseTypeWhereInput) P() (predicate.ExerciseType, error) {
 	if i.IDLTE != nil {
 		predicates = append(predicates, exercisetype.IDLTE(*i.IDLTE))
 	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, exercisetype.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, exercisetype.IDContainsFold(*i.IDContainsFold))
-	}
 	if i.Name != nil {
 		predicates = append(predicates, exercisetype.NameEQ(*i.Name))
 	}
@@ -1263,16 +1240,14 @@ type MusclesGroupWhereInput struct {
 	And        []*MusclesGroupWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "name" field predicates.
 	Name             *string  `json:"name,omitempty"`
@@ -1404,12 +1379,6 @@ func (i *MusclesGroupWhereInput) P() (predicate.MusclesGroup, error) {
 	if i.IDLTE != nil {
 		predicates = append(predicates, musclesgroup.IDLTE(*i.IDLTE))
 	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, musclesgroup.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, musclesgroup.IDContainsFold(*i.IDContainsFold))
-	}
 	if i.Name != nil {
 		predicates = append(predicates, musclesgroup.NameEQ(*i.Name))
 	}
@@ -1525,16 +1494,14 @@ type RoutineWhereInput struct {
 	And        []*RoutineWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "name" field predicates.
 	Name             *string  `json:"name,omitempty"`
@@ -1552,21 +1519,21 @@ type RoutineWhereInput struct {
 	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
 
 	// "user_id" field predicates.
-	UserID             *string  `json:"userID,omitempty"`
-	UserIDNEQ          *string  `json:"userIDNEQ,omitempty"`
-	UserIDIn           []string `json:"userIDIn,omitempty"`
-	UserIDNotIn        []string `json:"userIDNotIn,omitempty"`
-	UserIDGT           *string  `json:"userIDGT,omitempty"`
-	UserIDGTE          *string  `json:"userIDGTE,omitempty"`
-	UserIDLT           *string  `json:"userIDLT,omitempty"`
-	UserIDLTE          *string  `json:"userIDLTE,omitempty"`
-	UserIDContains     *string  `json:"userIDContains,omitempty"`
-	UserIDHasPrefix    *string  `json:"userIDHasPrefix,omitempty"`
-	UserIDHasSuffix    *string  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool     `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool     `json:"userIDNotNil,omitempty"`
-	UserIDEqualFold    *string  `json:"userIDEqualFold,omitempty"`
-	UserIDContainsFold *string  `json:"userIDContainsFold,omitempty"`
+	UserID             *pksuid.ID  `json:"userID,omitempty"`
+	UserIDNEQ          *pksuid.ID  `json:"userIDNEQ,omitempty"`
+	UserIDIn           []pksuid.ID `json:"userIDIn,omitempty"`
+	UserIDNotIn        []pksuid.ID `json:"userIDNotIn,omitempty"`
+	UserIDGT           *pksuid.ID  `json:"userIDGT,omitempty"`
+	UserIDGTE          *pksuid.ID  `json:"userIDGTE,omitempty"`
+	UserIDLT           *pksuid.ID  `json:"userIDLT,omitempty"`
+	UserIDLTE          *pksuid.ID  `json:"userIDLTE,omitempty"`
+	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
+	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
+	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
+	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
+	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
+	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
+	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
 	// "exercises" edge predicates.
 	HasExercises     *bool                 `json:"hasExercises,omitempty"`
@@ -1675,12 +1642,6 @@ func (i *RoutineWhereInput) P() (predicate.Routine, error) {
 	}
 	if i.IDLTE != nil {
 		predicates = append(predicates, routine.IDLTE(*i.IDLTE))
-	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, routine.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, routine.IDContainsFold(*i.IDContainsFold))
 	}
 	if i.Name != nil {
 		predicates = append(predicates, routine.NameEQ(*i.Name))
@@ -1839,16 +1800,14 @@ type RoutineExerciseWhereInput struct {
 	And        []*RoutineExerciseWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "rest_timer" field predicates.
 	RestTimer             *string  `json:"restTimer,omitempty"`
@@ -1868,51 +1827,51 @@ type RoutineExerciseWhereInput struct {
 	RestTimerContainsFold *string  `json:"restTimerContainsFold,omitempty"`
 
 	// "routine_id" field predicates.
-	RoutineID             *string  `json:"routineID,omitempty"`
-	RoutineIDNEQ          *string  `json:"routineIDNEQ,omitempty"`
-	RoutineIDIn           []string `json:"routineIDIn,omitempty"`
-	RoutineIDNotIn        []string `json:"routineIDNotIn,omitempty"`
-	RoutineIDGT           *string  `json:"routineIDGT,omitempty"`
-	RoutineIDGTE          *string  `json:"routineIDGTE,omitempty"`
-	RoutineIDLT           *string  `json:"routineIDLT,omitempty"`
-	RoutineIDLTE          *string  `json:"routineIDLTE,omitempty"`
-	RoutineIDContains     *string  `json:"routineIDContains,omitempty"`
-	RoutineIDHasPrefix    *string  `json:"routineIDHasPrefix,omitempty"`
-	RoutineIDHasSuffix    *string  `json:"routineIDHasSuffix,omitempty"`
-	RoutineIDEqualFold    *string  `json:"routineIDEqualFold,omitempty"`
-	RoutineIDContainsFold *string  `json:"routineIDContainsFold,omitempty"`
+	RoutineID             *pksuid.ID  `json:"routineID,omitempty"`
+	RoutineIDNEQ          *pksuid.ID  `json:"routineIDNEQ,omitempty"`
+	RoutineIDIn           []pksuid.ID `json:"routineIDIn,omitempty"`
+	RoutineIDNotIn        []pksuid.ID `json:"routineIDNotIn,omitempty"`
+	RoutineIDGT           *pksuid.ID  `json:"routineIDGT,omitempty"`
+	RoutineIDGTE          *pksuid.ID  `json:"routineIDGTE,omitempty"`
+	RoutineIDLT           *pksuid.ID  `json:"routineIDLT,omitempty"`
+	RoutineIDLTE          *pksuid.ID  `json:"routineIDLTE,omitempty"`
+	RoutineIDContains     *pksuid.ID  `json:"routineIDContains,omitempty"`
+	RoutineIDHasPrefix    *pksuid.ID  `json:"routineIDHasPrefix,omitempty"`
+	RoutineIDHasSuffix    *pksuid.ID  `json:"routineIDHasSuffix,omitempty"`
+	RoutineIDEqualFold    *pksuid.ID  `json:"routineIDEqualFold,omitempty"`
+	RoutineIDContainsFold *pksuid.ID  `json:"routineIDContainsFold,omitempty"`
 
 	// "exercise_id" field predicates.
-	ExerciseID             *string  `json:"exerciseID,omitempty"`
-	ExerciseIDNEQ          *string  `json:"exerciseIDNEQ,omitempty"`
-	ExerciseIDIn           []string `json:"exerciseIDIn,omitempty"`
-	ExerciseIDNotIn        []string `json:"exerciseIDNotIn,omitempty"`
-	ExerciseIDGT           *string  `json:"exerciseIDGT,omitempty"`
-	ExerciseIDGTE          *string  `json:"exerciseIDGTE,omitempty"`
-	ExerciseIDLT           *string  `json:"exerciseIDLT,omitempty"`
-	ExerciseIDLTE          *string  `json:"exerciseIDLTE,omitempty"`
-	ExerciseIDContains     *string  `json:"exerciseIDContains,omitempty"`
-	ExerciseIDHasPrefix    *string  `json:"exerciseIDHasPrefix,omitempty"`
-	ExerciseIDHasSuffix    *string  `json:"exerciseIDHasSuffix,omitempty"`
-	ExerciseIDEqualFold    *string  `json:"exerciseIDEqualFold,omitempty"`
-	ExerciseIDContainsFold *string  `json:"exerciseIDContainsFold,omitempty"`
+	ExerciseID             *pksuid.ID  `json:"exerciseID,omitempty"`
+	ExerciseIDNEQ          *pksuid.ID  `json:"exerciseIDNEQ,omitempty"`
+	ExerciseIDIn           []pksuid.ID `json:"exerciseIDIn,omitempty"`
+	ExerciseIDNotIn        []pksuid.ID `json:"exerciseIDNotIn,omitempty"`
+	ExerciseIDGT           *pksuid.ID  `json:"exerciseIDGT,omitempty"`
+	ExerciseIDGTE          *pksuid.ID  `json:"exerciseIDGTE,omitempty"`
+	ExerciseIDLT           *pksuid.ID  `json:"exerciseIDLT,omitempty"`
+	ExerciseIDLTE          *pksuid.ID  `json:"exerciseIDLTE,omitempty"`
+	ExerciseIDContains     *pksuid.ID  `json:"exerciseIDContains,omitempty"`
+	ExerciseIDHasPrefix    *pksuid.ID  `json:"exerciseIDHasPrefix,omitempty"`
+	ExerciseIDHasSuffix    *pksuid.ID  `json:"exerciseIDHasSuffix,omitempty"`
+	ExerciseIDEqualFold    *pksuid.ID  `json:"exerciseIDEqualFold,omitempty"`
+	ExerciseIDContainsFold *pksuid.ID  `json:"exerciseIDContainsFold,omitempty"`
 
 	// "user_id" field predicates.
-	UserID             *string  `json:"userID,omitempty"`
-	UserIDNEQ          *string  `json:"userIDNEQ,omitempty"`
-	UserIDIn           []string `json:"userIDIn,omitempty"`
-	UserIDNotIn        []string `json:"userIDNotIn,omitempty"`
-	UserIDGT           *string  `json:"userIDGT,omitempty"`
-	UserIDGTE          *string  `json:"userIDGTE,omitempty"`
-	UserIDLT           *string  `json:"userIDLT,omitempty"`
-	UserIDLTE          *string  `json:"userIDLTE,omitempty"`
-	UserIDContains     *string  `json:"userIDContains,omitempty"`
-	UserIDHasPrefix    *string  `json:"userIDHasPrefix,omitempty"`
-	UserIDHasSuffix    *string  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool     `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool     `json:"userIDNotNil,omitempty"`
-	UserIDEqualFold    *string  `json:"userIDEqualFold,omitempty"`
-	UserIDContainsFold *string  `json:"userIDContainsFold,omitempty"`
+	UserID             *pksuid.ID  `json:"userID,omitempty"`
+	UserIDNEQ          *pksuid.ID  `json:"userIDNEQ,omitempty"`
+	UserIDIn           []pksuid.ID `json:"userIDIn,omitempty"`
+	UserIDNotIn        []pksuid.ID `json:"userIDNotIn,omitempty"`
+	UserIDGT           *pksuid.ID  `json:"userIDGT,omitempty"`
+	UserIDGTE          *pksuid.ID  `json:"userIDGTE,omitempty"`
+	UserIDLT           *pksuid.ID  `json:"userIDLT,omitempty"`
+	UserIDLTE          *pksuid.ID  `json:"userIDLTE,omitempty"`
+	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
+	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
+	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
+	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
+	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
+	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
+	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
 	// "routines" edge predicates.
 	HasRoutines     *bool                `json:"hasRoutines,omitempty"`
@@ -2021,12 +1980,6 @@ func (i *RoutineExerciseWhereInput) P() (predicate.RoutineExercise, error) {
 	}
 	if i.IDLTE != nil {
 		predicates = append(predicates, routineexercise.IDLTE(*i.IDLTE))
-	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, routineexercise.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, routineexercise.IDContainsFold(*i.IDContainsFold))
 	}
 	if i.RestTimer != nil {
 		predicates = append(predicates, routineexercise.RestTimerEQ(*i.RestTimer))
@@ -2269,16 +2222,14 @@ type TokenWhereInput struct {
 	And        []*TokenWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "expiry" field predicates.
 	Expiry             *string  `json:"expiry,omitempty"`
@@ -2311,21 +2262,21 @@ type TokenWhereInput struct {
 	ScopeContainsFold *string  `json:"scopeContainsFold,omitempty"`
 
 	// "user_id" field predicates.
-	UserID             *string  `json:"userID,omitempty"`
-	UserIDNEQ          *string  `json:"userIDNEQ,omitempty"`
-	UserIDIn           []string `json:"userIDIn,omitempty"`
-	UserIDNotIn        []string `json:"userIDNotIn,omitempty"`
-	UserIDGT           *string  `json:"userIDGT,omitempty"`
-	UserIDGTE          *string  `json:"userIDGTE,omitempty"`
-	UserIDLT           *string  `json:"userIDLT,omitempty"`
-	UserIDLTE          *string  `json:"userIDLTE,omitempty"`
-	UserIDContains     *string  `json:"userIDContains,omitempty"`
-	UserIDHasPrefix    *string  `json:"userIDHasPrefix,omitempty"`
-	UserIDHasSuffix    *string  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool     `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool     `json:"userIDNotNil,omitempty"`
-	UserIDEqualFold    *string  `json:"userIDEqualFold,omitempty"`
-	UserIDContainsFold *string  `json:"userIDContainsFold,omitempty"`
+	UserID             *pksuid.ID  `json:"userID,omitempty"`
+	UserIDNEQ          *pksuid.ID  `json:"userIDNEQ,omitempty"`
+	UserIDIn           []pksuid.ID `json:"userIDIn,omitempty"`
+	UserIDNotIn        []pksuid.ID `json:"userIDNotIn,omitempty"`
+	UserIDGT           *pksuid.ID  `json:"userIDGT,omitempty"`
+	UserIDGTE          *pksuid.ID  `json:"userIDGTE,omitempty"`
+	UserIDLT           *pksuid.ID  `json:"userIDLT,omitempty"`
+	UserIDLTE          *pksuid.ID  `json:"userIDLTE,omitempty"`
+	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
+	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
+	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
+	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
+	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
+	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
+	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
 	// "users" edge predicates.
 	HasUsers     *bool             `json:"hasUsers,omitempty"`
@@ -2426,12 +2377,6 @@ func (i *TokenWhereInput) P() (predicate.Token, error) {
 	}
 	if i.IDLTE != nil {
 		predicates = append(predicates, token.IDLTE(*i.IDLTE))
-	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, token.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, token.IDContainsFold(*i.IDContainsFold))
 	}
 	if i.Expiry != nil {
 		predicates = append(predicates, token.ExpiryEQ(*i.Expiry))
@@ -2593,16 +2538,14 @@ type UserWhereInput struct {
 	And        []*UserWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "email" field predicates.
 	Email             *string  `json:"email,omitempty"`
@@ -2818,12 +2761,6 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 	}
 	if i.IDLTE != nil {
 		predicates = append(predicates, user.IDLTE(*i.IDLTE))
-	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, user.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, user.IDContainsFold(*i.IDContainsFold))
 	}
 	if i.Email != nil {
 		predicates = append(predicates, user.EmailEQ(*i.Email))
@@ -3195,16 +3132,14 @@ type WorkoutWhereInput struct {
 	And        []*WorkoutWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "name" field predicates.
 	Name             *string  `json:"name,omitempty"`
@@ -3316,21 +3251,21 @@ type WorkoutWhereInput struct {
 	DescriptionContainsFold *string  `json:"descriptionContainsFold,omitempty"`
 
 	// "user_id" field predicates.
-	UserID             *string  `json:"userID,omitempty"`
-	UserIDNEQ          *string  `json:"userIDNEQ,omitempty"`
-	UserIDIn           []string `json:"userIDIn,omitempty"`
-	UserIDNotIn        []string `json:"userIDNotIn,omitempty"`
-	UserIDGT           *string  `json:"userIDGT,omitempty"`
-	UserIDGTE          *string  `json:"userIDGTE,omitempty"`
-	UserIDLT           *string  `json:"userIDLT,omitempty"`
-	UserIDLTE          *string  `json:"userIDLTE,omitempty"`
-	UserIDContains     *string  `json:"userIDContains,omitempty"`
-	UserIDHasPrefix    *string  `json:"userIDHasPrefix,omitempty"`
-	UserIDHasSuffix    *string  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool     `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool     `json:"userIDNotNil,omitempty"`
-	UserIDEqualFold    *string  `json:"userIDEqualFold,omitempty"`
-	UserIDContainsFold *string  `json:"userIDContainsFold,omitempty"`
+	UserID             *pksuid.ID  `json:"userID,omitempty"`
+	UserIDNEQ          *pksuid.ID  `json:"userIDNEQ,omitempty"`
+	UserIDIn           []pksuid.ID `json:"userIDIn,omitempty"`
+	UserIDNotIn        []pksuid.ID `json:"userIDNotIn,omitempty"`
+	UserIDGT           *pksuid.ID  `json:"userIDGT,omitempty"`
+	UserIDGTE          *pksuid.ID  `json:"userIDGTE,omitempty"`
+	UserIDLT           *pksuid.ID  `json:"userIDLT,omitempty"`
+	UserIDLTE          *pksuid.ID  `json:"userIDLTE,omitempty"`
+	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
+	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
+	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
+	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
+	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
+	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
+	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
 	// "users" edge predicates.
 	HasUsers     *bool             `json:"hasUsers,omitempty"`
@@ -3435,12 +3370,6 @@ func (i *WorkoutWhereInput) P() (predicate.Workout, error) {
 	}
 	if i.IDLTE != nil {
 		predicates = append(predicates, workout.IDLTE(*i.IDLTE))
-	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, workout.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, workout.IDContainsFold(*i.IDContainsFold))
 	}
 	if i.Name != nil {
 		predicates = append(predicates, workout.NameEQ(*i.Name))
@@ -3821,16 +3750,14 @@ type WorkoutLogWhereInput struct {
 	And        []*WorkoutLogWhereInput `json:"and,omitempty"`
 
 	// "id" field predicates.
-	ID             *string  `json:"id,omitempty"`
-	IDNEQ          *string  `json:"idNEQ,omitempty"`
-	IDIn           []string `json:"idIn,omitempty"`
-	IDNotIn        []string `json:"idNotIn,omitempty"`
-	IDGT           *string  `json:"idGT,omitempty"`
-	IDGTE          *string  `json:"idGTE,omitempty"`
-	IDLT           *string  `json:"idLT,omitempty"`
-	IDLTE          *string  `json:"idLTE,omitempty"`
-	IDEqualFold    *string  `json:"idEqualFold,omitempty"`
-	IDContainsFold *string  `json:"idContainsFold,omitempty"`
+	ID      *pksuid.ID  `json:"id,omitempty"`
+	IDNEQ   *pksuid.ID  `json:"idNEQ,omitempty"`
+	IDIn    []pksuid.ID `json:"idIn,omitempty"`
+	IDNotIn []pksuid.ID `json:"idNotIn,omitempty"`
+	IDGT    *pksuid.ID  `json:"idGT,omitempty"`
+	IDGTE   *pksuid.ID  `json:"idGTE,omitempty"`
+	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
+	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "created_at" field predicates.
 	CreatedAt             *string  `json:"createdAt,omitempty"`
@@ -3848,55 +3775,55 @@ type WorkoutLogWhereInput struct {
 	CreatedAtContainsFold *string  `json:"createdAtContainsFold,omitempty"`
 
 	// "exercise_id" field predicates.
-	ExerciseID             *string  `json:"exerciseID,omitempty"`
-	ExerciseIDNEQ          *string  `json:"exerciseIDNEQ,omitempty"`
-	ExerciseIDIn           []string `json:"exerciseIDIn,omitempty"`
-	ExerciseIDNotIn        []string `json:"exerciseIDNotIn,omitempty"`
-	ExerciseIDGT           *string  `json:"exerciseIDGT,omitempty"`
-	ExerciseIDGTE          *string  `json:"exerciseIDGTE,omitempty"`
-	ExerciseIDLT           *string  `json:"exerciseIDLT,omitempty"`
-	ExerciseIDLTE          *string  `json:"exerciseIDLTE,omitempty"`
-	ExerciseIDContains     *string  `json:"exerciseIDContains,omitempty"`
-	ExerciseIDHasPrefix    *string  `json:"exerciseIDHasPrefix,omitempty"`
-	ExerciseIDHasSuffix    *string  `json:"exerciseIDHasSuffix,omitempty"`
-	ExerciseIDIsNil        bool     `json:"exerciseIDIsNil,omitempty"`
-	ExerciseIDNotNil       bool     `json:"exerciseIDNotNil,omitempty"`
-	ExerciseIDEqualFold    *string  `json:"exerciseIDEqualFold,omitempty"`
-	ExerciseIDContainsFold *string  `json:"exerciseIDContainsFold,omitempty"`
+	ExerciseID             *pksuid.ID  `json:"exerciseID,omitempty"`
+	ExerciseIDNEQ          *pksuid.ID  `json:"exerciseIDNEQ,omitempty"`
+	ExerciseIDIn           []pksuid.ID `json:"exerciseIDIn,omitempty"`
+	ExerciseIDNotIn        []pksuid.ID `json:"exerciseIDNotIn,omitempty"`
+	ExerciseIDGT           *pksuid.ID  `json:"exerciseIDGT,omitempty"`
+	ExerciseIDGTE          *pksuid.ID  `json:"exerciseIDGTE,omitempty"`
+	ExerciseIDLT           *pksuid.ID  `json:"exerciseIDLT,omitempty"`
+	ExerciseIDLTE          *pksuid.ID  `json:"exerciseIDLTE,omitempty"`
+	ExerciseIDContains     *pksuid.ID  `json:"exerciseIDContains,omitempty"`
+	ExerciseIDHasPrefix    *pksuid.ID  `json:"exerciseIDHasPrefix,omitempty"`
+	ExerciseIDHasSuffix    *pksuid.ID  `json:"exerciseIDHasSuffix,omitempty"`
+	ExerciseIDIsNil        bool        `json:"exerciseIDIsNil,omitempty"`
+	ExerciseIDNotNil       bool        `json:"exerciseIDNotNil,omitempty"`
+	ExerciseIDEqualFold    *pksuid.ID  `json:"exerciseIDEqualFold,omitempty"`
+	ExerciseIDContainsFold *pksuid.ID  `json:"exerciseIDContainsFold,omitempty"`
 
 	// "workout_id" field predicates.
-	WorkoutID             *string  `json:"workoutID,omitempty"`
-	WorkoutIDNEQ          *string  `json:"workoutIDNEQ,omitempty"`
-	WorkoutIDIn           []string `json:"workoutIDIn,omitempty"`
-	WorkoutIDNotIn        []string `json:"workoutIDNotIn,omitempty"`
-	WorkoutIDGT           *string  `json:"workoutIDGT,omitempty"`
-	WorkoutIDGTE          *string  `json:"workoutIDGTE,omitempty"`
-	WorkoutIDLT           *string  `json:"workoutIDLT,omitempty"`
-	WorkoutIDLTE          *string  `json:"workoutIDLTE,omitempty"`
-	WorkoutIDContains     *string  `json:"workoutIDContains,omitempty"`
-	WorkoutIDHasPrefix    *string  `json:"workoutIDHasPrefix,omitempty"`
-	WorkoutIDHasSuffix    *string  `json:"workoutIDHasSuffix,omitempty"`
-	WorkoutIDIsNil        bool     `json:"workoutIDIsNil,omitempty"`
-	WorkoutIDNotNil       bool     `json:"workoutIDNotNil,omitempty"`
-	WorkoutIDEqualFold    *string  `json:"workoutIDEqualFold,omitempty"`
-	WorkoutIDContainsFold *string  `json:"workoutIDContainsFold,omitempty"`
+	WorkoutID             *pksuid.ID  `json:"workoutID,omitempty"`
+	WorkoutIDNEQ          *pksuid.ID  `json:"workoutIDNEQ,omitempty"`
+	WorkoutIDIn           []pksuid.ID `json:"workoutIDIn,omitempty"`
+	WorkoutIDNotIn        []pksuid.ID `json:"workoutIDNotIn,omitempty"`
+	WorkoutIDGT           *pksuid.ID  `json:"workoutIDGT,omitempty"`
+	WorkoutIDGTE          *pksuid.ID  `json:"workoutIDGTE,omitempty"`
+	WorkoutIDLT           *pksuid.ID  `json:"workoutIDLT,omitempty"`
+	WorkoutIDLTE          *pksuid.ID  `json:"workoutIDLTE,omitempty"`
+	WorkoutIDContains     *pksuid.ID  `json:"workoutIDContains,omitempty"`
+	WorkoutIDHasPrefix    *pksuid.ID  `json:"workoutIDHasPrefix,omitempty"`
+	WorkoutIDHasSuffix    *pksuid.ID  `json:"workoutIDHasSuffix,omitempty"`
+	WorkoutIDIsNil        bool        `json:"workoutIDIsNil,omitempty"`
+	WorkoutIDNotNil       bool        `json:"workoutIDNotNil,omitempty"`
+	WorkoutIDEqualFold    *pksuid.ID  `json:"workoutIDEqualFold,omitempty"`
+	WorkoutIDContainsFold *pksuid.ID  `json:"workoutIDContainsFold,omitempty"`
 
 	// "user_id" field predicates.
-	UserID             *string  `json:"userID,omitempty"`
-	UserIDNEQ          *string  `json:"userIDNEQ,omitempty"`
-	UserIDIn           []string `json:"userIDIn,omitempty"`
-	UserIDNotIn        []string `json:"userIDNotIn,omitempty"`
-	UserIDGT           *string  `json:"userIDGT,omitempty"`
-	UserIDGTE          *string  `json:"userIDGTE,omitempty"`
-	UserIDLT           *string  `json:"userIDLT,omitempty"`
-	UserIDLTE          *string  `json:"userIDLTE,omitempty"`
-	UserIDContains     *string  `json:"userIDContains,omitempty"`
-	UserIDHasPrefix    *string  `json:"userIDHasPrefix,omitempty"`
-	UserIDHasSuffix    *string  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool     `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool     `json:"userIDNotNil,omitempty"`
-	UserIDEqualFold    *string  `json:"userIDEqualFold,omitempty"`
-	UserIDContainsFold *string  `json:"userIDContainsFold,omitempty"`
+	UserID             *pksuid.ID  `json:"userID,omitempty"`
+	UserIDNEQ          *pksuid.ID  `json:"userIDNEQ,omitempty"`
+	UserIDIn           []pksuid.ID `json:"userIDIn,omitempty"`
+	UserIDNotIn        []pksuid.ID `json:"userIDNotIn,omitempty"`
+	UserIDGT           *pksuid.ID  `json:"userIDGT,omitempty"`
+	UserIDGTE          *pksuid.ID  `json:"userIDGTE,omitempty"`
+	UserIDLT           *pksuid.ID  `json:"userIDLT,omitempty"`
+	UserIDLTE          *pksuid.ID  `json:"userIDLTE,omitempty"`
+	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
+	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
+	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
+	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
+	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
+	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
+	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
 	// "users" edge predicates.
 	HasUsers     *bool             `json:"hasUsers,omitempty"`
@@ -4005,12 +3932,6 @@ func (i *WorkoutLogWhereInput) P() (predicate.WorkoutLog, error) {
 	}
 	if i.IDLTE != nil {
 		predicates = append(predicates, workoutlog.IDLTE(*i.IDLTE))
-	}
-	if i.IDEqualFold != nil {
-		predicates = append(predicates, workoutlog.IDEqualFold(*i.IDEqualFold))
-	}
-	if i.IDContainsFold != nil {
-		predicates = append(predicates, workoutlog.IDContainsFold(*i.IDContainsFold))
 	}
 	if i.CreatedAt != nil {
 		predicates = append(predicates, workoutlog.CreatedAtEQ(*i.CreatedAt))

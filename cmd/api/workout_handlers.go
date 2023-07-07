@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/request"
 	"github.com/sahidrahman404/gigachad-api/internal/response"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
@@ -61,7 +62,7 @@ func (app *application) getWorkoutHandler(w http.ResponseWriter, r *http.Request
 	user := app.contextGetUser(r)
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	workout, err := app.storage.Workout.GetForUser(ctx, workoutID, user.Ent.ID)
+	workout, err := app.storage.Workout.GetForUser(ctx, pksuid.ID(workoutID), user.Ent.ID)
 	if err != nil {
 		app.serverError(w, r, err)
 		return

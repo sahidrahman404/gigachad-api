@@ -5,9 +5,6 @@ package ent
 import (
 	"context"
 	"errors"
-	"fmt"
-	"io"
-	"strconv"
 
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
@@ -20,6 +17,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -29,8 +27,8 @@ import (
 
 // Common entgql types.
 type (
-	Cursor         = entgql.Cursor[string]
-	PageInfo       = entgql.PageInfo[string]
+	Cursor         = entgql.Cursor[pksuid.ID]
+	PageInfo       = entgql.PageInfo[pksuid.ID]
 	OrderDirection = entgql.OrderDirection
 )
 
@@ -2298,53 +2296,6 @@ func (w *WorkoutQuery) Paginate(
 	return conn, nil
 }
 
-var (
-	// WorkoutOrderFieldID orders Workout by id.
-	WorkoutOrderFieldID = &WorkoutOrderField{
-		Value: func(w *Workout) (ent.Value, error) {
-			return w.ID, nil
-		},
-		column: workout.FieldID,
-		toTerm: workout.ByID,
-		toCursor: func(w *Workout) Cursor {
-			return Cursor{
-				ID:    w.ID,
-				Value: w.ID,
-			}
-		},
-	}
-)
-
-// String implement fmt.Stringer interface.
-func (f WorkoutOrderField) String() string {
-	var str string
-	switch f.column {
-	case WorkoutOrderFieldID.column:
-		str = "ID"
-	}
-	return str
-}
-
-// MarshalGQL implements graphql.Marshaler interface.
-func (f WorkoutOrderField) MarshalGQL(w io.Writer) {
-	io.WriteString(w, strconv.Quote(f.String()))
-}
-
-// UnmarshalGQL implements graphql.Unmarshaler interface.
-func (f *WorkoutOrderField) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("WorkoutOrderField %T must be a string", v)
-	}
-	switch str {
-	case "ID":
-		*f = *WorkoutOrderFieldID
-	default:
-		return fmt.Errorf("%s is not a valid WorkoutOrderField", str)
-	}
-	return nil
-}
-
 // WorkoutOrderField defines the ordering field of Workout.
 type WorkoutOrderField struct {
 	// Value extracts the ordering value from the given Workout.
@@ -2591,53 +2542,6 @@ func (wl *WorkoutLogQuery) Paginate(
 	}
 	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
-}
-
-var (
-	// WorkoutLogOrderFieldID orders WorkoutLog by id.
-	WorkoutLogOrderFieldID = &WorkoutLogOrderField{
-		Value: func(wl *WorkoutLog) (ent.Value, error) {
-			return wl.ID, nil
-		},
-		column: workoutlog.FieldID,
-		toTerm: workoutlog.ByID,
-		toCursor: func(wl *WorkoutLog) Cursor {
-			return Cursor{
-				ID:    wl.ID,
-				Value: wl.ID,
-			}
-		},
-	}
-)
-
-// String implement fmt.Stringer interface.
-func (f WorkoutLogOrderField) String() string {
-	var str string
-	switch f.column {
-	case WorkoutLogOrderFieldID.column:
-		str = "ID"
-	}
-	return str
-}
-
-// MarshalGQL implements graphql.Marshaler interface.
-func (f WorkoutLogOrderField) MarshalGQL(w io.Writer) {
-	io.WriteString(w, strconv.Quote(f.String()))
-}
-
-// UnmarshalGQL implements graphql.Unmarshaler interface.
-func (f *WorkoutLogOrderField) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("WorkoutLogOrderField %T must be a string", v)
-	}
-	switch str {
-	case "ID":
-		*f = *WorkoutLogOrderFieldID
-	default:
-		return fmt.Errorf("%s is not a valid WorkoutLogOrderField", str)
-	}
-	return nil
 }
 
 // WorkoutLogOrderField defines the ordering field of WorkoutLog.

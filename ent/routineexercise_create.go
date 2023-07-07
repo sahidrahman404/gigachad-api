@@ -12,6 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
@@ -44,47 +45,47 @@ func (rec *RoutineExerciseCreate) SetSets(s *schematype.Sets) *RoutineExerciseCr
 }
 
 // SetRoutineID sets the "routine_id" field.
-func (rec *RoutineExerciseCreate) SetRoutineID(s string) *RoutineExerciseCreate {
-	rec.mutation.SetRoutineID(s)
+func (rec *RoutineExerciseCreate) SetRoutineID(pk pksuid.ID) *RoutineExerciseCreate {
+	rec.mutation.SetRoutineID(pk)
 	return rec
 }
 
 // SetExerciseID sets the "exercise_id" field.
-func (rec *RoutineExerciseCreate) SetExerciseID(s string) *RoutineExerciseCreate {
-	rec.mutation.SetExerciseID(s)
+func (rec *RoutineExerciseCreate) SetExerciseID(pk pksuid.ID) *RoutineExerciseCreate {
+	rec.mutation.SetExerciseID(pk)
 	return rec
 }
 
 // SetUserID sets the "user_id" field.
-func (rec *RoutineExerciseCreate) SetUserID(s string) *RoutineExerciseCreate {
-	rec.mutation.SetUserID(s)
+func (rec *RoutineExerciseCreate) SetUserID(pk pksuid.ID) *RoutineExerciseCreate {
+	rec.mutation.SetUserID(pk)
 	return rec
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableUserID(s *string) *RoutineExerciseCreate {
-	if s != nil {
-		rec.SetUserID(*s)
+func (rec *RoutineExerciseCreate) SetNillableUserID(pk *pksuid.ID) *RoutineExerciseCreate {
+	if pk != nil {
+		rec.SetUserID(*pk)
 	}
 	return rec
 }
 
 // SetID sets the "id" field.
-func (rec *RoutineExerciseCreate) SetID(s string) *RoutineExerciseCreate {
-	rec.mutation.SetID(s)
+func (rec *RoutineExerciseCreate) SetID(pk pksuid.ID) *RoutineExerciseCreate {
+	rec.mutation.SetID(pk)
 	return rec
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableID(s *string) *RoutineExerciseCreate {
-	if s != nil {
-		rec.SetID(*s)
+func (rec *RoutineExerciseCreate) SetNillableID(pk *pksuid.ID) *RoutineExerciseCreate {
+	if pk != nil {
+		rec.SetID(*pk)
 	}
 	return rec
 }
 
 // SetRoutinesID sets the "routines" edge to the Routine entity by ID.
-func (rec *RoutineExerciseCreate) SetRoutinesID(id string) *RoutineExerciseCreate {
+func (rec *RoutineExerciseCreate) SetRoutinesID(id pksuid.ID) *RoutineExerciseCreate {
 	rec.mutation.SetRoutinesID(id)
 	return rec
 }
@@ -95,7 +96,7 @@ func (rec *RoutineExerciseCreate) SetRoutines(r *Routine) *RoutineExerciseCreate
 }
 
 // SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
-func (rec *RoutineExerciseCreate) SetExercisesID(id string) *RoutineExerciseCreate {
+func (rec *RoutineExerciseCreate) SetExercisesID(id pksuid.ID) *RoutineExerciseCreate {
 	rec.mutation.SetExercisesID(id)
 	return rec
 }
@@ -106,13 +107,13 @@ func (rec *RoutineExerciseCreate) SetExercises(e *Exercise) *RoutineExerciseCrea
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (rec *RoutineExerciseCreate) SetUsersID(id string) *RoutineExerciseCreate {
+func (rec *RoutineExerciseCreate) SetUsersID(id pksuid.ID) *RoutineExerciseCreate {
 	rec.mutation.SetUsersID(id)
 	return rec
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableUsersID(id *string) *RoutineExerciseCreate {
+func (rec *RoutineExerciseCreate) SetNillableUsersID(id *pksuid.ID) *RoutineExerciseCreate {
 	if id != nil {
 		rec = rec.SetUsersID(*id)
 	}
@@ -197,10 +198,10 @@ func (rec *RoutineExerciseCreate) sqlSave(ctx context.Context) (*RoutineExercise
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected RoutineExercise.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	rec.mutation.id = &_node.ID
@@ -215,7 +216,7 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 	)
 	if id, ok := rec.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := rec.mutation.RestTimer(); ok {
 		_spec.SetField(routineexercise.FieldRestTimer, field.TypeString, value)

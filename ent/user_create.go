@@ -12,6 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -92,28 +93,28 @@ func (uc *UserCreate) SetNillableVersion(i *int) *UserCreate {
 }
 
 // SetID sets the "id" field.
-func (uc *UserCreate) SetID(s string) *UserCreate {
-	uc.mutation.SetID(s)
+func (uc *UserCreate) SetID(pk pksuid.ID) *UserCreate {
+	uc.mutation.SetID(pk)
 	return uc
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (uc *UserCreate) SetNillableID(s *string) *UserCreate {
-	if s != nil {
-		uc.SetID(*s)
+func (uc *UserCreate) SetNillableID(pk *pksuid.ID) *UserCreate {
+	if pk != nil {
+		uc.SetID(*pk)
 	}
 	return uc
 }
 
 // AddTokenIDs adds the "tokens" edge to the Token entity by IDs.
-func (uc *UserCreate) AddTokenIDs(ids ...string) *UserCreate {
+func (uc *UserCreate) AddTokenIDs(ids ...pksuid.ID) *UserCreate {
 	uc.mutation.AddTokenIDs(ids...)
 	return uc
 }
 
 // AddTokens adds the "tokens" edges to the Token entity.
 func (uc *UserCreate) AddTokens(t ...*Token) *UserCreate {
-	ids := make([]string, len(t))
+	ids := make([]pksuid.ID, len(t))
 	for i := range t {
 		ids[i] = t[i].ID
 	}
@@ -121,14 +122,14 @@ func (uc *UserCreate) AddTokens(t ...*Token) *UserCreate {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (uc *UserCreate) AddExerciseIDs(ids ...string) *UserCreate {
+func (uc *UserCreate) AddExerciseIDs(ids ...pksuid.ID) *UserCreate {
 	uc.mutation.AddExerciseIDs(ids...)
 	return uc
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (uc *UserCreate) AddExercises(e ...*Exercise) *UserCreate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -136,14 +137,14 @@ func (uc *UserCreate) AddExercises(e ...*Exercise) *UserCreate {
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
-func (uc *UserCreate) AddRoutineIDs(ids ...string) *UserCreate {
+func (uc *UserCreate) AddRoutineIDs(ids ...pksuid.ID) *UserCreate {
 	uc.mutation.AddRoutineIDs(ids...)
 	return uc
 }
 
 // AddRoutines adds the "routines" edges to the Routine entity.
 func (uc *UserCreate) AddRoutines(r ...*Routine) *UserCreate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -151,14 +152,14 @@ func (uc *UserCreate) AddRoutines(r ...*Routine) *UserCreate {
 }
 
 // AddWorkoutIDs adds the "workouts" edge to the Workout entity by IDs.
-func (uc *UserCreate) AddWorkoutIDs(ids ...string) *UserCreate {
+func (uc *UserCreate) AddWorkoutIDs(ids ...pksuid.ID) *UserCreate {
 	uc.mutation.AddWorkoutIDs(ids...)
 	return uc
 }
 
 // AddWorkouts adds the "workouts" edges to the Workout entity.
 func (uc *UserCreate) AddWorkouts(w ...*Workout) *UserCreate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -166,14 +167,14 @@ func (uc *UserCreate) AddWorkouts(w ...*Workout) *UserCreate {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (uc *UserCreate) AddWorkoutLogIDs(ids ...string) *UserCreate {
+func (uc *UserCreate) AddWorkoutLogIDs(ids ...pksuid.ID) *UserCreate {
 	uc.mutation.AddWorkoutLogIDs(ids...)
 	return uc
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (uc *UserCreate) AddWorkoutLogs(w ...*WorkoutLog) *UserCreate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -181,14 +182,14 @@ func (uc *UserCreate) AddWorkoutLogs(w ...*WorkoutLog) *UserCreate {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (uc *UserCreate) AddRoutineExerciseIDs(ids ...string) *UserCreate {
+func (uc *UserCreate) AddRoutineExerciseIDs(ids ...pksuid.ID) *UserCreate {
 	uc.mutation.AddRoutineExerciseIDs(ids...)
 	return uc
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (uc *UserCreate) AddRoutineExercises(r ...*RoutineExercise) *UserCreate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -286,10 +287,10 @@ func (uc *UserCreate) sqlSave(ctx context.Context) (*User, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected User.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	uc.mutation.id = &_node.ID
@@ -304,7 +305,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	)
 	if id, ok := uc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := uc.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)

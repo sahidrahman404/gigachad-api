@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/request"
 	"github.com/sahidrahman404/gigachad-api/internal/response"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
@@ -57,7 +58,7 @@ func (app *application) getRoutineExerciseHandler(w http.ResponseWriter, r *http
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	routineExercises, err := app.storage.RoutineExercise.GetAllForRoutine(ctx, routineID)
+	routineExercises, err := app.storage.RoutineExercise.GetAllForRoutine(ctx, pksuid.ID(routineID))
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -86,7 +87,7 @@ func (app *application) updateRoutineExerciseHandler(w http.ResponseWriter, r *h
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	err = app.storage.RoutineExercise.Update(ctx, routineExercise, routineExerciseID)
+	err = app.storage.RoutineExercise.Update(ctx, routineExercise, pksuid.ID(routineExerciseID))
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -107,7 +108,7 @@ func (app *application) deleteRoutineExerciseHandler(w http.ResponseWriter, r *h
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	err = app.storage.RoutineExercise.Delete(ctx, routineExerciseID)
+	err = app.storage.RoutineExercise.Delete(ctx, pksuid.ID(routineExerciseID))
 	if err != nil {
 		app.serverError(w, r, err)
 	}

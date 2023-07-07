@@ -8,6 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
@@ -16,7 +17,7 @@ import (
 type Token struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// Hash holds the value of the "hash" field.
 	Hash []byte `json:"hash,omitempty"`
 	// Expiry holds the value of the "expiry" field.
@@ -24,7 +25,7 @@ type Token struct {
 	// Scope holds the value of the "scope" field.
 	Scope string `json:"scope,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID string `json:"user_id,omitempty"`
+	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TokenQuery when eager-loading is set.
 	Edges        TokenEdges `json:"edges"`
@@ -62,7 +63,9 @@ func (*Token) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case token.FieldHash:
 			values[i] = new([]byte)
-		case token.FieldID, token.FieldExpiry, token.FieldScope, token.FieldUserID:
+		case token.FieldID, token.FieldUserID:
+			values[i] = new(pksuid.ID)
+		case token.FieldExpiry, token.FieldScope:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -80,10 +83,10 @@ func (t *Token) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case token.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				t.ID = value.String
+			} else if value != nil {
+				t.ID = *value
 			}
 		case token.FieldHash:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -104,10 +107,10 @@ func (t *Token) assignValues(columns []string, values []any) error {
 				t.Scope = value.String
 			}
 		case token.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value.Valid {
-				t.UserID = value.String
+			} else if value != nil {
+				t.UserID = *value
 			}
 		default:
 			t.selectValues.Set(columns[i], values[i])
@@ -160,7 +163,7 @@ func (t *Token) String() string {
 	builder.WriteString(t.Scope)
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(t.UserID)
+	builder.WriteString(fmt.Sprintf("%v", t.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

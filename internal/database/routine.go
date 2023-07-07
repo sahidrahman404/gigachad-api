@@ -5,16 +5,17 @@ import (
 
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 type RoutineStorer interface {
 	Insert(context.Context, *types.Routine) error
-	GetForUser(context.Context, string, string) (*types.Routine, error)
-	Update(context.Context, *types.Routine, string) error
-	Delete(context.Context, string) error
-	GetAllForUser(context.Context, string) ([]*types.Routine, error)
+	GetForUser(context.Context, pksuid.ID, pksuid.ID) (*types.Routine, error)
+	Update(context.Context, *types.Routine, pksuid.ID) error
+	Delete(context.Context, pksuid.ID) error
+	GetAllForUser(context.Context, pksuid.ID) ([]*types.Routine, error)
 }
 
 type RoutineStore struct {
@@ -38,8 +39,8 @@ func (e *RoutineStore) Insert(ctx context.Context, r *types.Routine) error {
 
 func (e *RoutineStore) GetForUser(
 	ctx context.Context,
-	routineID string,
-	userID string,
+	routineID pksuid.ID,
+	userID pksuid.ID,
 ) (*types.Routine, error) {
 	r, err := e.Client.Routine.Query().
 		Where(routine.ID(routineID), routine.UserID(userID)).
@@ -57,7 +58,7 @@ func (e *RoutineStore) GetForUser(
 	}, nil
 }
 
-func (e *RoutineStore) Update(ctx context.Context, r *types.Routine, routineID string) error {
+func (e *RoutineStore) Update(ctx context.Context, r *types.Routine, routineID pksuid.ID) error {
 	_, err := e.Client.Routine.UpdateOneID(routineID).
 		SetName(r.Ent.Name).
 		SetUserID(r.Ent.UserID).
@@ -68,7 +69,7 @@ func (e *RoutineStore) Update(ctx context.Context, r *types.Routine, routineID s
 	return nil
 }
 
-func (e *RoutineStore) Delete(ctx context.Context, routineID string) error {
+func (e *RoutineStore) Delete(ctx context.Context, routineID pksuid.ID) error {
 	err := e.Client.Routine.DeleteOneID(routineID).Exec(ctx)
 	if err != nil {
 		return err
@@ -76,7 +77,10 @@ func (e *RoutineStore) Delete(ctx context.Context, routineID string) error {
 	return nil
 }
 
-func (e *RoutineStore) GetAllForUser(ctx context.Context, userID string) ([]*types.Routine, error) {
+func (e *RoutineStore) GetAllForUser(
+	ctx context.Context,
+	userID pksuid.ID,
+) ([]*types.Routine, error) {
 	routine, err := e.Client.Routine.Query().
 		Where(routine.HasUsersWith(user.ID(userID))).
 		All(ctx)

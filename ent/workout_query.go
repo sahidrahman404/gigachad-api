@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -133,8 +134,8 @@ func (wq *WorkoutQuery) FirstX(ctx context.Context) *Workout {
 
 // FirstID returns the first Workout ID from the query.
 // Returns a *NotFoundError when no Workout ID was found.
-func (wq *WorkoutQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (wq *WorkoutQuery) FirstID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = wq.Limit(1).IDs(setContextOp(ctx, wq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -146,7 +147,7 @@ func (wq *WorkoutQuery) FirstID(ctx context.Context) (id string, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (wq *WorkoutQuery) FirstIDX(ctx context.Context) string {
+func (wq *WorkoutQuery) FirstIDX(ctx context.Context) pksuid.ID {
 	id, err := wq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -184,8 +185,8 @@ func (wq *WorkoutQuery) OnlyX(ctx context.Context) *Workout {
 // OnlyID is like Only, but returns the only Workout ID in the query.
 // Returns a *NotSingularError when more than one Workout ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (wq *WorkoutQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (wq *WorkoutQuery) OnlyID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = wq.Limit(2).IDs(setContextOp(ctx, wq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -201,7 +202,7 @@ func (wq *WorkoutQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (wq *WorkoutQuery) OnlyIDX(ctx context.Context) string {
+func (wq *WorkoutQuery) OnlyIDX(ctx context.Context) pksuid.ID {
 	id, err := wq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -229,7 +230,7 @@ func (wq *WorkoutQuery) AllX(ctx context.Context) []*Workout {
 }
 
 // IDs executes the query and returns a list of Workout IDs.
-func (wq *WorkoutQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (wq *WorkoutQuery) IDs(ctx context.Context) (ids []pksuid.ID, err error) {
 	if wq.ctx.Unique == nil && wq.path != nil {
 		wq.Unique(true)
 	}
@@ -241,7 +242,7 @@ func (wq *WorkoutQuery) IDs(ctx context.Context) (ids []string, err error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (wq *WorkoutQuery) IDsX(ctx context.Context) []string {
+func (wq *WorkoutQuery) IDsX(ctx context.Context) []pksuid.ID {
 	ids, err := wq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -464,8 +465,8 @@ func (wq *WorkoutQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Work
 }
 
 func (wq *WorkoutQuery) loadUsers(ctx context.Context, query *UserQuery, nodes []*Workout, init func(*Workout), assign func(*Workout, *User)) error {
-	ids := make([]string, 0, len(nodes))
-	nodeids := make(map[string][]*Workout)
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*Workout)
 	for i := range nodes {
 		fk := nodes[i].UserID
 		if _, ok := nodeids[fk]; !ok {
@@ -494,7 +495,7 @@ func (wq *WorkoutQuery) loadUsers(ctx context.Context, query *UserQuery, nodes [
 }
 func (wq *WorkoutQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQuery, nodes []*Workout, init func(*Workout), assign func(*Workout, *WorkoutLog)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*Workout)
+	nodeids := make(map[pksuid.ID]*Workout)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
 
@@ -15,7 +16,7 @@ type Token struct {
 	Plaintext string
 }
 
-func GenerateToken(userID string, ttl time.Duration, scope string) (*Token, error) {
+func GenerateToken(userID pksuid.ID, ttl time.Duration, scope string) (*Token, error) {
 	token := &Token{
 		Ent: &ent.Token{
 			UserID: userID,

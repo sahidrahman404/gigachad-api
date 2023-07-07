@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -37,15 +38,15 @@ func (ru *RoutineUpdate) SetName(s string) *RoutineUpdate {
 }
 
 // SetUserID sets the "user_id" field.
-func (ru *RoutineUpdate) SetUserID(s string) *RoutineUpdate {
-	ru.mutation.SetUserID(s)
+func (ru *RoutineUpdate) SetUserID(pk pksuid.ID) *RoutineUpdate {
+	ru.mutation.SetUserID(pk)
 	return ru
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (ru *RoutineUpdate) SetNillableUserID(s *string) *RoutineUpdate {
-	if s != nil {
-		ru.SetUserID(*s)
+func (ru *RoutineUpdate) SetNillableUserID(pk *pksuid.ID) *RoutineUpdate {
+	if pk != nil {
+		ru.SetUserID(*pk)
 	}
 	return ru
 }
@@ -57,14 +58,14 @@ func (ru *RoutineUpdate) ClearUserID() *RoutineUpdate {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (ru *RoutineUpdate) AddExerciseIDs(ids ...string) *RoutineUpdate {
+func (ru *RoutineUpdate) AddExerciseIDs(ids ...pksuid.ID) *RoutineUpdate {
 	ru.mutation.AddExerciseIDs(ids...)
 	return ru
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (ru *RoutineUpdate) AddExercises(e ...*Exercise) *RoutineUpdate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -72,13 +73,13 @@ func (ru *RoutineUpdate) AddExercises(e ...*Exercise) *RoutineUpdate {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (ru *RoutineUpdate) SetUsersID(id string) *RoutineUpdate {
+func (ru *RoutineUpdate) SetUsersID(id pksuid.ID) *RoutineUpdate {
 	ru.mutation.SetUsersID(id)
 	return ru
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (ru *RoutineUpdate) SetNillableUsersID(id *string) *RoutineUpdate {
+func (ru *RoutineUpdate) SetNillableUsersID(id *pksuid.ID) *RoutineUpdate {
 	if id != nil {
 		ru = ru.SetUsersID(*id)
 	}
@@ -91,14 +92,14 @@ func (ru *RoutineUpdate) SetUsers(u *User) *RoutineUpdate {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (ru *RoutineUpdate) AddRoutineExerciseIDs(ids ...string) *RoutineUpdate {
+func (ru *RoutineUpdate) AddRoutineExerciseIDs(ids ...pksuid.ID) *RoutineUpdate {
 	ru.mutation.AddRoutineExerciseIDs(ids...)
 	return ru
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (ru *RoutineUpdate) AddRoutineExercises(r ...*RoutineExercise) *RoutineUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -117,14 +118,14 @@ func (ru *RoutineUpdate) ClearExercises() *RoutineUpdate {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
-func (ru *RoutineUpdate) RemoveExerciseIDs(ids ...string) *RoutineUpdate {
+func (ru *RoutineUpdate) RemoveExerciseIDs(ids ...pksuid.ID) *RoutineUpdate {
 	ru.mutation.RemoveExerciseIDs(ids...)
 	return ru
 }
 
 // RemoveExercises removes "exercises" edges to Exercise entities.
 func (ru *RoutineUpdate) RemoveExercises(e ...*Exercise) *RoutineUpdate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -144,14 +145,14 @@ func (ru *RoutineUpdate) ClearRoutineExercises() *RoutineUpdate {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to RoutineExercise entities by IDs.
-func (ru *RoutineUpdate) RemoveRoutineExerciseIDs(ids ...string) *RoutineUpdate {
+func (ru *RoutineUpdate) RemoveRoutineExerciseIDs(ids ...pksuid.ID) *RoutineUpdate {
 	ru.mutation.RemoveRoutineExerciseIDs(ids...)
 	return ru
 }
 
 // RemoveRoutineExercises removes "routine_exercises" edges to RoutineExercise entities.
 func (ru *RoutineUpdate) RemoveRoutineExercises(r ...*RoutineExercise) *RoutineUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -364,15 +365,15 @@ func (ruo *RoutineUpdateOne) SetName(s string) *RoutineUpdateOne {
 }
 
 // SetUserID sets the "user_id" field.
-func (ruo *RoutineUpdateOne) SetUserID(s string) *RoutineUpdateOne {
-	ruo.mutation.SetUserID(s)
+func (ruo *RoutineUpdateOne) SetUserID(pk pksuid.ID) *RoutineUpdateOne {
+	ruo.mutation.SetUserID(pk)
 	return ruo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (ruo *RoutineUpdateOne) SetNillableUserID(s *string) *RoutineUpdateOne {
-	if s != nil {
-		ruo.SetUserID(*s)
+func (ruo *RoutineUpdateOne) SetNillableUserID(pk *pksuid.ID) *RoutineUpdateOne {
+	if pk != nil {
+		ruo.SetUserID(*pk)
 	}
 	return ruo
 }
@@ -384,14 +385,14 @@ func (ruo *RoutineUpdateOne) ClearUserID() *RoutineUpdateOne {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (ruo *RoutineUpdateOne) AddExerciseIDs(ids ...string) *RoutineUpdateOne {
+func (ruo *RoutineUpdateOne) AddExerciseIDs(ids ...pksuid.ID) *RoutineUpdateOne {
 	ruo.mutation.AddExerciseIDs(ids...)
 	return ruo
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (ruo *RoutineUpdateOne) AddExercises(e ...*Exercise) *RoutineUpdateOne {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -399,13 +400,13 @@ func (ruo *RoutineUpdateOne) AddExercises(e ...*Exercise) *RoutineUpdateOne {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (ruo *RoutineUpdateOne) SetUsersID(id string) *RoutineUpdateOne {
+func (ruo *RoutineUpdateOne) SetUsersID(id pksuid.ID) *RoutineUpdateOne {
 	ruo.mutation.SetUsersID(id)
 	return ruo
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (ruo *RoutineUpdateOne) SetNillableUsersID(id *string) *RoutineUpdateOne {
+func (ruo *RoutineUpdateOne) SetNillableUsersID(id *pksuid.ID) *RoutineUpdateOne {
 	if id != nil {
 		ruo = ruo.SetUsersID(*id)
 	}
@@ -418,14 +419,14 @@ func (ruo *RoutineUpdateOne) SetUsers(u *User) *RoutineUpdateOne {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (ruo *RoutineUpdateOne) AddRoutineExerciseIDs(ids ...string) *RoutineUpdateOne {
+func (ruo *RoutineUpdateOne) AddRoutineExerciseIDs(ids ...pksuid.ID) *RoutineUpdateOne {
 	ruo.mutation.AddRoutineExerciseIDs(ids...)
 	return ruo
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (ruo *RoutineUpdateOne) AddRoutineExercises(r ...*RoutineExercise) *RoutineUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -444,14 +445,14 @@ func (ruo *RoutineUpdateOne) ClearExercises() *RoutineUpdateOne {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
-func (ruo *RoutineUpdateOne) RemoveExerciseIDs(ids ...string) *RoutineUpdateOne {
+func (ruo *RoutineUpdateOne) RemoveExerciseIDs(ids ...pksuid.ID) *RoutineUpdateOne {
 	ruo.mutation.RemoveExerciseIDs(ids...)
 	return ruo
 }
 
 // RemoveExercises removes "exercises" edges to Exercise entities.
 func (ruo *RoutineUpdateOne) RemoveExercises(e ...*Exercise) *RoutineUpdateOne {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -471,14 +472,14 @@ func (ruo *RoutineUpdateOne) ClearRoutineExercises() *RoutineUpdateOne {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to RoutineExercise entities by IDs.
-func (ruo *RoutineUpdateOne) RemoveRoutineExerciseIDs(ids ...string) *RoutineUpdateOne {
+func (ruo *RoutineUpdateOne) RemoveRoutineExerciseIDs(ids ...pksuid.ID) *RoutineUpdateOne {
 	ruo.mutation.RemoveRoutineExerciseIDs(ids...)
 	return ruo
 }
 
 // RemoveRoutineExercises removes "routine_exercises" edges to RoutineExercise entities.
 func (ruo *RoutineUpdateOne) RemoveRoutineExercises(r ...*RoutineExercise) *RoutineUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}

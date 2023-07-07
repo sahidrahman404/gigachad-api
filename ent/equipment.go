@@ -9,13 +9,14 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // Equipment is the model entity for the Equipment schema.
 type Equipment struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Image holds the value of the "image" field.
@@ -53,7 +54,9 @@ func (*Equipment) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case equipment.FieldID, equipment.FieldName, equipment.FieldImage:
+		case equipment.FieldID:
+			values[i] = new(pksuid.ID)
+		case equipment.FieldName, equipment.FieldImage:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -71,10 +74,10 @@ func (e *Equipment) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case equipment.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				e.ID = value.String
+			} else if value != nil {
+				e.ID = *value
 			}
 		case equipment.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {

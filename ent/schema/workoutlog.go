@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
@@ -14,16 +15,21 @@ type WorkoutLog struct {
 	ent.Schema
 }
 
+func (WorkoutLog) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		pksuid.MixinWithPrefix("WL"),
+	}
+}
+
 // Fields of the WorkoutLog.
 func (WorkoutLog) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").DefaultFunc(generateKSUID).Annotations(entgql.OrderField("ID")),
 		field.JSON("sets", &schematype.Sets{}).Annotations(entgql.Type("[Set!]")),
 		field.String("created_at").DefaultFunc(generateTime).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
-		field.String("exercise_id").Optional(),
-		field.String("workout_id").Optional(),
-		field.String("user_id").Optional(),
+		field.String("exercise_id").Optional().GoType(pksuid.ID("")),
+		field.String("workout_id").Optional().GoType(pksuid.ID("")),
+		field.String("user_id").Optional().GoType(pksuid.ID("")),
 	}
 }
 

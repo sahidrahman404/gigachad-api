@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // ExerciseTypeUpdate is the builder for updating ExerciseType entities.
@@ -54,14 +55,14 @@ func (etu *ExerciseTypeUpdate) SetDescription(s string) *ExerciseTypeUpdate {
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (etu *ExerciseTypeUpdate) AddExerciseIDs(ids ...string) *ExerciseTypeUpdate {
+func (etu *ExerciseTypeUpdate) AddExerciseIDs(ids ...pksuid.ID) *ExerciseTypeUpdate {
 	etu.mutation.AddExerciseIDs(ids...)
 	return etu
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (etu *ExerciseTypeUpdate) AddExercises(e ...*Exercise) *ExerciseTypeUpdate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -80,14 +81,14 @@ func (etu *ExerciseTypeUpdate) ClearExercises() *ExerciseTypeUpdate {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
-func (etu *ExerciseTypeUpdate) RemoveExerciseIDs(ids ...string) *ExerciseTypeUpdate {
+func (etu *ExerciseTypeUpdate) RemoveExerciseIDs(ids ...pksuid.ID) *ExerciseTypeUpdate {
 	etu.mutation.RemoveExerciseIDs(ids...)
 	return etu
 }
 
 // RemoveExercises removes "exercises" edges to Exercise entities.
 func (etu *ExerciseTypeUpdate) RemoveExercises(e ...*Exercise) *ExerciseTypeUpdate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -234,14 +235,14 @@ func (etuo *ExerciseTypeUpdateOne) SetDescription(s string) *ExerciseTypeUpdateO
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (etuo *ExerciseTypeUpdateOne) AddExerciseIDs(ids ...string) *ExerciseTypeUpdateOne {
+func (etuo *ExerciseTypeUpdateOne) AddExerciseIDs(ids ...pksuid.ID) *ExerciseTypeUpdateOne {
 	etuo.mutation.AddExerciseIDs(ids...)
 	return etuo
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (etuo *ExerciseTypeUpdateOne) AddExercises(e ...*Exercise) *ExerciseTypeUpdateOne {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -260,14 +261,14 @@ func (etuo *ExerciseTypeUpdateOne) ClearExercises() *ExerciseTypeUpdateOne {
 }
 
 // RemoveExerciseIDs removes the "exercises" edge to Exercise entities by IDs.
-func (etuo *ExerciseTypeUpdateOne) RemoveExerciseIDs(ids ...string) *ExerciseTypeUpdateOne {
+func (etuo *ExerciseTypeUpdateOne) RemoveExerciseIDs(ids ...pksuid.ID) *ExerciseTypeUpdateOne {
 	etuo.mutation.RemoveExerciseIDs(ids...)
 	return etuo
 }
 
 // RemoveExercises removes "exercises" edges to Exercise entities.
 func (etuo *ExerciseTypeUpdateOne) RemoveExercises(e ...*Exercise) *ExerciseTypeUpdateOne {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}

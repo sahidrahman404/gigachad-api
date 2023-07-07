@@ -5,7 +5,6 @@ package ent
 import (
 	"context"
 
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
@@ -1087,28 +1086,6 @@ func newWorkoutPaginateArgs(rv map[string]any) *workoutPaginateArgs {
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
-	if v, ok := rv[orderByField]; ok {
-		switch v := v.(type) {
-		case map[string]any:
-			var (
-				err1, err2 error
-				order      = &WorkoutOrder{Field: &WorkoutOrderField{}, Direction: entgql.OrderDirectionAsc}
-			)
-			if d, ok := v[directionField]; ok {
-				err1 = order.Direction.UnmarshalGQL(d)
-			}
-			if f, ok := v[fieldField]; ok {
-				err2 = order.Field.UnmarshalGQL(f)
-			}
-			if err1 == nil && err2 == nil {
-				args.opts = append(args.opts, WithWorkoutOrder(order))
-			}
-		case *WorkoutOrder:
-			if v != nil {
-				args.opts = append(args.opts, WithWorkoutOrder(v))
-			}
-		}
-	}
 	if v, ok := rv[whereField].(*WorkoutWhereInput); ok {
 		args.opts = append(args.opts, WithWorkoutFilter(v.Filter))
 	}
@@ -1237,28 +1214,6 @@ func newWorkoutLogPaginateArgs(rv map[string]any) *workoutlogPaginateArgs {
 	}
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
-	}
-	if v, ok := rv[orderByField]; ok {
-		switch v := v.(type) {
-		case map[string]any:
-			var (
-				err1, err2 error
-				order      = &WorkoutLogOrder{Field: &WorkoutLogOrderField{}, Direction: entgql.OrderDirectionAsc}
-			)
-			if d, ok := v[directionField]; ok {
-				err1 = order.Direction.UnmarshalGQL(d)
-			}
-			if f, ok := v[fieldField]; ok {
-				err2 = order.Field.UnmarshalGQL(f)
-			}
-			if err1 == nil && err2 == nil {
-				args.opts = append(args.opts, WithWorkoutLogOrder(order))
-			}
-		case *WorkoutLogOrder:
-			if v != nil {
-				args.opts = append(args.opts, WithWorkoutLogOrder(v))
-			}
-		}
 	}
 	if v, ok := rv[whereField].(*WorkoutLogWhereInput); ok {
 		args.opts = append(args.opts, WithWorkoutLogFilter(v.Filter))

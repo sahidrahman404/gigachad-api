@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
@@ -20,17 +21,17 @@ import (
 type WorkoutLog struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// Sets holds the value of the "sets" field.
 	Sets *schematype.Sets `json:"sets,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt string `json:"created_at,omitempty"`
 	// ExerciseID holds the value of the "exercise_id" field.
-	ExerciseID string `json:"exercise_id,omitempty"`
+	ExerciseID pksuid.ID `json:"exercise_id,omitempty"`
 	// WorkoutID holds the value of the "workout_id" field.
-	WorkoutID string `json:"workout_id,omitempty"`
+	WorkoutID pksuid.ID `json:"workout_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID string `json:"user_id,omitempty"`
+	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the WorkoutLogQuery when eager-loading is set.
 	Edges        WorkoutLogEdges `json:"edges"`
@@ -98,7 +99,9 @@ func (*WorkoutLog) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case workoutlog.FieldSets:
 			values[i] = new([]byte)
-		case workoutlog.FieldID, workoutlog.FieldCreatedAt, workoutlog.FieldExerciseID, workoutlog.FieldWorkoutID, workoutlog.FieldUserID:
+		case workoutlog.FieldID, workoutlog.FieldExerciseID, workoutlog.FieldWorkoutID, workoutlog.FieldUserID:
+			values[i] = new(pksuid.ID)
+		case workoutlog.FieldCreatedAt:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -116,10 +119,10 @@ func (wl *WorkoutLog) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case workoutlog.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				wl.ID = value.String
+			} else if value != nil {
+				wl.ID = *value
 			}
 		case workoutlog.FieldSets:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -136,22 +139,22 @@ func (wl *WorkoutLog) assignValues(columns []string, values []any) error {
 				wl.CreatedAt = value.String
 			}
 		case workoutlog.FieldExerciseID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field exercise_id", values[i])
-			} else if value.Valid {
-				wl.ExerciseID = value.String
+			} else if value != nil {
+				wl.ExerciseID = *value
 			}
 		case workoutlog.FieldWorkoutID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field workout_id", values[i])
-			} else if value.Valid {
-				wl.WorkoutID = value.String
+			} else if value != nil {
+				wl.WorkoutID = *value
 			}
 		case workoutlog.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value.Valid {
-				wl.UserID = value.String
+			} else if value != nil {
+				wl.UserID = *value
 			}
 		default:
 			wl.selectValues.Set(columns[i], values[i])
@@ -211,13 +214,13 @@ func (wl *WorkoutLog) String() string {
 	builder.WriteString(wl.CreatedAt)
 	builder.WriteString(", ")
 	builder.WriteString("exercise_id=")
-	builder.WriteString(wl.ExerciseID)
+	builder.WriteString(fmt.Sprintf("%v", wl.ExerciseID))
 	builder.WriteString(", ")
 	builder.WriteString("workout_id=")
-	builder.WriteString(wl.WorkoutID)
+	builder.WriteString(fmt.Sprintf("%v", wl.WorkoutID))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(wl.UserID)
+	builder.WriteString(fmt.Sprintf("%v", wl.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -7,6 +7,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // Muscles_Group holds the schema definition for the Muscles_Group entity.
@@ -14,10 +15,15 @@ type MusclesGroup struct {
 	ent.Schema
 }
 
+func (MusclesGroup) Mixin() []ent.Mixin {
+	return []ent.Mixin{
+		pksuid.MixinWithPrefix("MG"),
+	}
+}
+
 // Fields of the Muscles_Group.
 func (MusclesGroup) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id").DefaultFunc(generateKSUID),
 		field.String("name"),
 		field.String("image"),
 	}

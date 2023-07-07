@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/request"
 	"github.com/sahidrahman404/gigachad-api/internal/response"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
@@ -77,7 +78,7 @@ func (app *application) updateExerciseHandler(w http.ResponseWriter, r *http.Req
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	exercise, err := app.storage.Exercise.Get(ctx, exerciseID)
+	exercise, err := app.storage.Exercise.Get(ctx, pksuid.ID(exerciseID))
 	if err != nil {
 		app.serverError(w, r, err)
 		return

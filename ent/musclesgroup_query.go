@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // MusclesGroupQuery is the builder for querying MusclesGroup entities.
@@ -109,8 +110,8 @@ func (mgq *MusclesGroupQuery) FirstX(ctx context.Context) *MusclesGroup {
 
 // FirstID returns the first MusclesGroup ID from the query.
 // Returns a *NotFoundError when no MusclesGroup ID was found.
-func (mgq *MusclesGroupQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (mgq *MusclesGroupQuery) FirstID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = mgq.Limit(1).IDs(setContextOp(ctx, mgq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -122,7 +123,7 @@ func (mgq *MusclesGroupQuery) FirstID(ctx context.Context) (id string, err error
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (mgq *MusclesGroupQuery) FirstIDX(ctx context.Context) string {
+func (mgq *MusclesGroupQuery) FirstIDX(ctx context.Context) pksuid.ID {
 	id, err := mgq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -160,8 +161,8 @@ func (mgq *MusclesGroupQuery) OnlyX(ctx context.Context) *MusclesGroup {
 // OnlyID is like Only, but returns the only MusclesGroup ID in the query.
 // Returns a *NotSingularError when more than one MusclesGroup ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (mgq *MusclesGroupQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (mgq *MusclesGroupQuery) OnlyID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = mgq.Limit(2).IDs(setContextOp(ctx, mgq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -177,7 +178,7 @@ func (mgq *MusclesGroupQuery) OnlyID(ctx context.Context) (id string, err error)
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (mgq *MusclesGroupQuery) OnlyIDX(ctx context.Context) string {
+func (mgq *MusclesGroupQuery) OnlyIDX(ctx context.Context) pksuid.ID {
 	id, err := mgq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -205,7 +206,7 @@ func (mgq *MusclesGroupQuery) AllX(ctx context.Context) []*MusclesGroup {
 }
 
 // IDs executes the query and returns a list of MusclesGroup IDs.
-func (mgq *MusclesGroupQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (mgq *MusclesGroupQuery) IDs(ctx context.Context) (ids []pksuid.ID, err error) {
 	if mgq.ctx.Unique == nil && mgq.path != nil {
 		mgq.Unique(true)
 	}
@@ -217,7 +218,7 @@ func (mgq *MusclesGroupQuery) IDs(ctx context.Context) (ids []string, err error)
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (mgq *MusclesGroupQuery) IDsX(ctx context.Context) []string {
+func (mgq *MusclesGroupQuery) IDsX(ctx context.Context) []pksuid.ID {
 	ids, err := mgq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -422,7 +423,7 @@ func (mgq *MusclesGroupQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 
 func (mgq *MusclesGroupQuery) loadExercises(ctx context.Context, query *ExerciseQuery, nodes []*MusclesGroup, init func(*MusclesGroup), assign func(*MusclesGroup, *Exercise)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*MusclesGroup)
+	nodeids := make(map[pksuid.ID]*MusclesGroup)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]

@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // ExerciseTypeCreate is the builder for creating a ExerciseType entity.
@@ -39,28 +40,28 @@ func (etc *ExerciseTypeCreate) SetDescription(s string) *ExerciseTypeCreate {
 }
 
 // SetID sets the "id" field.
-func (etc *ExerciseTypeCreate) SetID(s string) *ExerciseTypeCreate {
-	etc.mutation.SetID(s)
+func (etc *ExerciseTypeCreate) SetID(pk pksuid.ID) *ExerciseTypeCreate {
+	etc.mutation.SetID(pk)
 	return etc
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (etc *ExerciseTypeCreate) SetNillableID(s *string) *ExerciseTypeCreate {
-	if s != nil {
-		etc.SetID(*s)
+func (etc *ExerciseTypeCreate) SetNillableID(pk *pksuid.ID) *ExerciseTypeCreate {
+	if pk != nil {
+		etc.SetID(*pk)
 	}
 	return etc
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
-func (etc *ExerciseTypeCreate) AddExerciseIDs(ids ...string) *ExerciseTypeCreate {
+func (etc *ExerciseTypeCreate) AddExerciseIDs(ids ...pksuid.ID) *ExerciseTypeCreate {
 	etc.mutation.AddExerciseIDs(ids...)
 	return etc
 }
 
 // AddExercises adds the "exercises" edges to the Exercise entity.
 func (etc *ExerciseTypeCreate) AddExercises(e ...*Exercise) *ExerciseTypeCreate {
-	ids := make([]string, len(e))
+	ids := make([]pksuid.ID, len(e))
 	for i := range e {
 		ids[i] = e[i].ID
 	}
@@ -134,10 +135,10 @@ func (etc *ExerciseTypeCreate) sqlSave(ctx context.Context) (*ExerciseType, erro
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected ExerciseType.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	etc.mutation.id = &_node.ID
@@ -152,7 +153,7 @@ func (etc *ExerciseTypeCreate) createSpec() (*ExerciseType, *sqlgraph.CreateSpec
 	)
 	if id, ok := etc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := etc.mutation.Name(); ok {
 		_spec.SetField(exercisetype.FieldName, field.TypeString, value)

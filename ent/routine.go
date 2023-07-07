@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -16,11 +17,11 @@ import (
 type Routine struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID pksuid.ID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// UserID holds the value of the "user_id" field.
-	UserID string `json:"user_id,omitempty"`
+	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoutineQuery when eager-loading is set.
 	Edges        RoutineEdges `json:"edges"`
@@ -81,7 +82,9 @@ func (*Routine) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case routine.FieldID, routine.FieldName, routine.FieldUserID:
+		case routine.FieldID, routine.FieldUserID:
+			values[i] = new(pksuid.ID)
+		case routine.FieldName:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -99,10 +102,10 @@ func (r *Routine) assignValues(columns []string, values []any) error {
 	for i := range columns {
 		switch columns[i] {
 		case routine.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				r.ID = value.String
+			} else if value != nil {
+				r.ID = *value
 			}
 		case routine.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -111,10 +114,10 @@ func (r *Routine) assignValues(columns []string, values []any) error {
 				r.Name = value.String
 			}
 		case routine.FieldUserID:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value.Valid {
-				r.UserID = value.String
+			} else if value != nil {
+				r.UserID = *value
 			}
 		default:
 			r.selectValues.Set(columns[i], values[i])
@@ -171,7 +174,7 @@ func (r *Routine) String() string {
 	builder.WriteString(r.Name)
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
-	builder.WriteString(r.UserID)
+	builder.WriteString(fmt.Sprintf("%v", r.UserID))
 	builder.WriteByte(')')
 	return builder.String()
 }

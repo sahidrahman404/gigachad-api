@@ -15,6 +15,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
 )
@@ -61,84 +62,84 @@ func (ec *ExerciseCreate) SetNillableHowTo(s *string) *ExerciseCreate {
 }
 
 // SetEquipmentID sets the "equipment_id" field.
-func (ec *ExerciseCreate) SetEquipmentID(s string) *ExerciseCreate {
-	ec.mutation.SetEquipmentID(s)
+func (ec *ExerciseCreate) SetEquipmentID(pk pksuid.ID) *ExerciseCreate {
+	ec.mutation.SetEquipmentID(pk)
 	return ec
 }
 
 // SetNillableEquipmentID sets the "equipment_id" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableEquipmentID(s *string) *ExerciseCreate {
-	if s != nil {
-		ec.SetEquipmentID(*s)
+func (ec *ExerciseCreate) SetNillableEquipmentID(pk *pksuid.ID) *ExerciseCreate {
+	if pk != nil {
+		ec.SetEquipmentID(*pk)
 	}
 	return ec
 }
 
 // SetMusclesGroupID sets the "muscles_group_id" field.
-func (ec *ExerciseCreate) SetMusclesGroupID(s string) *ExerciseCreate {
-	ec.mutation.SetMusclesGroupID(s)
+func (ec *ExerciseCreate) SetMusclesGroupID(pk pksuid.ID) *ExerciseCreate {
+	ec.mutation.SetMusclesGroupID(pk)
 	return ec
 }
 
 // SetNillableMusclesGroupID sets the "muscles_group_id" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableMusclesGroupID(s *string) *ExerciseCreate {
-	if s != nil {
-		ec.SetMusclesGroupID(*s)
+func (ec *ExerciseCreate) SetNillableMusclesGroupID(pk *pksuid.ID) *ExerciseCreate {
+	if pk != nil {
+		ec.SetMusclesGroupID(*pk)
 	}
 	return ec
 }
 
 // SetExerciseTypeID sets the "exercise_type_id" field.
-func (ec *ExerciseCreate) SetExerciseTypeID(s string) *ExerciseCreate {
-	ec.mutation.SetExerciseTypeID(s)
+func (ec *ExerciseCreate) SetExerciseTypeID(pk pksuid.ID) *ExerciseCreate {
+	ec.mutation.SetExerciseTypeID(pk)
 	return ec
 }
 
 // SetNillableExerciseTypeID sets the "exercise_type_id" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableExerciseTypeID(s *string) *ExerciseCreate {
-	if s != nil {
-		ec.SetExerciseTypeID(*s)
+func (ec *ExerciseCreate) SetNillableExerciseTypeID(pk *pksuid.ID) *ExerciseCreate {
+	if pk != nil {
+		ec.SetExerciseTypeID(*pk)
 	}
 	return ec
 }
 
 // SetUserID sets the "user_id" field.
-func (ec *ExerciseCreate) SetUserID(s string) *ExerciseCreate {
-	ec.mutation.SetUserID(s)
+func (ec *ExerciseCreate) SetUserID(pk pksuid.ID) *ExerciseCreate {
+	ec.mutation.SetUserID(pk)
 	return ec
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableUserID(s *string) *ExerciseCreate {
-	if s != nil {
-		ec.SetUserID(*s)
+func (ec *ExerciseCreate) SetNillableUserID(pk *pksuid.ID) *ExerciseCreate {
+	if pk != nil {
+		ec.SetUserID(*pk)
 	}
 	return ec
 }
 
 // SetID sets the "id" field.
-func (ec *ExerciseCreate) SetID(s string) *ExerciseCreate {
-	ec.mutation.SetID(s)
+func (ec *ExerciseCreate) SetID(pk pksuid.ID) *ExerciseCreate {
+	ec.mutation.SetID(pk)
 	return ec
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableID(s *string) *ExerciseCreate {
-	if s != nil {
-		ec.SetID(*s)
+func (ec *ExerciseCreate) SetNillableID(pk *pksuid.ID) *ExerciseCreate {
+	if pk != nil {
+		ec.SetID(*pk)
 	}
 	return ec
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (ec *ExerciseCreate) AddWorkoutLogIDs(ids ...string) *ExerciseCreate {
+func (ec *ExerciseCreate) AddWorkoutLogIDs(ids ...pksuid.ID) *ExerciseCreate {
 	ec.mutation.AddWorkoutLogIDs(ids...)
 	return ec
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (ec *ExerciseCreate) AddWorkoutLogs(w ...*WorkoutLog) *ExerciseCreate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -146,13 +147,13 @@ func (ec *ExerciseCreate) AddWorkoutLogs(w ...*WorkoutLog) *ExerciseCreate {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (ec *ExerciseCreate) SetUsersID(id string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetUsersID(id pksuid.ID) *ExerciseCreate {
 	ec.mutation.SetUsersID(id)
 	return ec
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableUsersID(id *string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetNillableUsersID(id *pksuid.ID) *ExerciseCreate {
 	if id != nil {
 		ec = ec.SetUsersID(*id)
 	}
@@ -165,13 +166,13 @@ func (ec *ExerciseCreate) SetUsers(u *User) *ExerciseCreate {
 }
 
 // SetEquipmentsID sets the "equipments" edge to the Equipment entity by ID.
-func (ec *ExerciseCreate) SetEquipmentsID(id string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetEquipmentsID(id pksuid.ID) *ExerciseCreate {
 	ec.mutation.SetEquipmentsID(id)
 	return ec
 }
 
 // SetNillableEquipmentsID sets the "equipments" edge to the Equipment entity by ID if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableEquipmentsID(id *string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetNillableEquipmentsID(id *pksuid.ID) *ExerciseCreate {
 	if id != nil {
 		ec = ec.SetEquipmentsID(*id)
 	}
@@ -184,13 +185,13 @@ func (ec *ExerciseCreate) SetEquipments(e *Equipment) *ExerciseCreate {
 }
 
 // SetMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID.
-func (ec *ExerciseCreate) SetMusclesGroupsID(id string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetMusclesGroupsID(id pksuid.ID) *ExerciseCreate {
 	ec.mutation.SetMusclesGroupsID(id)
 	return ec
 }
 
 // SetNillableMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableMusclesGroupsID(id *string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetNillableMusclesGroupsID(id *pksuid.ID) *ExerciseCreate {
 	if id != nil {
 		ec = ec.SetMusclesGroupsID(*id)
 	}
@@ -203,13 +204,13 @@ func (ec *ExerciseCreate) SetMusclesGroups(m *MusclesGroup) *ExerciseCreate {
 }
 
 // SetExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID.
-func (ec *ExerciseCreate) SetExerciseTypesID(id string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetExerciseTypesID(id pksuid.ID) *ExerciseCreate {
 	ec.mutation.SetExerciseTypesID(id)
 	return ec
 }
 
 // SetNillableExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableExerciseTypesID(id *string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetNillableExerciseTypesID(id *pksuid.ID) *ExerciseCreate {
 	if id != nil {
 		ec = ec.SetExerciseTypesID(*id)
 	}
@@ -222,14 +223,14 @@ func (ec *ExerciseCreate) SetExerciseTypes(e *ExerciseType) *ExerciseCreate {
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
-func (ec *ExerciseCreate) AddRoutineIDs(ids ...string) *ExerciseCreate {
+func (ec *ExerciseCreate) AddRoutineIDs(ids ...pksuid.ID) *ExerciseCreate {
 	ec.mutation.AddRoutineIDs(ids...)
 	return ec
 }
 
 // AddRoutines adds the "routines" edges to the Routine entity.
 func (ec *ExerciseCreate) AddRoutines(r ...*Routine) *ExerciseCreate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -237,14 +238,14 @@ func (ec *ExerciseCreate) AddRoutines(r ...*Routine) *ExerciseCreate {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (ec *ExerciseCreate) AddRoutineExerciseIDs(ids ...string) *ExerciseCreate {
+func (ec *ExerciseCreate) AddRoutineExerciseIDs(ids ...pksuid.ID) *ExerciseCreate {
 	ec.mutation.AddRoutineExerciseIDs(ids...)
 	return ec
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (ec *ExerciseCreate) AddRoutineExercises(r ...*RoutineExercise) *ExerciseCreate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -312,10 +313,10 @@ func (ec *ExerciseCreate) sqlSave(ctx context.Context) (*Exercise, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Exercise.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	ec.mutation.id = &_node.ID
@@ -330,7 +331,7 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 	)
 	if id, ok := ec.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := ec.mutation.Name(); ok {
 		_spec.SetField(exercise.FieldName, field.TypeString, value)

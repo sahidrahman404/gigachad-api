@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // ExerciseTypeQuery is the builder for querying ExerciseType entities.
@@ -109,8 +110,8 @@ func (etq *ExerciseTypeQuery) FirstX(ctx context.Context) *ExerciseType {
 
 // FirstID returns the first ExerciseType ID from the query.
 // Returns a *NotFoundError when no ExerciseType ID was found.
-func (etq *ExerciseTypeQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (etq *ExerciseTypeQuery) FirstID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = etq.Limit(1).IDs(setContextOp(ctx, etq.ctx, "FirstID")); err != nil {
 		return
 	}
@@ -122,7 +123,7 @@ func (etq *ExerciseTypeQuery) FirstID(ctx context.Context) (id string, err error
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (etq *ExerciseTypeQuery) FirstIDX(ctx context.Context) string {
+func (etq *ExerciseTypeQuery) FirstIDX(ctx context.Context) pksuid.ID {
 	id, err := etq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -160,8 +161,8 @@ func (etq *ExerciseTypeQuery) OnlyX(ctx context.Context) *ExerciseType {
 // OnlyID is like Only, but returns the only ExerciseType ID in the query.
 // Returns a *NotSingularError when more than one ExerciseType ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (etq *ExerciseTypeQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (etq *ExerciseTypeQuery) OnlyID(ctx context.Context) (id pksuid.ID, err error) {
+	var ids []pksuid.ID
 	if ids, err = etq.Limit(2).IDs(setContextOp(ctx, etq.ctx, "OnlyID")); err != nil {
 		return
 	}
@@ -177,7 +178,7 @@ func (etq *ExerciseTypeQuery) OnlyID(ctx context.Context) (id string, err error)
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (etq *ExerciseTypeQuery) OnlyIDX(ctx context.Context) string {
+func (etq *ExerciseTypeQuery) OnlyIDX(ctx context.Context) pksuid.ID {
 	id, err := etq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -205,7 +206,7 @@ func (etq *ExerciseTypeQuery) AllX(ctx context.Context) []*ExerciseType {
 }
 
 // IDs executes the query and returns a list of ExerciseType IDs.
-func (etq *ExerciseTypeQuery) IDs(ctx context.Context) (ids []string, err error) {
+func (etq *ExerciseTypeQuery) IDs(ctx context.Context) (ids []pksuid.ID, err error) {
 	if etq.ctx.Unique == nil && etq.path != nil {
 		etq.Unique(true)
 	}
@@ -217,7 +218,7 @@ func (etq *ExerciseTypeQuery) IDs(ctx context.Context) (ids []string, err error)
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (etq *ExerciseTypeQuery) IDsX(ctx context.Context) []string {
+func (etq *ExerciseTypeQuery) IDsX(ctx context.Context) []pksuid.ID {
 	ids, err := etq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -422,7 +423,7 @@ func (etq *ExerciseTypeQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 
 func (etq *ExerciseTypeQuery) loadExercises(ctx context.Context, query *ExerciseQuery, nodes []*ExerciseType, init func(*ExerciseType), assign func(*ExerciseType, *Exercise)) error {
 	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[string]*ExerciseType)
+	nodeids := make(map[pksuid.ID]*ExerciseType)
 	for i := range nodes {
 		fks = append(fks, nodes[i].ID)
 		nodeids[nodes[i].ID] = nodes[i]

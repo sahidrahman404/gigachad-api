@@ -6,61 +6,52 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
 // ID filters vertices based on their ID field.
-func ID(id string) predicate.Routine {
+func ID(id pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldEQ(FieldID, id))
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id string) predicate.Routine {
+func IDEQ(id pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldEQ(FieldID, id))
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id string) predicate.Routine {
+func IDNEQ(id pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldNEQ(FieldID, id))
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...string) predicate.Routine {
+func IDIn(ids ...pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldIn(FieldID, ids...))
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...string) predicate.Routine {
+func IDNotIn(ids ...pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldNotIn(FieldID, ids...))
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id string) predicate.Routine {
+func IDGT(id pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldGT(FieldID, id))
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id string) predicate.Routine {
+func IDGTE(id pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldGTE(FieldID, id))
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id string) predicate.Routine {
+func IDLT(id pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldLT(FieldID, id))
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id string) predicate.Routine {
+func IDLTE(id pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldLTE(FieldID, id))
-}
-
-// IDEqualFold applies the EqualFold predicate on the ID field.
-func IDEqualFold(id string) predicate.Routine {
-	return predicate.Routine(sql.FieldEqualFold(FieldID, id))
-}
-
-// IDContainsFold applies the ContainsFold predicate on the ID field.
-func IDContainsFold(id string) predicate.Routine {
-	return predicate.Routine(sql.FieldContainsFold(FieldID, id))
 }
 
 // Name applies equality check predicate on the "name" field. It's identical to NameEQ.
@@ -69,7 +60,7 @@ func Name(v string) predicate.Routine {
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v string) predicate.Routine {
+func UserID(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldEQ(FieldUserID, v))
 }
 
@@ -139,58 +130,61 @@ func NameContainsFold(v string) predicate.Routine {
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v string) predicate.Routine {
+func UserIDEQ(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldEQ(FieldUserID, v))
 }
 
 // UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v string) predicate.Routine {
+func UserIDNEQ(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldNEQ(FieldUserID, v))
 }
 
 // UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...string) predicate.Routine {
+func UserIDIn(vs ...pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldIn(FieldUserID, vs...))
 }
 
 // UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...string) predicate.Routine {
+func UserIDNotIn(vs ...pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldNotIn(FieldUserID, vs...))
 }
 
 // UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v string) predicate.Routine {
+func UserIDGT(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldGT(FieldUserID, v))
 }
 
 // UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v string) predicate.Routine {
+func UserIDGTE(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldGTE(FieldUserID, v))
 }
 
 // UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v string) predicate.Routine {
+func UserIDLT(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldLT(FieldUserID, v))
 }
 
 // UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v string) predicate.Routine {
+func UserIDLTE(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldLTE(FieldUserID, v))
 }
 
 // UserIDContains applies the Contains predicate on the "user_id" field.
-func UserIDContains(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldContains(FieldUserID, v))
+func UserIDContains(v pksuid.ID) predicate.Routine {
+	vc := string(v)
+	return predicate.Routine(sql.FieldContains(FieldUserID, vc))
 }
 
 // UserIDHasPrefix applies the HasPrefix predicate on the "user_id" field.
-func UserIDHasPrefix(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldHasPrefix(FieldUserID, v))
+func UserIDHasPrefix(v pksuid.ID) predicate.Routine {
+	vc := string(v)
+	return predicate.Routine(sql.FieldHasPrefix(FieldUserID, vc))
 }
 
 // UserIDHasSuffix applies the HasSuffix predicate on the "user_id" field.
-func UserIDHasSuffix(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldHasSuffix(FieldUserID, v))
+func UserIDHasSuffix(v pksuid.ID) predicate.Routine {
+	vc := string(v)
+	return predicate.Routine(sql.FieldHasSuffix(FieldUserID, vc))
 }
 
 // UserIDIsNil applies the IsNil predicate on the "user_id" field.
@@ -204,13 +198,15 @@ func UserIDNotNil() predicate.Routine {
 }
 
 // UserIDEqualFold applies the EqualFold predicate on the "user_id" field.
-func UserIDEqualFold(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldEqualFold(FieldUserID, v))
+func UserIDEqualFold(v pksuid.ID) predicate.Routine {
+	vc := string(v)
+	return predicate.Routine(sql.FieldEqualFold(FieldUserID, vc))
 }
 
 // UserIDContainsFold applies the ContainsFold predicate on the "user_id" field.
-func UserIDContainsFold(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldContainsFold(FieldUserID, v))
+func UserIDContainsFold(v pksuid.ID) predicate.Routine {
+	vc := string(v)
+	return predicate.Routine(sql.FieldContainsFold(FieldUserID, vc))
 }
 
 // HasExercises applies the HasEdge predicate on the "exercises" edge.

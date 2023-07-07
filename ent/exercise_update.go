@@ -17,6 +17,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
 )
@@ -81,15 +82,15 @@ func (eu *ExerciseUpdate) ClearHowTo() *ExerciseUpdate {
 }
 
 // SetEquipmentID sets the "equipment_id" field.
-func (eu *ExerciseUpdate) SetEquipmentID(s string) *ExerciseUpdate {
-	eu.mutation.SetEquipmentID(s)
+func (eu *ExerciseUpdate) SetEquipmentID(pk pksuid.ID) *ExerciseUpdate {
+	eu.mutation.SetEquipmentID(pk)
 	return eu
 }
 
 // SetNillableEquipmentID sets the "equipment_id" field if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableEquipmentID(s *string) *ExerciseUpdate {
-	if s != nil {
-		eu.SetEquipmentID(*s)
+func (eu *ExerciseUpdate) SetNillableEquipmentID(pk *pksuid.ID) *ExerciseUpdate {
+	if pk != nil {
+		eu.SetEquipmentID(*pk)
 	}
 	return eu
 }
@@ -101,15 +102,15 @@ func (eu *ExerciseUpdate) ClearEquipmentID() *ExerciseUpdate {
 }
 
 // SetMusclesGroupID sets the "muscles_group_id" field.
-func (eu *ExerciseUpdate) SetMusclesGroupID(s string) *ExerciseUpdate {
-	eu.mutation.SetMusclesGroupID(s)
+func (eu *ExerciseUpdate) SetMusclesGroupID(pk pksuid.ID) *ExerciseUpdate {
+	eu.mutation.SetMusclesGroupID(pk)
 	return eu
 }
 
 // SetNillableMusclesGroupID sets the "muscles_group_id" field if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableMusclesGroupID(s *string) *ExerciseUpdate {
-	if s != nil {
-		eu.SetMusclesGroupID(*s)
+func (eu *ExerciseUpdate) SetNillableMusclesGroupID(pk *pksuid.ID) *ExerciseUpdate {
+	if pk != nil {
+		eu.SetMusclesGroupID(*pk)
 	}
 	return eu
 }
@@ -121,15 +122,15 @@ func (eu *ExerciseUpdate) ClearMusclesGroupID() *ExerciseUpdate {
 }
 
 // SetExerciseTypeID sets the "exercise_type_id" field.
-func (eu *ExerciseUpdate) SetExerciseTypeID(s string) *ExerciseUpdate {
-	eu.mutation.SetExerciseTypeID(s)
+func (eu *ExerciseUpdate) SetExerciseTypeID(pk pksuid.ID) *ExerciseUpdate {
+	eu.mutation.SetExerciseTypeID(pk)
 	return eu
 }
 
 // SetNillableExerciseTypeID sets the "exercise_type_id" field if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableExerciseTypeID(s *string) *ExerciseUpdate {
-	if s != nil {
-		eu.SetExerciseTypeID(*s)
+func (eu *ExerciseUpdate) SetNillableExerciseTypeID(pk *pksuid.ID) *ExerciseUpdate {
+	if pk != nil {
+		eu.SetExerciseTypeID(*pk)
 	}
 	return eu
 }
@@ -141,15 +142,15 @@ func (eu *ExerciseUpdate) ClearExerciseTypeID() *ExerciseUpdate {
 }
 
 // SetUserID sets the "user_id" field.
-func (eu *ExerciseUpdate) SetUserID(s string) *ExerciseUpdate {
-	eu.mutation.SetUserID(s)
+func (eu *ExerciseUpdate) SetUserID(pk pksuid.ID) *ExerciseUpdate {
+	eu.mutation.SetUserID(pk)
 	return eu
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableUserID(s *string) *ExerciseUpdate {
-	if s != nil {
-		eu.SetUserID(*s)
+func (eu *ExerciseUpdate) SetNillableUserID(pk *pksuid.ID) *ExerciseUpdate {
+	if pk != nil {
+		eu.SetUserID(*pk)
 	}
 	return eu
 }
@@ -161,14 +162,14 @@ func (eu *ExerciseUpdate) ClearUserID() *ExerciseUpdate {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (eu *ExerciseUpdate) AddWorkoutLogIDs(ids ...string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) AddWorkoutLogIDs(ids ...pksuid.ID) *ExerciseUpdate {
 	eu.mutation.AddWorkoutLogIDs(ids...)
 	return eu
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (eu *ExerciseUpdate) AddWorkoutLogs(w ...*WorkoutLog) *ExerciseUpdate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -176,13 +177,13 @@ func (eu *ExerciseUpdate) AddWorkoutLogs(w ...*WorkoutLog) *ExerciseUpdate {
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (eu *ExerciseUpdate) SetUsersID(id string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) SetUsersID(id pksuid.ID) *ExerciseUpdate {
 	eu.mutation.SetUsersID(id)
 	return eu
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableUsersID(id *string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) SetNillableUsersID(id *pksuid.ID) *ExerciseUpdate {
 	if id != nil {
 		eu = eu.SetUsersID(*id)
 	}
@@ -195,13 +196,13 @@ func (eu *ExerciseUpdate) SetUsers(u *User) *ExerciseUpdate {
 }
 
 // SetEquipmentsID sets the "equipments" edge to the Equipment entity by ID.
-func (eu *ExerciseUpdate) SetEquipmentsID(id string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) SetEquipmentsID(id pksuid.ID) *ExerciseUpdate {
 	eu.mutation.SetEquipmentsID(id)
 	return eu
 }
 
 // SetNillableEquipmentsID sets the "equipments" edge to the Equipment entity by ID if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableEquipmentsID(id *string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) SetNillableEquipmentsID(id *pksuid.ID) *ExerciseUpdate {
 	if id != nil {
 		eu = eu.SetEquipmentsID(*id)
 	}
@@ -214,13 +215,13 @@ func (eu *ExerciseUpdate) SetEquipments(e *Equipment) *ExerciseUpdate {
 }
 
 // SetMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID.
-func (eu *ExerciseUpdate) SetMusclesGroupsID(id string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) SetMusclesGroupsID(id pksuid.ID) *ExerciseUpdate {
 	eu.mutation.SetMusclesGroupsID(id)
 	return eu
 }
 
 // SetNillableMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableMusclesGroupsID(id *string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) SetNillableMusclesGroupsID(id *pksuid.ID) *ExerciseUpdate {
 	if id != nil {
 		eu = eu.SetMusclesGroupsID(*id)
 	}
@@ -233,13 +234,13 @@ func (eu *ExerciseUpdate) SetMusclesGroups(m *MusclesGroup) *ExerciseUpdate {
 }
 
 // SetExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID.
-func (eu *ExerciseUpdate) SetExerciseTypesID(id string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) SetExerciseTypesID(id pksuid.ID) *ExerciseUpdate {
 	eu.mutation.SetExerciseTypesID(id)
 	return eu
 }
 
 // SetNillableExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableExerciseTypesID(id *string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) SetNillableExerciseTypesID(id *pksuid.ID) *ExerciseUpdate {
 	if id != nil {
 		eu = eu.SetExerciseTypesID(*id)
 	}
@@ -252,14 +253,14 @@ func (eu *ExerciseUpdate) SetExerciseTypes(e *ExerciseType) *ExerciseUpdate {
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
-func (eu *ExerciseUpdate) AddRoutineIDs(ids ...string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) AddRoutineIDs(ids ...pksuid.ID) *ExerciseUpdate {
 	eu.mutation.AddRoutineIDs(ids...)
 	return eu
 }
 
 // AddRoutines adds the "routines" edges to the Routine entity.
 func (eu *ExerciseUpdate) AddRoutines(r ...*Routine) *ExerciseUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -267,14 +268,14 @@ func (eu *ExerciseUpdate) AddRoutines(r ...*Routine) *ExerciseUpdate {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (eu *ExerciseUpdate) AddRoutineExerciseIDs(ids ...string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) AddRoutineExerciseIDs(ids ...pksuid.ID) *ExerciseUpdate {
 	eu.mutation.AddRoutineExerciseIDs(ids...)
 	return eu
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (eu *ExerciseUpdate) AddRoutineExercises(r ...*RoutineExercise) *ExerciseUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -293,14 +294,14 @@ func (eu *ExerciseUpdate) ClearWorkoutLogs() *ExerciseUpdate {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to WorkoutLog entities by IDs.
-func (eu *ExerciseUpdate) RemoveWorkoutLogIDs(ids ...string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) RemoveWorkoutLogIDs(ids ...pksuid.ID) *ExerciseUpdate {
 	eu.mutation.RemoveWorkoutLogIDs(ids...)
 	return eu
 }
 
 // RemoveWorkoutLogs removes "workout_logs" edges to WorkoutLog entities.
 func (eu *ExerciseUpdate) RemoveWorkoutLogs(w ...*WorkoutLog) *ExerciseUpdate {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -338,14 +339,14 @@ func (eu *ExerciseUpdate) ClearRoutines() *ExerciseUpdate {
 }
 
 // RemoveRoutineIDs removes the "routines" edge to Routine entities by IDs.
-func (eu *ExerciseUpdate) RemoveRoutineIDs(ids ...string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) RemoveRoutineIDs(ids ...pksuid.ID) *ExerciseUpdate {
 	eu.mutation.RemoveRoutineIDs(ids...)
 	return eu
 }
 
 // RemoveRoutines removes "routines" edges to Routine entities.
 func (eu *ExerciseUpdate) RemoveRoutines(r ...*Routine) *ExerciseUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -359,14 +360,14 @@ func (eu *ExerciseUpdate) ClearRoutineExercises() *ExerciseUpdate {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to RoutineExercise entities by IDs.
-func (eu *ExerciseUpdate) RemoveRoutineExerciseIDs(ids ...string) *ExerciseUpdate {
+func (eu *ExerciseUpdate) RemoveRoutineExerciseIDs(ids ...pksuid.ID) *ExerciseUpdate {
 	eu.mutation.RemoveRoutineExerciseIDs(ids...)
 	return eu
 }
 
 // RemoveRoutineExercises removes "routine_exercises" edges to RoutineExercise entities.
 func (eu *ExerciseUpdate) RemoveRoutineExercises(r ...*RoutineExercise) *ExerciseUpdate {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -763,15 +764,15 @@ func (euo *ExerciseUpdateOne) ClearHowTo() *ExerciseUpdateOne {
 }
 
 // SetEquipmentID sets the "equipment_id" field.
-func (euo *ExerciseUpdateOne) SetEquipmentID(s string) *ExerciseUpdateOne {
-	euo.mutation.SetEquipmentID(s)
+func (euo *ExerciseUpdateOne) SetEquipmentID(pk pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.SetEquipmentID(pk)
 	return euo
 }
 
 // SetNillableEquipmentID sets the "equipment_id" field if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableEquipmentID(s *string) *ExerciseUpdateOne {
-	if s != nil {
-		euo.SetEquipmentID(*s)
+func (euo *ExerciseUpdateOne) SetNillableEquipmentID(pk *pksuid.ID) *ExerciseUpdateOne {
+	if pk != nil {
+		euo.SetEquipmentID(*pk)
 	}
 	return euo
 }
@@ -783,15 +784,15 @@ func (euo *ExerciseUpdateOne) ClearEquipmentID() *ExerciseUpdateOne {
 }
 
 // SetMusclesGroupID sets the "muscles_group_id" field.
-func (euo *ExerciseUpdateOne) SetMusclesGroupID(s string) *ExerciseUpdateOne {
-	euo.mutation.SetMusclesGroupID(s)
+func (euo *ExerciseUpdateOne) SetMusclesGroupID(pk pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.SetMusclesGroupID(pk)
 	return euo
 }
 
 // SetNillableMusclesGroupID sets the "muscles_group_id" field if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableMusclesGroupID(s *string) *ExerciseUpdateOne {
-	if s != nil {
-		euo.SetMusclesGroupID(*s)
+func (euo *ExerciseUpdateOne) SetNillableMusclesGroupID(pk *pksuid.ID) *ExerciseUpdateOne {
+	if pk != nil {
+		euo.SetMusclesGroupID(*pk)
 	}
 	return euo
 }
@@ -803,15 +804,15 @@ func (euo *ExerciseUpdateOne) ClearMusclesGroupID() *ExerciseUpdateOne {
 }
 
 // SetExerciseTypeID sets the "exercise_type_id" field.
-func (euo *ExerciseUpdateOne) SetExerciseTypeID(s string) *ExerciseUpdateOne {
-	euo.mutation.SetExerciseTypeID(s)
+func (euo *ExerciseUpdateOne) SetExerciseTypeID(pk pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.SetExerciseTypeID(pk)
 	return euo
 }
 
 // SetNillableExerciseTypeID sets the "exercise_type_id" field if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableExerciseTypeID(s *string) *ExerciseUpdateOne {
-	if s != nil {
-		euo.SetExerciseTypeID(*s)
+func (euo *ExerciseUpdateOne) SetNillableExerciseTypeID(pk *pksuid.ID) *ExerciseUpdateOne {
+	if pk != nil {
+		euo.SetExerciseTypeID(*pk)
 	}
 	return euo
 }
@@ -823,15 +824,15 @@ func (euo *ExerciseUpdateOne) ClearExerciseTypeID() *ExerciseUpdateOne {
 }
 
 // SetUserID sets the "user_id" field.
-func (euo *ExerciseUpdateOne) SetUserID(s string) *ExerciseUpdateOne {
-	euo.mutation.SetUserID(s)
+func (euo *ExerciseUpdateOne) SetUserID(pk pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.SetUserID(pk)
 	return euo
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableUserID(s *string) *ExerciseUpdateOne {
-	if s != nil {
-		euo.SetUserID(*s)
+func (euo *ExerciseUpdateOne) SetNillableUserID(pk *pksuid.ID) *ExerciseUpdateOne {
+	if pk != nil {
+		euo.SetUserID(*pk)
 	}
 	return euo
 }
@@ -843,14 +844,14 @@ func (euo *ExerciseUpdateOne) ClearUserID() *ExerciseUpdateOne {
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
-func (euo *ExerciseUpdateOne) AddWorkoutLogIDs(ids ...string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) AddWorkoutLogIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.AddWorkoutLogIDs(ids...)
 	return euo
 }
 
 // AddWorkoutLogs adds the "workout_logs" edges to the WorkoutLog entity.
 func (euo *ExerciseUpdateOne) AddWorkoutLogs(w ...*WorkoutLog) *ExerciseUpdateOne {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -858,13 +859,13 @@ func (euo *ExerciseUpdateOne) AddWorkoutLogs(w ...*WorkoutLog) *ExerciseUpdateOn
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (euo *ExerciseUpdateOne) SetUsersID(id string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) SetUsersID(id pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.SetUsersID(id)
 	return euo
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableUsersID(id *string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) SetNillableUsersID(id *pksuid.ID) *ExerciseUpdateOne {
 	if id != nil {
 		euo = euo.SetUsersID(*id)
 	}
@@ -877,13 +878,13 @@ func (euo *ExerciseUpdateOne) SetUsers(u *User) *ExerciseUpdateOne {
 }
 
 // SetEquipmentsID sets the "equipments" edge to the Equipment entity by ID.
-func (euo *ExerciseUpdateOne) SetEquipmentsID(id string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) SetEquipmentsID(id pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.SetEquipmentsID(id)
 	return euo
 }
 
 // SetNillableEquipmentsID sets the "equipments" edge to the Equipment entity by ID if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableEquipmentsID(id *string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) SetNillableEquipmentsID(id *pksuid.ID) *ExerciseUpdateOne {
 	if id != nil {
 		euo = euo.SetEquipmentsID(*id)
 	}
@@ -896,13 +897,13 @@ func (euo *ExerciseUpdateOne) SetEquipments(e *Equipment) *ExerciseUpdateOne {
 }
 
 // SetMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID.
-func (euo *ExerciseUpdateOne) SetMusclesGroupsID(id string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) SetMusclesGroupsID(id pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.SetMusclesGroupsID(id)
 	return euo
 }
 
 // SetNillableMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableMusclesGroupsID(id *string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) SetNillableMusclesGroupsID(id *pksuid.ID) *ExerciseUpdateOne {
 	if id != nil {
 		euo = euo.SetMusclesGroupsID(*id)
 	}
@@ -915,13 +916,13 @@ func (euo *ExerciseUpdateOne) SetMusclesGroups(m *MusclesGroup) *ExerciseUpdateO
 }
 
 // SetExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID.
-func (euo *ExerciseUpdateOne) SetExerciseTypesID(id string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) SetExerciseTypesID(id pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.SetExerciseTypesID(id)
 	return euo
 }
 
 // SetNillableExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableExerciseTypesID(id *string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) SetNillableExerciseTypesID(id *pksuid.ID) *ExerciseUpdateOne {
 	if id != nil {
 		euo = euo.SetExerciseTypesID(*id)
 	}
@@ -934,14 +935,14 @@ func (euo *ExerciseUpdateOne) SetExerciseTypes(e *ExerciseType) *ExerciseUpdateO
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
-func (euo *ExerciseUpdateOne) AddRoutineIDs(ids ...string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) AddRoutineIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.AddRoutineIDs(ids...)
 	return euo
 }
 
 // AddRoutines adds the "routines" edges to the Routine entity.
 func (euo *ExerciseUpdateOne) AddRoutines(r ...*Routine) *ExerciseUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -949,14 +950,14 @@ func (euo *ExerciseUpdateOne) AddRoutines(r ...*Routine) *ExerciseUpdateOne {
 }
 
 // AddRoutineExerciseIDs adds the "routine_exercises" edge to the RoutineExercise entity by IDs.
-func (euo *ExerciseUpdateOne) AddRoutineExerciseIDs(ids ...string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) AddRoutineExerciseIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.AddRoutineExerciseIDs(ids...)
 	return euo
 }
 
 // AddRoutineExercises adds the "routine_exercises" edges to the RoutineExercise entity.
 func (euo *ExerciseUpdateOne) AddRoutineExercises(r ...*RoutineExercise) *ExerciseUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -975,14 +976,14 @@ func (euo *ExerciseUpdateOne) ClearWorkoutLogs() *ExerciseUpdateOne {
 }
 
 // RemoveWorkoutLogIDs removes the "workout_logs" edge to WorkoutLog entities by IDs.
-func (euo *ExerciseUpdateOne) RemoveWorkoutLogIDs(ids ...string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) RemoveWorkoutLogIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.RemoveWorkoutLogIDs(ids...)
 	return euo
 }
 
 // RemoveWorkoutLogs removes "workout_logs" edges to WorkoutLog entities.
 func (euo *ExerciseUpdateOne) RemoveWorkoutLogs(w ...*WorkoutLog) *ExerciseUpdateOne {
-	ids := make([]string, len(w))
+	ids := make([]pksuid.ID, len(w))
 	for i := range w {
 		ids[i] = w[i].ID
 	}
@@ -1020,14 +1021,14 @@ func (euo *ExerciseUpdateOne) ClearRoutines() *ExerciseUpdateOne {
 }
 
 // RemoveRoutineIDs removes the "routines" edge to Routine entities by IDs.
-func (euo *ExerciseUpdateOne) RemoveRoutineIDs(ids ...string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) RemoveRoutineIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.RemoveRoutineIDs(ids...)
 	return euo
 }
 
 // RemoveRoutines removes "routines" edges to Routine entities.
 func (euo *ExerciseUpdateOne) RemoveRoutines(r ...*Routine) *ExerciseUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}
@@ -1041,14 +1042,14 @@ func (euo *ExerciseUpdateOne) ClearRoutineExercises() *ExerciseUpdateOne {
 }
 
 // RemoveRoutineExerciseIDs removes the "routine_exercises" edge to RoutineExercise entities by IDs.
-func (euo *ExerciseUpdateOne) RemoveRoutineExerciseIDs(ids ...string) *ExerciseUpdateOne {
+func (euo *ExerciseUpdateOne) RemoveRoutineExerciseIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.RemoveRoutineExerciseIDs(ids...)
 	return euo
 }
 
 // RemoveRoutineExercises removes "routine_exercises" edges to RoutineExercise entities.
 func (euo *ExerciseUpdateOne) RemoveRoutineExercises(r ...*RoutineExercise) *ExerciseUpdateOne {
-	ids := make([]string, len(r))
+	ids := make([]pksuid.ID, len(r))
 	for i := range r {
 		ids[i] = r[i].ID
 	}

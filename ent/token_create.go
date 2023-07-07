@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
@@ -39,41 +40,41 @@ func (tc *TokenCreate) SetScope(s string) *TokenCreate {
 }
 
 // SetUserID sets the "user_id" field.
-func (tc *TokenCreate) SetUserID(s string) *TokenCreate {
-	tc.mutation.SetUserID(s)
+func (tc *TokenCreate) SetUserID(pk pksuid.ID) *TokenCreate {
+	tc.mutation.SetUserID(pk)
 	return tc
 }
 
 // SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (tc *TokenCreate) SetNillableUserID(s *string) *TokenCreate {
-	if s != nil {
-		tc.SetUserID(*s)
+func (tc *TokenCreate) SetNillableUserID(pk *pksuid.ID) *TokenCreate {
+	if pk != nil {
+		tc.SetUserID(*pk)
 	}
 	return tc
 }
 
 // SetID sets the "id" field.
-func (tc *TokenCreate) SetID(s string) *TokenCreate {
-	tc.mutation.SetID(s)
+func (tc *TokenCreate) SetID(pk pksuid.ID) *TokenCreate {
+	tc.mutation.SetID(pk)
 	return tc
 }
 
 // SetNillableID sets the "id" field if the given value is not nil.
-func (tc *TokenCreate) SetNillableID(s *string) *TokenCreate {
-	if s != nil {
-		tc.SetID(*s)
+func (tc *TokenCreate) SetNillableID(pk *pksuid.ID) *TokenCreate {
+	if pk != nil {
+		tc.SetID(*pk)
 	}
 	return tc
 }
 
 // SetUsersID sets the "users" edge to the User entity by ID.
-func (tc *TokenCreate) SetUsersID(id string) *TokenCreate {
+func (tc *TokenCreate) SetUsersID(id pksuid.ID) *TokenCreate {
 	tc.mutation.SetUsersID(id)
 	return tc
 }
 
 // SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (tc *TokenCreate) SetNillableUsersID(id *string) *TokenCreate {
+func (tc *TokenCreate) SetNillableUsersID(id *pksuid.ID) *TokenCreate {
 	if id != nil {
 		tc = tc.SetUsersID(*id)
 	}
@@ -152,10 +153,10 @@ func (tc *TokenCreate) sqlSave(ctx context.Context) (*Token, error) {
 		return nil, err
 	}
 	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Token.ID type: %T", _spec.ID.Value)
+		if id, ok := _spec.ID.Value.(*pksuid.ID); ok {
+			_node.ID = *id
+		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
+			return nil, err
 		}
 	}
 	tc.mutation.id = &_node.ID
@@ -170,7 +171,7 @@ func (tc *TokenCreate) createSpec() (*Token, *sqlgraph.CreateSpec) {
 	)
 	if id, ok := tc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = id
+		_spec.ID.Value = &id
 	}
 	if value, ok := tc.mutation.Hash(); ok {
 		_spec.SetField(token.FieldHash, field.TypeBytes, value)
