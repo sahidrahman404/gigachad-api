@@ -1,18 +1,18 @@
-input Login {
+input LoginInput {
   email: String!
   password: String!
 }
 
-input ActivationTokenParams {
+input ActivationTokenInput {
   email: String!
 }
 
-input ResetPasswordParams {
+input ResetPasswordInput {
   email: String!
 }
 
 extend type Mutation {
-  createAuthenticationToken(input: Login!): String
-  createActivationToken(input: ActivationTokenParams!): String
-  createPasswordResetToken(input: ResetPasswordParams!): String
+  createAuthenticationToken(input: LoginInput!): String
+  createActivationToken(input: ActivationTokenInput!): String
+  createPasswordResetToken(input: ResetPasswordInput!): String
 }

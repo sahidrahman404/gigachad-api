@@ -56,7 +56,7 @@ func (r *queryResolver) RoutineExercises(ctx context.Context, after *entgql.Curs
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, after *entgql.Cursor[string], first *int, before *entgql.Cursor[string], last *int, where *ent.UserWhereInput) (*ent.UserConnection, error) {
-	panic(fmt.Errorf("not implemented: Users - users"))
+	return r.client.User.Query().Paginate(ctx, after, first, before, last, ent.WithUserFilter(where.Filter))
 }
 
 // Workouts is the resolver for the workouts field.
@@ -90,30 +90,6 @@ func (r *Resolver) RoutineExercise() gigachad.RoutineExerciseResolver {
 // WorkoutLog returns gigachad.WorkoutLogResolver implementation.
 func (r *Resolver) WorkoutLog() gigachad.WorkoutLogResolver { return &workoutLogResolver{r} }
 
-// CreateRoutineExerciseInput returns gigachad.CreateRoutineExerciseInputResolver implementation.
-func (r *Resolver) CreateRoutineExerciseInput() gigachad.CreateRoutineExerciseInputResolver {
-	return &createRoutineExerciseInputResolver{r}
-}
-
-// CreateWorkoutLogInput returns gigachad.CreateWorkoutLogInputResolver implementation.
-func (r *Resolver) CreateWorkoutLogInput() gigachad.CreateWorkoutLogInputResolver {
-	return &createWorkoutLogInputResolver{r}
-}
-
-// UpdateRoutineExerciseInput returns gigachad.UpdateRoutineExerciseInputResolver implementation.
-func (r *Resolver) UpdateRoutineExerciseInput() gigachad.UpdateRoutineExerciseInputResolver {
-	return &updateRoutineExerciseInputResolver{r}
-}
-
-// UpdateWorkoutLogInput returns gigachad.UpdateWorkoutLogInputResolver implementation.
-func (r *Resolver) UpdateWorkoutLogInput() gigachad.UpdateWorkoutLogInputResolver {
-	return &updateWorkoutLogInputResolver{r}
-}
-
 type queryResolver struct{ *Resolver }
 type routineExerciseResolver struct{ *Resolver }
 type workoutLogResolver struct{ *Resolver }
-type createRoutineExerciseInputResolver struct{ *Resolver }
-type createWorkoutLogInputResolver struct{ *Resolver }
-type updateRoutineExerciseInputResolver struct{ *Resolver }
-type updateWorkoutLogInputResolver struct{ *Resolver }

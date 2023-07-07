@@ -1,14 +1,14 @@
-input ActivateUser {
+input ActivateUserInput {
   tokenPlainText: String!
 }
 
-input ResetUserPasswordParams {
+input ResetUserPasswordInput {
   password: String!
   tokenPlainText: String!
 }
 
 type Mutation {
   createUser(input: CreateUserInput!): User!
-  activateUser(input: ActivateUser!): User!
-  updateUserPassword(input: ResetUserPasswordParams!): String
+  activateUser(input: ActivateUserInput!): User!
+  updateUserPassword(input: ResetUserPasswordInput!): String
 }

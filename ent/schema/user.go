@@ -21,7 +21,7 @@ func (User) Fields() []ent.Field {
 		field.String("id").DefaultFunc(generateKSUID),
 		field.String("email"),
 		field.String("username"),
-		field.String("hashed_password"),
+		field.String("hashed_password").Sensitive(),
 		field.String("name"),
 		field.String("created_at").
 			DefaultFunc(generateTime).

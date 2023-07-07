@@ -16,7 +16,7 @@ import (
 )
 
 // CreateAuthenticationToken is the resolver for the createAuthenticationToken field.
-func (r *mutationResolver) CreateAuthenticationToken(ctx context.Context, input gigachad.Login) (*string, error) {
+func (r *mutationResolver) CreateAuthenticationToken(ctx context.Context, input gigachad.LoginInput) (*string, error) {
 	v := validator.NewValidator()
 
 	types.ValidateEmail(v, input.Email)
@@ -54,7 +54,7 @@ func (r *mutationResolver) CreateAuthenticationToken(ctx context.Context, input 
 }
 
 // CreateActivationToken is the resolver for the createActivationToken field.
-func (r *mutationResolver) CreateActivationToken(ctx context.Context, input gigachad.ActivationTokenParams) (*string, error) {
+func (r *mutationResolver) CreateActivationToken(ctx context.Context, input gigachad.ActivationTokenInput) (*string, error) {
 	v := validator.NewValidator()
 
 	if types.ValidateEmail(v, input.Email); v.HasErrors() {
@@ -95,7 +95,7 @@ func (r *mutationResolver) CreateActivationToken(ctx context.Context, input giga
 }
 
 // CreatePasswordResetToken is the resolver for the createPasswordResetToken field.
-func (r *mutationResolver) CreatePasswordResetToken(ctx context.Context, input gigachad.ResetPasswordParams) (*string, error) {
+func (r *mutationResolver) CreatePasswordResetToken(ctx context.Context, input gigachad.ResetPasswordInput) (*string, error) {
 	v := validator.NewValidator()
 
 	if types.ValidateEmail(v, input.Email); v.HasErrors() {

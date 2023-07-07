@@ -899,11 +899,6 @@ func (u *UserQuery) collectField(ctx context.Context, opCtx *graphql.OperationCo
 				selectedFields = append(selectedFields, user.FieldUsername)
 				fieldSeen[user.FieldUsername] = struct{}{}
 			}
-		case "hashedPassword":
-			if _, ok := fieldSeen[user.FieldHashedPassword]; !ok {
-				selectedFields = append(selectedFields, user.FieldHashedPassword)
-				fieldSeen[user.FieldHashedPassword] = struct{}{}
-			}
 		case "name":
 			if _, ok := fieldSeen[user.FieldName]; !ok {
 				selectedFields = append(selectedFields, user.FieldName)

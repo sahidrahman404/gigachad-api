@@ -21,7 +21,7 @@ type User struct {
 	// Username holds the value of the "username" field.
 	Username string `json:"username,omitempty"`
 	// HashedPassword holds the value of the "hashed_password" field.
-	HashedPassword string `json:"hashed_password,omitempty"`
+	HashedPassword string `json:"-"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
@@ -262,8 +262,7 @@ func (u *User) String() string {
 	builder.WriteString("username=")
 	builder.WriteString(u.Username)
 	builder.WriteString(", ")
-	builder.WriteString("hashed_password=")
-	builder.WriteString(u.HashedPassword)
+	builder.WriteString("hashed_password=<sensitive>")
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(u.Name)

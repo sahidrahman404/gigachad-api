@@ -5,27 +5,3 @@ type Set {
   Time: String
   Km: Int
 }
-
-input SetInput {
-  Set: Int!
-  Reps: Int
-  Kg: Int
-  Time: String
-  Km: Int
-}
-
-extend input CreateRoutineExerciseInput {
-  createSets: [SetInput!]!
-}
-
-extend input CreateWorkoutLogInput {
-  createSets: [SetInput!]!
-}
-
-extend input UpdateRoutineExerciseInput {
-  createSets: [SetInput!]!
-}
-
-extend input UpdateWorkoutLogInput {
-  createSets: [SetInput!]!
-}

@@ -1061,7 +1061,6 @@ type User implements Node {
   id: ID!
   email: String!
   username: String!
-  hashedPassword: String!
   name: String!
   createdAt: String!
   activated: Int!
@@ -1136,20 +1135,6 @@ input UserWhereInput {
   usernameHasSuffix: String
   usernameEqualFold: String
   usernameContainsFold: String
-  """hashed_password field predicates"""
-  hashedPassword: String
-  hashedPasswordNEQ: String
-  hashedPasswordIn: [String!]
-  hashedPasswordNotIn: [String!]
-  hashedPasswordGT: String
-  hashedPasswordGTE: String
-  hashedPasswordLT: String
-  hashedPasswordLTE: String
-  hashedPasswordContains: String
-  hashedPasswordHasPrefix: String
-  hashedPasswordHasSuffix: String
-  hashedPasswordEqualFold: String
-  hashedPasswordContainsFold: String
   """name field predicates"""
   name: String
   nameNEQ: String

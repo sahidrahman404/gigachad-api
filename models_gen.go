@@ -2,24 +2,24 @@
 
 package gigachad
 
-type ActivateUser struct {
+type ActivateUserInput struct {
 	TokenPlainText string `json:"tokenPlainText"`
 }
 
-type ActivationTokenParams struct {
+type ActivationTokenInput struct {
 	Email string `json:"email"`
 }
 
-type Login struct {
+type LoginInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-type ResetPasswordParams struct {
+type ResetPasswordInput struct {
 	Email string `json:"email"`
 }
 
-type ResetUserPasswordParams struct {
+type ResetUserPasswordInput struct {
 	Password       string `json:"password"`
 	TokenPlainText string `json:"tokenPlainText"`
 }

@@ -43,10 +43,6 @@ type ResolverRoot interface {
 	Query() QueryResolver
 	RoutineExercise() RoutineExerciseResolver
 	WorkoutLog() WorkoutLogResolver
-	CreateRoutineExerciseInput() CreateRoutineExerciseInputResolver
-	CreateWorkoutLogInput() CreateWorkoutLogInputResolver
-	UpdateRoutineExerciseInput() UpdateRoutineExerciseInputResolver
-	UpdateWorkoutLogInput() UpdateWorkoutLogInputResolver
 }
 
 type DirectiveRoot struct {
@@ -138,12 +134,12 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		ActivateUser              func(childComplexity int, input ActivateUser) int
-		CreateActivationToken     func(childComplexity int, input ActivationTokenParams) int
-		CreateAuthenticationToken func(childComplexity int, input Login) int
-		CreatePasswordResetToken  func(childComplexity int, input ResetPasswordParams) int
+		ActivateUser              func(childComplexity int, input ActivateUserInput) int
+		CreateActivationToken     func(childComplexity int, input ActivationTokenInput) int
+		CreateAuthenticationToken func(childComplexity int, input LoginInput) int
+		CreatePasswordResetToken  func(childComplexity int, input ResetPasswordInput) int
 		CreateUser                func(childComplexity int, input ent.CreateUserInput) int
-		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordParams) int
+		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordInput) int
 	}
 
 	PageInfo struct {
@@ -231,7 +227,6 @@ type ComplexityRoot struct {
 		CreatedAt        func(childComplexity int) int
 		Email            func(childComplexity int) int
 		Exercises        func(childComplexity int) int
-		HashedPassword   func(childComplexity int) int
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
 		RoutineExercises func(childComplexity int) int
@@ -306,11 +301,11 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error)
-	ActivateUser(ctx context.Context, input ActivateUser) (*ent.User, error)
-	UpdateUserPassword(ctx context.Context, input ResetUserPasswordParams) (*string, error)
-	CreateAuthenticationToken(ctx context.Context, input Login) (*string, error)
-	CreateActivationToken(ctx context.Context, input ActivationTokenParams) (*string, error)
-	CreatePasswordResetToken(ctx context.Context, input ResetPasswordParams) (*string, error)
+	ActivateUser(ctx context.Context, input ActivateUserInput) (*ent.User, error)
+	UpdateUserPassword(ctx context.Context, input ResetUserPasswordInput) (*string, error)
+	CreateAuthenticationToken(ctx context.Context, input LoginInput) (*string, error)
+	CreateActivationToken(ctx context.Context, input ActivationTokenInput) (*string, error)
+	CreatePasswordResetToken(ctx context.Context, input ResetPasswordInput) (*string, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id string) (ent.Noder, error)
@@ -330,19 +325,6 @@ type RoutineExerciseResolver interface {
 }
 type WorkoutLogResolver interface {
 	Sets(ctx context.Context, obj *ent.WorkoutLog) ([]*schematype.Set, error)
-}
-
-type CreateRoutineExerciseInputResolver interface {
-	CreateSets(ctx context.Context, obj *ent.CreateRoutineExerciseInput, data []*schematype.Set) error
-}
-type CreateWorkoutLogInputResolver interface {
-	CreateSets(ctx context.Context, obj *ent.CreateWorkoutLogInput, data []*schematype.Set) error
-}
-type UpdateRoutineExerciseInputResolver interface {
-	CreateSets(ctx context.Context, obj *ent.UpdateRoutineExerciseInput, data []*schematype.Set) error
-}
-type UpdateWorkoutLogInputResolver interface {
-	CreateSets(ctx context.Context, obj *ent.UpdateWorkoutLogInput, data []*schematype.Set) error
 }
 
 type executableSchema struct {
@@ -706,7 +688,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.ActivateUser(childComplexity, args["input"].(ActivateUser)), true
+		return e.complexity.Mutation.ActivateUser(childComplexity, args["input"].(ActivateUserInput)), true
 
 	case "Mutation.createActivationToken":
 		if e.complexity.Mutation.CreateActivationToken == nil {
@@ -718,7 +700,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateActivationToken(childComplexity, args["input"].(ActivationTokenParams)), true
+		return e.complexity.Mutation.CreateActivationToken(childComplexity, args["input"].(ActivationTokenInput)), true
 
 	case "Mutation.createAuthenticationToken":
 		if e.complexity.Mutation.CreateAuthenticationToken == nil {
@@ -730,7 +712,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateAuthenticationToken(childComplexity, args["input"].(Login)), true
+		return e.complexity.Mutation.CreateAuthenticationToken(childComplexity, args["input"].(LoginInput)), true
 
 	case "Mutation.createPasswordResetToken":
 		if e.complexity.Mutation.CreatePasswordResetToken == nil {
@@ -742,7 +724,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreatePasswordResetToken(childComplexity, args["input"].(ResetPasswordParams)), true
+		return e.complexity.Mutation.CreatePasswordResetToken(childComplexity, args["input"].(ResetPasswordInput)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -766,7 +748,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateUserPassword(childComplexity, args["input"].(ResetUserPasswordParams)), true
+		return e.complexity.Mutation.UpdateUserPassword(childComplexity, args["input"].(ResetUserPasswordInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -1201,13 +1183,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.Exercises(childComplexity), true
 
-	case "User.hashedPassword":
-		if e.complexity.User.HashedPassword == nil {
-			break
-		}
-
-		return e.complexity.User.HashedPassword(childComplexity), true
-
 	case "User.id":
 		if e.complexity.User.ID == nil {
 			break
@@ -1531,8 +1506,8 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
-		ec.unmarshalInputActivateUser,
-		ec.unmarshalInputActivationTokenParams,
+		ec.unmarshalInputActivateUserInput,
+		ec.unmarshalInputActivationTokenInput,
 		ec.unmarshalInputCreateEquipmentInput,
 		ec.unmarshalInputCreateExerciseInput,
 		ec.unmarshalInputCreateExerciseTypeInput,
@@ -1545,13 +1520,12 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputEquipmentWhereInput,
 		ec.unmarshalInputExerciseTypeWhereInput,
 		ec.unmarshalInputExerciseWhereInput,
-		ec.unmarshalInputLogin,
+		ec.unmarshalInputLoginInput,
 		ec.unmarshalInputMusclesGroupWhereInput,
-		ec.unmarshalInputResetPasswordParams,
-		ec.unmarshalInputResetUserPasswordParams,
+		ec.unmarshalInputResetPasswordInput,
+		ec.unmarshalInputResetUserPasswordInput,
 		ec.unmarshalInputRoutineExerciseWhereInput,
 		ec.unmarshalInputRoutineWhereInput,
-		ec.unmarshalInputSetInput,
 		ec.unmarshalInputTokenWhereInput,
 		ec.unmarshalInputUpdateEquipmentInput,
 		ec.unmarshalInputUpdateExerciseInput,
@@ -1689,10 +1663,10 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_activateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 ActivateUser
+	var arg0 ActivateUserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNActivateUser2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivateUser(ctx, tmp)
+		arg0, err = ec.unmarshalNActivateUserInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivateUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1704,10 +1678,10 @@ func (ec *executionContext) field_Mutation_activateUser_args(ctx context.Context
 func (ec *executionContext) field_Mutation_createActivationToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 ActivationTokenParams
+	var arg0 ActivationTokenInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNActivationTokenParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivationTokenParams(ctx, tmp)
+		arg0, err = ec.unmarshalNActivationTokenInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivationTokenInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1719,10 +1693,10 @@ func (ec *executionContext) field_Mutation_createActivationToken_args(ctx contex
 func (ec *executionContext) field_Mutation_createAuthenticationToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 Login
+	var arg0 LoginInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNLogin2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐLogin(ctx, tmp)
+		arg0, err = ec.unmarshalNLoginInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐLoginInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1734,10 +1708,10 @@ func (ec *executionContext) field_Mutation_createAuthenticationToken_args(ctx co
 func (ec *executionContext) field_Mutation_createPasswordResetToken_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 ResetPasswordParams
+	var arg0 ResetPasswordInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNResetPasswordParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetPasswordParams(ctx, tmp)
+		arg0, err = ec.unmarshalNResetPasswordInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetPasswordInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1764,10 +1738,10 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 func (ec *executionContext) field_Mutation_updateUserPassword_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 ResetUserPasswordParams
+	var arg0 ResetUserPasswordInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNResetUserPasswordParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordParams(ctx, tmp)
+		arg0, err = ec.unmarshalNResetUserPasswordInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3218,8 +3192,6 @@ func (ec *executionContext) fieldContext_Exercise_users(ctx context.Context, fie
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -4761,8 +4733,6 @@ func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -4815,7 +4785,7 @@ func (ec *executionContext) _Mutation_activateUser(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().ActivateUser(rctx, fc.Args["input"].(ActivateUser))
+		return ec.resolvers.Mutation().ActivateUser(rctx, fc.Args["input"].(ActivateUserInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4846,8 +4816,6 @@ func (ec *executionContext) fieldContext_Mutation_activateUser(ctx context.Conte
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -4900,7 +4868,7 @@ func (ec *executionContext) _Mutation_updateUserPassword(ctx context.Context, fi
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateUserPassword(rctx, fc.Args["input"].(ResetUserPasswordParams))
+		return ec.resolvers.Mutation().UpdateUserPassword(rctx, fc.Args["input"].(ResetUserPasswordInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4952,7 +4920,7 @@ func (ec *executionContext) _Mutation_createAuthenticationToken(ctx context.Cont
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateAuthenticationToken(rctx, fc.Args["input"].(Login))
+		return ec.resolvers.Mutation().CreateAuthenticationToken(rctx, fc.Args["input"].(LoginInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5004,7 +4972,7 @@ func (ec *executionContext) _Mutation_createActivationToken(ctx context.Context,
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateActivationToken(rctx, fc.Args["input"].(ActivationTokenParams))
+		return ec.resolvers.Mutation().CreateActivationToken(rctx, fc.Args["input"].(ActivationTokenInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5056,7 +5024,7 @@ func (ec *executionContext) _Mutation_createPasswordResetToken(ctx context.Conte
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreatePasswordResetToken(rctx, fc.Args["input"].(ResetPasswordParams))
+		return ec.resolvers.Mutation().CreatePasswordResetToken(rctx, fc.Args["input"].(ResetPasswordInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6311,8 +6279,6 @@ func (ec *executionContext) fieldContext_Routine_users(ctx context.Context, fiel
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -7091,8 +7057,6 @@ func (ec *executionContext) fieldContext_RoutineExercise_users(ctx context.Conte
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -7793,8 +7757,6 @@ func (ec *executionContext) fieldContext_Token_users(ctx context.Context, field 
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -7942,50 +7904,6 @@ func (ec *executionContext) _User_username(ctx context.Context, field graphql.Co
 }
 
 func (ec *executionContext) fieldContext_User_username(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "User",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _User_hashedPassword(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_hashedPassword(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.HashedPassword, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_User_hashedPassword(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -8731,8 +8649,6 @@ func (ec *executionContext) fieldContext_UserEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -9277,8 +9193,6 @@ func (ec *executionContext) fieldContext_Workout_users(ctx context.Context, fiel
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -9932,8 +9846,6 @@ func (ec *executionContext) fieldContext_WorkoutLog_users(ctx context.Context, f
 				return ec.fieldContext_User_email(ctx, field)
 			case "username":
 				return ec.fieldContext_User_username(ctx, field)
-			case "hashedPassword":
-				return ec.fieldContext_User_hashedPassword(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
 			case "createdAt":
@@ -12124,8 +12036,8 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputActivateUser(ctx context.Context, obj interface{}) (ActivateUser, error) {
-	var it ActivateUser
+func (ec *executionContext) unmarshalInputActivateUserInput(ctx context.Context, obj interface{}) (ActivateUserInput, error) {
+	var it ActivateUserInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -12153,8 +12065,8 @@ func (ec *executionContext) unmarshalInputActivateUser(ctx context.Context, obj 
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputActivationTokenParams(ctx context.Context, obj interface{}) (ActivationTokenParams, error) {
-	var it ActivationTokenParams
+func (ec *executionContext) unmarshalInputActivationTokenInput(ctx context.Context, obj interface{}) (ActivationTokenInput, error) {
+	var it ActivationTokenInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -12440,7 +12352,7 @@ func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"restTimer", "routinesID", "exercisesID", "usersID", "createSets"}
+	fieldsInOrder := [...]string{"restTimer", "routinesID", "exercisesID", "usersID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -12483,17 +12395,6 @@ func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context
 				return it, err
 			}
 			it.UsersID = data
-		case "createSets":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createSets"))
-			data, err := ec.unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			if err = ec.resolvers.CreateRoutineExerciseInput().CreateSets(ctx, &it, data); err != nil {
-				return it, err
-			}
 		}
 	}
 
@@ -12756,7 +12657,7 @@ func (ec *executionContext) unmarshalInputCreateWorkoutLogInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"usersID", "exercisesID", "workoutsID", "createSets"}
+	fieldsInOrder := [...]string{"usersID", "exercisesID", "workoutsID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -12790,17 +12691,6 @@ func (ec *executionContext) unmarshalInputCreateWorkoutLogInput(ctx context.Cont
 				return it, err
 			}
 			it.WorkoutsID = data
-		case "createSets":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createSets"))
-			data, err := ec.unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			if err = ec.resolvers.CreateWorkoutLogInput().CreateSets(ctx, &it, data); err != nil {
-				return it, err
-			}
 		}
 	}
 
@@ -14775,8 +14665,8 @@ func (ec *executionContext) unmarshalInputExerciseWhereInput(ctx context.Context
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputLogin(ctx context.Context, obj interface{}) (Login, error) {
-	var it Login
+func (ec *executionContext) unmarshalInputLoginInput(ctx context.Context, obj interface{}) (LoginInput, error) {
+	var it LoginInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -15202,8 +15092,8 @@ func (ec *executionContext) unmarshalInputMusclesGroupWhereInput(ctx context.Con
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputResetPasswordParams(ctx context.Context, obj interface{}) (ResetPasswordParams, error) {
-	var it ResetPasswordParams
+func (ec *executionContext) unmarshalInputResetPasswordInput(ctx context.Context, obj interface{}) (ResetPasswordInput, error) {
+	var it ResetPasswordInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -15231,8 +15121,8 @@ func (ec *executionContext) unmarshalInputResetPasswordParams(ctx context.Contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputResetUserPasswordParams(ctx context.Context, obj interface{}) (ResetUserPasswordParams, error) {
-	var it ResetUserPasswordParams
+func (ec *executionContext) unmarshalInputResetUserPasswordInput(ctx context.Context, obj interface{}) (ResetUserPasswordInput, error) {
+	var it ResetUserPasswordInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -15933,71 +15823,6 @@ func (ec *executionContext) unmarshalInputRoutineWhereInput(ctx context.Context,
 				return it, err
 			}
 			it.HasRoutineExercisesWith = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputSetInput(ctx context.Context, obj interface{}) (schematype.Set, error) {
-	var it schematype.Set
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"Set", "Reps", "Kg", "Time", "Km"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "Set":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Set"))
-			data, err := ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Set = data
-		case "Reps":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Reps"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Reps = data
-		case "Kg":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Kg"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Kg = data
-		case "Time":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Time"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Time = data
-		case "Km":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Km"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Km = data
 		}
 	}
 
@@ -16939,7 +16764,7 @@ func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"restTimer", "clearRestTimer", "routinesID", "exercisesID", "usersID", "clearUsers", "createSets"}
+	fieldsInOrder := [...]string{"restTimer", "clearRestTimer", "routinesID", "exercisesID", "usersID", "clearUsers"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -17000,17 +16825,6 @@ func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context
 				return it, err
 			}
 			it.ClearUsers = data
-		case "createSets":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createSets"))
-			data, err := ec.unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			if err = ec.resolvers.UpdateRoutineExerciseInput().CreateSets(ctx, &it, data); err != nil {
-				return it, err
-			}
 		}
 	}
 
@@ -17435,7 +17249,7 @@ func (ec *executionContext) unmarshalInputUpdateWorkoutLogInput(ctx context.Cont
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"usersID", "clearUsers", "exercisesID", "clearExercises", "workoutsID", "clearWorkouts", "createSets"}
+	fieldsInOrder := [...]string{"usersID", "clearUsers", "exercisesID", "clearExercises", "workoutsID", "clearWorkouts"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -17496,17 +17310,6 @@ func (ec *executionContext) unmarshalInputUpdateWorkoutLogInput(ctx context.Cont
 				return it, err
 			}
 			it.ClearWorkouts = data
-		case "createSets":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createSets"))
-			data, err := ec.unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			if err = ec.resolvers.UpdateWorkoutLogInput().CreateSets(ctx, &it, data); err != nil {
-				return it, err
-			}
 		}
 	}
 
@@ -17520,7 +17323,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "idEqualFold", "idContainsFold", "email", "emailNEQ", "emailIn", "emailNotIn", "emailGT", "emailGTE", "emailLT", "emailLTE", "emailContains", "emailHasPrefix", "emailHasSuffix", "emailEqualFold", "emailContainsFold", "username", "usernameNEQ", "usernameIn", "usernameNotIn", "usernameGT", "usernameGTE", "usernameLT", "usernameLTE", "usernameContains", "usernameHasPrefix", "usernameHasSuffix", "usernameEqualFold", "usernameContainsFold", "hashedPassword", "hashedPasswordNEQ", "hashedPasswordIn", "hashedPasswordNotIn", "hashedPasswordGT", "hashedPasswordGTE", "hashedPasswordLT", "hashedPasswordLTE", "hashedPasswordContains", "hashedPasswordHasPrefix", "hashedPasswordHasSuffix", "hashedPasswordEqualFold", "hashedPasswordContainsFold", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "createdAtContains", "createdAtHasPrefix", "createdAtHasSuffix", "createdAtEqualFold", "createdAtContainsFold", "activated", "activatedNEQ", "activatedIn", "activatedNotIn", "activatedGT", "activatedGTE", "activatedLT", "activatedLTE", "version", "versionNEQ", "versionIn", "versionNotIn", "versionGT", "versionGTE", "versionLT", "versionLTE", "hasTokens", "hasTokensWith", "hasExercises", "hasExercisesWith", "hasRoutines", "hasRoutinesWith", "hasWorkouts", "hasWorkoutsWith", "hasWorkoutLogs", "hasWorkoutLogsWith", "hasRoutineExercises", "hasRoutineExercisesWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "idEqualFold", "idContainsFold", "email", "emailNEQ", "emailIn", "emailNotIn", "emailGT", "emailGTE", "emailLT", "emailLTE", "emailContains", "emailHasPrefix", "emailHasSuffix", "emailEqualFold", "emailContainsFold", "username", "usernameNEQ", "usernameIn", "usernameNotIn", "usernameGT", "usernameGTE", "usernameLT", "usernameLTE", "usernameContains", "usernameHasPrefix", "usernameHasSuffix", "usernameEqualFold", "usernameContainsFold", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "createdAtContains", "createdAtHasPrefix", "createdAtHasSuffix", "createdAtEqualFold", "createdAtContainsFold", "activated", "activatedNEQ", "activatedIn", "activatedNotIn", "activatedGT", "activatedGTE", "activatedLT", "activatedLTE", "version", "versionNEQ", "versionIn", "versionNotIn", "versionGT", "versionGTE", "versionLT", "versionLTE", "hasTokens", "hasTokensWith", "hasExercises", "hasExercisesWith", "hasRoutines", "hasRoutinesWith", "hasWorkouts", "hasWorkoutsWith", "hasWorkoutLogs", "hasWorkoutLogsWith", "hasRoutineExercises", "hasRoutineExercisesWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -17878,123 +17681,6 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 				return it, err
 			}
 			it.UsernameContainsFold = data
-		case "hashedPassword":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPassword"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPassword = data
-		case "hashedPasswordNEQ":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordNEQ"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordNEQ = data
-		case "hashedPasswordIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordIn"))
-			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordIn = data
-		case "hashedPasswordNotIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordNotIn"))
-			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordNotIn = data
-		case "hashedPasswordGT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordGT"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordGT = data
-		case "hashedPasswordGTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordGTE"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordGTE = data
-		case "hashedPasswordLT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordLT"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordLT = data
-		case "hashedPasswordLTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordLTE"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordLTE = data
-		case "hashedPasswordContains":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordContains"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordContains = data
-		case "hashedPasswordHasPrefix":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordHasPrefix"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordHasPrefix = data
-		case "hashedPasswordHasSuffix":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordHasSuffix"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordHasSuffix = data
-		case "hashedPasswordEqualFold":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordEqualFold"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordEqualFold = data
-		case "hashedPasswordContainsFold":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hashedPasswordContainsFold"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.HashedPasswordContainsFold = data
 		case "name":
 			var err error
 
@@ -22461,11 +22147,6 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "hashedPassword":
-			out.Values[i] = ec._User_hashedPassword(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "name":
 			out.Values[i] = ec._User_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -23620,13 +23301,13 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) unmarshalNActivateUser2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivateUser(ctx context.Context, v interface{}) (ActivateUser, error) {
-	res, err := ec.unmarshalInputActivateUser(ctx, v)
+func (ec *executionContext) unmarshalNActivateUserInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivateUserInput(ctx context.Context, v interface{}) (ActivateUserInput, error) {
+	res, err := ec.unmarshalInputActivateUserInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNActivationTokenParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivationTokenParams(ctx context.Context, v interface{}) (ActivationTokenParams, error) {
-	res, err := ec.unmarshalInputActivationTokenParams(ctx, v)
+func (ec *executionContext) unmarshalNActivationTokenInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐActivationTokenInput(ctx context.Context, v interface{}) (ActivationTokenInput, error) {
+	res, err := ec.unmarshalInputActivationTokenInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -23789,8 +23470,8 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNLogin2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐLogin(ctx context.Context, v interface{}) (Login, error) {
-	res, err := ec.unmarshalInputLogin(ctx, v)
+func (ec *executionContext) unmarshalNLoginInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐLoginInput(ctx context.Context, v interface{}) (LoginInput, error) {
+	res, err := ec.unmarshalInputLoginInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -23865,13 +23546,13 @@ func (ec *executionContext) marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPag
 	return ec._PageInfo(ctx, sel, &v)
 }
 
-func (ec *executionContext) unmarshalNResetPasswordParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetPasswordParams(ctx context.Context, v interface{}) (ResetPasswordParams, error) {
-	res, err := ec.unmarshalInputResetPasswordParams(ctx, v)
+func (ec *executionContext) unmarshalNResetPasswordInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetPasswordInput(ctx context.Context, v interface{}) (ResetPasswordInput, error) {
+	res, err := ec.unmarshalInputResetPasswordInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNResetUserPasswordParams2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordParams(ctx context.Context, v interface{}) (ResetUserPasswordParams, error) {
-	res, err := ec.unmarshalInputResetUserPasswordParams(ctx, v)
+func (ec *executionContext) unmarshalNResetUserPasswordInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordInput(ctx context.Context, v interface{}) (ResetUserPasswordInput, error) {
+	res, err := ec.unmarshalInputResetUserPasswordInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -23985,28 +23666,6 @@ func (ec *executionContext) marshalNSet2ᚖgithubᚗcomᚋsahidrahman404ᚋgigac
 		return graphql.Null
 	}
 	return ec._Set(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx context.Context, v interface{}) ([]*schematype.Set, error) {
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*schematype.Set, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNSetInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSet(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) unmarshalNSetInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSet(ctx context.Context, v interface{}) (*schematype.Set, error) {
-	res, err := ec.unmarshalInputSetInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

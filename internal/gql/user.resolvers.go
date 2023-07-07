@@ -62,7 +62,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 }
 
 // ActivateUser is the resolver for the activateUser field.
-func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.ActivateUser) (*ent.User, error) {
+func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.ActivateUserInput) (*ent.User, error) {
 	v := validator.NewValidator()
 
 	if types.ValidateTokenPlaintext(v, input.TokenPlainText); v.HasErrors() {
@@ -111,7 +111,7 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 }
 
 // UpdateUserPassword is the resolver for the updateUserPassword field.
-func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigachad.ResetUserPasswordParams) (*string, error) {
+func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigachad.ResetUserPasswordInput) (*string, error) {
 	v := validator.NewValidator()
 
 	types.ValidatePasswordPlaintext(v, input.Password)
