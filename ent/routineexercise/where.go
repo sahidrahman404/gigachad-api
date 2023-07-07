@@ -64,7 +64,7 @@ func IDContainsFold(id string) predicate.RoutineExercise {
 }
 
 // RestTimer applies equality check predicate on the "rest_timer" field. It's identical to RestTimerEQ.
-func RestTimer(v int) predicate.RoutineExercise {
+func RestTimer(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldRestTimer, v))
 }
 
@@ -84,43 +84,58 @@ func UserID(v string) predicate.RoutineExercise {
 }
 
 // RestTimerEQ applies the EQ predicate on the "rest_timer" field.
-func RestTimerEQ(v int) predicate.RoutineExercise {
+func RestTimerEQ(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldRestTimer, v))
 }
 
 // RestTimerNEQ applies the NEQ predicate on the "rest_timer" field.
-func RestTimerNEQ(v int) predicate.RoutineExercise {
+func RestTimerNEQ(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNEQ(FieldRestTimer, v))
 }
 
 // RestTimerIn applies the In predicate on the "rest_timer" field.
-func RestTimerIn(vs ...int) predicate.RoutineExercise {
+func RestTimerIn(vs ...string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldIn(FieldRestTimer, vs...))
 }
 
 // RestTimerNotIn applies the NotIn predicate on the "rest_timer" field.
-func RestTimerNotIn(vs ...int) predicate.RoutineExercise {
+func RestTimerNotIn(vs ...string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNotIn(FieldRestTimer, vs...))
 }
 
 // RestTimerGT applies the GT predicate on the "rest_timer" field.
-func RestTimerGT(v int) predicate.RoutineExercise {
+func RestTimerGT(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGT(FieldRestTimer, v))
 }
 
 // RestTimerGTE applies the GTE predicate on the "rest_timer" field.
-func RestTimerGTE(v int) predicate.RoutineExercise {
+func RestTimerGTE(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldGTE(FieldRestTimer, v))
 }
 
 // RestTimerLT applies the LT predicate on the "rest_timer" field.
-func RestTimerLT(v int) predicate.RoutineExercise {
+func RestTimerLT(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLT(FieldRestTimer, v))
 }
 
 // RestTimerLTE applies the LTE predicate on the "rest_timer" field.
-func RestTimerLTE(v int) predicate.RoutineExercise {
+func RestTimerLTE(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldLTE(FieldRestTimer, v))
+}
+
+// RestTimerContains applies the Contains predicate on the "rest_timer" field.
+func RestTimerContains(v string) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldContains(FieldRestTimer, v))
+}
+
+// RestTimerHasPrefix applies the HasPrefix predicate on the "rest_timer" field.
+func RestTimerHasPrefix(v string) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldHasPrefix(FieldRestTimer, v))
+}
+
+// RestTimerHasSuffix applies the HasSuffix predicate on the "rest_timer" field.
+func RestTimerHasSuffix(v string) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldRestTimer, v))
 }
 
 // RestTimerIsNil applies the IsNil predicate on the "rest_timer" field.
@@ -131,6 +146,16 @@ func RestTimerIsNil() predicate.RoutineExercise {
 // RestTimerNotNil applies the NotNil predicate on the "rest_timer" field.
 func RestTimerNotNil() predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldNotNull(FieldRestTimer))
+}
+
+// RestTimerEqualFold applies the EqualFold predicate on the "rest_timer" field.
+func RestTimerEqualFold(v string) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldEqualFold(FieldRestTimer, v))
+}
+
+// RestTimerContainsFold applies the ContainsFold predicate on the "rest_timer" field.
+func RestTimerContainsFold(v string) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldContainsFold(FieldRestTimer, v))
 }
 
 // RoutineIDEQ applies the EQ predicate on the "routine_id" field.

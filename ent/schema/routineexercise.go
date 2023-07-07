@@ -20,9 +20,8 @@ type RoutineExercise struct {
 func (RoutineExercise) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").DefaultFunc(generateKSUID),
-		field.Int("rest_timer").Optional(),
-		field.JSON("sets", &schematype.Sets{}).
-			Annotations(entgql.Type("[Set!]"), entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
+		field.String("rest_timer").Optional(),
+		field.JSON("sets", &schematype.Sets{}).Annotations(entgql.Type("[Set!]")),
 		field.String("routine_id"),
 		field.String("exercise_id"),
 		field.String("user_id").Optional(),
@@ -50,6 +49,5 @@ func (RoutineExercise) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
 		entgql.QueryField(),
-		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

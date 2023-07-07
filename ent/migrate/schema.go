@@ -111,7 +111,7 @@ var (
 	// RoutineExercisesColumns holds the columns for the "routine_exercises" table.
 	RoutineExercisesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
-		{Name: "rest_timer", Type: field.TypeInt, Nullable: true},
+		{Name: "rest_timer", Type: field.TypeString, Nullable: true},
 		{Name: "sets", Type: field.TypeJSON},
 		{Name: "routine_id", Type: field.TypeString},
 		{Name: "exercise_id", Type: field.TypeString},

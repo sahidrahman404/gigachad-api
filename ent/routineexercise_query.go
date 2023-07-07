@@ -371,7 +371,7 @@ func (req *RoutineExerciseQuery) WithUsers(opts ...func(*UserQuery)) *RoutineExe
 // Example:
 //
 //	var v []struct {
-//		RestTimer int `json:"rest_timer,omitempty"`
+//		RestTimer string `json:"rest_timer,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -394,7 +394,7 @@ func (req *RoutineExerciseQuery) GroupBy(field string, fields ...string) *Routin
 // Example:
 //
 //	var v []struct {
-//		RestTimer int `json:"rest_timer,omitempty"`
+//		RestTimer string `json:"rest_timer,omitempty"`
 //	}
 //
 //	client.RoutineExercise.Query().

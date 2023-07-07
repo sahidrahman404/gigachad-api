@@ -7,7 +7,7 @@ import (
 )
 
 type UpdateRoutineExerciseParams struct {
-	RestTimer *int            `json:"restTimer"`
+	RestTimer *string         `json:"restTimer"`
 	Sets      schematype.Sets `json:"set"`
 }
 
@@ -17,7 +17,7 @@ type CreateRoutineExerciseParams struct {
 }
 
 type RE struct {
-	RestTimer  *int            `json:"restTimer"`
+	RestTimer  *string         `json:"restTimer"`
 	Sets       schematype.Sets `json:"set"`
 	ExerciseID string          `json:"exerciseID"`
 }

@@ -2,12 +2,24 @@
 
 package gigachad
 
+import (
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
+)
+
 type ActivateUserInput struct {
 	TokenPlainText string `json:"tokenPlainText"`
 }
 
 type ActivationTokenInput struct {
 	Email string `json:"email"`
+}
+
+type CreateRoutineExerciseInput struct {
+	RestTimer  *string           `json:"restTimer,omitempty"`
+	Sets       []*schematype.Set `json:"sets"`
+	RoutineID  string            `json:"routineID"`
+	ExerciseID string            `json:"exerciseID"`
+	UserID     *string           `json:"userID,omitempty"`
 }
 
 type LoginInput struct {

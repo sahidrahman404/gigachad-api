@@ -24,15 +24,15 @@ type RoutineExerciseCreate struct {
 }
 
 // SetRestTimer sets the "rest_timer" field.
-func (rec *RoutineExerciseCreate) SetRestTimer(i int) *RoutineExerciseCreate {
-	rec.mutation.SetRestTimer(i)
+func (rec *RoutineExerciseCreate) SetRestTimer(s string) *RoutineExerciseCreate {
+	rec.mutation.SetRestTimer(s)
 	return rec
 }
 
 // SetNillableRestTimer sets the "rest_timer" field if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableRestTimer(i *int) *RoutineExerciseCreate {
-	if i != nil {
-		rec.SetRestTimer(*i)
+func (rec *RoutineExerciseCreate) SetNillableRestTimer(s *string) *RoutineExerciseCreate {
+	if s != nil {
+		rec.SetRestTimer(*s)
 	}
 	return rec
 }
@@ -218,7 +218,7 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 		_spec.ID.Value = id
 	}
 	if value, ok := rec.mutation.RestTimer(); ok {
-		_spec.SetField(routineexercise.FieldRestTimer, field.TypeInt, value)
+		_spec.SetField(routineexercise.FieldRestTimer, field.TypeString, value)
 		_node.RestTimer = value
 	}
 	if value, ok := rec.mutation.Sets(); ok {

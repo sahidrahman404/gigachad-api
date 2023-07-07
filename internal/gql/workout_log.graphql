@@ -1,0 +1,10 @@
+input CreateWorkoutLogInput {
+  sets: [SetInput!]!
+  exerciseID: ID
+  workoutID: ID
+  userID: ID
+}
+
+extend type Mutation {
+  CreateWorkoutLog(input: CreateWorkoutLogInput!): WorkoutLog
+}

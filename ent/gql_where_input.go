@@ -1851,16 +1851,21 @@ type RoutineExerciseWhereInput struct {
 	IDContainsFold *string  `json:"idContainsFold,omitempty"`
 
 	// "rest_timer" field predicates.
-	RestTimer       *int  `json:"restTimer,omitempty"`
-	RestTimerNEQ    *int  `json:"restTimerNEQ,omitempty"`
-	RestTimerIn     []int `json:"restTimerIn,omitempty"`
-	RestTimerNotIn  []int `json:"restTimerNotIn,omitempty"`
-	RestTimerGT     *int  `json:"restTimerGT,omitempty"`
-	RestTimerGTE    *int  `json:"restTimerGTE,omitempty"`
-	RestTimerLT     *int  `json:"restTimerLT,omitempty"`
-	RestTimerLTE    *int  `json:"restTimerLTE,omitempty"`
-	RestTimerIsNil  bool  `json:"restTimerIsNil,omitempty"`
-	RestTimerNotNil bool  `json:"restTimerNotNil,omitempty"`
+	RestTimer             *string  `json:"restTimer,omitempty"`
+	RestTimerNEQ          *string  `json:"restTimerNEQ,omitempty"`
+	RestTimerIn           []string `json:"restTimerIn,omitempty"`
+	RestTimerNotIn        []string `json:"restTimerNotIn,omitempty"`
+	RestTimerGT           *string  `json:"restTimerGT,omitempty"`
+	RestTimerGTE          *string  `json:"restTimerGTE,omitempty"`
+	RestTimerLT           *string  `json:"restTimerLT,omitempty"`
+	RestTimerLTE          *string  `json:"restTimerLTE,omitempty"`
+	RestTimerContains     *string  `json:"restTimerContains,omitempty"`
+	RestTimerHasPrefix    *string  `json:"restTimerHasPrefix,omitempty"`
+	RestTimerHasSuffix    *string  `json:"restTimerHasSuffix,omitempty"`
+	RestTimerIsNil        bool     `json:"restTimerIsNil,omitempty"`
+	RestTimerNotNil       bool     `json:"restTimerNotNil,omitempty"`
+	RestTimerEqualFold    *string  `json:"restTimerEqualFold,omitempty"`
+	RestTimerContainsFold *string  `json:"restTimerContainsFold,omitempty"`
 
 	// "routine_id" field predicates.
 	RoutineID             *string  `json:"routineID,omitempty"`
@@ -2047,11 +2052,26 @@ func (i *RoutineExerciseWhereInput) P() (predicate.RoutineExercise, error) {
 	if i.RestTimerLTE != nil {
 		predicates = append(predicates, routineexercise.RestTimerLTE(*i.RestTimerLTE))
 	}
+	if i.RestTimerContains != nil {
+		predicates = append(predicates, routineexercise.RestTimerContains(*i.RestTimerContains))
+	}
+	if i.RestTimerHasPrefix != nil {
+		predicates = append(predicates, routineexercise.RestTimerHasPrefix(*i.RestTimerHasPrefix))
+	}
+	if i.RestTimerHasSuffix != nil {
+		predicates = append(predicates, routineexercise.RestTimerHasSuffix(*i.RestTimerHasSuffix))
+	}
 	if i.RestTimerIsNil {
 		predicates = append(predicates, routineexercise.RestTimerIsNil())
 	}
 	if i.RestTimerNotNil {
 		predicates = append(predicates, routineexercise.RestTimerNotNil())
+	}
+	if i.RestTimerEqualFold != nil {
+		predicates = append(predicates, routineexercise.RestTimerEqualFold(*i.RestTimerEqualFold))
+	}
+	if i.RestTimerContainsFold != nil {
+		predicates = append(predicates, routineexercise.RestTimerContainsFold(*i.RestTimerContainsFold))
 	}
 	if i.RoutineID != nil {
 		predicates = append(predicates, routineexercise.RoutineIDEQ(*i.RoutineID))
