@@ -22,7 +22,7 @@ autobind:
 models:
   ID:
     model:
-      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/sahidrahman404/gigachad-api/ent/schema/pksuid.ID
   Node:
     model:
       - github.com/sahidrahman404/gigachad-api/ent.Noder
