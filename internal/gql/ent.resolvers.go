@@ -6,7 +6,6 @@ package gql
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/contrib/entgql"
 	gigachad "github.com/sahidrahman404/gigachad-api"
@@ -72,12 +71,20 @@ func (r *queryResolver) WorkoutLogs(ctx context.Context, after *entgql.Cursor[pk
 
 // Sets is the resolver for the sets field.
 func (r *routineExerciseResolver) Sets(ctx context.Context, obj *ent.RoutineExercise) ([]*schematype.Set, error) {
-	panic(fmt.Errorf("not implemented: Sets - sets"))
+	var sets []*schematype.Set
+	for _, v := range *obj.Sets {
+		sets = append(sets, &v)
+	}
+	return sets, nil
 }
 
 // Sets is the resolver for the sets field.
 func (r *workoutLogResolver) Sets(ctx context.Context, obj *ent.WorkoutLog) ([]*schematype.Set, error) {
-	panic(fmt.Errorf("not implemented: Sets - sets"))
+	var sets []*schematype.Set
+	for _, v := range *obj.Sets {
+		sets = append(sets, &v)
+	}
+	return sets, nil
 }
 
 // Query returns gigachad.QueryResolver implementation.
