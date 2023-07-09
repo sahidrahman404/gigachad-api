@@ -166,6 +166,12 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 	return &message, nil
 }
 
+// GetUser is the resolver for the getUser field.
+func (r *queryResolver) GetUser(ctx context.Context) (*ent.User, error) {
+	user := r.forContext(ctx)
+	return user.Ent, nil
+}
+
 // Mutation returns gigachad.MutationResolver implementation.
 func (r *Resolver) Mutation() gigachad.MutationResolver { return &mutationResolver{r} }
 

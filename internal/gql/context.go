@@ -8,9 +8,12 @@ import (
 
 type contextKey string
 
-const userContextKey = contextKey("user")
+const UserContextKey = contextKey("user")
 
 func (r *Resolver) forContext(ctx context.Context) *types.User {
-	user, _ := ctx.Value(userContextKey).(*types.User)
+	user, ok := ctx.Value(UserContextKey).(*types.User)
+	if !ok {
+		panic("missing user value in request context")
+	}
 	return user
 }

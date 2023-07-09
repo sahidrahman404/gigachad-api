@@ -155,6 +155,7 @@ type ComplexityRoot struct {
 		EquipmentSlice   func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.EquipmentWhereInput) int
 		ExerciseTypes    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseTypeWhereInput) int
 		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) int
+		GetUser          func(childComplexity int) int
 		MusclesGroups    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.MusclesGroupWhereInput) int
 		Node             func(childComplexity int, id pksuid.ID) int
 		Nodes            func(childComplexity int, ids []pksuid.ID) int
@@ -322,6 +323,7 @@ type QueryResolver interface {
 	Users(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.UserWhereInput) (*ent.UserConnection, error)
 	Workouts(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutWhereInput) (*ent.WorkoutConnection, error)
 	WorkoutLogs(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutLogWhereInput) (*ent.WorkoutLogConnection, error)
+	GetUser(ctx context.Context) (*ent.User, error)
 }
 type RoutineExerciseResolver interface {
 	Sets(ctx context.Context, obj *ent.RoutineExercise) ([]*schematype.Set, error)
@@ -828,6 +830,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseWhereInput)), true
+
+	case "Query.getUser":
+		if e.complexity.Query.GetUser == nil {
+			break
+		}
+
+		return e.complexity.Query.GetUser(childComplexity), true
 
 	case "Query.musclesGroups":
 		if e.complexity.Query.MusclesGroups == nil {
@@ -5982,6 +5991,75 @@ func (ec *executionContext) fieldContext_Query_workoutLogs(ctx context.Context, 
 	if fc.Args, err = ec.field_Query_workoutLogs_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_getUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_getUser(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetUser(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*ent.User)
+	fc.Result = res
+	return ec.marshalOUser2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_getUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "username":
+				return ec.fieldContext_User_username(ctx, field)
+			case "name":
+				return ec.fieldContext_User_name(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "activated":
+				return ec.fieldContext_User_activated(ctx, field)
+			case "version":
+				return ec.fieldContext_User_version(ctx, field)
+			case "tokens":
+				return ec.fieldContext_User_tokens(ctx, field)
+			case "exercises":
+				return ec.fieldContext_User_exercises(ctx, field)
+			case "routines":
+				return ec.fieldContext_User_routines(ctx, field)
+			case "workouts":
+				return ec.fieldContext_User_workouts(ctx, field)
+			case "workoutLogs":
+				return ec.fieldContext_User_workoutLogs(ctx, field)
+			case "routineExercises":
+				return ec.fieldContext_User_routineExercises(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
 	}
 	return fc, nil
 }
@@ -21181,6 +21259,25 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "getUser":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getUser(ctx, field)
 				return res
 			}
 

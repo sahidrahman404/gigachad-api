@@ -12,3 +12,7 @@ type Mutation {
   activateUser(input: ActivateUserInput!): User!
   updateUserPassword(input: ResetUserPasswordInput!): String
 }
+
+extend type Query {
+  getUser: User
+}

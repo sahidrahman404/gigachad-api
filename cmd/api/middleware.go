@@ -46,7 +46,7 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 
 		v := validator.NewValidator()
 
-		if types.ValidateTokenPlaintext(v, token); !v.HasErrors() {
+		if types.ValidateTokenPlaintext(v, token); v.HasErrors() {
 			app.invalidAuthenticationToken(w, r)
 			return
 		}
