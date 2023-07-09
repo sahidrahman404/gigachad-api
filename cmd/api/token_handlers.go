@@ -187,3 +187,48 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 		app.serverError(w, r, err)
 	}
 }
+
+func (app *application) setCookieHandler(w http.ResponseWriter, r *http.Request) {
+	tokenPlainText, err := app.readParams("tokenPlainText", r)
+	if err != nil {
+		app.badRequest(w, r, err)
+		return
+	}
+
+	cookie := http.Cookie{
+		Name:     "auth",
+		Value:    tokenPlainText,
+		Path:     "/",
+		MaxAge:   3600,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &cookie)
+
+	err = response.JSON(w, http.StatusOK, "cookie set!")
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+}
+
+func (app *application) getCookieHandler(w http.ResponseWriter, r *http.Request) {
+	tokenPlainText, err := r.Cookie("auth")
+	if err != nil {
+		switch {
+		case errors.Is(err, http.ErrNoCookie):
+			app.badRequest(w, r, err)
+		default:
+			app.serverError(w, r, err)
+		}
+		return
+	}
+
+	err = response.JSON(w, http.StatusOK, map[string]string{
+		"token": tokenPlainText.Value,
+	})
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+}

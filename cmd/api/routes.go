@@ -25,9 +25,11 @@ func (app *application) routes() http.Handler {
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: false,
+		AllowCredentials: true,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
+
+	mux.Use(app.authenticate)
 
 	mux.Get("/status", app.status)
 
@@ -61,6 +63,10 @@ func (app *application) routes() http.Handler {
 				"/password-reset",
 				app.createPasswordResetTokenHandler,
 			)
+
+			// Add token to client cookie using http cookies - for spa
+			r.Get("/set/{tokenPlainText}", app.setCookieHandler)
+			r.Get("/get", app.getCookieHandler)
 		})
 
 		// equipment resources

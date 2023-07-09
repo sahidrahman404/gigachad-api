@@ -42,5 +42,5 @@ func GenerateToken(userID pksuid.ID, ttl time.Duration, scope string) (*Token, e
 
 func ValidateTokenPlaintext(v *validator.Validator, tokenPlaintext string) {
 	v.CheckField(tokenPlaintext != "", "token", "must be provided")
-	v.CheckField(len(tokenPlaintext) != 26, "token", "must be 26 bytes long")
+	v.CheckField(len(tokenPlaintext) == 26, "token", "must be 26 bytes long")
 }
