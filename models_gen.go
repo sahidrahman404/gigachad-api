@@ -3,6 +3,7 @@
 package gigachad
 
 import (
+	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
@@ -13,6 +14,11 @@ type ActivateUserInput struct {
 
 type ActivationTokenInput struct {
 	Email string `json:"email"`
+}
+
+type AuthenticationToken struct {
+	User           *ent.User `json:"user"`
+	TokenPlainText string    `json:"tokenPlainText"`
 }
 
 type CreateRoutineExerciseInput struct {

@@ -62,7 +62,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 }
 
 // ActivateUser is the resolver for the activateUser field.
-func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.ActivateUserInput) (*ent.User, error) {
+func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.ActivateUserInput) (*gigachad.AuthenticationToken, error) {
 	v := validator.NewValidator()
 
 	if types.ValidateTokenPlaintext(v, input.TokenPlainText); v.HasErrors() {
@@ -107,7 +107,15 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 		return nil, r.serverError(err)
 	}
 
-	return user.Ent, nil
+	token, err := r.storage.Tokens.New(user.Ent.ID, 24*time.Hour, database.SocpeAuthentication)
+	if err != nil {
+		return nil, r.serverError(err)
+	}
+
+	return &gigachad.AuthenticationToken{
+		User: user.Ent,
+		TokenPlainText: token.Plaintext,
+	}, nil
 }
 
 // UpdateUserPassword is the resolver for the updateUserPassword field.

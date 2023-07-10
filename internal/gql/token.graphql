@@ -11,8 +11,13 @@ input ResetPasswordInput {
   email: String!
 }
 
+type AuthenticationToken {
+  user: User!
+  tokenPlainText: String!
+}
+
 extend type Mutation {
-  createAuthenticationToken(input: LoginInput!): String
+  createAuthenticationToken(input: LoginInput!): AuthenticationToken
   createActivationToken(input: ActivationTokenInput!): String
   createPasswordResetToken(input: ResetPasswordInput!): String
 }
