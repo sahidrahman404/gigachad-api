@@ -40,7 +40,16 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 	err = r.storage.Users.Insert(user)
 
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, database.ErrDuplicateUsername):
+			v.AddFieldError("username", "a user with this username already exists")
+			return nil, r.errorMessage(v)
+		case errors.Is(err, database.ErrDuplicateEmail):
+			v.AddFieldError("email", "a user with this email address already exists")
+			return nil, r.errorMessage(v)
+		default:
+			return nil, r.serverError(err)
+		}
 	}
 
 	token, err := r.storage.Tokens.New(user.Ent.ID, 3*24*time.Hour, database.ScopeActivation)
@@ -113,7 +122,7 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 	}
 
 	return &gigachad.AuthenticationToken{
-		User: user.Ent,
+		User:           user.Ent,
 		TokenPlainText: token.Plaintext,
 	}, nil
 }
