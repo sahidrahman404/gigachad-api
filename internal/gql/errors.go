@@ -38,3 +38,8 @@ func (r *Resolver) invalidCredentials() *gqlerror.Error {
 	message := "invalid authentication credentials"
 	return gqlerror.Errorf(message)
 }
+
+func (r *Resolver) invalidUser() *gqlerror.Error {
+	message := "a user with this email address doesn't exist"
+	return gqlerror.Errorf(message)
+}
