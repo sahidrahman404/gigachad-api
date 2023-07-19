@@ -8,7 +8,7 @@ type CreateTransformedURLParams struct {
 	Width       *int     `json:"width"`
 	Height      *float64 `json:"height"`
 	Src         string   `json:"src"`
-	BreakPoint  int      `json:"breakPoint"`
+	BreakPoint  []int    `json:"breakPoint"`
 	AspectRatio *float64 `json:"aspectRatio"`
 }
 

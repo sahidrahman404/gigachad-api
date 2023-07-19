@@ -50,7 +50,7 @@ func (app *application) getSignedUrl(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) getTransformedUrls(w http.ResponseWriter, r *http.Request) {
-	var params []types.CreateTransformedURLParams
+	var params types.CreateTransformedURLParams
 
 	err := request.DecodeJSONStrict(w, r, &params)
 	if err != nil {
@@ -59,32 +59,32 @@ func (app *application) getTransformedUrls(w http.ResponseWriter, r *http.Reques
 	}
 
 	var result []*string
-	for _, value := range params {
-		if value.AspectRatio != nil && value.Height != nil {
-			devided := float64(value.BreakPoint) / *value.AspectRatio
+	for _, breakpoint := range params.BreakPoint {
+		if params.AspectRatio != nil && params.Height != nil {
+			devided := float64(breakpoint) / *params.AspectRatio
 			transformedHeight := math.Round(devided)
 			transformed := signURL(
 				app.config.imgproxy.key,
 				app.config.imgproxy.salt,
 				app.config.imgproxy.imgproxyHost,
-				value.BreakPoint,
+				breakpoint,
 				&transformedHeight,
-				value.Src,
+				params.Src,
 			)
-			stitch := fmt.Sprintf("%s %dw", transformed, value.BreakPoint)
+			stitch := fmt.Sprintf("%s %dw", transformed, params.BreakPoint)
 			result = append(result, &stitch)
 		}
 
-		if value.Height == nil {
+		if params.Height == nil {
 			transformed := signURL(
 				app.config.imgproxy.key,
 				app.config.imgproxy.salt,
 				app.config.imgproxy.imgproxyHost,
-				value.BreakPoint,
+				breakpoint,
 				nil,
-				value.Src,
+				params.Src,
 			)
-			stitch := fmt.Sprintf("%s %dw", transformed, value.BreakPoint)
+			stitch := fmt.Sprintf("%s %dw", transformed, params.BreakPoint)
 			result = append(result, &stitch)
 		}
 	}
