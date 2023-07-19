@@ -39,7 +39,7 @@ func (r *Resolver) invalidCredentials() *gqlerror.Error {
 	return gqlerror.Errorf(message)
 }
 
-func (r *Resolver) invalidUser() *gqlerror.Error {
-	message := "a user with this email address doesn't exist"
+func (r *Resolver) invalidEmail() *gqlerror.Error {
+	message := "no matching email address found"
 	return gqlerror.Errorf(message)
 }

@@ -68,7 +68,7 @@ func (r *mutationResolver) CreateActivationToken(ctx context.Context, input giga
 	if err != nil {
 		switch {
 		case errors.Is(err, database.ErrRecordNotFound):
-			return nil, r.invalidCredentials()
+			return nil, r.invalidEmail()
 		default:
 			return nil, r.serverError(err)
 		}
@@ -109,8 +109,7 @@ func (r *mutationResolver) CreatePasswordResetToken(ctx context.Context, input g
 	if err != nil {
 		switch {
 		case errors.Is(err, database.ErrRecordNotFound):
-			v.AddFieldError("email", "no matching email address found")
-			return nil, r.errorMessage(v)
+			return nil, r.invalidEmail()
 		default:
 			return nil, r.serverError(err)
 		}
