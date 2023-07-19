@@ -67,6 +67,8 @@ func (app *application) routes() http.Handler {
 			// Add token to client cookie using http cookies - for spa
 			r.Get("/set/{tokenPlainText}", app.setCookieHandler)
 			r.Get("/get", app.getCookieHandler)
+			r.Post("/img", app.getSignedUrl)
+			r.Post("/imgs", app.getTransformedUrls)
 		})
 
 		// equipment resources

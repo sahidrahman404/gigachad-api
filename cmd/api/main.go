@@ -38,6 +38,11 @@ type config struct {
 		password string
 		from     string
 	}
+	imgproxy struct {
+		key          string
+		salt         string
+		imgproxyHost string
+	}
 }
 
 type application struct {
@@ -60,6 +65,9 @@ func run(logger *leveledlog.Logger) error {
 	cfg.smtp.username = env.GetString("SMTP_USERNAME", "example_username")
 	cfg.smtp.password = env.GetString("SMTP_PASSWORD", "pa55word")
 	cfg.smtp.from = env.GetString("SMTP_FROM", "Example Name <no_reply@example.org>")
+	cfg.imgproxy.key = env.GetString("KEY", "")
+	cfg.imgproxy.salt = env.GetString("SALT", "")
+	cfg.imgproxy.imgproxyHost = env.GetString("IMGPROXY_HOST", "")
 
 	showVersion := flag.Bool("version", false, "display version and exit")
 
