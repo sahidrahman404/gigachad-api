@@ -71,7 +71,7 @@ func (app *application) getTransformedUrls(w http.ResponseWriter, r *http.Reques
 				&transformedHeight,
 				params.Src,
 			)
-			stitch := fmt.Sprintf("%s %dw", transformed, params.BreakPoint)
+			stitch := fmt.Sprintf("%s %dw", transformed, breakpoint)
 			result = append(result, &stitch)
 		}
 
@@ -84,7 +84,7 @@ func (app *application) getTransformedUrls(w http.ResponseWriter, r *http.Reques
 				nil,
 				params.Src,
 			)
-			stitch := fmt.Sprintf("%s %dw", transformed, params.BreakPoint)
+			stitch := fmt.Sprintf("%s %dw", transformed, breakpoint)
 			result = append(result, &stitch)
 		}
 	}
