@@ -3,44 +3,50 @@ Welcome to Gigachad!
 {{end}}
 
 {{define "plainBody"}}
-Hi,
+Hi {{.userID}},
 
-Thanks for signing up for a Gigachad account. We're excited to have you on board!
+Thanks for signing up for a Gigachad account. We're excited to have you on
+board!
 
-For future reference, your user ID number is {{.userID}}.
-
-Please send a request to the `PUT /v1/users/activated` endpoint with the following JSON
-body to activate your account:
+Enter the following token to verify your account
 
 {"token": "{{.activationToken}}"}
 
 Please note that this is a one-time use token and it will expire in 3 days.
 
-Thanks,
+Best,
+The Gigachad team
 
-The Gigachad Team
+--------------------------------------------------------------------------------
+
+Jln Amd - Pandeglang, Banten 42218
 {{end}}
 
 {{define "htmlBody"}}
-<!doctype html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<html lang="en">
 
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
+  <head data-id="__react-email-head"></head>
+  <div id="__react-email-preview" style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">You&#x27;re now ready to create personalized workout programs with Gigachad!<div> ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿</div>
+  </div>
 
-<body>
-    <p>Hi,</p>
-    <p>Thanks for signing up for a Gigachad account. We're excited to have you on board!</p>
-    <p>For future reference, your user ID number is {{.userID}}.</p>
-    <p>Please send a request to the <code>PUT /v1/users/activated</code> endpoint with the following JSON body to
-        activate your account:</p>
-    <pre><code>{"token": "{{.activationToken}}"}</code></pre>
-    <p>Please note that this is a one-time use token and it will expire in 3 days.</p>
-    <p>Thanks,</p>
-    <p>The Gigachad Team</p>
-</body>
-
+  <body data-id="__react-email-body" style="background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,Oxygen-Sans,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,sans-serif">
+    <table align="center" width="100%" data-id="__react-email-container" role="presentation" cellSpacing="0" cellPadding="0" border="0" style="max-width:37.5em;margin:0 auto;padding:20px 0 48px">
+      <tbody>
+        <tr style="width:100%">
+          <td>
+            <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Hi {{.userID}},</p>
+            <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Thanks for signing up for a Gigachad account. We&#x27;re excited to have you on board!</p>
+            <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Enter the following token to verify your account</p><code style="display:inline-block;padding:16px 4.5%;width:90.5%;background-color:#f4f4f4;border-radius:5px;border:1px solid #eee;color:#333">{{.activationToken}}</code>
+            <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Please note that this is a one-time use token and it will expire in 3 days.</p>
+            <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Best,<br />The Gigachad team</p>
+            <hr data-id="react-email-hr" style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#cccccc;margin:20px 0" />
+            <p data-id="react-email-text" style="font-size:12px;line-height:24px;margin:16px 0;color:#8898aa">Jln Amd - Pandeglang, Banten 42218</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
 </html>
 {{end}}
