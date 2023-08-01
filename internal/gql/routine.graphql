@@ -1,0 +1,3 @@
+extend type Mutation {
+  createRoutine(input: CreateRoutineInput!): Routine
+}

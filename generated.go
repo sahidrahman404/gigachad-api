@@ -144,6 +144,7 @@ type ComplexityRoot struct {
 		CreateActivationToken     func(childComplexity int, input ActivationTokenInput) int
 		CreateAuthenticationToken func(childComplexity int, input LoginInput) int
 		CreatePasswordResetToken  func(childComplexity int, input ResetPasswordInput) int
+		CreateRoutine             func(childComplexity int, input ent.CreateRoutineInput) int
 		CreateRoutineExercise     func(childComplexity int, input CreateRoutineExerciseInput) int
 		CreateUser                func(childComplexity int, input ent.CreateUserInput) int
 		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordInput) int
@@ -315,6 +316,7 @@ type MutationResolver interface {
 	CreateActivationToken(ctx context.Context, input ActivationTokenInput) (*string, error)
 	CreatePasswordResetToken(ctx context.Context, input ResetPasswordInput) (*string, error)
 	CreateRoutineExercise(ctx context.Context, input CreateRoutineExerciseInput) (*ent.RoutineExercise, error)
+	CreateRoutine(ctx context.Context, input ent.CreateRoutineInput) (*ent.Routine, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id pksuid.ID) (ent.Noder, error)
@@ -749,6 +751,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreatePasswordResetToken(childComplexity, args["input"].(ResetPasswordInput)), true
+
+	case "Mutation.createRoutine":
+		if e.complexity.Mutation.CreateRoutine == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createRoutine_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateRoutine(childComplexity, args["input"].(ent.CreateRoutineInput)), true
 
 	case "Mutation.CreateRoutineExercise":
 		if e.complexity.Mutation.CreateRoutineExercise == nil {
@@ -1676,7 +1690,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(parsedSchema, parsedSchema.Types[name]), nil
 }
 
-//go:embed "internal/gql/user.graphql" "internal/gql/token.graphql" "internal/gql/ent.graphql" "internal/gql/routine_exercise.graphql"
+//go:embed "internal/gql/user.graphql" "internal/gql/token.graphql" "internal/gql/ent.graphql" "internal/gql/routine_exercise.graphql" "internal/gql/routine.graphql"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -1692,6 +1706,7 @@ var sources = []*ast.Source{
 	{Name: "internal/gql/token.graphql", Input: sourceData("internal/gql/token.graphql"), BuiltIn: false},
 	{Name: "internal/gql/ent.graphql", Input: sourceData("internal/gql/ent.graphql"), BuiltIn: false},
 	{Name: "internal/gql/routine_exercise.graphql", Input: sourceData("internal/gql/routine_exercise.graphql"), BuiltIn: false},
+	{Name: "internal/gql/routine.graphql", Input: sourceData("internal/gql/routine.graphql"), BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -1766,6 +1781,21 @@ func (ec *executionContext) field_Mutation_createPasswordResetToken_args(ctx con
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNResetPasswordInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetPasswordInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createRoutine_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 ent.CreateRoutineInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateRoutineInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐCreateRoutineInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5261,6 +5291,72 @@ func (ec *executionContext) fieldContext_Mutation_CreateRoutineExercise(ctx cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_CreateRoutineExercise_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createRoutine(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createRoutine(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateRoutine(rctx, fc.Args["input"].(ent.CreateRoutineInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Routine)
+	fc.Result = res
+	return ec.marshalORoutine2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutine(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createRoutine(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Routine_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Routine_name(ctx, field)
+			case "userID":
+				return ec.fieldContext_Routine_userID(ctx, field)
+			case "exercises":
+				return ec.fieldContext_Routine_exercises(ctx, field)
+			case "users":
+				return ec.fieldContext_Routine_users(ctx, field)
+			case "routineExercises":
+				return ec.fieldContext_Routine_routineExercises(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Routine", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createRoutine_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -21096,6 +21192,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_CreateRoutineExercise(ctx, field)
 			})
+		case "createRoutine":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createRoutine(ctx, field)
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -23326,6 +23426,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 
 func (ec *executionContext) unmarshalNCreateRoutineExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInput(ctx context.Context, v interface{}) (CreateRoutineExerciseInput, error) {
 	res, err := ec.unmarshalInputCreateRoutineExerciseInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreateRoutineInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐCreateRoutineInput(ctx context.Context, v interface{}) (ent.CreateRoutineInput, error) {
+	res, err := ec.unmarshalInputCreateRoutineInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

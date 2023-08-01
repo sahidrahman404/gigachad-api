@@ -4,6 +4,7 @@ schema:
   - ./internal/gql/token.graphql
   - ./internal/gql/ent.graphql
   - ./internal/gql/routine_exercise.graphql
+  - ./internal/gql/routine.graphql
 
 # resolver reports where the resolver implementations go.
 resolver:
