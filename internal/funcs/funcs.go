@@ -40,7 +40,7 @@ var TemplateFuncs = template.FuncMap{
 
 	// Slice functions
 	"join":           strings.Join,
-	"containsString": slices.Contains[string],
+	"containsString": slices.Contains[[]string],
 
 	// Number functions
 	"incr":        incr,
