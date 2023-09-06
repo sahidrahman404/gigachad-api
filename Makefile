@@ -63,14 +63,14 @@ run/live:
 		--build.include_ext "go, tpl, tmpl, html, css, scss, js, ts, sql, jpeg, jpg, gif, png, bmp, svg, webp, ico" \
 		--misc.clean_on_exit "true"
 
-## ent/schema name=$: generate ent schema
-.PHONY: ent/schema
-ent/schema:
+## ent/init name=$: initialize a new ent schema
+.PHONY: ent/init
+ent/init:
 	go run -mod=mod entgo.io/ent/cmd/ent new ${name}
 
-## ent/sql: generate sql schema
-.PHONY: ent/sql
-ent/sql:
+## ent/gen: generate ent assets
+.PHONY: ent/gen
+ent/gen:
 		go generate .
 
 ## atlas/migrate/diff name=$1
