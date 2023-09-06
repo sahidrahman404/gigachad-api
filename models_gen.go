@@ -29,6 +29,10 @@ type CreateRoutineExerciseInput struct {
 	UserID     *pksuid.ID        `json:"userID,omitempty"`
 }
 
+type DeletedID struct {
+	ID *pksuid.ID `json:"id,omitempty"`
+}
+
 type LoginInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`

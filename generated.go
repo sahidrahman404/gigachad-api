@@ -55,6 +55,10 @@ type ComplexityRoot struct {
 		User           func(childComplexity int) int
 	}
 
+	DeletedID struct {
+		ID func(childComplexity int) int
+	}
+
 	Equipment struct {
 		Exercises func(childComplexity int) int
 		ID        func(childComplexity int) int
@@ -147,6 +151,7 @@ type ComplexityRoot struct {
 		CreateRoutine             func(childComplexity int, input ent.CreateRoutineInput) int
 		CreateRoutineExercise     func(childComplexity int, input CreateRoutineExerciseInput) int
 		CreateUser                func(childComplexity int, input ent.CreateUserInput) int
+		DeleteRoutine             func(childComplexity int, id pksuid.ID) int
 		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordInput) int
 	}
 
@@ -161,13 +166,13 @@ type ComplexityRoot struct {
 		EquipmentSlice   func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.EquipmentWhereInput) int
 		ExerciseTypes    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseTypeWhereInput) int
 		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) int
-		GetUser          func(childComplexity int) int
 		MusclesGroups    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.MusclesGroupWhereInput) int
 		Node             func(childComplexity int, id pksuid.ID) int
 		Nodes            func(childComplexity int, ids []pksuid.ID) int
 		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineExerciseWhereInput) int
 		Routines         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineWhereInput) int
 		Users            func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.UserWhereInput) int
+		Viewer           func(childComplexity int) int
 		WorkoutLogs      func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutLogWhereInput) int
 		Workouts         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutWhereInput) int
 	}
@@ -317,6 +322,7 @@ type MutationResolver interface {
 	CreatePasswordResetToken(ctx context.Context, input ResetPasswordInput) (*string, error)
 	CreateRoutineExercise(ctx context.Context, input CreateRoutineExerciseInput) (*ent.RoutineExercise, error)
 	CreateRoutine(ctx context.Context, input ent.CreateRoutineInput) (*ent.Routine, error)
+	DeleteRoutine(ctx context.Context, id pksuid.ID) (*DeletedID, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id pksuid.ID) (ent.Noder, error)
@@ -330,7 +336,7 @@ type QueryResolver interface {
 	Users(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.UserWhereInput) (*ent.UserConnection, error)
 	Workouts(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutWhereInput) (*ent.WorkoutConnection, error)
 	WorkoutLogs(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutLogWhereInput) (*ent.WorkoutLogConnection, error)
-	GetUser(ctx context.Context) (*ent.User, error)
+	Viewer(ctx context.Context) (*ent.User, error)
 }
 type RoutineExerciseResolver interface {
 	Sets(ctx context.Context, obj *ent.RoutineExercise) ([]*schematype.Set, error)
@@ -367,6 +373,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AuthenticationToken.User(childComplexity), true
+
+	case "DeletedID.id":
+		if e.complexity.DeletedID.ID == nil {
+			break
+		}
+
+		return e.complexity.DeletedID.ID(childComplexity), true
 
 	case "Equipment.exercises":
 		if e.complexity.Equipment.Exercises == nil {
@@ -788,6 +801,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(ent.CreateUserInput)), true
 
+	case "Mutation.deleteRoutine":
+		if e.complexity.Mutation.DeleteRoutine == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteRoutine_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteRoutine(childComplexity, args["id"].(pksuid.ID)), true
+
 	case "Mutation.updateUserPassword":
 		if e.complexity.Mutation.UpdateUserPassword == nil {
 			break
@@ -864,13 +889,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseWhereInput)), true
 
-	case "Query.getUser":
-		if e.complexity.Query.GetUser == nil {
-			break
-		}
-
-		return e.complexity.Query.GetUser(childComplexity), true
-
 	case "Query.musclesGroups":
 		if e.complexity.Query.MusclesGroups == nil {
 			break
@@ -942,6 +960,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Users(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.UserWhereInput)), true
+
+	case "Query.viewer":
+		if e.complexity.Query.Viewer == nil {
+			break
+		}
+
+		return e.complexity.Query.Viewer(childComplexity), true
 
 	case "Query.workoutLogs":
 		if e.complexity.Query.WorkoutLogs == nil {
@@ -1819,6 +1844,21 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_deleteRoutine_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 pksuid.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateUserPassword_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2487,6 +2527,47 @@ func (ec *executionContext) fieldContext_AuthenticationToken_tokenPlainText(ctx 
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _DeletedID_id(ctx context.Context, field graphql.CollectedField, obj *DeletedID) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_DeletedID_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*pksuid.ID)
+	fc.Result = res
+	return ec.marshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_DeletedID_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "DeletedID",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5363,6 +5444,62 @@ func (ec *executionContext) fieldContext_Mutation_createRoutine(ctx context.Cont
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_deleteRoutine(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteRoutine(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteRoutine(rctx, fc.Args["id"].(pksuid.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*DeletedID)
+	fc.Result = res
+	return ec.marshalODeletedID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeletedID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteRoutine(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_DeletedID_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DeletedID", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteRoutine_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *entgql.PageInfo[pksuid.ID]) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PageInfo_hasNextPage(ctx, field)
 	if err != nil {
@@ -6207,8 +6344,8 @@ func (ec *executionContext) fieldContext_Query_workoutLogs(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_getUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_getUser(ctx, field)
+func (ec *executionContext) _Query_viewer(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_viewer(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -6221,7 +6358,7 @@ func (ec *executionContext) _Query_getUser(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetUser(rctx)
+		return ec.resolvers.Query().Viewer(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6235,7 +6372,7 @@ func (ec *executionContext) _Query_getUser(ctx context.Context, field graphql.Co
 	return ec.marshalOUser2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUser(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_getUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_viewer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -20256,6 +20393,42 @@ func (ec *executionContext) _AuthenticationToken(ctx context.Context, sel ast.Se
 	return out
 }
 
+var deletedIDImplementors = []string{"DeletedID"}
+
+func (ec *executionContext) _DeletedID(ctx context.Context, sel ast.SelectionSet, obj *DeletedID) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deletedIDImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeletedID")
+		case "id":
+			out.Values[i] = ec._DeletedID_id(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var equipmentImplementors = []string{"Equipment", "Node"}
 
 func (ec *executionContext) _Equipment(ctx context.Context, sel ast.SelectionSet, obj *ent.Equipment) graphql.Marshaler {
@@ -21196,6 +21369,10 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createRoutine(ctx, field)
 			})
+		case "deleteRoutine":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteRoutine(ctx, field)
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -21525,7 +21702,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "getUser":
+		case "viewer":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -21534,7 +21711,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_getUser(ctx, field)
+				res = ec._Query_viewer(ctx, field)
 				return res
 			}
 
@@ -24236,6 +24413,13 @@ func (ec *executionContext) marshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCu
 		return graphql.Null
 	}
 	return v
+}
+
+func (ec *executionContext) marshalODeletedID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeletedID(ctx context.Context, sel ast.SelectionSet, v *DeletedID) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeletedID(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOEquipment2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipment(ctx context.Context, sel ast.SelectionSet, v *ent.Equipment) graphql.Marshaler {
