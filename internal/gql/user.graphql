@@ -14,5 +14,5 @@ type Mutation {
 }
 
 extend type Query {
-  getUser: User
+  viewer: User
 }
