@@ -6,6 +6,10 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
 
+var (
+	EntRoutineNotFound = `ent: routine not found`
+)
+
 type CreateRoutineParams struct {
 	Name string `json:"name"`
 }
