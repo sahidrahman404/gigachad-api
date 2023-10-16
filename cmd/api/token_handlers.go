@@ -218,16 +218,17 @@ func (app *application) getCookieHandler(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		switch {
 		case errors.Is(err, http.ErrNoCookie):
-			app.badRequest(w, r, err)
+			err = response.JSON(w, http.StatusOK, nil)
+			if err != nil {
+				app.serverError(w, r, err)
+			}
 		default:
 			app.serverError(w, r, err)
 		}
 		return
 	}
 
-	err = response.JSON(w, http.StatusOK, map[string]string{
-		"token": tokenPlainText.Value,
-	})
+	err = response.JSON(w, http.StatusOK, tokenPlainText.Value)
 	if err != nil {
 		app.serverError(w, r, err)
 	}
