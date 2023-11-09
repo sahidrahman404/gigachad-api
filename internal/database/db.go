@@ -50,8 +50,8 @@ func New(dsn string) (*DB, error) {
 }
 
 func parseSqliteError(s string) string {
-	if len(strings.Split(s, ":")) == 6 {
-		return strings.TrimSpace(strings.Join(strings.Split(s, ":")[3:], ":"))
+	if len(strings.Split(s, "\n")) == 2 {
+		return strings.Split(s, "\n")[1]
 	}
 	return s
 }
