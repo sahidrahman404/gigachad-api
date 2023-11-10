@@ -7,5 +7,3 @@ type Set struct {
 	Time *string `json:"time,omitempty"`
 	Km   *int    `json:"km,omitempty"`
 }
-
-type Sets []Set

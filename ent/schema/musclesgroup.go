@@ -32,7 +32,11 @@ func (MusclesGroup) Fields() []ent.Field {
 // Edges of the Muscles_Group.
 func (MusclesGroup) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("exercises", Exercise.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("exercises", Exercise.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
 	}
 }
 

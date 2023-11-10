@@ -27,9 +27,6 @@ func (Exercise) Fields() []ent.Field {
 		field.String("name"),
 		field.String("image").Optional().Nillable(),
 		field.String("how_to").Optional().Nillable(),
-		field.String("equipment_id").Optional().GoType(pksuid.ID("")),
-		field.String("muscles_group_id").Optional().GoType(pksuid.ID("")),
-		field.String("exercise_type_id").Optional().GoType(pksuid.ID("")),
 		field.String("user_id").Optional().Nillable().GoType(pksuid.ID("")),
 	}
 }
@@ -37,19 +34,25 @@ func (Exercise) Fields() []ent.Field {
 // Edges of the Exercise.
 func (Exercise) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("workout_logs", WorkoutLog.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("workout_logs", WorkoutLog.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
 		edge.From("users", User.Type).Ref("exercises").Field("user_id").Unique(),
-		edge.From("equipments", Equipment.Type).Ref("exercises").Field("equipment_id").Unique(),
+		edge.From("equipment", Equipment.Type).
+			Ref("exercises").
+			Annotations(entgql.RelayConnection()),
 		edge.From("muscles_groups", MusclesGroup.Type).
 			Ref("exercises").
-			Field("muscles_group_id").
-			Unique(),
+			Annotations(entgql.RelayConnection()),
 		edge.From("exercise_types", ExerciseType.Type).
 			Ref("exercises").
-			Field("exercise_type_id").
-			Unique(),
-		edge.From("routines", Routine.Type).Ref("exercises").
-			Through("routine_exercises", RoutineExercise.Type),
+			Annotations(entgql.RelayConnection()),
+		edge.From("routines", Routine.Type).
+			Ref("exercises").
+			Through("routine_exercises", RoutineExercise.Type).
+			Annotations(entgql.RelayConnection()),
 	}
 }
 

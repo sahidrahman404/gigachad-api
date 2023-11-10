@@ -52,12 +52,31 @@ func (User) Indexes() []ent.Index {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("tokens", Token.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
-		edge.To("exercises", Exercise.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
-		edge.To("routines", Routine.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
-		edge.To("workouts", Workout.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
-		edge.To("workout_logs", WorkoutLog.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("exercises", Exercise.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
+		edge.To("routines", Routine.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
+		edge.To("workouts", Workout.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
+		edge.To("workout_logs", WorkoutLog.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
 		edge.To("routine_exercises", RoutineExercise.Type).
-			Annotations(entsql.OnDelete(entsql.Cascade)),
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
 	}
 }
 

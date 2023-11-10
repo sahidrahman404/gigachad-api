@@ -26,22 +26,36 @@ func (RoutineExercise) Mixin() []ent.Mixin {
 // Fields of the RoutineExercise.
 func (RoutineExercise) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("rest_timer").Optional(),
-		field.JSON("sets", &schematype.Sets{}).Annotations(entgql.Type("[Set!]")),
+		field.String("rest_timer").Optional().Nillable(),
+		field.JSON("sets", []*schematype.Set{}).Annotations(entgql.Type("[Set!]")),
 		field.String("routine_id").GoType(pksuid.ID("")),
 		field.String("exercise_id").GoType(pksuid.ID("")),
-		field.String("user_id").Optional().GoType(pksuid.ID("")),
+		field.String("user_id").GoType(pksuid.ID("")),
 	}
 }
 
 // Edges of the RoutineExercise.
 func (RoutineExercise) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("routines", Routine.Type).Field("routine_id").Unique().Required().
-			Annotations(entsql.OnDelete(entsql.Cascade)),
-		edge.To("exercises", Exercise.Type).Field("exercise_id").Unique().Required().
-			Annotations(entsql.OnDelete(entsql.Cascade)),
-		edge.From("users", User.Type).Ref("routine_exercises").Field("user_id").Unique(),
+		edge.To("routines", Routine.Type).
+			Field("routine_id").
+			Unique().
+			Required().
+			Annotations(
+				entsql.OnDelete(entsql.Cascade),
+			),
+		edge.To("exercises", Exercise.Type).
+			Field("exercise_id").
+			Unique().
+			Required().
+			Annotations(
+				entsql.OnDelete(entsql.Cascade),
+			),
+		edge.From("users", User.Type).
+			Ref("routine_exercises").
+			Field("user_id").
+			Unique().
+			Required(),
 	}
 }
 

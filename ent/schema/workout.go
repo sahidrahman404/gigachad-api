@@ -34,15 +34,23 @@ func (Workout) Fields() []ent.Field {
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.String("image").Optional().Nillable(),
 		field.String("description"),
-		field.String("user_id").Optional().GoType(pksuid.ID("")),
+		field.String("user_id").GoType(pksuid.ID("")),
 	}
 }
 
 // Edges of the Workout.
 func (Workout) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("users", User.Type).Ref("workouts").Field("user_id").Unique(),
-		edge.To("workout_logs", WorkoutLog.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.From("users", User.Type).
+			Ref("workouts").
+			Field("user_id").
+			Unique().
+			Required(),
+		edge.To("workout_logs", WorkoutLog.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
 	}
 }
 

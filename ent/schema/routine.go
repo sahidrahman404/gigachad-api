@@ -25,7 +25,7 @@ func (Routine) Mixin() []ent.Mixin {
 func (Routine) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.String("user_id").Optional().GoType(pksuid.ID("")),
+		field.String("user_id").GoType(pksuid.ID("")),
 	}
 }
 
@@ -33,9 +33,16 @@ func (Routine) Fields() []ent.Field {
 func (Routine) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("exercises", Exercise.Type).
-			Annotations(entsql.OnDelete(entsql.Cascade)).
-			Through("routine_exercises", RoutineExercise.Type),
-		edge.From("users", User.Type).Ref("routines").Field("user_id").Unique(),
+			Through("routine_exercises", RoutineExercise.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
+		edge.From("users", User.Type).
+			Ref("routines").
+			Field("user_id").
+			Unique().
+			Required(),
 	}
 }
 

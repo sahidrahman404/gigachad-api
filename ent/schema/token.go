@@ -26,7 +26,7 @@ func (Token) Fields() []ent.Field {
 		field.Bytes("hash").Annotations(entgql.Skip()),
 		field.String("expiry"),
 		field.String("scope"),
-		field.String("user_id").Optional().GoType(pksuid.ID("")),
+		field.String("user_id").GoType(pksuid.ID("")),
 	}
 }
 
@@ -41,6 +41,10 @@ func (Token) Index() []ent.Index {
 // Edges of the Token.
 func (Token) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("users", User.Type).Ref("tokens").Field("user_id").Unique(),
+		edge.From("users", User.Type).
+			Ref("tokens").
+			Field("user_id").
+			Unique().
+			Required(),
 	}
 }

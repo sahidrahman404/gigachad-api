@@ -33,7 +33,11 @@ func (ExerciseType) Fields() []ent.Field {
 // Edges of the Exercise_Type.
 func (ExerciseType) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("exercises", Exercise.Type).Annotations(entsql.OnDelete(entsql.Cascade)),
+		edge.To("exercises", Exercise.Type).
+			Annotations(
+				entgql.RelayConnection(),
+				entsql.OnDelete(entsql.Cascade),
+			),
 	}
 }
 
