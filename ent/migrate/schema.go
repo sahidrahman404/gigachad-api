@@ -26,9 +26,6 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "image", Type: field.TypeString, Nullable: true},
 		{Name: "how_to", Type: field.TypeString, Nullable: true},
-		{Name: "equipment_id", Type: field.TypeString, Nullable: true},
-		{Name: "exercise_type_id", Type: field.TypeString, Nullable: true},
-		{Name: "muscles_group_id", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString, Nullable: true},
 	}
 	// ExercisesTable holds the schema information for the "exercises" table.
@@ -38,26 +35,8 @@ var (
 		PrimaryKey: []*schema.Column{ExercisesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "exercises_equipment_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[4]},
-				RefColumns: []*schema.Column{EquipmentColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
-				Symbol:     "exercises_exercise_types_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[5]},
-				RefColumns: []*schema.Column{ExerciseTypesColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
-				Symbol:     "exercises_muscles_groups_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[6]},
-				RefColumns: []*schema.Column{MusclesGroupsColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
 				Symbol:     "exercises_users_exercises",
-				Columns:    []*schema.Column{ExercisesColumns[7]},
+				Columns:    []*schema.Column{ExercisesColumns[4]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -92,7 +71,7 @@ var (
 	RoutinesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "user_id", Type: field.TypeString, Nullable: true},
+		{Name: "user_id", Type: field.TypeString},
 	}
 	// RoutinesTable holds the schema information for the "routines" table.
 	RoutinesTable = &schema.Table{
@@ -115,7 +94,7 @@ var (
 		{Name: "sets", Type: field.TypeJSON},
 		{Name: "routine_id", Type: field.TypeString},
 		{Name: "exercise_id", Type: field.TypeString},
-		{Name: "user_id", Type: field.TypeString, Nullable: true},
+		{Name: "user_id", Type: field.TypeString},
 	}
 	// RoutineExercisesTable holds the schema information for the "routine_exercises" table.
 	RoutineExercisesTable = &schema.Table{
@@ -161,7 +140,7 @@ var (
 		{Name: "hash", Type: field.TypeBytes},
 		{Name: "expiry", Type: field.TypeString},
 		{Name: "scope", Type: field.TypeString},
-		{Name: "user_id", Type: field.TypeString, Nullable: true},
+		{Name: "user_id", Type: field.TypeString},
 	}
 	// TokensTable holds the schema information for the "tokens" table.
 	TokensTable = &schema.Table{
@@ -217,7 +196,7 @@ var (
 		{Name: "created_at", Type: field.TypeString},
 		{Name: "image", Type: field.TypeString, Nullable: true},
 		{Name: "description", Type: field.TypeString},
-		{Name: "user_id", Type: field.TypeString, Nullable: true},
+		{Name: "user_id", Type: field.TypeString},
 	}
 	// WorkoutsTable holds the schema information for the "workouts" table.
 	WorkoutsTable = &schema.Table{
@@ -238,9 +217,9 @@ var (
 		{Name: "id", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeJSON},
 		{Name: "created_at", Type: field.TypeString},
-		{Name: "exercise_id", Type: field.TypeString, Nullable: true},
-		{Name: "user_id", Type: field.TypeString, Nullable: true},
-		{Name: "workout_id", Type: field.TypeString, Nullable: true},
+		{Name: "exercise_workout_logs", Type: field.TypeString, Nullable: true},
+		{Name: "user_id", Type: field.TypeString},
+		{Name: "workout_workout_logs", Type: field.TypeString, Nullable: true},
 	}
 	// WorkoutLogsTable holds the schema information for the "workout_logs" table.
 	WorkoutLogsTable = &schema.Table{
@@ -268,6 +247,81 @@ var (
 			},
 		},
 	}
+	// EquipmentExercisesColumns holds the columns for the "equipment_exercises" table.
+	EquipmentExercisesColumns = []*schema.Column{
+		{Name: "equipment_id", Type: field.TypeString},
+		{Name: "exercise_id", Type: field.TypeString},
+	}
+	// EquipmentExercisesTable holds the schema information for the "equipment_exercises" table.
+	EquipmentExercisesTable = &schema.Table{
+		Name:       "equipment_exercises",
+		Columns:    EquipmentExercisesColumns,
+		PrimaryKey: []*schema.Column{EquipmentExercisesColumns[0], EquipmentExercisesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "equipment_exercises_equipment_id",
+				Columns:    []*schema.Column{EquipmentExercisesColumns[0]},
+				RefColumns: []*schema.Column{EquipmentColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "equipment_exercises_exercise_id",
+				Columns:    []*schema.Column{EquipmentExercisesColumns[1]},
+				RefColumns: []*schema.Column{ExercisesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
+	// ExerciseTypeExercisesColumns holds the columns for the "exercise_type_exercises" table.
+	ExerciseTypeExercisesColumns = []*schema.Column{
+		{Name: "exercise_type_id", Type: field.TypeString},
+		{Name: "exercise_id", Type: field.TypeString},
+	}
+	// ExerciseTypeExercisesTable holds the schema information for the "exercise_type_exercises" table.
+	ExerciseTypeExercisesTable = &schema.Table{
+		Name:       "exercise_type_exercises",
+		Columns:    ExerciseTypeExercisesColumns,
+		PrimaryKey: []*schema.Column{ExerciseTypeExercisesColumns[0], ExerciseTypeExercisesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "exercise_type_exercises_exercise_type_id",
+				Columns:    []*schema.Column{ExerciseTypeExercisesColumns[0]},
+				RefColumns: []*schema.Column{ExerciseTypesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "exercise_type_exercises_exercise_id",
+				Columns:    []*schema.Column{ExerciseTypeExercisesColumns[1]},
+				RefColumns: []*schema.Column{ExercisesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
+	// MusclesGroupExercisesColumns holds the columns for the "muscles_group_exercises" table.
+	MusclesGroupExercisesColumns = []*schema.Column{
+		{Name: "muscles_group_id", Type: field.TypeString},
+		{Name: "exercise_id", Type: field.TypeString},
+	}
+	// MusclesGroupExercisesTable holds the schema information for the "muscles_group_exercises" table.
+	MusclesGroupExercisesTable = &schema.Table{
+		Name:       "muscles_group_exercises",
+		Columns:    MusclesGroupExercisesColumns,
+		PrimaryKey: []*schema.Column{MusclesGroupExercisesColumns[0], MusclesGroupExercisesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "muscles_group_exercises_muscles_group_id",
+				Columns:    []*schema.Column{MusclesGroupExercisesColumns[0]},
+				RefColumns: []*schema.Column{MusclesGroupsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "muscles_group_exercises_exercise_id",
+				Columns:    []*schema.Column{MusclesGroupExercisesColumns[1]},
+				RefColumns: []*schema.Column{ExercisesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		EquipmentTable,
@@ -280,14 +334,14 @@ var (
 		UsersTable,
 		WorkoutsTable,
 		WorkoutLogsTable,
+		EquipmentExercisesTable,
+		ExerciseTypeExercisesTable,
+		MusclesGroupExercisesTable,
 	}
 )
 
 func init() {
-	ExercisesTable.ForeignKeys[0].RefTable = EquipmentTable
-	ExercisesTable.ForeignKeys[1].RefTable = ExerciseTypesTable
-	ExercisesTable.ForeignKeys[2].RefTable = MusclesGroupsTable
-	ExercisesTable.ForeignKeys[3].RefTable = UsersTable
+	ExercisesTable.ForeignKeys[0].RefTable = UsersTable
 	RoutinesTable.ForeignKeys[0].RefTable = UsersTable
 	RoutineExercisesTable.ForeignKeys[0].RefTable = RoutinesTable
 	RoutineExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
@@ -297,4 +351,10 @@ func init() {
 	WorkoutLogsTable.ForeignKeys[0].RefTable = ExercisesTable
 	WorkoutLogsTable.ForeignKeys[1].RefTable = UsersTable
 	WorkoutLogsTable.ForeignKeys[2].RefTable = WorkoutsTable
+	EquipmentExercisesTable.ForeignKeys[0].RefTable = EquipmentTable
+	EquipmentExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
+	ExerciseTypeExercisesTable.ForeignKeys[0].RefTable = ExerciseTypesTable
+	ExerciseTypeExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
+	MusclesGroupExercisesTable.ForeignKeys[0].RefTable = MusclesGroupsTable
+	MusclesGroupExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
 }

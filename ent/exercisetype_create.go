@@ -169,10 +169,10 @@ func (etc *ExerciseTypeCreate) createSpec() (*ExerciseType, *sqlgraph.CreateSpec
 	}
 	if nodes := etc.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   exercisetype.ExercisesTable,
-			Columns: []string{exercisetype.ExercisesColumn},
+			Columns: exercisetype.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),

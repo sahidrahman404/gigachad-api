@@ -17,10 +17,6 @@ const (
 	FieldSets = "sets"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
-	// FieldExerciseID holds the string denoting the exercise_id field in the database.
-	FieldExerciseID = "exercise_id"
-	// FieldWorkoutID holds the string denoting the workout_id field in the database.
-	FieldWorkoutID = "workout_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
@@ -44,14 +40,14 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "exercise" package.
 	ExercisesInverseTable = "exercises"
 	// ExercisesColumn is the table column denoting the exercises relation/edge.
-	ExercisesColumn = "exercise_id"
+	ExercisesColumn = "exercise_workout_logs"
 	// WorkoutsTable is the table that holds the workouts relation/edge.
 	WorkoutsTable = "workout_logs"
 	// WorkoutsInverseTable is the table name for the Workout entity.
 	// It exists in this package in order to avoid circular dependency with the "workout" package.
 	WorkoutsInverseTable = "workouts"
 	// WorkoutsColumn is the table column denoting the workouts relation/edge.
-	WorkoutsColumn = "workout_id"
+	WorkoutsColumn = "workout_workout_logs"
 )
 
 // Columns holds all SQL columns for workoutlog fields.
@@ -59,15 +55,25 @@ var Columns = []string{
 	FieldID,
 	FieldSets,
 	FieldCreatedAt,
-	FieldExerciseID,
-	FieldWorkoutID,
 	FieldUserID,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the "workout_logs"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"exercise_workout_logs",
+	"workout_workout_logs",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
 	for i := range Columns {
 		if column == Columns[i] {
+			return true
+		}
+	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
 			return true
 		}
 	}
@@ -92,16 +98,6 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
-}
-
-// ByExerciseID orders the results by the exercise_id field.
-func ByExerciseID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldExerciseID, opts...).ToFunc()
-}
-
-// ByWorkoutID orders the results by the workout_id field.
-func ByWorkoutID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldWorkoutID, opts...).ToFunc()
 }
 
 // ByUserID orders the results by the user_id field.

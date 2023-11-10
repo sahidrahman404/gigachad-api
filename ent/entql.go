@@ -50,13 +50,10 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Exercise",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			exercise.FieldName:           {Type: field.TypeString, Column: exercise.FieldName},
-			exercise.FieldImage:          {Type: field.TypeString, Column: exercise.FieldImage},
-			exercise.FieldHowTo:          {Type: field.TypeString, Column: exercise.FieldHowTo},
-			exercise.FieldEquipmentID:    {Type: field.TypeString, Column: exercise.FieldEquipmentID},
-			exercise.FieldMusclesGroupID: {Type: field.TypeString, Column: exercise.FieldMusclesGroupID},
-			exercise.FieldExerciseTypeID: {Type: field.TypeString, Column: exercise.FieldExerciseTypeID},
-			exercise.FieldUserID:         {Type: field.TypeString, Column: exercise.FieldUserID},
+			exercise.FieldName:   {Type: field.TypeString, Column: exercise.FieldName},
+			exercise.FieldImage:  {Type: field.TypeString, Column: exercise.FieldImage},
+			exercise.FieldHowTo:  {Type: field.TypeString, Column: exercise.FieldHowTo},
+			exercise.FieldUserID: {Type: field.TypeString, Column: exercise.FieldUserID},
 		},
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
@@ -193,20 +190,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "WorkoutLog",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			workoutlog.FieldSets:       {Type: field.TypeJSON, Column: workoutlog.FieldSets},
-			workoutlog.FieldCreatedAt:  {Type: field.TypeString, Column: workoutlog.FieldCreatedAt},
-			workoutlog.FieldExerciseID: {Type: field.TypeString, Column: workoutlog.FieldExerciseID},
-			workoutlog.FieldWorkoutID:  {Type: field.TypeString, Column: workoutlog.FieldWorkoutID},
-			workoutlog.FieldUserID:     {Type: field.TypeString, Column: workoutlog.FieldUserID},
+			workoutlog.FieldSets:      {Type: field.TypeJSON, Column: workoutlog.FieldSets},
+			workoutlog.FieldCreatedAt: {Type: field.TypeString, Column: workoutlog.FieldCreatedAt},
+			workoutlog.FieldUserID:    {Type: field.TypeString, Column: workoutlog.FieldUserID},
 		},
 	}
 	graph.MustAddE(
 		"exercises",
 		&sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   equipment.ExercisesTable,
-			Columns: []string{equipment.ExercisesColumn},
+			Columns: equipment.ExercisesPrimaryKey,
 			Bidi:    false,
 		},
 		"Equipment",
@@ -237,12 +232,12 @@ var schemaGraph = func() *sqlgraph.Schema {
 		"User",
 	)
 	graph.MustAddE(
-		"equipments",
+		"equipment",
 		&sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   exercise.EquipmentsTable,
-			Columns: []string{exercise.EquipmentsColumn},
+			Table:   exercise.EquipmentTable,
+			Columns: exercise.EquipmentPrimaryKey,
 			Bidi:    false,
 		},
 		"Exercise",
@@ -251,10 +246,10 @@ var schemaGraph = func() *sqlgraph.Schema {
 	graph.MustAddE(
 		"muscles_groups",
 		&sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.MusclesGroupsTable,
-			Columns: []string{exercise.MusclesGroupsColumn},
+			Columns: exercise.MusclesGroupsPrimaryKey,
 			Bidi:    false,
 		},
 		"Exercise",
@@ -263,10 +258,10 @@ var schemaGraph = func() *sqlgraph.Schema {
 	graph.MustAddE(
 		"exercise_types",
 		&sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.ExerciseTypesTable,
-			Columns: []string{exercise.ExerciseTypesColumn},
+			Columns: exercise.ExerciseTypesPrimaryKey,
 			Bidi:    false,
 		},
 		"Exercise",
@@ -299,10 +294,10 @@ var schemaGraph = func() *sqlgraph.Schema {
 	graph.MustAddE(
 		"exercises",
 		&sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   exercisetype.ExercisesTable,
-			Columns: []string{exercisetype.ExercisesColumn},
+			Columns: exercisetype.ExercisesPrimaryKey,
 			Bidi:    false,
 		},
 		"ExerciseType",
@@ -311,10 +306,10 @@ var schemaGraph = func() *sqlgraph.Schema {
 	graph.MustAddE(
 		"exercises",
 		&sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   musclesgroup.ExercisesTable,
-			Columns: []string{musclesgroup.ExercisesColumn},
+			Columns: musclesgroup.ExercisesPrimaryKey,
 			Bidi:    false,
 		},
 		"MusclesGroup",
@@ -664,21 +659,6 @@ func (f *ExerciseFilter) WhereHowTo(p entql.StringP) {
 	f.Where(p.Field(exercise.FieldHowTo))
 }
 
-// WhereEquipmentID applies the entql string predicate on the equipment_id field.
-func (f *ExerciseFilter) WhereEquipmentID(p entql.StringP) {
-	f.Where(p.Field(exercise.FieldEquipmentID))
-}
-
-// WhereMusclesGroupID applies the entql string predicate on the muscles_group_id field.
-func (f *ExerciseFilter) WhereMusclesGroupID(p entql.StringP) {
-	f.Where(p.Field(exercise.FieldMusclesGroupID))
-}
-
-// WhereExerciseTypeID applies the entql string predicate on the exercise_type_id field.
-func (f *ExerciseFilter) WhereExerciseTypeID(p entql.StringP) {
-	f.Where(p.Field(exercise.FieldExerciseTypeID))
-}
-
 // WhereUserID applies the entql string predicate on the user_id field.
 func (f *ExerciseFilter) WhereUserID(p entql.StringP) {
 	f.Where(p.Field(exercise.FieldUserID))
@@ -712,14 +692,14 @@ func (f *ExerciseFilter) WhereHasUsersWith(preds ...predicate.User) {
 	})))
 }
 
-// WhereHasEquipments applies a predicate to check if query has an edge equipments.
-func (f *ExerciseFilter) WhereHasEquipments() {
-	f.Where(entql.HasEdge("equipments"))
+// WhereHasEquipment applies a predicate to check if query has an edge equipment.
+func (f *ExerciseFilter) WhereHasEquipment() {
+	f.Where(entql.HasEdge("equipment"))
 }
 
-// WhereHasEquipmentsWith applies a predicate to check if query has an edge equipments with a given conditions (other predicates).
-func (f *ExerciseFilter) WhereHasEquipmentsWith(preds ...predicate.Equipment) {
-	f.Where(entql.HasEdgeWith("equipments", sqlgraph.WrapFunc(func(s *sql.Selector) {
+// WhereHasEquipmentWith applies a predicate to check if query has an edge equipment with a given conditions (other predicates).
+func (f *ExerciseFilter) WhereHasEquipmentWith(preds ...predicate.Equipment) {
+	f.Where(entql.HasEdgeWith("equipment", sqlgraph.WrapFunc(func(s *sql.Selector) {
 		for _, p := range preds {
 			p(s)
 		}
@@ -1508,16 +1488,6 @@ func (f *WorkoutLogFilter) WhereSets(p entql.BytesP) {
 // WhereCreatedAt applies the entql string predicate on the created_at field.
 func (f *WorkoutLogFilter) WhereCreatedAt(p entql.StringP) {
 	f.Where(p.Field(workoutlog.FieldCreatedAt))
-}
-
-// WhereExerciseID applies the entql string predicate on the exercise_id field.
-func (f *WorkoutLogFilter) WhereExerciseID(p entql.StringP) {
-	f.Where(p.Field(workoutlog.FieldExerciseID))
-}
-
-// WhereWorkoutID applies the entql string predicate on the workout_id field.
-func (f *WorkoutLogFilter) WhereWorkoutID(p entql.StringP) {
-	f.Where(p.Field(workoutlog.FieldWorkoutID))
 }
 
 // WhereUserID applies the entql string predicate on the user_id field.

@@ -340,57 +340,6 @@ type ExerciseWhereInput struct {
 	HowToEqualFold    *string  `json:"howToEqualFold,omitempty"`
 	HowToContainsFold *string  `json:"howToContainsFold,omitempty"`
 
-	// "equipment_id" field predicates.
-	EquipmentID             *pksuid.ID  `json:"equipmentID,omitempty"`
-	EquipmentIDNEQ          *pksuid.ID  `json:"equipmentIDNEQ,omitempty"`
-	EquipmentIDIn           []pksuid.ID `json:"equipmentIDIn,omitempty"`
-	EquipmentIDNotIn        []pksuid.ID `json:"equipmentIDNotIn,omitempty"`
-	EquipmentIDGT           *pksuid.ID  `json:"equipmentIDGT,omitempty"`
-	EquipmentIDGTE          *pksuid.ID  `json:"equipmentIDGTE,omitempty"`
-	EquipmentIDLT           *pksuid.ID  `json:"equipmentIDLT,omitempty"`
-	EquipmentIDLTE          *pksuid.ID  `json:"equipmentIDLTE,omitempty"`
-	EquipmentIDContains     *pksuid.ID  `json:"equipmentIDContains,omitempty"`
-	EquipmentIDHasPrefix    *pksuid.ID  `json:"equipmentIDHasPrefix,omitempty"`
-	EquipmentIDHasSuffix    *pksuid.ID  `json:"equipmentIDHasSuffix,omitempty"`
-	EquipmentIDIsNil        bool        `json:"equipmentIDIsNil,omitempty"`
-	EquipmentIDNotNil       bool        `json:"equipmentIDNotNil,omitempty"`
-	EquipmentIDEqualFold    *pksuid.ID  `json:"equipmentIDEqualFold,omitempty"`
-	EquipmentIDContainsFold *pksuid.ID  `json:"equipmentIDContainsFold,omitempty"`
-
-	// "muscles_group_id" field predicates.
-	MusclesGroupID             *pksuid.ID  `json:"musclesGroupID,omitempty"`
-	MusclesGroupIDNEQ          *pksuid.ID  `json:"musclesGroupIDNEQ,omitempty"`
-	MusclesGroupIDIn           []pksuid.ID `json:"musclesGroupIDIn,omitempty"`
-	MusclesGroupIDNotIn        []pksuid.ID `json:"musclesGroupIDNotIn,omitempty"`
-	MusclesGroupIDGT           *pksuid.ID  `json:"musclesGroupIDGT,omitempty"`
-	MusclesGroupIDGTE          *pksuid.ID  `json:"musclesGroupIDGTE,omitempty"`
-	MusclesGroupIDLT           *pksuid.ID  `json:"musclesGroupIDLT,omitempty"`
-	MusclesGroupIDLTE          *pksuid.ID  `json:"musclesGroupIDLTE,omitempty"`
-	MusclesGroupIDContains     *pksuid.ID  `json:"musclesGroupIDContains,omitempty"`
-	MusclesGroupIDHasPrefix    *pksuid.ID  `json:"musclesGroupIDHasPrefix,omitempty"`
-	MusclesGroupIDHasSuffix    *pksuid.ID  `json:"musclesGroupIDHasSuffix,omitempty"`
-	MusclesGroupIDIsNil        bool        `json:"musclesGroupIDIsNil,omitempty"`
-	MusclesGroupIDNotNil       bool        `json:"musclesGroupIDNotNil,omitempty"`
-	MusclesGroupIDEqualFold    *pksuid.ID  `json:"musclesGroupIDEqualFold,omitempty"`
-	MusclesGroupIDContainsFold *pksuid.ID  `json:"musclesGroupIDContainsFold,omitempty"`
-
-	// "exercise_type_id" field predicates.
-	ExerciseTypeID             *pksuid.ID  `json:"exerciseTypeID,omitempty"`
-	ExerciseTypeIDNEQ          *pksuid.ID  `json:"exerciseTypeIDNEQ,omitempty"`
-	ExerciseTypeIDIn           []pksuid.ID `json:"exerciseTypeIDIn,omitempty"`
-	ExerciseTypeIDNotIn        []pksuid.ID `json:"exerciseTypeIDNotIn,omitempty"`
-	ExerciseTypeIDGT           *pksuid.ID  `json:"exerciseTypeIDGT,omitempty"`
-	ExerciseTypeIDGTE          *pksuid.ID  `json:"exerciseTypeIDGTE,omitempty"`
-	ExerciseTypeIDLT           *pksuid.ID  `json:"exerciseTypeIDLT,omitempty"`
-	ExerciseTypeIDLTE          *pksuid.ID  `json:"exerciseTypeIDLTE,omitempty"`
-	ExerciseTypeIDContains     *pksuid.ID  `json:"exerciseTypeIDContains,omitempty"`
-	ExerciseTypeIDHasPrefix    *pksuid.ID  `json:"exerciseTypeIDHasPrefix,omitempty"`
-	ExerciseTypeIDHasSuffix    *pksuid.ID  `json:"exerciseTypeIDHasSuffix,omitempty"`
-	ExerciseTypeIDIsNil        bool        `json:"exerciseTypeIDIsNil,omitempty"`
-	ExerciseTypeIDNotNil       bool        `json:"exerciseTypeIDNotNil,omitempty"`
-	ExerciseTypeIDEqualFold    *pksuid.ID  `json:"exerciseTypeIDEqualFold,omitempty"`
-	ExerciseTypeIDContainsFold *pksuid.ID  `json:"exerciseTypeIDContainsFold,omitempty"`
-
 	// "user_id" field predicates.
 	UserID             *pksuid.ID  `json:"userID,omitempty"`
 	UserIDNEQ          *pksuid.ID  `json:"userIDNEQ,omitempty"`
@@ -416,9 +365,9 @@ type ExerciseWhereInput struct {
 	HasUsers     *bool             `json:"hasUsers,omitempty"`
 	HasUsersWith []*UserWhereInput `json:"hasUsersWith,omitempty"`
 
-	// "equipments" edge predicates.
-	HasEquipments     *bool                  `json:"hasEquipments,omitempty"`
-	HasEquipmentsWith []*EquipmentWhereInput `json:"hasEquipmentsWith,omitempty"`
+	// "equipment" edge predicates.
+	HasEquipment     *bool                  `json:"hasEquipment,omitempty"`
+	HasEquipmentWith []*EquipmentWhereInput `json:"hasEquipmentWith,omitempty"`
 
 	// "muscles_groups" edge predicates.
 	HasMusclesGroups     *bool                     `json:"hasMusclesGroups,omitempty"`
@@ -661,141 +610,6 @@ func (i *ExerciseWhereInput) P() (predicate.Exercise, error) {
 	if i.HowToContainsFold != nil {
 		predicates = append(predicates, exercise.HowToContainsFold(*i.HowToContainsFold))
 	}
-	if i.EquipmentID != nil {
-		predicates = append(predicates, exercise.EquipmentIDEQ(*i.EquipmentID))
-	}
-	if i.EquipmentIDNEQ != nil {
-		predicates = append(predicates, exercise.EquipmentIDNEQ(*i.EquipmentIDNEQ))
-	}
-	if len(i.EquipmentIDIn) > 0 {
-		predicates = append(predicates, exercise.EquipmentIDIn(i.EquipmentIDIn...))
-	}
-	if len(i.EquipmentIDNotIn) > 0 {
-		predicates = append(predicates, exercise.EquipmentIDNotIn(i.EquipmentIDNotIn...))
-	}
-	if i.EquipmentIDGT != nil {
-		predicates = append(predicates, exercise.EquipmentIDGT(*i.EquipmentIDGT))
-	}
-	if i.EquipmentIDGTE != nil {
-		predicates = append(predicates, exercise.EquipmentIDGTE(*i.EquipmentIDGTE))
-	}
-	if i.EquipmentIDLT != nil {
-		predicates = append(predicates, exercise.EquipmentIDLT(*i.EquipmentIDLT))
-	}
-	if i.EquipmentIDLTE != nil {
-		predicates = append(predicates, exercise.EquipmentIDLTE(*i.EquipmentIDLTE))
-	}
-	if i.EquipmentIDContains != nil {
-		predicates = append(predicates, exercise.EquipmentIDContains(*i.EquipmentIDContains))
-	}
-	if i.EquipmentIDHasPrefix != nil {
-		predicates = append(predicates, exercise.EquipmentIDHasPrefix(*i.EquipmentIDHasPrefix))
-	}
-	if i.EquipmentIDHasSuffix != nil {
-		predicates = append(predicates, exercise.EquipmentIDHasSuffix(*i.EquipmentIDHasSuffix))
-	}
-	if i.EquipmentIDIsNil {
-		predicates = append(predicates, exercise.EquipmentIDIsNil())
-	}
-	if i.EquipmentIDNotNil {
-		predicates = append(predicates, exercise.EquipmentIDNotNil())
-	}
-	if i.EquipmentIDEqualFold != nil {
-		predicates = append(predicates, exercise.EquipmentIDEqualFold(*i.EquipmentIDEqualFold))
-	}
-	if i.EquipmentIDContainsFold != nil {
-		predicates = append(predicates, exercise.EquipmentIDContainsFold(*i.EquipmentIDContainsFold))
-	}
-	if i.MusclesGroupID != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDEQ(*i.MusclesGroupID))
-	}
-	if i.MusclesGroupIDNEQ != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDNEQ(*i.MusclesGroupIDNEQ))
-	}
-	if len(i.MusclesGroupIDIn) > 0 {
-		predicates = append(predicates, exercise.MusclesGroupIDIn(i.MusclesGroupIDIn...))
-	}
-	if len(i.MusclesGroupIDNotIn) > 0 {
-		predicates = append(predicates, exercise.MusclesGroupIDNotIn(i.MusclesGroupIDNotIn...))
-	}
-	if i.MusclesGroupIDGT != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDGT(*i.MusclesGroupIDGT))
-	}
-	if i.MusclesGroupIDGTE != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDGTE(*i.MusclesGroupIDGTE))
-	}
-	if i.MusclesGroupIDLT != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDLT(*i.MusclesGroupIDLT))
-	}
-	if i.MusclesGroupIDLTE != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDLTE(*i.MusclesGroupIDLTE))
-	}
-	if i.MusclesGroupIDContains != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDContains(*i.MusclesGroupIDContains))
-	}
-	if i.MusclesGroupIDHasPrefix != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDHasPrefix(*i.MusclesGroupIDHasPrefix))
-	}
-	if i.MusclesGroupIDHasSuffix != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDHasSuffix(*i.MusclesGroupIDHasSuffix))
-	}
-	if i.MusclesGroupIDIsNil {
-		predicates = append(predicates, exercise.MusclesGroupIDIsNil())
-	}
-	if i.MusclesGroupIDNotNil {
-		predicates = append(predicates, exercise.MusclesGroupIDNotNil())
-	}
-	if i.MusclesGroupIDEqualFold != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDEqualFold(*i.MusclesGroupIDEqualFold))
-	}
-	if i.MusclesGroupIDContainsFold != nil {
-		predicates = append(predicates, exercise.MusclesGroupIDContainsFold(*i.MusclesGroupIDContainsFold))
-	}
-	if i.ExerciseTypeID != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDEQ(*i.ExerciseTypeID))
-	}
-	if i.ExerciseTypeIDNEQ != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDNEQ(*i.ExerciseTypeIDNEQ))
-	}
-	if len(i.ExerciseTypeIDIn) > 0 {
-		predicates = append(predicates, exercise.ExerciseTypeIDIn(i.ExerciseTypeIDIn...))
-	}
-	if len(i.ExerciseTypeIDNotIn) > 0 {
-		predicates = append(predicates, exercise.ExerciseTypeIDNotIn(i.ExerciseTypeIDNotIn...))
-	}
-	if i.ExerciseTypeIDGT != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDGT(*i.ExerciseTypeIDGT))
-	}
-	if i.ExerciseTypeIDGTE != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDGTE(*i.ExerciseTypeIDGTE))
-	}
-	if i.ExerciseTypeIDLT != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDLT(*i.ExerciseTypeIDLT))
-	}
-	if i.ExerciseTypeIDLTE != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDLTE(*i.ExerciseTypeIDLTE))
-	}
-	if i.ExerciseTypeIDContains != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDContains(*i.ExerciseTypeIDContains))
-	}
-	if i.ExerciseTypeIDHasPrefix != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDHasPrefix(*i.ExerciseTypeIDHasPrefix))
-	}
-	if i.ExerciseTypeIDHasSuffix != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDHasSuffix(*i.ExerciseTypeIDHasSuffix))
-	}
-	if i.ExerciseTypeIDIsNil {
-		predicates = append(predicates, exercise.ExerciseTypeIDIsNil())
-	}
-	if i.ExerciseTypeIDNotNil {
-		predicates = append(predicates, exercise.ExerciseTypeIDNotNil())
-	}
-	if i.ExerciseTypeIDEqualFold != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDEqualFold(*i.ExerciseTypeIDEqualFold))
-	}
-	if i.ExerciseTypeIDContainsFold != nil {
-		predicates = append(predicates, exercise.ExerciseTypeIDContainsFold(*i.ExerciseTypeIDContainsFold))
-	}
 	if i.UserID != nil {
 		predicates = append(predicates, exercise.UserIDEQ(*i.UserID))
 	}
@@ -878,23 +692,23 @@ func (i *ExerciseWhereInput) P() (predicate.Exercise, error) {
 		}
 		predicates = append(predicates, exercise.HasUsersWith(with...))
 	}
-	if i.HasEquipments != nil {
-		p := exercise.HasEquipments()
-		if !*i.HasEquipments {
+	if i.HasEquipment != nil {
+		p := exercise.HasEquipment()
+		if !*i.HasEquipment {
 			p = exercise.Not(p)
 		}
 		predicates = append(predicates, p)
 	}
-	if len(i.HasEquipmentsWith) > 0 {
-		with := make([]predicate.Equipment, 0, len(i.HasEquipmentsWith))
-		for _, w := range i.HasEquipmentsWith {
+	if len(i.HasEquipmentWith) > 0 {
+		with := make([]predicate.Equipment, 0, len(i.HasEquipmentWith))
+		for _, w := range i.HasEquipmentWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, fmt.Errorf("%w: field 'HasEquipmentsWith'", err)
+				return nil, fmt.Errorf("%w: field 'HasEquipmentWith'", err)
 			}
 			with = append(with, p)
 		}
-		predicates = append(predicates, exercise.HasEquipmentsWith(with...))
+		predicates = append(predicates, exercise.HasEquipmentWith(with...))
 	}
 	if i.HasMusclesGroups != nil {
 		p := exercise.HasMusclesGroups()
@@ -1530,8 +1344,6 @@ type RoutineWhereInput struct {
 	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
 	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
 	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
 	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
 	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
@@ -1715,12 +1527,6 @@ func (i *RoutineWhereInput) P() (predicate.Routine, error) {
 	if i.UserIDHasSuffix != nil {
 		predicates = append(predicates, routine.UserIDHasSuffix(*i.UserIDHasSuffix))
 	}
-	if i.UserIDIsNil {
-		predicates = append(predicates, routine.UserIDIsNil())
-	}
-	if i.UserIDNotNil {
-		predicates = append(predicates, routine.UserIDNotNil())
-	}
 	if i.UserIDEqualFold != nil {
 		predicates = append(predicates, routine.UserIDEqualFold(*i.UserIDEqualFold))
 	}
@@ -1868,8 +1674,6 @@ type RoutineExerciseWhereInput struct {
 	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
 	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
 	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
 	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
 	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
@@ -2137,12 +1941,6 @@ func (i *RoutineExerciseWhereInput) P() (predicate.RoutineExercise, error) {
 	if i.UserIDHasSuffix != nil {
 		predicates = append(predicates, routineexercise.UserIDHasSuffix(*i.UserIDHasSuffix))
 	}
-	if i.UserIDIsNil {
-		predicates = append(predicates, routineexercise.UserIDIsNil())
-	}
-	if i.UserIDNotNil {
-		predicates = append(predicates, routineexercise.UserIDNotNil())
-	}
 	if i.UserIDEqualFold != nil {
 		predicates = append(predicates, routineexercise.UserIDEqualFold(*i.UserIDEqualFold))
 	}
@@ -2273,8 +2071,6 @@ type TokenWhereInput struct {
 	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
 	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
 	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
 	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
 	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
@@ -2488,12 +2284,6 @@ func (i *TokenWhereInput) P() (predicate.Token, error) {
 	}
 	if i.UserIDHasSuffix != nil {
 		predicates = append(predicates, token.UserIDHasSuffix(*i.UserIDHasSuffix))
-	}
-	if i.UserIDIsNil {
-		predicates = append(predicates, token.UserIDIsNil())
-	}
-	if i.UserIDNotNil {
-		predicates = append(predicates, token.UserIDNotNil())
 	}
 	if i.UserIDEqualFold != nil {
 		predicates = append(predicates, token.UserIDEqualFold(*i.UserIDEqualFold))
@@ -3262,8 +3052,6 @@ type WorkoutWhereInput struct {
 	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
 	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
 	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
 	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
 	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
@@ -3683,12 +3471,6 @@ func (i *WorkoutWhereInput) P() (predicate.Workout, error) {
 	if i.UserIDHasSuffix != nil {
 		predicates = append(predicates, workout.UserIDHasSuffix(*i.UserIDHasSuffix))
 	}
-	if i.UserIDIsNil {
-		predicates = append(predicates, workout.UserIDIsNil())
-	}
-	if i.UserIDNotNil {
-		predicates = append(predicates, workout.UserIDNotNil())
-	}
 	if i.UserIDEqualFold != nil {
 		predicates = append(predicates, workout.UserIDEqualFold(*i.UserIDEqualFold))
 	}
@@ -3774,40 +3556,6 @@ type WorkoutLogWhereInput struct {
 	CreatedAtEqualFold    *string  `json:"createdAtEqualFold,omitempty"`
 	CreatedAtContainsFold *string  `json:"createdAtContainsFold,omitempty"`
 
-	// "exercise_id" field predicates.
-	ExerciseID             *pksuid.ID  `json:"exerciseID,omitempty"`
-	ExerciseIDNEQ          *pksuid.ID  `json:"exerciseIDNEQ,omitempty"`
-	ExerciseIDIn           []pksuid.ID `json:"exerciseIDIn,omitempty"`
-	ExerciseIDNotIn        []pksuid.ID `json:"exerciseIDNotIn,omitempty"`
-	ExerciseIDGT           *pksuid.ID  `json:"exerciseIDGT,omitempty"`
-	ExerciseIDGTE          *pksuid.ID  `json:"exerciseIDGTE,omitempty"`
-	ExerciseIDLT           *pksuid.ID  `json:"exerciseIDLT,omitempty"`
-	ExerciseIDLTE          *pksuid.ID  `json:"exerciseIDLTE,omitempty"`
-	ExerciseIDContains     *pksuid.ID  `json:"exerciseIDContains,omitempty"`
-	ExerciseIDHasPrefix    *pksuid.ID  `json:"exerciseIDHasPrefix,omitempty"`
-	ExerciseIDHasSuffix    *pksuid.ID  `json:"exerciseIDHasSuffix,omitempty"`
-	ExerciseIDIsNil        bool        `json:"exerciseIDIsNil,omitempty"`
-	ExerciseIDNotNil       bool        `json:"exerciseIDNotNil,omitempty"`
-	ExerciseIDEqualFold    *pksuid.ID  `json:"exerciseIDEqualFold,omitempty"`
-	ExerciseIDContainsFold *pksuid.ID  `json:"exerciseIDContainsFold,omitempty"`
-
-	// "workout_id" field predicates.
-	WorkoutID             *pksuid.ID  `json:"workoutID,omitempty"`
-	WorkoutIDNEQ          *pksuid.ID  `json:"workoutIDNEQ,omitempty"`
-	WorkoutIDIn           []pksuid.ID `json:"workoutIDIn,omitempty"`
-	WorkoutIDNotIn        []pksuid.ID `json:"workoutIDNotIn,omitempty"`
-	WorkoutIDGT           *pksuid.ID  `json:"workoutIDGT,omitempty"`
-	WorkoutIDGTE          *pksuid.ID  `json:"workoutIDGTE,omitempty"`
-	WorkoutIDLT           *pksuid.ID  `json:"workoutIDLT,omitempty"`
-	WorkoutIDLTE          *pksuid.ID  `json:"workoutIDLTE,omitempty"`
-	WorkoutIDContains     *pksuid.ID  `json:"workoutIDContains,omitempty"`
-	WorkoutIDHasPrefix    *pksuid.ID  `json:"workoutIDHasPrefix,omitempty"`
-	WorkoutIDHasSuffix    *pksuid.ID  `json:"workoutIDHasSuffix,omitempty"`
-	WorkoutIDIsNil        bool        `json:"workoutIDIsNil,omitempty"`
-	WorkoutIDNotNil       bool        `json:"workoutIDNotNil,omitempty"`
-	WorkoutIDEqualFold    *pksuid.ID  `json:"workoutIDEqualFold,omitempty"`
-	WorkoutIDContainsFold *pksuid.ID  `json:"workoutIDContainsFold,omitempty"`
-
 	// "user_id" field predicates.
 	UserID             *pksuid.ID  `json:"userID,omitempty"`
 	UserIDNEQ          *pksuid.ID  `json:"userIDNEQ,omitempty"`
@@ -3820,8 +3568,6 @@ type WorkoutLogWhereInput struct {
 	UserIDContains     *pksuid.ID  `json:"userIDContains,omitempty"`
 	UserIDHasPrefix    *pksuid.ID  `json:"userIDHasPrefix,omitempty"`
 	UserIDHasSuffix    *pksuid.ID  `json:"userIDHasSuffix,omitempty"`
-	UserIDIsNil        bool        `json:"userIDIsNil,omitempty"`
-	UserIDNotNil       bool        `json:"userIDNotNil,omitempty"`
 	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
 	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
@@ -3972,96 +3718,6 @@ func (i *WorkoutLogWhereInput) P() (predicate.WorkoutLog, error) {
 	if i.CreatedAtContainsFold != nil {
 		predicates = append(predicates, workoutlog.CreatedAtContainsFold(*i.CreatedAtContainsFold))
 	}
-	if i.ExerciseID != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDEQ(*i.ExerciseID))
-	}
-	if i.ExerciseIDNEQ != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDNEQ(*i.ExerciseIDNEQ))
-	}
-	if len(i.ExerciseIDIn) > 0 {
-		predicates = append(predicates, workoutlog.ExerciseIDIn(i.ExerciseIDIn...))
-	}
-	if len(i.ExerciseIDNotIn) > 0 {
-		predicates = append(predicates, workoutlog.ExerciseIDNotIn(i.ExerciseIDNotIn...))
-	}
-	if i.ExerciseIDGT != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDGT(*i.ExerciseIDGT))
-	}
-	if i.ExerciseIDGTE != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDGTE(*i.ExerciseIDGTE))
-	}
-	if i.ExerciseIDLT != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDLT(*i.ExerciseIDLT))
-	}
-	if i.ExerciseIDLTE != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDLTE(*i.ExerciseIDLTE))
-	}
-	if i.ExerciseIDContains != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDContains(*i.ExerciseIDContains))
-	}
-	if i.ExerciseIDHasPrefix != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDHasPrefix(*i.ExerciseIDHasPrefix))
-	}
-	if i.ExerciseIDHasSuffix != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDHasSuffix(*i.ExerciseIDHasSuffix))
-	}
-	if i.ExerciseIDIsNil {
-		predicates = append(predicates, workoutlog.ExerciseIDIsNil())
-	}
-	if i.ExerciseIDNotNil {
-		predicates = append(predicates, workoutlog.ExerciseIDNotNil())
-	}
-	if i.ExerciseIDEqualFold != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDEqualFold(*i.ExerciseIDEqualFold))
-	}
-	if i.ExerciseIDContainsFold != nil {
-		predicates = append(predicates, workoutlog.ExerciseIDContainsFold(*i.ExerciseIDContainsFold))
-	}
-	if i.WorkoutID != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDEQ(*i.WorkoutID))
-	}
-	if i.WorkoutIDNEQ != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDNEQ(*i.WorkoutIDNEQ))
-	}
-	if len(i.WorkoutIDIn) > 0 {
-		predicates = append(predicates, workoutlog.WorkoutIDIn(i.WorkoutIDIn...))
-	}
-	if len(i.WorkoutIDNotIn) > 0 {
-		predicates = append(predicates, workoutlog.WorkoutIDNotIn(i.WorkoutIDNotIn...))
-	}
-	if i.WorkoutIDGT != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDGT(*i.WorkoutIDGT))
-	}
-	if i.WorkoutIDGTE != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDGTE(*i.WorkoutIDGTE))
-	}
-	if i.WorkoutIDLT != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDLT(*i.WorkoutIDLT))
-	}
-	if i.WorkoutIDLTE != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDLTE(*i.WorkoutIDLTE))
-	}
-	if i.WorkoutIDContains != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDContains(*i.WorkoutIDContains))
-	}
-	if i.WorkoutIDHasPrefix != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDHasPrefix(*i.WorkoutIDHasPrefix))
-	}
-	if i.WorkoutIDHasSuffix != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDHasSuffix(*i.WorkoutIDHasSuffix))
-	}
-	if i.WorkoutIDIsNil {
-		predicates = append(predicates, workoutlog.WorkoutIDIsNil())
-	}
-	if i.WorkoutIDNotNil {
-		predicates = append(predicates, workoutlog.WorkoutIDNotNil())
-	}
-	if i.WorkoutIDEqualFold != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDEqualFold(*i.WorkoutIDEqualFold))
-	}
-	if i.WorkoutIDContainsFold != nil {
-		predicates = append(predicates, workoutlog.WorkoutIDContainsFold(*i.WorkoutIDContainsFold))
-	}
 	if i.UserID != nil {
 		predicates = append(predicates, workoutlog.UserIDEQ(*i.UserID))
 	}
@@ -4094,12 +3750,6 @@ func (i *WorkoutLogWhereInput) P() (predicate.WorkoutLog, error) {
 	}
 	if i.UserIDHasSuffix != nil {
 		predicates = append(predicates, workoutlog.UserIDHasSuffix(*i.UserIDHasSuffix))
-	}
-	if i.UserIDIsNil {
-		predicates = append(predicates, workoutlog.UserIDIsNil())
-	}
-	if i.UserIDNotNil {
-		predicates = append(predicates, workoutlog.UserIDNotNil())
 	}
 	if i.UserIDEqualFold != nil {
 		predicates = append(predicates, workoutlog.UserIDEqualFold(*i.UserIDEqualFold))

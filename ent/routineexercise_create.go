@@ -39,7 +39,7 @@ func (rec *RoutineExerciseCreate) SetNillableRestTimer(s *string) *RoutineExerci
 }
 
 // SetSets sets the "sets" field.
-func (rec *RoutineExerciseCreate) SetSets(s *schematype.Sets) *RoutineExerciseCreate {
+func (rec *RoutineExerciseCreate) SetSets(s []*schematype.Set) *RoutineExerciseCreate {
 	rec.mutation.SetSets(s)
 	return rec
 }
@@ -59,14 +59,6 @@ func (rec *RoutineExerciseCreate) SetExerciseID(pk pksuid.ID) *RoutineExerciseCr
 // SetUserID sets the "user_id" field.
 func (rec *RoutineExerciseCreate) SetUserID(pk pksuid.ID) *RoutineExerciseCreate {
 	rec.mutation.SetUserID(pk)
-	return rec
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableUserID(pk *pksuid.ID) *RoutineExerciseCreate {
-	if pk != nil {
-		rec.SetUserID(*pk)
-	}
 	return rec
 }
 
@@ -109,14 +101,6 @@ func (rec *RoutineExerciseCreate) SetExercises(e *Exercise) *RoutineExerciseCrea
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (rec *RoutineExerciseCreate) SetUsersID(id pksuid.ID) *RoutineExerciseCreate {
 	rec.mutation.SetUsersID(id)
-	return rec
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableUsersID(id *pksuid.ID) *RoutineExerciseCreate {
-	if id != nil {
-		rec = rec.SetUsersID(*id)
-	}
 	return rec
 }
 
@@ -177,11 +161,17 @@ func (rec *RoutineExerciseCreate) check() error {
 	if _, ok := rec.mutation.ExerciseID(); !ok {
 		return &ValidationError{Name: "exercise_id", err: errors.New(`ent: missing required field "RoutineExercise.exercise_id"`)}
 	}
+	if _, ok := rec.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "RoutineExercise.user_id"`)}
+	}
 	if _, ok := rec.mutation.RoutinesID(); !ok {
 		return &ValidationError{Name: "routines", err: errors.New(`ent: missing required edge "RoutineExercise.routines"`)}
 	}
 	if _, ok := rec.mutation.ExercisesID(); !ok {
 		return &ValidationError{Name: "exercises", err: errors.New(`ent: missing required edge "RoutineExercise.exercises"`)}
+	}
+	if _, ok := rec.mutation.UsersID(); !ok {
+		return &ValidationError{Name: "users", err: errors.New(`ent: missing required edge "RoutineExercise.users"`)}
 	}
 	return nil
 }
@@ -220,7 +210,7 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 	}
 	if value, ok := rec.mutation.RestTimer(); ok {
 		_spec.SetField(routineexercise.FieldRestTimer, field.TypeString, value)
-		_node.RestTimer = value
+		_node.RestTimer = &value
 	}
 	if value, ok := rec.mutation.Sets(); ok {
 		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)

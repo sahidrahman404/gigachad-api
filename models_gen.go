@@ -23,10 +23,14 @@ type AuthenticationToken struct {
 
 type CreateRoutineExerciseInput struct {
 	RestTimer  *string           `json:"restTimer,omitempty"`
-	Sets       []*schematype.Set `json:"sets"`
-	RoutineID  pksuid.ID         `json:"routineID"`
+	Sets       []*schematype.Set `json:"sets,omitempty"`
 	ExerciseID pksuid.ID         `json:"exerciseID"`
-	UserID     *pksuid.ID        `json:"userID,omitempty"`
+	UserID     pksuid.ID         `json:"userID"`
+}
+
+type CreateRoutineWithChildrenInput struct {
+	Name            string                        `json:"name"`
+	RoutineExercise []*CreateRoutineExerciseInput `json:"RoutineExercise,omitempty"`
 }
 
 type DeletedID struct {

@@ -199,7 +199,7 @@ func HasExercises() predicate.ExerciseType {
 	return predicate.ExerciseType(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, ExercisesTable, ExercisesColumn),
+			sqlgraph.Edge(sqlgraph.M2M, false, ExercisesTable, ExercisesPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})

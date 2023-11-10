@@ -81,66 +81,6 @@ func (eu *ExerciseUpdate) ClearHowTo() *ExerciseUpdate {
 	return eu
 }
 
-// SetEquipmentID sets the "equipment_id" field.
-func (eu *ExerciseUpdate) SetEquipmentID(pk pksuid.ID) *ExerciseUpdate {
-	eu.mutation.SetEquipmentID(pk)
-	return eu
-}
-
-// SetNillableEquipmentID sets the "equipment_id" field if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableEquipmentID(pk *pksuid.ID) *ExerciseUpdate {
-	if pk != nil {
-		eu.SetEquipmentID(*pk)
-	}
-	return eu
-}
-
-// ClearEquipmentID clears the value of the "equipment_id" field.
-func (eu *ExerciseUpdate) ClearEquipmentID() *ExerciseUpdate {
-	eu.mutation.ClearEquipmentID()
-	return eu
-}
-
-// SetMusclesGroupID sets the "muscles_group_id" field.
-func (eu *ExerciseUpdate) SetMusclesGroupID(pk pksuid.ID) *ExerciseUpdate {
-	eu.mutation.SetMusclesGroupID(pk)
-	return eu
-}
-
-// SetNillableMusclesGroupID sets the "muscles_group_id" field if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableMusclesGroupID(pk *pksuid.ID) *ExerciseUpdate {
-	if pk != nil {
-		eu.SetMusclesGroupID(*pk)
-	}
-	return eu
-}
-
-// ClearMusclesGroupID clears the value of the "muscles_group_id" field.
-func (eu *ExerciseUpdate) ClearMusclesGroupID() *ExerciseUpdate {
-	eu.mutation.ClearMusclesGroupID()
-	return eu
-}
-
-// SetExerciseTypeID sets the "exercise_type_id" field.
-func (eu *ExerciseUpdate) SetExerciseTypeID(pk pksuid.ID) *ExerciseUpdate {
-	eu.mutation.SetExerciseTypeID(pk)
-	return eu
-}
-
-// SetNillableExerciseTypeID sets the "exercise_type_id" field if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableExerciseTypeID(pk *pksuid.ID) *ExerciseUpdate {
-	if pk != nil {
-		eu.SetExerciseTypeID(*pk)
-	}
-	return eu
-}
-
-// ClearExerciseTypeID clears the value of the "exercise_type_id" field.
-func (eu *ExerciseUpdate) ClearExerciseTypeID() *ExerciseUpdate {
-	eu.mutation.ClearExerciseTypeID()
-	return eu
-}
-
 // SetUserID sets the "user_id" field.
 func (eu *ExerciseUpdate) SetUserID(pk pksuid.ID) *ExerciseUpdate {
 	eu.mutation.SetUserID(pk)
@@ -195,61 +135,49 @@ func (eu *ExerciseUpdate) SetUsers(u *User) *ExerciseUpdate {
 	return eu.SetUsersID(u.ID)
 }
 
-// SetEquipmentsID sets the "equipments" edge to the Equipment entity by ID.
-func (eu *ExerciseUpdate) SetEquipmentsID(id pksuid.ID) *ExerciseUpdate {
-	eu.mutation.SetEquipmentsID(id)
+// AddEquipmentIDs adds the "equipment" edge to the Equipment entity by IDs.
+func (eu *ExerciseUpdate) AddEquipmentIDs(ids ...pksuid.ID) *ExerciseUpdate {
+	eu.mutation.AddEquipmentIDs(ids...)
 	return eu
 }
 
-// SetNillableEquipmentsID sets the "equipments" edge to the Equipment entity by ID if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableEquipmentsID(id *pksuid.ID) *ExerciseUpdate {
-	if id != nil {
-		eu = eu.SetEquipmentsID(*id)
+// AddEquipment adds the "equipment" edges to the Equipment entity.
+func (eu *ExerciseUpdate) AddEquipment(e ...*Equipment) *ExerciseUpdate {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
+	return eu.AddEquipmentIDs(ids...)
+}
+
+// AddMusclesGroupIDs adds the "muscles_groups" edge to the MusclesGroup entity by IDs.
+func (eu *ExerciseUpdate) AddMusclesGroupIDs(ids ...pksuid.ID) *ExerciseUpdate {
+	eu.mutation.AddMusclesGroupIDs(ids...)
 	return eu
 }
 
-// SetEquipments sets the "equipments" edge to the Equipment entity.
-func (eu *ExerciseUpdate) SetEquipments(e *Equipment) *ExerciseUpdate {
-	return eu.SetEquipmentsID(e.ID)
-}
-
-// SetMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID.
-func (eu *ExerciseUpdate) SetMusclesGroupsID(id pksuid.ID) *ExerciseUpdate {
-	eu.mutation.SetMusclesGroupsID(id)
-	return eu
-}
-
-// SetNillableMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableMusclesGroupsID(id *pksuid.ID) *ExerciseUpdate {
-	if id != nil {
-		eu = eu.SetMusclesGroupsID(*id)
+// AddMusclesGroups adds the "muscles_groups" edges to the MusclesGroup entity.
+func (eu *ExerciseUpdate) AddMusclesGroups(m ...*MusclesGroup) *ExerciseUpdate {
+	ids := make([]pksuid.ID, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
 	}
+	return eu.AddMusclesGroupIDs(ids...)
+}
+
+// AddExerciseTypeIDs adds the "exercise_types" edge to the ExerciseType entity by IDs.
+func (eu *ExerciseUpdate) AddExerciseTypeIDs(ids ...pksuid.ID) *ExerciseUpdate {
+	eu.mutation.AddExerciseTypeIDs(ids...)
 	return eu
 }
 
-// SetMusclesGroups sets the "muscles_groups" edge to the MusclesGroup entity.
-func (eu *ExerciseUpdate) SetMusclesGroups(m *MusclesGroup) *ExerciseUpdate {
-	return eu.SetMusclesGroupsID(m.ID)
-}
-
-// SetExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID.
-func (eu *ExerciseUpdate) SetExerciseTypesID(id pksuid.ID) *ExerciseUpdate {
-	eu.mutation.SetExerciseTypesID(id)
-	return eu
-}
-
-// SetNillableExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID if the given value is not nil.
-func (eu *ExerciseUpdate) SetNillableExerciseTypesID(id *pksuid.ID) *ExerciseUpdate {
-	if id != nil {
-		eu = eu.SetExerciseTypesID(*id)
+// AddExerciseTypes adds the "exercise_types" edges to the ExerciseType entity.
+func (eu *ExerciseUpdate) AddExerciseTypes(e ...*ExerciseType) *ExerciseUpdate {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
-	return eu
-}
-
-// SetExerciseTypes sets the "exercise_types" edge to the ExerciseType entity.
-func (eu *ExerciseUpdate) SetExerciseTypes(e *ExerciseType) *ExerciseUpdate {
-	return eu.SetExerciseTypesID(e.ID)
+	return eu.AddExerciseTypeIDs(ids...)
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
@@ -314,22 +242,67 @@ func (eu *ExerciseUpdate) ClearUsers() *ExerciseUpdate {
 	return eu
 }
 
-// ClearEquipments clears the "equipments" edge to the Equipment entity.
-func (eu *ExerciseUpdate) ClearEquipments() *ExerciseUpdate {
-	eu.mutation.ClearEquipments()
+// ClearEquipment clears all "equipment" edges to the Equipment entity.
+func (eu *ExerciseUpdate) ClearEquipment() *ExerciseUpdate {
+	eu.mutation.ClearEquipment()
 	return eu
 }
 
-// ClearMusclesGroups clears the "muscles_groups" edge to the MusclesGroup entity.
+// RemoveEquipmentIDs removes the "equipment" edge to Equipment entities by IDs.
+func (eu *ExerciseUpdate) RemoveEquipmentIDs(ids ...pksuid.ID) *ExerciseUpdate {
+	eu.mutation.RemoveEquipmentIDs(ids...)
+	return eu
+}
+
+// RemoveEquipment removes "equipment" edges to Equipment entities.
+func (eu *ExerciseUpdate) RemoveEquipment(e ...*Equipment) *ExerciseUpdate {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return eu.RemoveEquipmentIDs(ids...)
+}
+
+// ClearMusclesGroups clears all "muscles_groups" edges to the MusclesGroup entity.
 func (eu *ExerciseUpdate) ClearMusclesGroups() *ExerciseUpdate {
 	eu.mutation.ClearMusclesGroups()
 	return eu
 }
 
-// ClearExerciseTypes clears the "exercise_types" edge to the ExerciseType entity.
+// RemoveMusclesGroupIDs removes the "muscles_groups" edge to MusclesGroup entities by IDs.
+func (eu *ExerciseUpdate) RemoveMusclesGroupIDs(ids ...pksuid.ID) *ExerciseUpdate {
+	eu.mutation.RemoveMusclesGroupIDs(ids...)
+	return eu
+}
+
+// RemoveMusclesGroups removes "muscles_groups" edges to MusclesGroup entities.
+func (eu *ExerciseUpdate) RemoveMusclesGroups(m ...*MusclesGroup) *ExerciseUpdate {
+	ids := make([]pksuid.ID, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
+	}
+	return eu.RemoveMusclesGroupIDs(ids...)
+}
+
+// ClearExerciseTypes clears all "exercise_types" edges to the ExerciseType entity.
 func (eu *ExerciseUpdate) ClearExerciseTypes() *ExerciseUpdate {
 	eu.mutation.ClearExerciseTypes()
 	return eu
+}
+
+// RemoveExerciseTypeIDs removes the "exercise_types" edge to ExerciseType entities by IDs.
+func (eu *ExerciseUpdate) RemoveExerciseTypeIDs(ids ...pksuid.ID) *ExerciseUpdate {
+	eu.mutation.RemoveExerciseTypeIDs(ids...)
+	return eu
+}
+
+// RemoveExerciseTypes removes "exercise_types" edges to ExerciseType entities.
+func (eu *ExerciseUpdate) RemoveExerciseTypes(e ...*ExerciseType) *ExerciseUpdate {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return eu.RemoveExerciseTypeIDs(ids...)
 }
 
 // ClearRoutines clears all "routines" edges to the Routine entity.
@@ -499,12 +472,12 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if eu.mutation.EquipmentsCleared() {
+	if eu.mutation.EquipmentCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   exercise.EquipmentsTable,
-			Columns: []string{exercise.EquipmentsColumn},
+			Table:   exercise.EquipmentTable,
+			Columns: exercise.EquipmentPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(equipment.FieldID, field.TypeString),
@@ -512,12 +485,28 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.EquipmentsIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.RemovedEquipmentIDs(); len(nodes) > 0 && !eu.mutation.EquipmentCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   exercise.EquipmentsTable,
-			Columns: []string{exercise.EquipmentsColumn},
+			Table:   exercise.EquipmentTable,
+			Columns: exercise.EquipmentPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(equipment.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.EquipmentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   exercise.EquipmentTable,
+			Columns: exercise.EquipmentPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(equipment.FieldID, field.TypeString),
@@ -530,10 +519,10 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if eu.mutation.MusclesGroupsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.MusclesGroupsTable,
-			Columns: []string{exercise.MusclesGroupsColumn},
+			Columns: exercise.MusclesGroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(musclesgroup.FieldID, field.TypeString),
@@ -541,12 +530,28 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.MusclesGroupsIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.RemovedMusclesGroupsIDs(); len(nodes) > 0 && !eu.mutation.MusclesGroupsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.MusclesGroupsTable,
-			Columns: []string{exercise.MusclesGroupsColumn},
+			Columns: exercise.MusclesGroupsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(musclesgroup.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.MusclesGroupsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   exercise.MusclesGroupsTable,
+			Columns: exercise.MusclesGroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(musclesgroup.FieldID, field.TypeString),
@@ -559,10 +564,10 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if eu.mutation.ExerciseTypesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.ExerciseTypesTable,
-			Columns: []string{exercise.ExerciseTypesColumn},
+			Columns: exercise.ExerciseTypesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercisetype.FieldID, field.TypeString),
@@ -570,12 +575,28 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eu.mutation.ExerciseTypesIDs(); len(nodes) > 0 {
+	if nodes := eu.mutation.RemovedExerciseTypesIDs(); len(nodes) > 0 && !eu.mutation.ExerciseTypesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.ExerciseTypesTable,
-			Columns: []string{exercise.ExerciseTypesColumn},
+			Columns: exercise.ExerciseTypesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(exercisetype.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := eu.mutation.ExerciseTypesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   exercise.ExerciseTypesTable,
+			Columns: exercise.ExerciseTypesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercisetype.FieldID, field.TypeString),
@@ -763,66 +784,6 @@ func (euo *ExerciseUpdateOne) ClearHowTo() *ExerciseUpdateOne {
 	return euo
 }
 
-// SetEquipmentID sets the "equipment_id" field.
-func (euo *ExerciseUpdateOne) SetEquipmentID(pk pksuid.ID) *ExerciseUpdateOne {
-	euo.mutation.SetEquipmentID(pk)
-	return euo
-}
-
-// SetNillableEquipmentID sets the "equipment_id" field if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableEquipmentID(pk *pksuid.ID) *ExerciseUpdateOne {
-	if pk != nil {
-		euo.SetEquipmentID(*pk)
-	}
-	return euo
-}
-
-// ClearEquipmentID clears the value of the "equipment_id" field.
-func (euo *ExerciseUpdateOne) ClearEquipmentID() *ExerciseUpdateOne {
-	euo.mutation.ClearEquipmentID()
-	return euo
-}
-
-// SetMusclesGroupID sets the "muscles_group_id" field.
-func (euo *ExerciseUpdateOne) SetMusclesGroupID(pk pksuid.ID) *ExerciseUpdateOne {
-	euo.mutation.SetMusclesGroupID(pk)
-	return euo
-}
-
-// SetNillableMusclesGroupID sets the "muscles_group_id" field if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableMusclesGroupID(pk *pksuid.ID) *ExerciseUpdateOne {
-	if pk != nil {
-		euo.SetMusclesGroupID(*pk)
-	}
-	return euo
-}
-
-// ClearMusclesGroupID clears the value of the "muscles_group_id" field.
-func (euo *ExerciseUpdateOne) ClearMusclesGroupID() *ExerciseUpdateOne {
-	euo.mutation.ClearMusclesGroupID()
-	return euo
-}
-
-// SetExerciseTypeID sets the "exercise_type_id" field.
-func (euo *ExerciseUpdateOne) SetExerciseTypeID(pk pksuid.ID) *ExerciseUpdateOne {
-	euo.mutation.SetExerciseTypeID(pk)
-	return euo
-}
-
-// SetNillableExerciseTypeID sets the "exercise_type_id" field if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableExerciseTypeID(pk *pksuid.ID) *ExerciseUpdateOne {
-	if pk != nil {
-		euo.SetExerciseTypeID(*pk)
-	}
-	return euo
-}
-
-// ClearExerciseTypeID clears the value of the "exercise_type_id" field.
-func (euo *ExerciseUpdateOne) ClearExerciseTypeID() *ExerciseUpdateOne {
-	euo.mutation.ClearExerciseTypeID()
-	return euo
-}
-
 // SetUserID sets the "user_id" field.
 func (euo *ExerciseUpdateOne) SetUserID(pk pksuid.ID) *ExerciseUpdateOne {
 	euo.mutation.SetUserID(pk)
@@ -877,61 +838,49 @@ func (euo *ExerciseUpdateOne) SetUsers(u *User) *ExerciseUpdateOne {
 	return euo.SetUsersID(u.ID)
 }
 
-// SetEquipmentsID sets the "equipments" edge to the Equipment entity by ID.
-func (euo *ExerciseUpdateOne) SetEquipmentsID(id pksuid.ID) *ExerciseUpdateOne {
-	euo.mutation.SetEquipmentsID(id)
+// AddEquipmentIDs adds the "equipment" edge to the Equipment entity by IDs.
+func (euo *ExerciseUpdateOne) AddEquipmentIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.AddEquipmentIDs(ids...)
 	return euo
 }
 
-// SetNillableEquipmentsID sets the "equipments" edge to the Equipment entity by ID if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableEquipmentsID(id *pksuid.ID) *ExerciseUpdateOne {
-	if id != nil {
-		euo = euo.SetEquipmentsID(*id)
+// AddEquipment adds the "equipment" edges to the Equipment entity.
+func (euo *ExerciseUpdateOne) AddEquipment(e ...*Equipment) *ExerciseUpdateOne {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
+	return euo.AddEquipmentIDs(ids...)
+}
+
+// AddMusclesGroupIDs adds the "muscles_groups" edge to the MusclesGroup entity by IDs.
+func (euo *ExerciseUpdateOne) AddMusclesGroupIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.AddMusclesGroupIDs(ids...)
 	return euo
 }
 
-// SetEquipments sets the "equipments" edge to the Equipment entity.
-func (euo *ExerciseUpdateOne) SetEquipments(e *Equipment) *ExerciseUpdateOne {
-	return euo.SetEquipmentsID(e.ID)
-}
-
-// SetMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID.
-func (euo *ExerciseUpdateOne) SetMusclesGroupsID(id pksuid.ID) *ExerciseUpdateOne {
-	euo.mutation.SetMusclesGroupsID(id)
-	return euo
-}
-
-// SetNillableMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableMusclesGroupsID(id *pksuid.ID) *ExerciseUpdateOne {
-	if id != nil {
-		euo = euo.SetMusclesGroupsID(*id)
+// AddMusclesGroups adds the "muscles_groups" edges to the MusclesGroup entity.
+func (euo *ExerciseUpdateOne) AddMusclesGroups(m ...*MusclesGroup) *ExerciseUpdateOne {
+	ids := make([]pksuid.ID, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
 	}
+	return euo.AddMusclesGroupIDs(ids...)
+}
+
+// AddExerciseTypeIDs adds the "exercise_types" edge to the ExerciseType entity by IDs.
+func (euo *ExerciseUpdateOne) AddExerciseTypeIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.AddExerciseTypeIDs(ids...)
 	return euo
 }
 
-// SetMusclesGroups sets the "muscles_groups" edge to the MusclesGroup entity.
-func (euo *ExerciseUpdateOne) SetMusclesGroups(m *MusclesGroup) *ExerciseUpdateOne {
-	return euo.SetMusclesGroupsID(m.ID)
-}
-
-// SetExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID.
-func (euo *ExerciseUpdateOne) SetExerciseTypesID(id pksuid.ID) *ExerciseUpdateOne {
-	euo.mutation.SetExerciseTypesID(id)
-	return euo
-}
-
-// SetNillableExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID if the given value is not nil.
-func (euo *ExerciseUpdateOne) SetNillableExerciseTypesID(id *pksuid.ID) *ExerciseUpdateOne {
-	if id != nil {
-		euo = euo.SetExerciseTypesID(*id)
+// AddExerciseTypes adds the "exercise_types" edges to the ExerciseType entity.
+func (euo *ExerciseUpdateOne) AddExerciseTypes(e ...*ExerciseType) *ExerciseUpdateOne {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
-	return euo
-}
-
-// SetExerciseTypes sets the "exercise_types" edge to the ExerciseType entity.
-func (euo *ExerciseUpdateOne) SetExerciseTypes(e *ExerciseType) *ExerciseUpdateOne {
-	return euo.SetExerciseTypesID(e.ID)
+	return euo.AddExerciseTypeIDs(ids...)
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
@@ -996,22 +945,67 @@ func (euo *ExerciseUpdateOne) ClearUsers() *ExerciseUpdateOne {
 	return euo
 }
 
-// ClearEquipments clears the "equipments" edge to the Equipment entity.
-func (euo *ExerciseUpdateOne) ClearEquipments() *ExerciseUpdateOne {
-	euo.mutation.ClearEquipments()
+// ClearEquipment clears all "equipment" edges to the Equipment entity.
+func (euo *ExerciseUpdateOne) ClearEquipment() *ExerciseUpdateOne {
+	euo.mutation.ClearEquipment()
 	return euo
 }
 
-// ClearMusclesGroups clears the "muscles_groups" edge to the MusclesGroup entity.
+// RemoveEquipmentIDs removes the "equipment" edge to Equipment entities by IDs.
+func (euo *ExerciseUpdateOne) RemoveEquipmentIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.RemoveEquipmentIDs(ids...)
+	return euo
+}
+
+// RemoveEquipment removes "equipment" edges to Equipment entities.
+func (euo *ExerciseUpdateOne) RemoveEquipment(e ...*Equipment) *ExerciseUpdateOne {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return euo.RemoveEquipmentIDs(ids...)
+}
+
+// ClearMusclesGroups clears all "muscles_groups" edges to the MusclesGroup entity.
 func (euo *ExerciseUpdateOne) ClearMusclesGroups() *ExerciseUpdateOne {
 	euo.mutation.ClearMusclesGroups()
 	return euo
 }
 
-// ClearExerciseTypes clears the "exercise_types" edge to the ExerciseType entity.
+// RemoveMusclesGroupIDs removes the "muscles_groups" edge to MusclesGroup entities by IDs.
+func (euo *ExerciseUpdateOne) RemoveMusclesGroupIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.RemoveMusclesGroupIDs(ids...)
+	return euo
+}
+
+// RemoveMusclesGroups removes "muscles_groups" edges to MusclesGroup entities.
+func (euo *ExerciseUpdateOne) RemoveMusclesGroups(m ...*MusclesGroup) *ExerciseUpdateOne {
+	ids := make([]pksuid.ID, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
+	}
+	return euo.RemoveMusclesGroupIDs(ids...)
+}
+
+// ClearExerciseTypes clears all "exercise_types" edges to the ExerciseType entity.
 func (euo *ExerciseUpdateOne) ClearExerciseTypes() *ExerciseUpdateOne {
 	euo.mutation.ClearExerciseTypes()
 	return euo
+}
+
+// RemoveExerciseTypeIDs removes the "exercise_types" edge to ExerciseType entities by IDs.
+func (euo *ExerciseUpdateOne) RemoveExerciseTypeIDs(ids ...pksuid.ID) *ExerciseUpdateOne {
+	euo.mutation.RemoveExerciseTypeIDs(ids...)
+	return euo
+}
+
+// RemoveExerciseTypes removes "exercise_types" edges to ExerciseType entities.
+func (euo *ExerciseUpdateOne) RemoveExerciseTypes(e ...*ExerciseType) *ExerciseUpdateOne {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return euo.RemoveExerciseTypeIDs(ids...)
 }
 
 // ClearRoutines clears all "routines" edges to the Routine entity.
@@ -1211,12 +1205,12 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if euo.mutation.EquipmentsCleared() {
+	if euo.mutation.EquipmentCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   exercise.EquipmentsTable,
-			Columns: []string{exercise.EquipmentsColumn},
+			Table:   exercise.EquipmentTable,
+			Columns: exercise.EquipmentPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(equipment.FieldID, field.TypeString),
@@ -1224,12 +1218,28 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.EquipmentsIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.RemovedEquipmentIDs(); len(nodes) > 0 && !euo.mutation.EquipmentCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   exercise.EquipmentsTable,
-			Columns: []string{exercise.EquipmentsColumn},
+			Table:   exercise.EquipmentTable,
+			Columns: exercise.EquipmentPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(equipment.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.EquipmentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   exercise.EquipmentTable,
+			Columns: exercise.EquipmentPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(equipment.FieldID, field.TypeString),
@@ -1242,10 +1252,10 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 	}
 	if euo.mutation.MusclesGroupsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.MusclesGroupsTable,
-			Columns: []string{exercise.MusclesGroupsColumn},
+			Columns: exercise.MusclesGroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(musclesgroup.FieldID, field.TypeString),
@@ -1253,12 +1263,28 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.MusclesGroupsIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.RemovedMusclesGroupsIDs(); len(nodes) > 0 && !euo.mutation.MusclesGroupsCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.MusclesGroupsTable,
-			Columns: []string{exercise.MusclesGroupsColumn},
+			Columns: exercise.MusclesGroupsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(musclesgroup.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.MusclesGroupsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   exercise.MusclesGroupsTable,
+			Columns: exercise.MusclesGroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(musclesgroup.FieldID, field.TypeString),
@@ -1271,10 +1297,10 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 	}
 	if euo.mutation.ExerciseTypesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.ExerciseTypesTable,
-			Columns: []string{exercise.ExerciseTypesColumn},
+			Columns: exercise.ExerciseTypesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercisetype.FieldID, field.TypeString),
@@ -1282,12 +1308,28 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := euo.mutation.ExerciseTypesIDs(); len(nodes) > 0 {
+	if nodes := euo.mutation.RemovedExerciseTypesIDs(); len(nodes) > 0 && !euo.mutation.ExerciseTypesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.ExerciseTypesTable,
-			Columns: []string{exercise.ExerciseTypesColumn},
+			Columns: exercise.ExerciseTypesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(exercisetype.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := euo.mutation.ExerciseTypesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   exercise.ExerciseTypesTable,
+			Columns: exercise.ExerciseTypesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercisetype.FieldID, field.TypeString),

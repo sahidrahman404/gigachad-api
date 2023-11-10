@@ -302,16 +302,6 @@ func UserIDHasSuffix(v pksuid.ID) predicate.Token {
 	return predicate.Token(sql.FieldHasSuffix(FieldUserID, vc))
 }
 
-// UserIDIsNil applies the IsNil predicate on the "user_id" field.
-func UserIDIsNil() predicate.Token {
-	return predicate.Token(sql.FieldIsNull(FieldUserID))
-}
-
-// UserIDNotNil applies the NotNil predicate on the "user_id" field.
-func UserIDNotNil() predicate.Token {
-	return predicate.Token(sql.FieldNotNull(FieldUserID))
-}
-
 // UserIDEqualFold applies the EqualFold predicate on the "user_id" field.
 func UserIDEqualFold(v pksuid.ID) predicate.Token {
 	vc := string(v)

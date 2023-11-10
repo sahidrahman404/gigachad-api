@@ -32,7 +32,7 @@ type ExerciseQuery struct {
 	predicates                []predicate.Exercise
 	withWorkoutLogs           *WorkoutLogQuery
 	withUsers                 *UserQuery
-	withEquipments            *EquipmentQuery
+	withEquipment             *EquipmentQuery
 	withMusclesGroups         *MusclesGroupQuery
 	withExerciseTypes         *ExerciseTypeQuery
 	withRoutines              *RoutineQuery
@@ -40,6 +40,9 @@ type ExerciseQuery struct {
 	modifiers                 []func(*sql.Selector)
 	loadTotal                 []func(context.Context, []*Exercise) error
 	withNamedWorkoutLogs      map[string]*WorkoutLogQuery
+	withNamedEquipment        map[string]*EquipmentQuery
+	withNamedMusclesGroups    map[string]*MusclesGroupQuery
+	withNamedExerciseTypes    map[string]*ExerciseTypeQuery
 	withNamedRoutines         map[string]*RoutineQuery
 	withNamedRoutineExercises map[string]*RoutineExerciseQuery
 	// intermediate query (i.e. traversal path).
@@ -122,8 +125,8 @@ func (eq *ExerciseQuery) QueryUsers() *UserQuery {
 	return query
 }
 
-// QueryEquipments chains the current query on the "equipments" edge.
-func (eq *ExerciseQuery) QueryEquipments() *EquipmentQuery {
+// QueryEquipment chains the current query on the "equipment" edge.
+func (eq *ExerciseQuery) QueryEquipment() *EquipmentQuery {
 	query := (&EquipmentClient{config: eq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := eq.prepareQuery(ctx); err != nil {
@@ -136,7 +139,7 @@ func (eq *ExerciseQuery) QueryEquipments() *EquipmentQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(exercise.Table, exercise.FieldID, selector),
 			sqlgraph.To(equipment.Table, equipment.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, exercise.EquipmentsTable, exercise.EquipmentsColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.EquipmentTable, exercise.EquipmentPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -158,7 +161,7 @@ func (eq *ExerciseQuery) QueryMusclesGroups() *MusclesGroupQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(exercise.Table, exercise.FieldID, selector),
 			sqlgraph.To(musclesgroup.Table, musclesgroup.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, exercise.MusclesGroupsTable, exercise.MusclesGroupsColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.MusclesGroupsTable, exercise.MusclesGroupsPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -180,7 +183,7 @@ func (eq *ExerciseQuery) QueryExerciseTypes() *ExerciseTypeQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(exercise.Table, exercise.FieldID, selector),
 			sqlgraph.To(exercisetype.Table, exercisetype.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, exercise.ExerciseTypesTable, exercise.ExerciseTypesColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.ExerciseTypesTable, exercise.ExerciseTypesPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(eq.driver.Dialect(), step)
 		return fromU, nil
@@ -426,7 +429,7 @@ func (eq *ExerciseQuery) Clone() *ExerciseQuery {
 		predicates:           append([]predicate.Exercise{}, eq.predicates...),
 		withWorkoutLogs:      eq.withWorkoutLogs.Clone(),
 		withUsers:            eq.withUsers.Clone(),
-		withEquipments:       eq.withEquipments.Clone(),
+		withEquipment:        eq.withEquipment.Clone(),
 		withMusclesGroups:    eq.withMusclesGroups.Clone(),
 		withExerciseTypes:    eq.withExerciseTypes.Clone(),
 		withRoutines:         eq.withRoutines.Clone(),
@@ -459,14 +462,14 @@ func (eq *ExerciseQuery) WithUsers(opts ...func(*UserQuery)) *ExerciseQuery {
 	return eq
 }
 
-// WithEquipments tells the query-builder to eager-load the nodes that are connected to
-// the "equipments" edge. The optional arguments are used to configure the query builder of the edge.
-func (eq *ExerciseQuery) WithEquipments(opts ...func(*EquipmentQuery)) *ExerciseQuery {
+// WithEquipment tells the query-builder to eager-load the nodes that are connected to
+// the "equipment" edge. The optional arguments are used to configure the query builder of the edge.
+func (eq *ExerciseQuery) WithEquipment(opts ...func(*EquipmentQuery)) *ExerciseQuery {
 	query := (&EquipmentClient{config: eq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	eq.withEquipments = query
+	eq.withEquipment = query
 	return eq
 }
 
@@ -595,7 +598,7 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 		loadedTypes = [7]bool{
 			eq.withWorkoutLogs != nil,
 			eq.withUsers != nil,
-			eq.withEquipments != nil,
+			eq.withEquipment != nil,
 			eq.withMusclesGroups != nil,
 			eq.withExerciseTypes != nil,
 			eq.withRoutines != nil,
@@ -636,21 +639,24 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 			return nil, err
 		}
 	}
-	if query := eq.withEquipments; query != nil {
-		if err := eq.loadEquipments(ctx, query, nodes, nil,
-			func(n *Exercise, e *Equipment) { n.Edges.Equipments = e }); err != nil {
+	if query := eq.withEquipment; query != nil {
+		if err := eq.loadEquipment(ctx, query, nodes,
+			func(n *Exercise) { n.Edges.Equipment = []*Equipment{} },
+			func(n *Exercise, e *Equipment) { n.Edges.Equipment = append(n.Edges.Equipment, e) }); err != nil {
 			return nil, err
 		}
 	}
 	if query := eq.withMusclesGroups; query != nil {
-		if err := eq.loadMusclesGroups(ctx, query, nodes, nil,
-			func(n *Exercise, e *MusclesGroup) { n.Edges.MusclesGroups = e }); err != nil {
+		if err := eq.loadMusclesGroups(ctx, query, nodes,
+			func(n *Exercise) { n.Edges.MusclesGroups = []*MusclesGroup{} },
+			func(n *Exercise, e *MusclesGroup) { n.Edges.MusclesGroups = append(n.Edges.MusclesGroups, e) }); err != nil {
 			return nil, err
 		}
 	}
 	if query := eq.withExerciseTypes; query != nil {
-		if err := eq.loadExerciseTypes(ctx, query, nodes, nil,
-			func(n *Exercise, e *ExerciseType) { n.Edges.ExerciseTypes = e }); err != nil {
+		if err := eq.loadExerciseTypes(ctx, query, nodes,
+			func(n *Exercise) { n.Edges.ExerciseTypes = []*ExerciseType{} },
+			func(n *Exercise, e *ExerciseType) { n.Edges.ExerciseTypes = append(n.Edges.ExerciseTypes, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -672,6 +678,27 @@ func (eq *ExerciseQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Exe
 		if err := eq.loadWorkoutLogs(ctx, query, nodes,
 			func(n *Exercise) { n.appendNamedWorkoutLogs(name) },
 			func(n *Exercise, e *WorkoutLog) { n.appendNamedWorkoutLogs(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range eq.withNamedEquipment {
+		if err := eq.loadEquipment(ctx, query, nodes,
+			func(n *Exercise) { n.appendNamedEquipment(name) },
+			func(n *Exercise, e *Equipment) { n.appendNamedEquipment(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range eq.withNamedMusclesGroups {
+		if err := eq.loadMusclesGroups(ctx, query, nodes,
+			func(n *Exercise) { n.appendNamedMusclesGroups(name) },
+			func(n *Exercise, e *MusclesGroup) { n.appendNamedMusclesGroups(name, e) }); err != nil {
+			return nil, err
+		}
+	}
+	for name, query := range eq.withNamedExerciseTypes {
+		if err := eq.loadExerciseTypes(ctx, query, nodes,
+			func(n *Exercise) { n.appendNamedExerciseTypes(name) },
+			func(n *Exercise, e *ExerciseType) { n.appendNamedExerciseTypes(name, e) }); err != nil {
 			return nil, err
 		}
 	}
@@ -707,9 +734,7 @@ func (eq *ExerciseQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQ
 			init(nodes[i])
 		}
 	}
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(workoutlog.FieldExerciseID)
-	}
+	query.withFKs = true
 	query.Where(predicate.WorkoutLog(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(exercise.WorkoutLogsColumn), fks...))
 	}))
@@ -718,10 +743,13 @@ func (eq *ExerciseQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQ
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.ExerciseID
-		node, ok := nodeids[fk]
+		fk := n.exercise_workout_logs
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "exercise_workout_logs" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "exercise_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "exercise_workout_logs" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}
@@ -759,89 +787,185 @@ func (eq *ExerciseQuery) loadUsers(ctx context.Context, query *UserQuery, nodes 
 	}
 	return nil
 }
-func (eq *ExerciseQuery) loadEquipments(ctx context.Context, query *EquipmentQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *Equipment)) error {
-	ids := make([]pksuid.ID, 0, len(nodes))
-	nodeids := make(map[pksuid.ID][]*Exercise)
-	for i := range nodes {
-		fk := nodes[i].EquipmentID
-		if _, ok := nodeids[fk]; !ok {
-			ids = append(ids, fk)
+func (eq *ExerciseQuery) loadEquipment(ctx context.Context, query *EquipmentQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *Equipment)) error {
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[pksuid.ID]*Exercise)
+	nids := make(map[pksuid.ID]map[*Exercise]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
 		}
-		nodeids[fk] = append(nodeids[fk], nodes[i])
 	}
-	if len(ids) == 0 {
-		return nil
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(exercise.EquipmentTable)
+		s.Join(joinT).On(s.C(equipment.FieldID), joinT.C(exercise.EquipmentPrimaryKey[0]))
+		s.Where(sql.InValues(joinT.C(exercise.EquipmentPrimaryKey[1]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(exercise.EquipmentPrimaryKey[1]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
 	}
-	query.Where(equipment.IDIn(ids...))
-	neighbors, err := query.All(ctx)
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(pksuid.ID)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := *values[0].(*pksuid.ID)
+				inValue := *values[1].(*pksuid.ID)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Exercise]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Equipment](ctx, query, qr, query.inters)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		nodes, ok := nodeids[n.ID]
+		nodes, ok := nids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "equipment_id" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected "equipment" node returned %v`, n.ID)
 		}
-		for i := range nodes {
-			assign(nodes[i], n)
+		for kn := range nodes {
+			assign(kn, n)
 		}
 	}
 	return nil
 }
 func (eq *ExerciseQuery) loadMusclesGroups(ctx context.Context, query *MusclesGroupQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *MusclesGroup)) error {
-	ids := make([]pksuid.ID, 0, len(nodes))
-	nodeids := make(map[pksuid.ID][]*Exercise)
-	for i := range nodes {
-		fk := nodes[i].MusclesGroupID
-		if _, ok := nodeids[fk]; !ok {
-			ids = append(ids, fk)
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[pksuid.ID]*Exercise)
+	nids := make(map[pksuid.ID]map[*Exercise]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
 		}
-		nodeids[fk] = append(nodeids[fk], nodes[i])
 	}
-	if len(ids) == 0 {
-		return nil
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(exercise.MusclesGroupsTable)
+		s.Join(joinT).On(s.C(musclesgroup.FieldID), joinT.C(exercise.MusclesGroupsPrimaryKey[0]))
+		s.Where(sql.InValues(joinT.C(exercise.MusclesGroupsPrimaryKey[1]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(exercise.MusclesGroupsPrimaryKey[1]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
 	}
-	query.Where(musclesgroup.IDIn(ids...))
-	neighbors, err := query.All(ctx)
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(pksuid.ID)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := *values[0].(*pksuid.ID)
+				inValue := *values[1].(*pksuid.ID)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Exercise]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*MusclesGroup](ctx, query, qr, query.inters)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		nodes, ok := nodeids[n.ID]
+		nodes, ok := nids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "muscles_group_id" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected "muscles_groups" node returned %v`, n.ID)
 		}
-		for i := range nodes {
-			assign(nodes[i], n)
+		for kn := range nodes {
+			assign(kn, n)
 		}
 	}
 	return nil
 }
 func (eq *ExerciseQuery) loadExerciseTypes(ctx context.Context, query *ExerciseTypeQuery, nodes []*Exercise, init func(*Exercise), assign func(*Exercise, *ExerciseType)) error {
-	ids := make([]pksuid.ID, 0, len(nodes))
-	nodeids := make(map[pksuid.ID][]*Exercise)
-	for i := range nodes {
-		fk := nodes[i].ExerciseTypeID
-		if _, ok := nodeids[fk]; !ok {
-			ids = append(ids, fk)
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[pksuid.ID]*Exercise)
+	nids := make(map[pksuid.ID]map[*Exercise]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
+		if init != nil {
+			init(node)
 		}
-		nodeids[fk] = append(nodeids[fk], nodes[i])
 	}
-	if len(ids) == 0 {
-		return nil
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(exercise.ExerciseTypesTable)
+		s.Join(joinT).On(s.C(exercisetype.FieldID), joinT.C(exercise.ExerciseTypesPrimaryKey[0]))
+		s.Where(sql.InValues(joinT.C(exercise.ExerciseTypesPrimaryKey[1]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(exercise.ExerciseTypesPrimaryKey[1]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
 	}
-	query.Where(exercisetype.IDIn(ids...))
-	neighbors, err := query.All(ctx)
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(pksuid.ID)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := *values[0].(*pksuid.ID)
+				inValue := *values[1].(*pksuid.ID)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Exercise]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*ExerciseType](ctx, query, qr, query.inters)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		nodes, ok := nodeids[n.ID]
+		nodes, ok := nids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "exercise_type_id" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected "exercise_types" node returned %v`, n.ID)
 		}
-		for i := range nodes {
-			assign(nodes[i], n)
+		for kn := range nodes {
+			assign(kn, n)
 		}
 	}
 	return nil
@@ -969,15 +1093,6 @@ func (eq *ExerciseQuery) querySpec() *sqlgraph.QuerySpec {
 		if eq.withUsers != nil {
 			_spec.Node.AddColumnOnce(exercise.FieldUserID)
 		}
-		if eq.withEquipments != nil {
-			_spec.Node.AddColumnOnce(exercise.FieldEquipmentID)
-		}
-		if eq.withMusclesGroups != nil {
-			_spec.Node.AddColumnOnce(exercise.FieldMusclesGroupID)
-		}
-		if eq.withExerciseTypes != nil {
-			_spec.Node.AddColumnOnce(exercise.FieldExerciseTypeID)
-		}
 	}
 	if ps := eq.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -1045,6 +1160,48 @@ func (eq *ExerciseQuery) WithNamedWorkoutLogs(name string, opts ...func(*Workout
 		eq.withNamedWorkoutLogs = make(map[string]*WorkoutLogQuery)
 	}
 	eq.withNamedWorkoutLogs[name] = query
+	return eq
+}
+
+// WithNamedEquipment tells the query-builder to eager-load the nodes that are connected to the "equipment"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (eq *ExerciseQuery) WithNamedEquipment(name string, opts ...func(*EquipmentQuery)) *ExerciseQuery {
+	query := (&EquipmentClient{config: eq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if eq.withNamedEquipment == nil {
+		eq.withNamedEquipment = make(map[string]*EquipmentQuery)
+	}
+	eq.withNamedEquipment[name] = query
+	return eq
+}
+
+// WithNamedMusclesGroups tells the query-builder to eager-load the nodes that are connected to the "muscles_groups"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (eq *ExerciseQuery) WithNamedMusclesGroups(name string, opts ...func(*MusclesGroupQuery)) *ExerciseQuery {
+	query := (&MusclesGroupClient{config: eq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if eq.withNamedMusclesGroups == nil {
+		eq.withNamedMusclesGroups = make(map[string]*MusclesGroupQuery)
+	}
+	eq.withNamedMusclesGroups[name] = query
+	return eq
+}
+
+// WithNamedExerciseTypes tells the query-builder to eager-load the nodes that are connected to the "exercise_types"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (eq *ExerciseQuery) WithNamedExerciseTypes(name string, opts ...func(*ExerciseTypeQuery)) *ExerciseQuery {
+	query := (&ExerciseTypeClient{config: eq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	if eq.withNamedExerciseTypes == nil {
+		eq.withNamedExerciseTypes = make(map[string]*ExerciseTypeQuery)
+	}
+	eq.withNamedExerciseTypes[name] = query
 	return eq
 }
 

@@ -147,10 +147,10 @@ func (etu *ExerciseTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if etu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   exercisetype.ExercisesTable,
-			Columns: []string{exercisetype.ExercisesColumn},
+			Columns: exercisetype.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -160,10 +160,10 @@ func (etu *ExerciseTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := etu.mutation.RemovedExercisesIDs(); len(nodes) > 0 && !etu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   exercisetype.ExercisesTable,
-			Columns: []string{exercisetype.ExercisesColumn},
+			Columns: exercisetype.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -176,10 +176,10 @@ func (etu *ExerciseTypeUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := etu.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   exercisetype.ExercisesTable,
-			Columns: []string{exercisetype.ExercisesColumn},
+			Columns: exercisetype.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -357,10 +357,10 @@ func (etuo *ExerciseTypeUpdateOne) sqlSave(ctx context.Context) (_node *Exercise
 	}
 	if etuo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   exercisetype.ExercisesTable,
-			Columns: []string{exercisetype.ExercisesColumn},
+			Columns: exercisetype.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -370,10 +370,10 @@ func (etuo *ExerciseTypeUpdateOne) sqlSave(ctx context.Context) (_node *Exercise
 	}
 	if nodes := etuo.mutation.RemovedExercisesIDs(); len(nodes) > 0 && !etuo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   exercisetype.ExercisesTable,
-			Columns: []string{exercisetype.ExercisesColumn},
+			Columns: exercisetype.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -386,10 +386,10 @@ func (etuo *ExerciseTypeUpdateOne) sqlSave(ctx context.Context) (_node *Exercise
 	}
 	if nodes := etuo.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   exercisetype.ExercisesTable,
-			Columns: []string{exercisetype.ExercisesColumn},
+			Columns: exercisetype.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),

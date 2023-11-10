@@ -35,14 +35,6 @@ func (rc *RoutineCreate) SetUserID(pk pksuid.ID) *RoutineCreate {
 	return rc
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (rc *RoutineCreate) SetNillableUserID(pk *pksuid.ID) *RoutineCreate {
-	if pk != nil {
-		rc.SetUserID(*pk)
-	}
-	return rc
-}
-
 // SetID sets the "id" field.
 func (rc *RoutineCreate) SetID(pk pksuid.ID) *RoutineCreate {
 	rc.mutation.SetID(pk)
@@ -75,14 +67,6 @@ func (rc *RoutineCreate) AddExercises(e ...*Exercise) *RoutineCreate {
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (rc *RoutineCreate) SetUsersID(id pksuid.ID) *RoutineCreate {
 	rc.mutation.SetUsersID(id)
-	return rc
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (rc *RoutineCreate) SetNillableUsersID(id *pksuid.ID) *RoutineCreate {
-	if id != nil {
-		rc = rc.SetUsersID(*id)
-	}
 	return rc
 }
 
@@ -151,6 +135,12 @@ func (rc *RoutineCreate) defaults() {
 func (rc *RoutineCreate) check() error {
 	if _, ok := rc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Routine.name"`)}
+	}
+	if _, ok := rc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Routine.user_id"`)}
+	}
+	if _, ok := rc.mutation.UsersID(); !ok {
+		return &ValidationError{Name: "users", err: errors.New(`ent: missing required edge "Routine.users"`)}
 	}
 	return nil
 }

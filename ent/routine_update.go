@@ -43,20 +43,6 @@ func (ru *RoutineUpdate) SetUserID(pk pksuid.ID) *RoutineUpdate {
 	return ru
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (ru *RoutineUpdate) SetNillableUserID(pk *pksuid.ID) *RoutineUpdate {
-	if pk != nil {
-		ru.SetUserID(*pk)
-	}
-	return ru
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (ru *RoutineUpdate) ClearUserID() *RoutineUpdate {
-	ru.mutation.ClearUserID()
-	return ru
-}
-
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
 func (ru *RoutineUpdate) AddExerciseIDs(ids ...pksuid.ID) *RoutineUpdate {
 	ru.mutation.AddExerciseIDs(ids...)
@@ -75,14 +61,6 @@ func (ru *RoutineUpdate) AddExercises(e ...*Exercise) *RoutineUpdate {
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (ru *RoutineUpdate) SetUsersID(id pksuid.ID) *RoutineUpdate {
 	ru.mutation.SetUsersID(id)
-	return ru
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (ru *RoutineUpdate) SetNillableUsersID(id *pksuid.ID) *RoutineUpdate {
-	if id != nil {
-		ru = ru.SetUsersID(*id)
-	}
 	return ru
 }
 
@@ -186,7 +164,18 @@ func (ru *RoutineUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (ru *RoutineUpdate) check() error {
+	if _, ok := ru.mutation.UsersID(); ru.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Routine.users"`)
+	}
+	return nil
+}
+
 func (ru *RoutineUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := ru.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(routine.Table, routine.Columns, sqlgraph.NewFieldSpec(routine.FieldID, field.TypeString))
 	if ps := ru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -370,20 +359,6 @@ func (ruo *RoutineUpdateOne) SetUserID(pk pksuid.ID) *RoutineUpdateOne {
 	return ruo
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (ruo *RoutineUpdateOne) SetNillableUserID(pk *pksuid.ID) *RoutineUpdateOne {
-	if pk != nil {
-		ruo.SetUserID(*pk)
-	}
-	return ruo
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (ruo *RoutineUpdateOne) ClearUserID() *RoutineUpdateOne {
-	ruo.mutation.ClearUserID()
-	return ruo
-}
-
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
 func (ruo *RoutineUpdateOne) AddExerciseIDs(ids ...pksuid.ID) *RoutineUpdateOne {
 	ruo.mutation.AddExerciseIDs(ids...)
@@ -402,14 +377,6 @@ func (ruo *RoutineUpdateOne) AddExercises(e ...*Exercise) *RoutineUpdateOne {
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (ruo *RoutineUpdateOne) SetUsersID(id pksuid.ID) *RoutineUpdateOne {
 	ruo.mutation.SetUsersID(id)
-	return ruo
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (ruo *RoutineUpdateOne) SetNillableUsersID(id *pksuid.ID) *RoutineUpdateOne {
-	if id != nil {
-		ruo = ruo.SetUsersID(*id)
-	}
 	return ruo
 }
 
@@ -526,7 +493,18 @@ func (ruo *RoutineUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (ruo *RoutineUpdateOne) check() error {
+	if _, ok := ruo.mutation.UsersID(); ruo.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Routine.users"`)
+	}
+	return nil
+}
+
 func (ruo *RoutineUpdateOne) sqlSave(ctx context.Context) (_node *Routine, err error) {
+	if err := ruo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(routine.Table, routine.Columns, sqlgraph.NewFieldSpec(routine.FieldID, field.TypeString))
 	id, ok := ruo.mutation.ID()
 	if !ok {

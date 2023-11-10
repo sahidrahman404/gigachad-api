@@ -347,16 +347,6 @@ func UserIDHasSuffix(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldHasSuffix(FieldUserID, vc))
 }
 
-// UserIDIsNil applies the IsNil predicate on the "user_id" field.
-func UserIDIsNil() predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldIsNull(FieldUserID))
-}
-
-// UserIDNotNil applies the NotNil predicate on the "user_id" field.
-func UserIDNotNil() predicate.RoutineExercise {
-	return predicate.RoutineExercise(sql.FieldNotNull(FieldUserID))
-}
-
 // UserIDEqualFold applies the EqualFold predicate on the "user_id" field.
 func UserIDEqualFold(v pksuid.ID) predicate.RoutineExercise {
 	vc := string(v)

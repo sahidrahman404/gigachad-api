@@ -141,31 +141,9 @@ func (wu *WorkoutUpdate) SetUserID(pk pksuid.ID) *WorkoutUpdate {
 	return wu
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wu *WorkoutUpdate) SetNillableUserID(pk *pksuid.ID) *WorkoutUpdate {
-	if pk != nil {
-		wu.SetUserID(*pk)
-	}
-	return wu
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (wu *WorkoutUpdate) ClearUserID() *WorkoutUpdate {
-	wu.mutation.ClearUserID()
-	return wu
-}
-
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (wu *WorkoutUpdate) SetUsersID(id pksuid.ID) *WorkoutUpdate {
 	wu.mutation.SetUsersID(id)
-	return wu
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wu *WorkoutUpdate) SetNillableUsersID(id *pksuid.ID) *WorkoutUpdate {
-	if id != nil {
-		wu = wu.SetUsersID(*id)
-	}
 	return wu
 }
 
@@ -248,7 +226,18 @@ func (wu *WorkoutUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (wu *WorkoutUpdate) check() error {
+	if _, ok := wu.mutation.UsersID(); wu.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Workout.users"`)
+	}
+	return nil
+}
+
 func (wu *WorkoutUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := wu.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(workout.Table, workout.Columns, sqlgraph.NewFieldSpec(workout.FieldID, field.TypeString))
 	if ps := wu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -501,31 +490,9 @@ func (wuo *WorkoutUpdateOne) SetUserID(pk pksuid.ID) *WorkoutUpdateOne {
 	return wuo
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wuo *WorkoutUpdateOne) SetNillableUserID(pk *pksuid.ID) *WorkoutUpdateOne {
-	if pk != nil {
-		wuo.SetUserID(*pk)
-	}
-	return wuo
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (wuo *WorkoutUpdateOne) ClearUserID() *WorkoutUpdateOne {
-	wuo.mutation.ClearUserID()
-	return wuo
-}
-
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (wuo *WorkoutUpdateOne) SetUsersID(id pksuid.ID) *WorkoutUpdateOne {
 	wuo.mutation.SetUsersID(id)
-	return wuo
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wuo *WorkoutUpdateOne) SetNillableUsersID(id *pksuid.ID) *WorkoutUpdateOne {
-	if id != nil {
-		wuo = wuo.SetUsersID(*id)
-	}
 	return wuo
 }
 
@@ -621,7 +588,18 @@ func (wuo *WorkoutUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (wuo *WorkoutUpdateOne) check() error {
+	if _, ok := wuo.mutation.UsersID(); wuo.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Workout.users"`)
+	}
+	return nil
+}
+
 func (wuo *WorkoutUpdateOne) sqlSave(ctx context.Context) (_node *Workout, err error) {
+	if err := wuo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(workout.Table, workout.Columns, sqlgraph.NewFieldSpec(workout.FieldID, field.TypeString))
 	id, ok := wuo.mutation.ID()
 	if !ok {

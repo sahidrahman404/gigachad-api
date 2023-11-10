@@ -19,20 +19,14 @@ const (
 	FieldImage = "image"
 	// FieldHowTo holds the string denoting the how_to field in the database.
 	FieldHowTo = "how_to"
-	// FieldEquipmentID holds the string denoting the equipment_id field in the database.
-	FieldEquipmentID = "equipment_id"
-	// FieldMusclesGroupID holds the string denoting the muscles_group_id field in the database.
-	FieldMusclesGroupID = "muscles_group_id"
-	// FieldExerciseTypeID holds the string denoting the exercise_type_id field in the database.
-	FieldExerciseTypeID = "exercise_type_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
 	// EdgeWorkoutLogs holds the string denoting the workout_logs edge name in mutations.
 	EdgeWorkoutLogs = "workout_logs"
 	// EdgeUsers holds the string denoting the users edge name in mutations.
 	EdgeUsers = "users"
-	// EdgeEquipments holds the string denoting the equipments edge name in mutations.
-	EdgeEquipments = "equipments"
+	// EdgeEquipment holds the string denoting the equipment edge name in mutations.
+	EdgeEquipment = "equipment"
 	// EdgeMusclesGroups holds the string denoting the muscles_groups edge name in mutations.
 	EdgeMusclesGroups = "muscles_groups"
 	// EdgeExerciseTypes holds the string denoting the exercise_types edge name in mutations.
@@ -49,7 +43,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "workoutlog" package.
 	WorkoutLogsInverseTable = "workout_logs"
 	// WorkoutLogsColumn is the table column denoting the workout_logs relation/edge.
-	WorkoutLogsColumn = "exercise_id"
+	WorkoutLogsColumn = "exercise_workout_logs"
 	// UsersTable is the table that holds the users relation/edge.
 	UsersTable = "exercises"
 	// UsersInverseTable is the table name for the User entity.
@@ -57,27 +51,21 @@ const (
 	UsersInverseTable = "users"
 	// UsersColumn is the table column denoting the users relation/edge.
 	UsersColumn = "user_id"
-	// EquipmentsTable is the table that holds the equipments relation/edge.
-	EquipmentsTable = "exercises"
-	// EquipmentsInverseTable is the table name for the Equipment entity.
+	// EquipmentTable is the table that holds the equipment relation/edge. The primary key declared below.
+	EquipmentTable = "equipment_exercises"
+	// EquipmentInverseTable is the table name for the Equipment entity.
 	// It exists in this package in order to avoid circular dependency with the "equipment" package.
-	EquipmentsInverseTable = "equipment"
-	// EquipmentsColumn is the table column denoting the equipments relation/edge.
-	EquipmentsColumn = "equipment_id"
-	// MusclesGroupsTable is the table that holds the muscles_groups relation/edge.
-	MusclesGroupsTable = "exercises"
+	EquipmentInverseTable = "equipment"
+	// MusclesGroupsTable is the table that holds the muscles_groups relation/edge. The primary key declared below.
+	MusclesGroupsTable = "muscles_group_exercises"
 	// MusclesGroupsInverseTable is the table name for the MusclesGroup entity.
 	// It exists in this package in order to avoid circular dependency with the "musclesgroup" package.
 	MusclesGroupsInverseTable = "muscles_groups"
-	// MusclesGroupsColumn is the table column denoting the muscles_groups relation/edge.
-	MusclesGroupsColumn = "muscles_group_id"
-	// ExerciseTypesTable is the table that holds the exercise_types relation/edge.
-	ExerciseTypesTable = "exercises"
+	// ExerciseTypesTable is the table that holds the exercise_types relation/edge. The primary key declared below.
+	ExerciseTypesTable = "exercise_type_exercises"
 	// ExerciseTypesInverseTable is the table name for the ExerciseType entity.
 	// It exists in this package in order to avoid circular dependency with the "exercisetype" package.
 	ExerciseTypesInverseTable = "exercise_types"
-	// ExerciseTypesColumn is the table column denoting the exercise_types relation/edge.
-	ExerciseTypesColumn = "exercise_type_id"
 	// RoutinesTable is the table that holds the routines relation/edge. The primary key declared below.
 	RoutinesTable = "routine_exercises"
 	// RoutinesInverseTable is the table name for the Routine entity.
@@ -98,13 +86,19 @@ var Columns = []string{
 	FieldName,
 	FieldImage,
 	FieldHowTo,
-	FieldEquipmentID,
-	FieldMusclesGroupID,
-	FieldExerciseTypeID,
 	FieldUserID,
 }
 
 var (
+	// EquipmentPrimaryKey and EquipmentColumn2 are the table columns denoting the
+	// primary key for the equipment relation (M2M).
+	EquipmentPrimaryKey = []string{"equipment_id", "exercise_id"}
+	// MusclesGroupsPrimaryKey and MusclesGroupsColumn2 are the table columns denoting the
+	// primary key for the muscles_groups relation (M2M).
+	MusclesGroupsPrimaryKey = []string{"muscles_group_id", "exercise_id"}
+	// ExerciseTypesPrimaryKey and ExerciseTypesColumn2 are the table columns denoting the
+	// primary key for the exercise_types relation (M2M).
+	ExerciseTypesPrimaryKey = []string{"exercise_type_id", "exercise_id"}
 	// RoutinesPrimaryKey and RoutinesColumn2 are the table columns denoting the
 	// primary key for the routines relation (M2M).
 	RoutinesPrimaryKey = []string{"routine_id", "exercise_id"}
@@ -148,21 +142,6 @@ func ByHowTo(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldHowTo, opts...).ToFunc()
 }
 
-// ByEquipmentID orders the results by the equipment_id field.
-func ByEquipmentID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldEquipmentID, opts...).ToFunc()
-}
-
-// ByMusclesGroupID orders the results by the muscles_group_id field.
-func ByMusclesGroupID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldMusclesGroupID, opts...).ToFunc()
-}
-
-// ByExerciseTypeID orders the results by the exercise_type_id field.
-func ByExerciseTypeID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldExerciseTypeID, opts...).ToFunc()
-}
-
 // ByUserID orders the results by the user_id field.
 func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUserID, opts...).ToFunc()
@@ -189,24 +168,45 @@ func ByUsersField(field string, opts ...sql.OrderTermOption) OrderOption {
 	}
 }
 
-// ByEquipmentsField orders the results by equipments field.
-func ByEquipmentsField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByEquipmentCount orders the results by equipment count.
+func ByEquipmentCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newEquipmentsStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborsCount(s, newEquipmentStep(), opts...)
 	}
 }
 
-// ByMusclesGroupsField orders the results by muscles_groups field.
-func ByMusclesGroupsField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByEquipment orders the results by equipment terms.
+func ByEquipment(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newMusclesGroupsStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborTerms(s, newEquipmentStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
-// ByExerciseTypesField orders the results by exercise_types field.
-func ByExerciseTypesField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByMusclesGroupsCount orders the results by muscles_groups count.
+func ByMusclesGroupsCount(opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newExerciseTypesStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborsCount(s, newMusclesGroupsStep(), opts...)
+	}
+}
+
+// ByMusclesGroups orders the results by muscles_groups terms.
+func ByMusclesGroups(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newMusclesGroupsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByExerciseTypesCount orders the results by exercise_types count.
+func ByExerciseTypesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newExerciseTypesStep(), opts...)
+	}
+}
+
+// ByExerciseTypes orders the results by exercise_types terms.
+func ByExerciseTypes(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newExerciseTypesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
 
@@ -251,25 +251,25 @@ func newUsersStep() *sqlgraph.Step {
 		sqlgraph.Edge(sqlgraph.M2O, true, UsersTable, UsersColumn),
 	)
 }
-func newEquipmentsStep() *sqlgraph.Step {
+func newEquipmentStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(EquipmentsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, EquipmentsTable, EquipmentsColumn),
+		sqlgraph.To(EquipmentInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, EquipmentTable, EquipmentPrimaryKey...),
 	)
 }
 func newMusclesGroupsStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(MusclesGroupsInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, MusclesGroupsTable, MusclesGroupsColumn),
+		sqlgraph.Edge(sqlgraph.M2M, true, MusclesGroupsTable, MusclesGroupsPrimaryKey...),
 	)
 }
 func newExerciseTypesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ExerciseTypesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, true, ExerciseTypesTable, ExerciseTypesColumn),
+		sqlgraph.Edge(sqlgraph.M2M, true, ExerciseTypesTable, ExerciseTypesPrimaryKey...),
 	)
 }
 func newRoutinesStep() *sqlgraph.Step {

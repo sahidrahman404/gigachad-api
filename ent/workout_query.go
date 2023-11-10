@@ -503,9 +503,7 @@ func (wq *WorkoutQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQu
 			init(nodes[i])
 		}
 	}
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(workoutlog.FieldWorkoutID)
-	}
+	query.withFKs = true
 	query.Where(predicate.WorkoutLog(func(s *sql.Selector) {
 		s.Where(sql.InValues(s.C(workout.WorkoutLogsColumn), fks...))
 	}))
@@ -514,10 +512,13 @@ func (wq *WorkoutQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQu
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.WorkoutID
-		node, ok := nodeids[fk]
+		fk := n.workout_workout_logs
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "workout_workout_logs" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "workout_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "workout_workout_logs" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

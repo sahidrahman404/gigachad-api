@@ -6,13 +6,40 @@ package gql
 
 import (
 	"context"
-	"fmt"
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 )
 
-// CreateRoutineExercise is the resolver for the CreateRoutineExercise field.
-func (r *mutationResolver) CreateRoutineExercise(ctx context.Context, input gigachad.CreateRoutineExerciseInput) (*ent.RoutineExercise, error) {
-	panic(fmt.Errorf("not implemented: CreateRoutineExercise - CreateRoutineExercise"))
+// CreateRoutineWithChildren is the resolver for the CreateRoutineWithChildren field.
+func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input gigachad.CreateRoutineWithChildrenInput) (*ent.Routine, error) {
+	routineID := pksuid.MustNew("RO")
+	if err := r.WithTx(ctx, func(tx *ent.Tx) error {
+		txClient := tx.Client()
+		routine, err := txClient.Routine.Create().
+			SetID(routineID).
+			SetName(input.Name).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+		txClient.RoutineExercise.CreateBulk()
+		bulk := make([]*ent.RoutineExerciseCreate, len(input.RoutineExercise))
+		for i, v := range input.RoutineExercise {
+			bulk[i] = txClient.RoutineExercise.Create().
+				SetNillableRestTimer(v.RestTimer).
+				SetSets(v.Sets).
+				SetRoutineID(routine.ID).
+				SetExerciseID(v.ExerciseID)
+		}
+		_, err = txClient.RoutineExercise.CreateBulk(bulk...).Save(ctx)
+		if err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return nil, r.serverError(err)
+	}
+	return r.client.Routine.Get(ctx, routineID)
 }

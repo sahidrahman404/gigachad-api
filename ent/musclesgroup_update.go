@@ -126,10 +126,10 @@ func (mgu *MusclesGroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if mgu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   musclesgroup.ExercisesTable,
-			Columns: []string{musclesgroup.ExercisesColumn},
+			Columns: musclesgroup.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -139,10 +139,10 @@ func (mgu *MusclesGroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := mgu.mutation.RemovedExercisesIDs(); len(nodes) > 0 && !mgu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   musclesgroup.ExercisesTable,
-			Columns: []string{musclesgroup.ExercisesColumn},
+			Columns: musclesgroup.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -155,10 +155,10 @@ func (mgu *MusclesGroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := mgu.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   musclesgroup.ExercisesTable,
-			Columns: []string{musclesgroup.ExercisesColumn},
+			Columns: musclesgroup.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -316,10 +316,10 @@ func (mguo *MusclesGroupUpdateOne) sqlSave(ctx context.Context) (_node *MusclesG
 	}
 	if mguo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   musclesgroup.ExercisesTable,
-			Columns: []string{musclesgroup.ExercisesColumn},
+			Columns: musclesgroup.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -329,10 +329,10 @@ func (mguo *MusclesGroupUpdateOne) sqlSave(ctx context.Context) (_node *MusclesG
 	}
 	if nodes := mguo.mutation.RemovedExercisesIDs(); len(nodes) > 0 && !mguo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   musclesgroup.ExercisesTable,
-			Columns: []string{musclesgroup.ExercisesColumn},
+			Columns: musclesgroup.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
@@ -345,10 +345,10 @@ func (mguo *MusclesGroupUpdateOne) sqlSave(ctx context.Context) (_node *MusclesG
 	}
 	if nodes := mguo.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   musclesgroup.ExercisesTable,
-			Columns: []string{musclesgroup.ExercisesColumn},
+			Columns: musclesgroup.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),

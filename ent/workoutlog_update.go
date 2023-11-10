@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
@@ -33,8 +34,14 @@ func (wlu *WorkoutLogUpdate) Where(ps ...predicate.WorkoutLog) *WorkoutLogUpdate
 }
 
 // SetSets sets the "sets" field.
-func (wlu *WorkoutLogUpdate) SetSets(s *schematype.Sets) *WorkoutLogUpdate {
+func (wlu *WorkoutLogUpdate) SetSets(s []*schematype.Set) *WorkoutLogUpdate {
 	wlu.mutation.SetSets(s)
+	return wlu
+}
+
+// AppendSets appends s to the "sets" field.
+func (wlu *WorkoutLogUpdate) AppendSets(s []*schematype.Set) *WorkoutLogUpdate {
+	wlu.mutation.AppendSets(s)
 	return wlu
 }
 
@@ -52,77 +59,15 @@ func (wlu *WorkoutLogUpdate) SetNillableCreatedAt(s *string) *WorkoutLogUpdate {
 	return wlu
 }
 
-// SetExerciseID sets the "exercise_id" field.
-func (wlu *WorkoutLogUpdate) SetExerciseID(pk pksuid.ID) *WorkoutLogUpdate {
-	wlu.mutation.SetExerciseID(pk)
-	return wlu
-}
-
-// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
-func (wlu *WorkoutLogUpdate) SetNillableExerciseID(pk *pksuid.ID) *WorkoutLogUpdate {
-	if pk != nil {
-		wlu.SetExerciseID(*pk)
-	}
-	return wlu
-}
-
-// ClearExerciseID clears the value of the "exercise_id" field.
-func (wlu *WorkoutLogUpdate) ClearExerciseID() *WorkoutLogUpdate {
-	wlu.mutation.ClearExerciseID()
-	return wlu
-}
-
-// SetWorkoutID sets the "workout_id" field.
-func (wlu *WorkoutLogUpdate) SetWorkoutID(pk pksuid.ID) *WorkoutLogUpdate {
-	wlu.mutation.SetWorkoutID(pk)
-	return wlu
-}
-
-// SetNillableWorkoutID sets the "workout_id" field if the given value is not nil.
-func (wlu *WorkoutLogUpdate) SetNillableWorkoutID(pk *pksuid.ID) *WorkoutLogUpdate {
-	if pk != nil {
-		wlu.SetWorkoutID(*pk)
-	}
-	return wlu
-}
-
-// ClearWorkoutID clears the value of the "workout_id" field.
-func (wlu *WorkoutLogUpdate) ClearWorkoutID() *WorkoutLogUpdate {
-	wlu.mutation.ClearWorkoutID()
-	return wlu
-}
-
 // SetUserID sets the "user_id" field.
 func (wlu *WorkoutLogUpdate) SetUserID(pk pksuid.ID) *WorkoutLogUpdate {
 	wlu.mutation.SetUserID(pk)
 	return wlu
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wlu *WorkoutLogUpdate) SetNillableUserID(pk *pksuid.ID) *WorkoutLogUpdate {
-	if pk != nil {
-		wlu.SetUserID(*pk)
-	}
-	return wlu
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (wlu *WorkoutLogUpdate) ClearUserID() *WorkoutLogUpdate {
-	wlu.mutation.ClearUserID()
-	return wlu
-}
-
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (wlu *WorkoutLogUpdate) SetUsersID(id pksuid.ID) *WorkoutLogUpdate {
 	wlu.mutation.SetUsersID(id)
-	return wlu
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wlu *WorkoutLogUpdate) SetNillableUsersID(id *pksuid.ID) *WorkoutLogUpdate {
-	if id != nil {
-		wlu = wlu.SetUsersID(*id)
-	}
 	return wlu
 }
 
@@ -219,7 +164,18 @@ func (wlu *WorkoutLogUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (wlu *WorkoutLogUpdate) check() error {
+	if _, ok := wlu.mutation.UsersID(); wlu.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "WorkoutLog.users"`)
+	}
+	return nil
+}
+
 func (wlu *WorkoutLogUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := wlu.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(workoutlog.Table, workoutlog.Columns, sqlgraph.NewFieldSpec(workoutlog.FieldID, field.TypeString))
 	if ps := wlu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -230,6 +186,11 @@ func (wlu *WorkoutLogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := wlu.mutation.Sets(); ok {
 		_spec.SetField(workoutlog.FieldSets, field.TypeJSON, value)
+	}
+	if value, ok := wlu.mutation.AppendedSets(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, workoutlog.FieldSets, value)
+		})
 	}
 	if value, ok := wlu.mutation.CreatedAt(); ok {
 		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeString, value)
@@ -342,8 +303,14 @@ type WorkoutLogUpdateOne struct {
 }
 
 // SetSets sets the "sets" field.
-func (wluo *WorkoutLogUpdateOne) SetSets(s *schematype.Sets) *WorkoutLogUpdateOne {
+func (wluo *WorkoutLogUpdateOne) SetSets(s []*schematype.Set) *WorkoutLogUpdateOne {
 	wluo.mutation.SetSets(s)
+	return wluo
+}
+
+// AppendSets appends s to the "sets" field.
+func (wluo *WorkoutLogUpdateOne) AppendSets(s []*schematype.Set) *WorkoutLogUpdateOne {
+	wluo.mutation.AppendSets(s)
 	return wluo
 }
 
@@ -361,77 +328,15 @@ func (wluo *WorkoutLogUpdateOne) SetNillableCreatedAt(s *string) *WorkoutLogUpda
 	return wluo
 }
 
-// SetExerciseID sets the "exercise_id" field.
-func (wluo *WorkoutLogUpdateOne) SetExerciseID(pk pksuid.ID) *WorkoutLogUpdateOne {
-	wluo.mutation.SetExerciseID(pk)
-	return wluo
-}
-
-// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
-func (wluo *WorkoutLogUpdateOne) SetNillableExerciseID(pk *pksuid.ID) *WorkoutLogUpdateOne {
-	if pk != nil {
-		wluo.SetExerciseID(*pk)
-	}
-	return wluo
-}
-
-// ClearExerciseID clears the value of the "exercise_id" field.
-func (wluo *WorkoutLogUpdateOne) ClearExerciseID() *WorkoutLogUpdateOne {
-	wluo.mutation.ClearExerciseID()
-	return wluo
-}
-
-// SetWorkoutID sets the "workout_id" field.
-func (wluo *WorkoutLogUpdateOne) SetWorkoutID(pk pksuid.ID) *WorkoutLogUpdateOne {
-	wluo.mutation.SetWorkoutID(pk)
-	return wluo
-}
-
-// SetNillableWorkoutID sets the "workout_id" field if the given value is not nil.
-func (wluo *WorkoutLogUpdateOne) SetNillableWorkoutID(pk *pksuid.ID) *WorkoutLogUpdateOne {
-	if pk != nil {
-		wluo.SetWorkoutID(*pk)
-	}
-	return wluo
-}
-
-// ClearWorkoutID clears the value of the "workout_id" field.
-func (wluo *WorkoutLogUpdateOne) ClearWorkoutID() *WorkoutLogUpdateOne {
-	wluo.mutation.ClearWorkoutID()
-	return wluo
-}
-
 // SetUserID sets the "user_id" field.
 func (wluo *WorkoutLogUpdateOne) SetUserID(pk pksuid.ID) *WorkoutLogUpdateOne {
 	wluo.mutation.SetUserID(pk)
 	return wluo
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wluo *WorkoutLogUpdateOne) SetNillableUserID(pk *pksuid.ID) *WorkoutLogUpdateOne {
-	if pk != nil {
-		wluo.SetUserID(*pk)
-	}
-	return wluo
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (wluo *WorkoutLogUpdateOne) ClearUserID() *WorkoutLogUpdateOne {
-	wluo.mutation.ClearUserID()
-	return wluo
-}
-
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (wluo *WorkoutLogUpdateOne) SetUsersID(id pksuid.ID) *WorkoutLogUpdateOne {
 	wluo.mutation.SetUsersID(id)
-	return wluo
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wluo *WorkoutLogUpdateOne) SetNillableUsersID(id *pksuid.ID) *WorkoutLogUpdateOne {
-	if id != nil {
-		wluo = wluo.SetUsersID(*id)
-	}
 	return wluo
 }
 
@@ -541,7 +446,18 @@ func (wluo *WorkoutLogUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (wluo *WorkoutLogUpdateOne) check() error {
+	if _, ok := wluo.mutation.UsersID(); wluo.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "WorkoutLog.users"`)
+	}
+	return nil
+}
+
 func (wluo *WorkoutLogUpdateOne) sqlSave(ctx context.Context) (_node *WorkoutLog, err error) {
+	if err := wluo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(workoutlog.Table, workoutlog.Columns, sqlgraph.NewFieldSpec(workoutlog.FieldID, field.TypeString))
 	id, ok := wluo.mutation.ID()
 	if !ok {
@@ -569,6 +485,11 @@ func (wluo *WorkoutLogUpdateOne) sqlSave(ctx context.Context) (_node *WorkoutLog
 	}
 	if value, ok := wluo.mutation.Sets(); ok {
 		_spec.SetField(workoutlog.FieldSets, field.TypeJSON, value)
+	}
+	if value, ok := wluo.mutation.AppendedSets(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, workoutlog.FieldSets, value)
+		})
 	}
 	if value, ok := wluo.mutation.CreatedAt(); ok {
 		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeString, value)

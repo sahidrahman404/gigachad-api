@@ -100,14 +100,6 @@ func (wc *WorkoutCreate) SetUserID(pk pksuid.ID) *WorkoutCreate {
 	return wc
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (wc *WorkoutCreate) SetNillableUserID(pk *pksuid.ID) *WorkoutCreate {
-	if pk != nil {
-		wc.SetUserID(*pk)
-	}
-	return wc
-}
-
 // SetID sets the "id" field.
 func (wc *WorkoutCreate) SetID(pk pksuid.ID) *WorkoutCreate {
 	wc.mutation.SetID(pk)
@@ -125,14 +117,6 @@ func (wc *WorkoutCreate) SetNillableID(pk *pksuid.ID) *WorkoutCreate {
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (wc *WorkoutCreate) SetUsersID(id pksuid.ID) *WorkoutCreate {
 	wc.mutation.SetUsersID(id)
-	return wc
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (wc *WorkoutCreate) SetNillableUsersID(id *pksuid.ID) *WorkoutCreate {
-	if id != nil {
-		wc = wc.SetUsersID(*id)
-	}
 	return wc
 }
 
@@ -220,6 +204,12 @@ func (wc *WorkoutCreate) check() error {
 	}
 	if _, ok := wc.mutation.Description(); !ok {
 		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Workout.description"`)}
+	}
+	if _, ok := wc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Workout.user_id"`)}
+	}
+	if _, ok := wc.mutation.UsersID(); !ok {
+		return &ValidationError{Name: "users", err: errors.New(`ent: missing required edge "Workout.users"`)}
 	}
 	return nil
 }

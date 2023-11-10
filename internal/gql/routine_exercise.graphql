@@ -16,12 +16,16 @@ input SetInput {
 
 input CreateRoutineExerciseInput {
   restTimer: String
-  sets: [SetInput!]!
-  routineID: ID!
+  sets: [SetInput!]
   exerciseID: ID!
-  userID: ID
+  userID: ID!
+}
+
+input CreateRoutineWithChildrenInput {
+  name: String!
+  RoutineExercise: [CreateRoutineExerciseInput!]
 }
 
 extend type Mutation {
-  CreateRoutineExercise(input: CreateRoutineExerciseInput!): RoutineExercise
+  CreateRoutineWithChildren(input: CreateRoutineWithChildrenInput!): Routine
 }

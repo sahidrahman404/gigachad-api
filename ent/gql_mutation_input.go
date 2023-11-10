@@ -75,9 +75,9 @@ type CreateExerciseInput struct {
 	HowTo           *string
 	WorkoutLogIDs   []pksuid.ID
 	UsersID         *pksuid.ID
-	EquipmentsID    *pksuid.ID
-	MusclesGroupsID *pksuid.ID
-	ExerciseTypesID *pksuid.ID
+	EquipmentIDs    []pksuid.ID
+	MusclesGroupIDs []pksuid.ID
+	ExerciseTypeIDs []pksuid.ID
 	RoutineIDs      []pksuid.ID
 }
 
@@ -96,14 +96,14 @@ func (i *CreateExerciseInput) Mutate(m *ExerciseMutation) {
 	if v := i.UsersID; v != nil {
 		m.SetUsersID(*v)
 	}
-	if v := i.EquipmentsID; v != nil {
-		m.SetEquipmentsID(*v)
+	if v := i.EquipmentIDs; len(v) > 0 {
+		m.AddEquipmentIDs(v...)
 	}
-	if v := i.MusclesGroupsID; v != nil {
-		m.SetMusclesGroupsID(*v)
+	if v := i.MusclesGroupIDs; len(v) > 0 {
+		m.AddMusclesGroupIDs(v...)
 	}
-	if v := i.ExerciseTypesID; v != nil {
-		m.SetExerciseTypesID(*v)
+	if v := i.ExerciseTypeIDs; len(v) > 0 {
+		m.AddExerciseTypeIDs(v...)
 	}
 	if v := i.RoutineIDs; len(v) > 0 {
 		m.AddRoutineIDs(v...)
@@ -118,25 +118,28 @@ func (c *ExerciseCreate) SetInput(i CreateExerciseInput) *ExerciseCreate {
 
 // UpdateExerciseInput represents a mutation input for updating exercises.
 type UpdateExerciseInput struct {
-	Name                *string
-	ClearImage          bool
-	Image               *string
-	ClearHowTo          bool
-	HowTo               *string
-	ClearWorkoutLogs    bool
-	AddWorkoutLogIDs    []pksuid.ID
-	RemoveWorkoutLogIDs []pksuid.ID
-	ClearUsers          bool
-	UsersID             *pksuid.ID
-	ClearEquipments     bool
-	EquipmentsID        *pksuid.ID
-	ClearMusclesGroups  bool
-	MusclesGroupsID     *pksuid.ID
-	ClearExerciseTypes  bool
-	ExerciseTypesID     *pksuid.ID
-	ClearRoutines       bool
-	AddRoutineIDs       []pksuid.ID
-	RemoveRoutineIDs    []pksuid.ID
+	Name                  *string
+	ClearImage            bool
+	Image                 *string
+	ClearHowTo            bool
+	HowTo                 *string
+	ClearWorkoutLogs      bool
+	AddWorkoutLogIDs      []pksuid.ID
+	RemoveWorkoutLogIDs   []pksuid.ID
+	ClearUsers            bool
+	UsersID               *pksuid.ID
+	ClearEquipment        bool
+	AddEquipmentIDs       []pksuid.ID
+	RemoveEquipmentIDs    []pksuid.ID
+	ClearMusclesGroups    bool
+	AddMusclesGroupIDs    []pksuid.ID
+	RemoveMusclesGroupIDs []pksuid.ID
+	ClearExerciseTypes    bool
+	AddExerciseTypeIDs    []pksuid.ID
+	RemoveExerciseTypeIDs []pksuid.ID
+	ClearRoutines         bool
+	AddRoutineIDs         []pksuid.ID
+	RemoveRoutineIDs      []pksuid.ID
 }
 
 // Mutate applies the UpdateExerciseInput on the ExerciseMutation builder.
@@ -171,23 +174,32 @@ func (i *UpdateExerciseInput) Mutate(m *ExerciseMutation) {
 	if v := i.UsersID; v != nil {
 		m.SetUsersID(*v)
 	}
-	if i.ClearEquipments {
-		m.ClearEquipments()
+	if i.ClearEquipment {
+		m.ClearEquipment()
 	}
-	if v := i.EquipmentsID; v != nil {
-		m.SetEquipmentsID(*v)
+	if v := i.AddEquipmentIDs; len(v) > 0 {
+		m.AddEquipmentIDs(v...)
+	}
+	if v := i.RemoveEquipmentIDs; len(v) > 0 {
+		m.RemoveEquipmentIDs(v...)
 	}
 	if i.ClearMusclesGroups {
 		m.ClearMusclesGroups()
 	}
-	if v := i.MusclesGroupsID; v != nil {
-		m.SetMusclesGroupsID(*v)
+	if v := i.AddMusclesGroupIDs; len(v) > 0 {
+		m.AddMusclesGroupIDs(v...)
+	}
+	if v := i.RemoveMusclesGroupIDs; len(v) > 0 {
+		m.RemoveMusclesGroupIDs(v...)
 	}
 	if i.ClearExerciseTypes {
 		m.ClearExerciseTypes()
 	}
-	if v := i.ExerciseTypesID; v != nil {
-		m.SetExerciseTypesID(*v)
+	if v := i.AddExerciseTypeIDs; len(v) > 0 {
+		m.AddExerciseTypeIDs(v...)
+	}
+	if v := i.RemoveExerciseTypeIDs; len(v) > 0 {
+		m.RemoveExerciseTypeIDs(v...)
 	}
 	if i.ClearRoutines {
 		m.ClearRoutines()
@@ -352,7 +364,7 @@ func (c *MusclesGroupUpdateOne) SetInput(i UpdateMusclesGroupInput) *MusclesGrou
 type CreateRoutineInput struct {
 	Name        string
 	ExerciseIDs []pksuid.ID
-	UsersID     *pksuid.ID
+	UsersID     pksuid.ID
 }
 
 // Mutate applies the CreateRoutineInput on the RoutineMutation builder.
@@ -361,9 +373,7 @@ func (i *CreateRoutineInput) Mutate(m *RoutineMutation) {
 	if v := i.ExerciseIDs; len(v) > 0 {
 		m.AddExerciseIDs(v...)
 	}
-	if v := i.UsersID; v != nil {
-		m.SetUsersID(*v)
-	}
+	m.SetUsersID(i.UsersID)
 }
 
 // SetInput applies the change-set in the CreateRoutineInput on the RoutineCreate builder.
@@ -378,7 +388,6 @@ type UpdateRoutineInput struct {
 	ClearExercises    bool
 	AddExerciseIDs    []pksuid.ID
 	RemoveExerciseIDs []pksuid.ID
-	ClearUsers        bool
 	UsersID           *pksuid.ID
 }
 
@@ -395,9 +404,6 @@ func (i *UpdateRoutineInput) Mutate(m *RoutineMutation) {
 	}
 	if v := i.RemoveExerciseIDs; len(v) > 0 {
 		m.RemoveExerciseIDs(v...)
-	}
-	if i.ClearUsers {
-		m.ClearUsers()
 	}
 	if v := i.UsersID; v != nil {
 		m.SetUsersID(*v)
@@ -563,7 +569,7 @@ type CreateWorkoutInput struct {
 	Sets          int
 	Image         *string
 	Description   string
-	UsersID       *pksuid.ID
+	UsersID       pksuid.ID
 	WorkoutLogIDs []pksuid.ID
 }
 
@@ -580,9 +586,7 @@ func (i *CreateWorkoutInput) Mutate(m *WorkoutMutation) {
 		m.SetImage(*v)
 	}
 	m.SetDescription(i.Description)
-	if v := i.UsersID; v != nil {
-		m.SetUsersID(*v)
-	}
+	m.SetUsersID(i.UsersID)
 	if v := i.WorkoutLogIDs; len(v) > 0 {
 		m.AddWorkoutLogIDs(v...)
 	}
@@ -605,7 +609,6 @@ type UpdateWorkoutInput struct {
 	ClearImage          bool
 	Image               *string
 	Description         *string
-	ClearUsers          bool
 	UsersID             *pksuid.ID
 	ClearWorkoutLogs    bool
 	AddWorkoutLogIDs    []pksuid.ID
@@ -640,9 +643,6 @@ func (i *UpdateWorkoutInput) Mutate(m *WorkoutMutation) {
 	}
 	if v := i.Description; v != nil {
 		m.SetDescription(*v)
-	}
-	if i.ClearUsers {
-		m.ClearUsers()
 	}
 	if v := i.UsersID; v != nil {
 		m.SetUsersID(*v)

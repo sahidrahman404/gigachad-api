@@ -61,48 +61,6 @@ func (ec *ExerciseCreate) SetNillableHowTo(s *string) *ExerciseCreate {
 	return ec
 }
 
-// SetEquipmentID sets the "equipment_id" field.
-func (ec *ExerciseCreate) SetEquipmentID(pk pksuid.ID) *ExerciseCreate {
-	ec.mutation.SetEquipmentID(pk)
-	return ec
-}
-
-// SetNillableEquipmentID sets the "equipment_id" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableEquipmentID(pk *pksuid.ID) *ExerciseCreate {
-	if pk != nil {
-		ec.SetEquipmentID(*pk)
-	}
-	return ec
-}
-
-// SetMusclesGroupID sets the "muscles_group_id" field.
-func (ec *ExerciseCreate) SetMusclesGroupID(pk pksuid.ID) *ExerciseCreate {
-	ec.mutation.SetMusclesGroupID(pk)
-	return ec
-}
-
-// SetNillableMusclesGroupID sets the "muscles_group_id" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableMusclesGroupID(pk *pksuid.ID) *ExerciseCreate {
-	if pk != nil {
-		ec.SetMusclesGroupID(*pk)
-	}
-	return ec
-}
-
-// SetExerciseTypeID sets the "exercise_type_id" field.
-func (ec *ExerciseCreate) SetExerciseTypeID(pk pksuid.ID) *ExerciseCreate {
-	ec.mutation.SetExerciseTypeID(pk)
-	return ec
-}
-
-// SetNillableExerciseTypeID sets the "exercise_type_id" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableExerciseTypeID(pk *pksuid.ID) *ExerciseCreate {
-	if pk != nil {
-		ec.SetExerciseTypeID(*pk)
-	}
-	return ec
-}
-
 // SetUserID sets the "user_id" field.
 func (ec *ExerciseCreate) SetUserID(pk pksuid.ID) *ExerciseCreate {
 	ec.mutation.SetUserID(pk)
@@ -165,61 +123,49 @@ func (ec *ExerciseCreate) SetUsers(u *User) *ExerciseCreate {
 	return ec.SetUsersID(u.ID)
 }
 
-// SetEquipmentsID sets the "equipments" edge to the Equipment entity by ID.
-func (ec *ExerciseCreate) SetEquipmentsID(id pksuid.ID) *ExerciseCreate {
-	ec.mutation.SetEquipmentsID(id)
+// AddEquipmentIDs adds the "equipment" edge to the Equipment entity by IDs.
+func (ec *ExerciseCreate) AddEquipmentIDs(ids ...pksuid.ID) *ExerciseCreate {
+	ec.mutation.AddEquipmentIDs(ids...)
 	return ec
 }
 
-// SetNillableEquipmentsID sets the "equipments" edge to the Equipment entity by ID if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableEquipmentsID(id *pksuid.ID) *ExerciseCreate {
-	if id != nil {
-		ec = ec.SetEquipmentsID(*id)
+// AddEquipment adds the "equipment" edges to the Equipment entity.
+func (ec *ExerciseCreate) AddEquipment(e ...*Equipment) *ExerciseCreate {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
+	return ec.AddEquipmentIDs(ids...)
+}
+
+// AddMusclesGroupIDs adds the "muscles_groups" edge to the MusclesGroup entity by IDs.
+func (ec *ExerciseCreate) AddMusclesGroupIDs(ids ...pksuid.ID) *ExerciseCreate {
+	ec.mutation.AddMusclesGroupIDs(ids...)
 	return ec
 }
 
-// SetEquipments sets the "equipments" edge to the Equipment entity.
-func (ec *ExerciseCreate) SetEquipments(e *Equipment) *ExerciseCreate {
-	return ec.SetEquipmentsID(e.ID)
-}
-
-// SetMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID.
-func (ec *ExerciseCreate) SetMusclesGroupsID(id pksuid.ID) *ExerciseCreate {
-	ec.mutation.SetMusclesGroupsID(id)
-	return ec
-}
-
-// SetNillableMusclesGroupsID sets the "muscles_groups" edge to the MusclesGroup entity by ID if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableMusclesGroupsID(id *pksuid.ID) *ExerciseCreate {
-	if id != nil {
-		ec = ec.SetMusclesGroupsID(*id)
+// AddMusclesGroups adds the "muscles_groups" edges to the MusclesGroup entity.
+func (ec *ExerciseCreate) AddMusclesGroups(m ...*MusclesGroup) *ExerciseCreate {
+	ids := make([]pksuid.ID, len(m))
+	for i := range m {
+		ids[i] = m[i].ID
 	}
+	return ec.AddMusclesGroupIDs(ids...)
+}
+
+// AddExerciseTypeIDs adds the "exercise_types" edge to the ExerciseType entity by IDs.
+func (ec *ExerciseCreate) AddExerciseTypeIDs(ids ...pksuid.ID) *ExerciseCreate {
+	ec.mutation.AddExerciseTypeIDs(ids...)
 	return ec
 }
 
-// SetMusclesGroups sets the "muscles_groups" edge to the MusclesGroup entity.
-func (ec *ExerciseCreate) SetMusclesGroups(m *MusclesGroup) *ExerciseCreate {
-	return ec.SetMusclesGroupsID(m.ID)
-}
-
-// SetExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID.
-func (ec *ExerciseCreate) SetExerciseTypesID(id pksuid.ID) *ExerciseCreate {
-	ec.mutation.SetExerciseTypesID(id)
-	return ec
-}
-
-// SetNillableExerciseTypesID sets the "exercise_types" edge to the ExerciseType entity by ID if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableExerciseTypesID(id *pksuid.ID) *ExerciseCreate {
-	if id != nil {
-		ec = ec.SetExerciseTypesID(*id)
+// AddExerciseTypes adds the "exercise_types" edges to the ExerciseType entity.
+func (ec *ExerciseCreate) AddExerciseTypes(e ...*ExerciseType) *ExerciseCreate {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
 	}
-	return ec
-}
-
-// SetExerciseTypes sets the "exercise_types" edge to the ExerciseType entity.
-func (ec *ExerciseCreate) SetExerciseTypes(e *ExerciseType) *ExerciseCreate {
-	return ec.SetExerciseTypesID(e.ID)
+	return ec.AddExerciseTypeIDs(ids...)
 }
 
 // AddRoutineIDs adds the "routines" edge to the Routine entity by IDs.
@@ -378,12 +324,12 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		_node.UserID = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := ec.mutation.EquipmentsIDs(); len(nodes) > 0 {
+	if nodes := ec.mutation.EquipmentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
-			Table:   exercise.EquipmentsTable,
-			Columns: []string{exercise.EquipmentsColumn},
+			Table:   exercise.EquipmentTable,
+			Columns: exercise.EquipmentPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(equipment.FieldID, field.TypeString),
@@ -392,15 +338,14 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.EquipmentID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := ec.mutation.MusclesGroupsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.MusclesGroupsTable,
-			Columns: []string{exercise.MusclesGroupsColumn},
+			Columns: exercise.MusclesGroupsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(musclesgroup.FieldID, field.TypeString),
@@ -409,15 +354,14 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.MusclesGroupID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := ec.mutation.ExerciseTypesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
+			Rel:     sqlgraph.M2M,
 			Inverse: true,
 			Table:   exercise.ExerciseTypesTable,
-			Columns: []string{exercise.ExerciseTypesColumn},
+			Columns: exercise.ExerciseTypesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercisetype.FieldID, field.TypeString),
@@ -426,7 +370,6 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.ExerciseTypeID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	if nodes := ec.mutation.RoutinesIDs(); len(nodes) > 0 {

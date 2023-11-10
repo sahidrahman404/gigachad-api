@@ -23,9 +23,9 @@ type RoutineExercise struct {
 	// ID of the ent.
 	ID pksuid.ID `json:"id,omitempty"`
 	// RestTimer holds the value of the "rest_timer" field.
-	RestTimer string `json:"rest_timer,omitempty"`
+	RestTimer *string `json:"rest_timer,omitempty"`
 	// Sets holds the value of the "sets" field.
-	Sets *schematype.Sets `json:"sets,omitempty"`
+	Sets []*schematype.Set `json:"sets,omitempty"`
 	// RoutineID holds the value of the "routine_id" field.
 	RoutineID pksuid.ID `json:"routine_id,omitempty"`
 	// ExerciseID holds the value of the "exercise_id" field.
@@ -128,7 +128,8 @@ func (re *RoutineExercise) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field rest_timer", values[i])
 			} else if value.Valid {
-				re.RestTimer = value.String
+				re.RestTimer = new(string)
+				*re.RestTimer = value.String
 			}
 		case routineexercise.FieldSets:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -207,8 +208,10 @@ func (re *RoutineExercise) String() string {
 	var builder strings.Builder
 	builder.WriteString("RoutineExercise(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", re.ID))
-	builder.WriteString("rest_timer=")
-	builder.WriteString(re.RestTimer)
+	if v := re.RestTimer; v != nil {
+		builder.WriteString("rest_timer=")
+		builder.WriteString(*v)
+	}
 	builder.WriteString(", ")
 	builder.WriteString("sets=")
 	builder.WriteString(fmt.Sprintf("%v", re.Sets))

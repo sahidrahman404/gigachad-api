@@ -69,21 +69,6 @@ func HowTo(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldEQ(FieldHowTo, v))
 }
 
-// EquipmentID applies equality check predicate on the "equipment_id" field. It's identical to EquipmentIDEQ.
-func EquipmentID(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldEQ(FieldEquipmentID, v))
-}
-
-// MusclesGroupID applies equality check predicate on the "muscles_group_id" field. It's identical to MusclesGroupIDEQ.
-func MusclesGroupID(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldEQ(FieldMusclesGroupID, v))
-}
-
-// ExerciseTypeID applies equality check predicate on the "exercise_type_id" field. It's identical to ExerciseTypeIDEQ.
-func ExerciseTypeID(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldEQ(FieldExerciseTypeID, v))
-}
-
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
 func UserID(v pksuid.ID) predicate.Exercise {
 	return predicate.Exercise(sql.FieldEQ(FieldUserID, v))
@@ -304,246 +289,6 @@ func HowToContainsFold(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldContainsFold(FieldHowTo, v))
 }
 
-// EquipmentIDEQ applies the EQ predicate on the "equipment_id" field.
-func EquipmentIDEQ(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldEQ(FieldEquipmentID, v))
-}
-
-// EquipmentIDNEQ applies the NEQ predicate on the "equipment_id" field.
-func EquipmentIDNEQ(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldNEQ(FieldEquipmentID, v))
-}
-
-// EquipmentIDIn applies the In predicate on the "equipment_id" field.
-func EquipmentIDIn(vs ...pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldIn(FieldEquipmentID, vs...))
-}
-
-// EquipmentIDNotIn applies the NotIn predicate on the "equipment_id" field.
-func EquipmentIDNotIn(vs ...pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldNotIn(FieldEquipmentID, vs...))
-}
-
-// EquipmentIDGT applies the GT predicate on the "equipment_id" field.
-func EquipmentIDGT(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldGT(FieldEquipmentID, v))
-}
-
-// EquipmentIDGTE applies the GTE predicate on the "equipment_id" field.
-func EquipmentIDGTE(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldGTE(FieldEquipmentID, v))
-}
-
-// EquipmentIDLT applies the LT predicate on the "equipment_id" field.
-func EquipmentIDLT(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldLT(FieldEquipmentID, v))
-}
-
-// EquipmentIDLTE applies the LTE predicate on the "equipment_id" field.
-func EquipmentIDLTE(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldLTE(FieldEquipmentID, v))
-}
-
-// EquipmentIDContains applies the Contains predicate on the "equipment_id" field.
-func EquipmentIDContains(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldContains(FieldEquipmentID, vc))
-}
-
-// EquipmentIDHasPrefix applies the HasPrefix predicate on the "equipment_id" field.
-func EquipmentIDHasPrefix(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldHasPrefix(FieldEquipmentID, vc))
-}
-
-// EquipmentIDHasSuffix applies the HasSuffix predicate on the "equipment_id" field.
-func EquipmentIDHasSuffix(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldHasSuffix(FieldEquipmentID, vc))
-}
-
-// EquipmentIDIsNil applies the IsNil predicate on the "equipment_id" field.
-func EquipmentIDIsNil() predicate.Exercise {
-	return predicate.Exercise(sql.FieldIsNull(FieldEquipmentID))
-}
-
-// EquipmentIDNotNil applies the NotNil predicate on the "equipment_id" field.
-func EquipmentIDNotNil() predicate.Exercise {
-	return predicate.Exercise(sql.FieldNotNull(FieldEquipmentID))
-}
-
-// EquipmentIDEqualFold applies the EqualFold predicate on the "equipment_id" field.
-func EquipmentIDEqualFold(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldEqualFold(FieldEquipmentID, vc))
-}
-
-// EquipmentIDContainsFold applies the ContainsFold predicate on the "equipment_id" field.
-func EquipmentIDContainsFold(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldContainsFold(FieldEquipmentID, vc))
-}
-
-// MusclesGroupIDEQ applies the EQ predicate on the "muscles_group_id" field.
-func MusclesGroupIDEQ(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldEQ(FieldMusclesGroupID, v))
-}
-
-// MusclesGroupIDNEQ applies the NEQ predicate on the "muscles_group_id" field.
-func MusclesGroupIDNEQ(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldNEQ(FieldMusclesGroupID, v))
-}
-
-// MusclesGroupIDIn applies the In predicate on the "muscles_group_id" field.
-func MusclesGroupIDIn(vs ...pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldIn(FieldMusclesGroupID, vs...))
-}
-
-// MusclesGroupIDNotIn applies the NotIn predicate on the "muscles_group_id" field.
-func MusclesGroupIDNotIn(vs ...pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldNotIn(FieldMusclesGroupID, vs...))
-}
-
-// MusclesGroupIDGT applies the GT predicate on the "muscles_group_id" field.
-func MusclesGroupIDGT(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldGT(FieldMusclesGroupID, v))
-}
-
-// MusclesGroupIDGTE applies the GTE predicate on the "muscles_group_id" field.
-func MusclesGroupIDGTE(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldGTE(FieldMusclesGroupID, v))
-}
-
-// MusclesGroupIDLT applies the LT predicate on the "muscles_group_id" field.
-func MusclesGroupIDLT(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldLT(FieldMusclesGroupID, v))
-}
-
-// MusclesGroupIDLTE applies the LTE predicate on the "muscles_group_id" field.
-func MusclesGroupIDLTE(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldLTE(FieldMusclesGroupID, v))
-}
-
-// MusclesGroupIDContains applies the Contains predicate on the "muscles_group_id" field.
-func MusclesGroupIDContains(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldContains(FieldMusclesGroupID, vc))
-}
-
-// MusclesGroupIDHasPrefix applies the HasPrefix predicate on the "muscles_group_id" field.
-func MusclesGroupIDHasPrefix(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldHasPrefix(FieldMusclesGroupID, vc))
-}
-
-// MusclesGroupIDHasSuffix applies the HasSuffix predicate on the "muscles_group_id" field.
-func MusclesGroupIDHasSuffix(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldHasSuffix(FieldMusclesGroupID, vc))
-}
-
-// MusclesGroupIDIsNil applies the IsNil predicate on the "muscles_group_id" field.
-func MusclesGroupIDIsNil() predicate.Exercise {
-	return predicate.Exercise(sql.FieldIsNull(FieldMusclesGroupID))
-}
-
-// MusclesGroupIDNotNil applies the NotNil predicate on the "muscles_group_id" field.
-func MusclesGroupIDNotNil() predicate.Exercise {
-	return predicate.Exercise(sql.FieldNotNull(FieldMusclesGroupID))
-}
-
-// MusclesGroupIDEqualFold applies the EqualFold predicate on the "muscles_group_id" field.
-func MusclesGroupIDEqualFold(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldEqualFold(FieldMusclesGroupID, vc))
-}
-
-// MusclesGroupIDContainsFold applies the ContainsFold predicate on the "muscles_group_id" field.
-func MusclesGroupIDContainsFold(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldContainsFold(FieldMusclesGroupID, vc))
-}
-
-// ExerciseTypeIDEQ applies the EQ predicate on the "exercise_type_id" field.
-func ExerciseTypeIDEQ(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldEQ(FieldExerciseTypeID, v))
-}
-
-// ExerciseTypeIDNEQ applies the NEQ predicate on the "exercise_type_id" field.
-func ExerciseTypeIDNEQ(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldNEQ(FieldExerciseTypeID, v))
-}
-
-// ExerciseTypeIDIn applies the In predicate on the "exercise_type_id" field.
-func ExerciseTypeIDIn(vs ...pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldIn(FieldExerciseTypeID, vs...))
-}
-
-// ExerciseTypeIDNotIn applies the NotIn predicate on the "exercise_type_id" field.
-func ExerciseTypeIDNotIn(vs ...pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldNotIn(FieldExerciseTypeID, vs...))
-}
-
-// ExerciseTypeIDGT applies the GT predicate on the "exercise_type_id" field.
-func ExerciseTypeIDGT(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldGT(FieldExerciseTypeID, v))
-}
-
-// ExerciseTypeIDGTE applies the GTE predicate on the "exercise_type_id" field.
-func ExerciseTypeIDGTE(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldGTE(FieldExerciseTypeID, v))
-}
-
-// ExerciseTypeIDLT applies the LT predicate on the "exercise_type_id" field.
-func ExerciseTypeIDLT(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldLT(FieldExerciseTypeID, v))
-}
-
-// ExerciseTypeIDLTE applies the LTE predicate on the "exercise_type_id" field.
-func ExerciseTypeIDLTE(v pksuid.ID) predicate.Exercise {
-	return predicate.Exercise(sql.FieldLTE(FieldExerciseTypeID, v))
-}
-
-// ExerciseTypeIDContains applies the Contains predicate on the "exercise_type_id" field.
-func ExerciseTypeIDContains(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldContains(FieldExerciseTypeID, vc))
-}
-
-// ExerciseTypeIDHasPrefix applies the HasPrefix predicate on the "exercise_type_id" field.
-func ExerciseTypeIDHasPrefix(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldHasPrefix(FieldExerciseTypeID, vc))
-}
-
-// ExerciseTypeIDHasSuffix applies the HasSuffix predicate on the "exercise_type_id" field.
-func ExerciseTypeIDHasSuffix(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldHasSuffix(FieldExerciseTypeID, vc))
-}
-
-// ExerciseTypeIDIsNil applies the IsNil predicate on the "exercise_type_id" field.
-func ExerciseTypeIDIsNil() predicate.Exercise {
-	return predicate.Exercise(sql.FieldIsNull(FieldExerciseTypeID))
-}
-
-// ExerciseTypeIDNotNil applies the NotNil predicate on the "exercise_type_id" field.
-func ExerciseTypeIDNotNil() predicate.Exercise {
-	return predicate.Exercise(sql.FieldNotNull(FieldExerciseTypeID))
-}
-
-// ExerciseTypeIDEqualFold applies the EqualFold predicate on the "exercise_type_id" field.
-func ExerciseTypeIDEqualFold(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldEqualFold(FieldExerciseTypeID, vc))
-}
-
-// ExerciseTypeIDContainsFold applies the ContainsFold predicate on the "exercise_type_id" field.
-func ExerciseTypeIDContainsFold(v pksuid.ID) predicate.Exercise {
-	vc := string(v)
-	return predicate.Exercise(sql.FieldContainsFold(FieldExerciseTypeID, vc))
-}
-
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v pksuid.ID) predicate.Exercise {
 	return predicate.Exercise(sql.FieldEQ(FieldUserID, v))
@@ -670,21 +415,21 @@ func HasUsersWith(preds ...predicate.User) predicate.Exercise {
 	})
 }
 
-// HasEquipments applies the HasEdge predicate on the "equipments" edge.
-func HasEquipments() predicate.Exercise {
+// HasEquipment applies the HasEdge predicate on the "equipment" edge.
+func HasEquipment() predicate.Exercise {
 	return predicate.Exercise(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, EquipmentsTable, EquipmentsColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, EquipmentTable, EquipmentPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasEquipmentsWith applies the HasEdge predicate on the "equipments" edge with a given conditions (other predicates).
-func HasEquipmentsWith(preds ...predicate.Equipment) predicate.Exercise {
+// HasEquipmentWith applies the HasEdge predicate on the "equipment" edge with a given conditions (other predicates).
+func HasEquipmentWith(preds ...predicate.Equipment) predicate.Exercise {
 	return predicate.Exercise(func(s *sql.Selector) {
-		step := newEquipmentsStep()
+		step := newEquipmentStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -698,7 +443,7 @@ func HasMusclesGroups() predicate.Exercise {
 	return predicate.Exercise(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, MusclesGroupsTable, MusclesGroupsColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, MusclesGroupsTable, MusclesGroupsPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -721,7 +466,7 @@ func HasExerciseTypes() predicate.Exercise {
 	return predicate.Exercise(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, ExerciseTypesTable, ExerciseTypesColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, ExerciseTypesTable, ExerciseTypesPrimaryKey...),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})

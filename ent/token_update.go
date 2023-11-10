@@ -53,31 +53,9 @@ func (tu *TokenUpdate) SetUserID(pk pksuid.ID) *TokenUpdate {
 	return tu
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (tu *TokenUpdate) SetNillableUserID(pk *pksuid.ID) *TokenUpdate {
-	if pk != nil {
-		tu.SetUserID(*pk)
-	}
-	return tu
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (tu *TokenUpdate) ClearUserID() *TokenUpdate {
-	tu.mutation.ClearUserID()
-	return tu
-}
-
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (tu *TokenUpdate) SetUsersID(id pksuid.ID) *TokenUpdate {
 	tu.mutation.SetUsersID(id)
-	return tu
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (tu *TokenUpdate) SetNillableUsersID(id *pksuid.ID) *TokenUpdate {
-	if id != nil {
-		tu = tu.SetUsersID(*id)
-	}
 	return tu
 }
 
@@ -124,7 +102,18 @@ func (tu *TokenUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (tu *TokenUpdate) check() error {
+	if _, ok := tu.mutation.UsersID(); tu.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Token.users"`)
+	}
+	return nil
+}
+
 func (tu *TokenUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := tu.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(token.Table, token.Columns, sqlgraph.NewFieldSpec(token.FieldID, field.TypeString))
 	if ps := tu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -215,31 +204,9 @@ func (tuo *TokenUpdateOne) SetUserID(pk pksuid.ID) *TokenUpdateOne {
 	return tuo
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (tuo *TokenUpdateOne) SetNillableUserID(pk *pksuid.ID) *TokenUpdateOne {
-	if pk != nil {
-		tuo.SetUserID(*pk)
-	}
-	return tuo
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (tuo *TokenUpdateOne) ClearUserID() *TokenUpdateOne {
-	tuo.mutation.ClearUserID()
-	return tuo
-}
-
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (tuo *TokenUpdateOne) SetUsersID(id pksuid.ID) *TokenUpdateOne {
 	tuo.mutation.SetUsersID(id)
-	return tuo
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (tuo *TokenUpdateOne) SetNillableUsersID(id *pksuid.ID) *TokenUpdateOne {
-	if id != nil {
-		tuo = tuo.SetUsersID(*id)
-	}
 	return tuo
 }
 
@@ -299,7 +266,18 @@ func (tuo *TokenUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (tuo *TokenUpdateOne) check() error {
+	if _, ok := tuo.mutation.UsersID(); tuo.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "Token.users"`)
+	}
+	return nil
+}
+
 func (tuo *TokenUpdateOne) sqlSave(ctx context.Context) (_node *Token, err error) {
+	if err := tuo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(token.Table, token.Columns, sqlgraph.NewFieldSpec(token.FieldID, field.TypeString))
 	id, ok := tuo.mutation.ID()
 	if !ok {

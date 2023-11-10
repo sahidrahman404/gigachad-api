@@ -372,7 +372,7 @@ func (c *EquipmentClient) QueryExercises(e *Equipment) *ExerciseQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(equipment.Table, equipment.FieldID, id),
 			sqlgraph.To(exercise.Table, exercise.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, equipment.ExercisesTable, equipment.ExercisesColumn),
+			sqlgraph.Edge(sqlgraph.M2M, false, equipment.ExercisesTable, equipment.ExercisesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -530,15 +530,15 @@ func (c *ExerciseClient) QueryUsers(e *Exercise) *UserQuery {
 	return query
 }
 
-// QueryEquipments queries the equipments edge of a Exercise.
-func (c *ExerciseClient) QueryEquipments(e *Exercise) *EquipmentQuery {
+// QueryEquipment queries the equipment edge of a Exercise.
+func (c *ExerciseClient) QueryEquipment(e *Exercise) *EquipmentQuery {
 	query := (&EquipmentClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := e.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(exercise.Table, exercise.FieldID, id),
 			sqlgraph.To(equipment.Table, equipment.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, exercise.EquipmentsTable, exercise.EquipmentsColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.EquipmentTable, exercise.EquipmentPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -554,7 +554,7 @@ func (c *ExerciseClient) QueryMusclesGroups(e *Exercise) *MusclesGroupQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(exercise.Table, exercise.FieldID, id),
 			sqlgraph.To(musclesgroup.Table, musclesgroup.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, exercise.MusclesGroupsTable, exercise.MusclesGroupsColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.MusclesGroupsTable, exercise.MusclesGroupsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -570,7 +570,7 @@ func (c *ExerciseClient) QueryExerciseTypes(e *Exercise) *ExerciseTypeQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(exercise.Table, exercise.FieldID, id),
 			sqlgraph.To(exercisetype.Table, exercisetype.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, exercise.ExerciseTypesTable, exercise.ExerciseTypesColumn),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.ExerciseTypesTable, exercise.ExerciseTypesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -736,7 +736,7 @@ func (c *ExerciseTypeClient) QueryExercises(et *ExerciseType) *ExerciseQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(exercisetype.Table, exercisetype.FieldID, id),
 			sqlgraph.To(exercise.Table, exercise.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, exercisetype.ExercisesTable, exercisetype.ExercisesColumn),
+			sqlgraph.Edge(sqlgraph.M2M, false, exercisetype.ExercisesTable, exercisetype.ExercisesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(et.driver.Dialect(), step)
 		return fromV, nil
@@ -870,7 +870,7 @@ func (c *MusclesGroupClient) QueryExercises(mg *MusclesGroup) *ExerciseQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(musclesgroup.Table, musclesgroup.FieldID, id),
 			sqlgraph.To(exercise.Table, exercise.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, musclesgroup.ExercisesTable, musclesgroup.ExercisesColumn),
+			sqlgraph.Edge(sqlgraph.M2M, false, musclesgroup.ExercisesTable, musclesgroup.ExercisesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(mg.driver.Dialect(), step)
 		return fromV, nil

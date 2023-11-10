@@ -11,7 +11,6 @@ import (
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // Node is the resolver for the node field.
@@ -69,35 +68,7 @@ func (r *queryResolver) WorkoutLogs(ctx context.Context, after *entgql.Cursor[pk
 	return r.client.WorkoutLog.Query().Paginate(ctx, after, first, before, last, ent.WithWorkoutLogFilter(where.Filter))
 }
 
-// Sets is the resolver for the sets field.
-func (r *routineExerciseResolver) Sets(ctx context.Context, obj *ent.RoutineExercise) ([]*schematype.Set, error) {
-	var sets []*schematype.Set
-	for _, v := range *obj.Sets {
-		sets = append(sets, &v)
-	}
-	return sets, nil
-}
-
-// Sets is the resolver for the sets field.
-func (r *workoutLogResolver) Sets(ctx context.Context, obj *ent.WorkoutLog) ([]*schematype.Set, error) {
-	var sets []*schematype.Set
-	for _, v := range *obj.Sets {
-		sets = append(sets, &v)
-	}
-	return sets, nil
-}
-
 // Query returns gigachad.QueryResolver implementation.
 func (r *Resolver) Query() gigachad.QueryResolver { return &queryResolver{r} }
 
-// RoutineExercise returns gigachad.RoutineExerciseResolver implementation.
-func (r *Resolver) RoutineExercise() gigachad.RoutineExerciseResolver {
-	return &routineExerciseResolver{r}
-}
-
-// WorkoutLog returns gigachad.WorkoutLogResolver implementation.
-func (r *Resolver) WorkoutLog() gigachad.WorkoutLogResolver { return &workoutLogResolver{r} }
-
 type queryResolver struct{ *Resolver }
-type routineExerciseResolver struct{ *Resolver }
-type workoutLogResolver struct{ *Resolver }

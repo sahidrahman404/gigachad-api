@@ -23,13 +23,11 @@ const (
 	EdgeExercises = "exercises"
 	// Table holds the table name of the exercisetype in the database.
 	Table = "exercise_types"
-	// ExercisesTable is the table that holds the exercises relation/edge.
-	ExercisesTable = "exercises"
+	// ExercisesTable is the table that holds the exercises relation/edge. The primary key declared below.
+	ExercisesTable = "exercise_type_exercises"
 	// ExercisesInverseTable is the table name for the Exercise entity.
 	// It exists in this package in order to avoid circular dependency with the "exercise" package.
 	ExercisesInverseTable = "exercises"
-	// ExercisesColumn is the table column denoting the exercises relation/edge.
-	ExercisesColumn = "exercise_type_id"
 )
 
 // Columns holds all SQL columns for exercisetype fields.
@@ -39,6 +37,12 @@ var Columns = []string{
 	FieldProperties,
 	FieldDescription,
 }
+
+var (
+	// ExercisesPrimaryKey and ExercisesColumn2 are the table columns denoting the
+	// primary key for the exercises relation (M2M).
+	ExercisesPrimaryKey = []string{"exercise_type_id", "exercise_id"}
+)
 
 // ValidColumn reports if the column name is valid (part of the table columns).
 func ValidColumn(column string) bool {
@@ -90,6 +94,6 @@ func newExercisesStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ExercisesInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.O2M, false, ExercisesTable, ExercisesColumn),
+		sqlgraph.Edge(sqlgraph.M2M, false, ExercisesTable, ExercisesPrimaryKey...),
 	)
 }

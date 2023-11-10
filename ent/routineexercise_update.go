@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
@@ -53,8 +54,14 @@ func (reu *RoutineExerciseUpdate) ClearRestTimer() *RoutineExerciseUpdate {
 }
 
 // SetSets sets the "sets" field.
-func (reu *RoutineExerciseUpdate) SetSets(s *schematype.Sets) *RoutineExerciseUpdate {
+func (reu *RoutineExerciseUpdate) SetSets(s []*schematype.Set) *RoutineExerciseUpdate {
 	reu.mutation.SetSets(s)
+	return reu
+}
+
+// AppendSets appends s to the "sets" field.
+func (reu *RoutineExerciseUpdate) AppendSets(s []*schematype.Set) *RoutineExerciseUpdate {
+	reu.mutation.AppendSets(s)
 	return reu
 }
 
@@ -73,20 +80,6 @@ func (reu *RoutineExerciseUpdate) SetExerciseID(pk pksuid.ID) *RoutineExerciseUp
 // SetUserID sets the "user_id" field.
 func (reu *RoutineExerciseUpdate) SetUserID(pk pksuid.ID) *RoutineExerciseUpdate {
 	reu.mutation.SetUserID(pk)
-	return reu
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableUserID(pk *pksuid.ID) *RoutineExerciseUpdate {
-	if pk != nil {
-		reu.SetUserID(*pk)
-	}
-	return reu
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (reu *RoutineExerciseUpdate) ClearUserID() *RoutineExerciseUpdate {
-	reu.mutation.ClearUserID()
 	return reu
 }
 
@@ -115,14 +108,6 @@ func (reu *RoutineExerciseUpdate) SetExercises(e *Exercise) *RoutineExerciseUpda
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (reu *RoutineExerciseUpdate) SetUsersID(id pksuid.ID) *RoutineExerciseUpdate {
 	reu.mutation.SetUsersID(id)
-	return reu
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableUsersID(id *pksuid.ID) *RoutineExerciseUpdate {
-	if id != nil {
-		reu = reu.SetUsersID(*id)
-	}
 	return reu
 }
 
@@ -189,6 +174,9 @@ func (reu *RoutineExerciseUpdate) check() error {
 	if _, ok := reu.mutation.ExercisesID(); reu.mutation.ExercisesCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "RoutineExercise.exercises"`)
 	}
+	if _, ok := reu.mutation.UsersID(); reu.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "RoutineExercise.users"`)
+	}
 	return nil
 }
 
@@ -212,6 +200,11 @@ func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error
 	}
 	if value, ok := reu.mutation.Sets(); ok {
 		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)
+	}
+	if value, ok := reu.mutation.AppendedSets(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, routineexercise.FieldSets, value)
+		})
 	}
 	if reu.mutation.RoutinesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -341,8 +334,14 @@ func (reuo *RoutineExerciseUpdateOne) ClearRestTimer() *RoutineExerciseUpdateOne
 }
 
 // SetSets sets the "sets" field.
-func (reuo *RoutineExerciseUpdateOne) SetSets(s *schematype.Sets) *RoutineExerciseUpdateOne {
+func (reuo *RoutineExerciseUpdateOne) SetSets(s []*schematype.Set) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetSets(s)
+	return reuo
+}
+
+// AppendSets appends s to the "sets" field.
+func (reuo *RoutineExerciseUpdateOne) AppendSets(s []*schematype.Set) *RoutineExerciseUpdateOne {
+	reuo.mutation.AppendSets(s)
 	return reuo
 }
 
@@ -361,20 +360,6 @@ func (reuo *RoutineExerciseUpdateOne) SetExerciseID(pk pksuid.ID) *RoutineExerci
 // SetUserID sets the "user_id" field.
 func (reuo *RoutineExerciseUpdateOne) SetUserID(pk pksuid.ID) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetUserID(pk)
-	return reuo
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableUserID(pk *pksuid.ID) *RoutineExerciseUpdateOne {
-	if pk != nil {
-		reuo.SetUserID(*pk)
-	}
-	return reuo
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (reuo *RoutineExerciseUpdateOne) ClearUserID() *RoutineExerciseUpdateOne {
-	reuo.mutation.ClearUserID()
 	return reuo
 }
 
@@ -403,14 +388,6 @@ func (reuo *RoutineExerciseUpdateOne) SetExercises(e *Exercise) *RoutineExercise
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (reuo *RoutineExerciseUpdateOne) SetUsersID(id pksuid.ID) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetUsersID(id)
-	return reuo
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableUsersID(id *pksuid.ID) *RoutineExerciseUpdateOne {
-	if id != nil {
-		reuo = reuo.SetUsersID(*id)
-	}
 	return reuo
 }
 
@@ -490,6 +467,9 @@ func (reuo *RoutineExerciseUpdateOne) check() error {
 	if _, ok := reuo.mutation.ExercisesID(); reuo.mutation.ExercisesCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "RoutineExercise.exercises"`)
 	}
+	if _, ok := reuo.mutation.UsersID(); reuo.mutation.UsersCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "RoutineExercise.users"`)
+	}
 	return nil
 }
 
@@ -530,6 +510,11 @@ func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Routi
 	}
 	if value, ok := reuo.mutation.Sets(); ok {
 		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)
+	}
+	if value, ok := reuo.mutation.AppendedSets(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, routineexercise.FieldSets, value)
+		})
 	}
 	if reuo.mutation.RoutinesCleared() {
 		edge := &sqlgraph.EdgeSpec{

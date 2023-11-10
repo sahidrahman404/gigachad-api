@@ -78,7 +78,7 @@ func (mgq *MusclesGroupQuery) QueryExercises() *ExerciseQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(musclesgroup.Table, musclesgroup.FieldID, selector),
 			sqlgraph.To(exercise.Table, exercise.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, musclesgroup.ExercisesTable, musclesgroup.ExercisesColumn),
+			sqlgraph.Edge(sqlgraph.M2M, false, musclesgroup.ExercisesTable, musclesgroup.ExercisesPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(mgq.driver.Dialect(), step)
 		return fromU, nil
@@ -422,32 +422,63 @@ func (mgq *MusclesGroupQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([
 }
 
 func (mgq *MusclesGroupQuery) loadExercises(ctx context.Context, query *ExerciseQuery, nodes []*MusclesGroup, init func(*MusclesGroup), assign func(*MusclesGroup, *Exercise)) error {
-	fks := make([]driver.Value, 0, len(nodes))
-	nodeids := make(map[pksuid.ID]*MusclesGroup)
-	for i := range nodes {
-		fks = append(fks, nodes[i].ID)
-		nodeids[nodes[i].ID] = nodes[i]
+	edgeIDs := make([]driver.Value, len(nodes))
+	byID := make(map[pksuid.ID]*MusclesGroup)
+	nids := make(map[pksuid.ID]map[*MusclesGroup]struct{})
+	for i, node := range nodes {
+		edgeIDs[i] = node.ID
+		byID[node.ID] = node
 		if init != nil {
-			init(nodes[i])
+			init(node)
 		}
 	}
-	if len(query.ctx.Fields) > 0 {
-		query.ctx.AppendFieldOnce(exercise.FieldMusclesGroupID)
+	query.Where(func(s *sql.Selector) {
+		joinT := sql.Table(musclesgroup.ExercisesTable)
+		s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(musclesgroup.ExercisesPrimaryKey[1]))
+		s.Where(sql.InValues(joinT.C(musclesgroup.ExercisesPrimaryKey[0]), edgeIDs...))
+		columns := s.SelectedColumns()
+		s.Select(joinT.C(musclesgroup.ExercisesPrimaryKey[0]))
+		s.AppendSelect(columns...)
+		s.SetDistinct(false)
+	})
+	if err := query.prepareQuery(ctx); err != nil {
+		return err
 	}
-	query.Where(predicate.Exercise(func(s *sql.Selector) {
-		s.Where(sql.InValues(s.C(musclesgroup.ExercisesColumn), fks...))
-	}))
-	neighbors, err := query.All(ctx)
+	qr := QuerierFunc(func(ctx context.Context, q Query) (Value, error) {
+		return query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]any, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]any{new(pksuid.ID)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []any) error {
+				outValue := *values[0].(*pksuid.ID)
+				inValue := *values[1].(*pksuid.ID)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*MusclesGroup]struct{}{byID[outValue]: {}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byID[outValue]] = struct{}{}
+				return nil
+			}
+		})
+	})
+	neighbors, err := withInterceptors[[]*Exercise](ctx, query, qr, query.inters)
 	if err != nil {
 		return err
 	}
 	for _, n := range neighbors {
-		fk := n.MusclesGroupID
-		node, ok := nodeids[fk]
+		nodes, ok := nids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected referenced foreign-key "muscles_group_id" returned %v for node %v`, fk, n.ID)
+			return fmt.Errorf(`unexpected "exercises" node returned %v`, n.ID)
 		}
-		assign(node, n)
+		for kn := range nodes {
+			assign(kn, n)
+		}
 	}
 	return nil
 }

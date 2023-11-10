@@ -45,14 +45,6 @@ func (tc *TokenCreate) SetUserID(pk pksuid.ID) *TokenCreate {
 	return tc
 }
 
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (tc *TokenCreate) SetNillableUserID(pk *pksuid.ID) *TokenCreate {
-	if pk != nil {
-		tc.SetUserID(*pk)
-	}
-	return tc
-}
-
 // SetID sets the "id" field.
 func (tc *TokenCreate) SetID(pk pksuid.ID) *TokenCreate {
 	tc.mutation.SetID(pk)
@@ -70,14 +62,6 @@ func (tc *TokenCreate) SetNillableID(pk *pksuid.ID) *TokenCreate {
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (tc *TokenCreate) SetUsersID(id pksuid.ID) *TokenCreate {
 	tc.mutation.SetUsersID(id)
-	return tc
-}
-
-// SetNillableUsersID sets the "users" edge to the User entity by ID if the given value is not nil.
-func (tc *TokenCreate) SetNillableUsersID(id *pksuid.ID) *TokenCreate {
-	if id != nil {
-		tc = tc.SetUsersID(*id)
-	}
 	return tc
 }
 
@@ -137,6 +121,12 @@ func (tc *TokenCreate) check() error {
 	}
 	if _, ok := tc.mutation.Scope(); !ok {
 		return &ValidationError{Name: "scope", err: errors.New(`ent: missing required field "Token.scope"`)}
+	}
+	if _, ok := tc.mutation.UserID(); !ok {
+		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Token.user_id"`)}
+	}
+	if _, ok := tc.mutation.UsersID(); !ok {
+		return &ValidationError{Name: "users", err: errors.New(`ent: missing required edge "Token.users"`)}
 	}
 	return nil
 }

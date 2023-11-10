@@ -28,6 +28,7 @@ type WorkoutLogQuery struct {
 	withUsers     *UserQuery
 	withExercises *ExerciseQuery
 	withWorkouts  *WorkoutQuery
+	withFKs       bool
 	modifiers     []func(*sql.Selector)
 	loadTotal     []func(context.Context, []*WorkoutLog) error
 	// intermediate query (i.e. traversal path).
@@ -372,7 +373,7 @@ func (wlq *WorkoutLogQuery) WithWorkouts(opts ...func(*WorkoutQuery)) *WorkoutLo
 // Example:
 //
 //	var v []struct {
-//		Sets *schematype.Sets `json:"sets,omitempty"`
+//		Sets []*schematype.Set `json:"sets,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -395,7 +396,7 @@ func (wlq *WorkoutLogQuery) GroupBy(field string, fields ...string) *WorkoutLogG
 // Example:
 //
 //	var v []struct {
-//		Sets *schematype.Sets `json:"sets,omitempty"`
+//		Sets []*schematype.Set `json:"sets,omitempty"`
 //	}
 //
 //	client.WorkoutLog.Query().
@@ -443,6 +444,7 @@ func (wlq *WorkoutLogQuery) prepareQuery(ctx context.Context) error {
 func (wlq *WorkoutLogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*WorkoutLog, error) {
 	var (
 		nodes       = []*WorkoutLog{}
+		withFKs     = wlq.withFKs
 		_spec       = wlq.querySpec()
 		loadedTypes = [3]bool{
 			wlq.withUsers != nil,
@@ -450,6 +452,12 @@ func (wlq *WorkoutLogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 			wlq.withWorkouts != nil,
 		}
 	)
+	if wlq.withExercises != nil || wlq.withWorkouts != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, workoutlog.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*WorkoutLog).scanValues(nil, columns)
 	}
@@ -530,7 +538,10 @@ func (wlq *WorkoutLogQuery) loadExercises(ctx context.Context, query *ExerciseQu
 	ids := make([]pksuid.ID, 0, len(nodes))
 	nodeids := make(map[pksuid.ID][]*WorkoutLog)
 	for i := range nodes {
-		fk := nodes[i].ExerciseID
+		if nodes[i].exercise_workout_logs == nil {
+			continue
+		}
+		fk := *nodes[i].exercise_workout_logs
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -547,7 +558,7 @@ func (wlq *WorkoutLogQuery) loadExercises(ctx context.Context, query *ExerciseQu
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "exercise_id" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "exercise_workout_logs" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -559,7 +570,10 @@ func (wlq *WorkoutLogQuery) loadWorkouts(ctx context.Context, query *WorkoutQuer
 	ids := make([]pksuid.ID, 0, len(nodes))
 	nodeids := make(map[pksuid.ID][]*WorkoutLog)
 	for i := range nodes {
-		fk := nodes[i].WorkoutID
+		if nodes[i].workout_workout_logs == nil {
+			continue
+		}
+		fk := *nodes[i].workout_workout_logs
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -576,7 +590,7 @@ func (wlq *WorkoutLogQuery) loadWorkouts(ctx context.Context, query *WorkoutQuer
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "workout_id" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "workout_workout_logs" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -615,12 +629,6 @@ func (wlq *WorkoutLogQuery) querySpec() *sqlgraph.QuerySpec {
 		}
 		if wlq.withUsers != nil {
 			_spec.Node.AddColumnOnce(workoutlog.FieldUserID)
-		}
-		if wlq.withExercises != nil {
-			_spec.Node.AddColumnOnce(workoutlog.FieldExerciseID)
-		}
-		if wlq.withWorkouts != nil {
-			_spec.Node.AddColumnOnce(workoutlog.FieldWorkoutID)
 		}
 	}
 	if ps := wlq.predicates; len(ps) > 0 {

@@ -156,10 +156,10 @@ func (mgc *MusclesGroupCreate) createSpec() (*MusclesGroup, *sqlgraph.CreateSpec
 	}
 	if nodes := mgc.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
+			Rel:     sqlgraph.M2M,
 			Inverse: false,
 			Table:   musclesgroup.ExercisesTable,
-			Columns: []string{musclesgroup.ExercisesColumn},
+			Columns: musclesgroup.ExercisesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
