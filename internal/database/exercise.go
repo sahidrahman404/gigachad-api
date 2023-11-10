@@ -33,9 +33,10 @@ func (e *ExerciseStore) Insert(ctx context.Context, ex *types.Exercise) error {
 		SetNillableHowTo(ex.Ent.HowTo).
 		SetNillableUserID(ex.Ent.UserID).
 		SetNillableImage(ex.Ent.Image).
-		SetEquipmentID(ex.Ent.EquipmentID).
-		SetExerciseTypeID(ex.Ent.ExerciseTypeID).
-		SetMusclesGroupID(ex.Ent.MusclesGroupID).Save(ctx)
+		// SetEquipmentID(ex.Ent.EquipmentID).
+		// SetExerciseTypeID(ex.Ent.ExerciseTypeID).
+		// SetMusclesGroupID(ex.Ent.MusclesGroupID).
+		Save(ctx)
 	if err != nil {
 		return err
 	}
@@ -49,9 +50,10 @@ func (e *ExerciseStore) Update(ctx context.Context, ex *types.Exercise) error {
 		SetNillableHowTo(ex.Ent.HowTo).
 		SetNillableUserID(ex.Ent.UserID).
 		SetNillableImage(ex.Ent.Image).
-		SetEquipmentID(ex.Ent.EquipmentID).
-		SetExerciseTypeID(ex.Ent.ExerciseTypeID).
-		SetMusclesGroupID(ex.Ent.MusclesGroupID).Save(ctx)
+		// SetEquipmentID(ex.Ent.EquipmentID).
+		// SetExerciseTypeID(ex.Ent.ExerciseTypeID).
+		// SetMusclesGroupID(ex.Ent.MusclesGroupID).
+		Save(ctx)
 	if err != nil {
 		return err
 	}

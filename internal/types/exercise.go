@@ -31,12 +31,11 @@ type Exercise struct {
 func NewExerciseFromParams(p CreateExerciseParams, userID *pksuid.ID) *Exercise {
 	e := &Exercise{
 		Ent: &ent.Exercise{
-			Name:           p.Name,
-			Image:          p.Image,
-			EquipmentID:    p.EquipmentID,
-			MusclesGroupID: p.MusclesGroupID,
-			ExerciseTypeID: p.ExerciseTypeID,
-			UserID:         userID,
+			Name:  p.Name,
+			Image: p.Image,
+			// MusclesGroupID: p.MusclesGroupID,
+			// ExerciseTypeID: p.ExerciseTypeID,
+			UserID: userID,
 		},
 	}
 	if p.HowTo != nil {
@@ -69,15 +68,15 @@ func UpdateExerciseFromParams(e *UpdateExerciseParams, ex *Exercise) {
 		ex.Ent.Image = e.Image
 	}
 
-	if e.EquipmentID != nil {
-		ex.Ent.EquipmentID = *e.EquipmentID
-	}
+	// if e.EquipmentID != nil {
+	// 	ex.Ent.EquipmentID = *e.EquipmentID
+	// }
 
-	if e.MusclesGroupID != nil {
-		ex.Ent.MusclesGroupID = *e.MusclesGroupID
-	}
+	// if e.MusclesGroupID != nil {
+	// 	ex.Ent.MusclesGroupID = *e.MusclesGroupID
+	// }
 
-	if e.ExerciseTypeID != nil {
-		ex.Ent.ExerciseTypeID = *e.ExerciseTypeID
-	}
+	// if e.ExerciseTypeID != nil {
+	// 	ex.Ent.ExerciseTypeID = *e.ExerciseTypeID
+	// }
 }

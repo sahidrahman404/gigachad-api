@@ -3,13 +3,12 @@ package types
 import (
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
 
 type UpdateRoutineExerciseParams struct {
-	RestTimer *string         `json:"restTimer"`
-	Sets      schematype.Sets `json:"set"`
+	RestTimer *string `json:"restTimer"`
+	// Sets      schematype.Sets `json:"set"`
 }
 
 type CreateRoutineExerciseParams struct {
@@ -18,9 +17,9 @@ type CreateRoutineExerciseParams struct {
 }
 
 type RE struct {
-	RestTimer  *string         `json:"restTimer"`
-	Sets       schematype.Sets `json:"set"`
-	ExerciseID pksuid.ID       `json:"exerciseID"`
+	RestTimer *string `json:"restTimer"`
+	// Sets       schematype.Sets `json:"set"`
+	ExerciseID pksuid.ID `json:"exerciseID"`
 }
 
 type RoutineExercise struct {
@@ -30,8 +29,8 @@ type RoutineExercise struct {
 func UpdateRoutineExerciseFromParams(p UpdateRoutineExerciseParams) *RoutineExercise {
 	return &RoutineExercise{
 		Ent: &ent.RoutineExercise{
-			RestTimer: *p.RestTimer,
-			Sets:      &p.Sets,
+			// RestTimer: *p.RestTimer,
+			// Sets:      &p.Sets,
 		},
 	}
 }
@@ -44,15 +43,15 @@ func NewRoutineExerciseFromParams(
 	for _, v := range p.RoutineExercises {
 		re := RoutineExercise{
 			Ent: &ent.RoutineExercise{
-				Sets:       &v.Sets,
+				// Sets:       &v.Sets,
 				ExerciseID: v.ExerciseID,
 				RoutineID:  p.RoutineID,
 				UserID:     userID,
 			},
 		}
-		if v.RestTimer != nil {
-			re.Ent.RestTimer = *v.RestTimer
-		}
+		// if v.RestTimer != nil {
+		// 	re.Ent.RestTimer = *v.RestTimer
+		// }
 		res = append(res, &re)
 	}
 	return res

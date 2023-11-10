@@ -24,8 +24,9 @@ func NewEntWorkoutLogStore(c *ent.Client) *WorkoutLogStore {
 func (e *WorkoutLogStore) Insert(ctx context.Context, wl *types.WorkoutLog) error {
 	workoutlog, err := e.Client.WorkoutLog.Create().
 		SetSets(wl.Ent.Sets).
-		SetExerciseID(wl.Ent.ExerciseID).
-		SetWorkoutID(wl.Ent.WorkoutID).Save(ctx)
+		// SetExerciseID(wl.Ent.ExerciseID).
+		// SetWorkoutID(wl.Ent.WorkoutID).
+		Save(ctx)
 	if err != nil {
 		return err
 	}

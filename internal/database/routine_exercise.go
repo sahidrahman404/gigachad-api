@@ -35,7 +35,7 @@ func (e *RoutineExerciseStore) InsertMany(
 	bulk := make([]*ent.RoutineExerciseCreate, len(re))
 	for i, v := range re {
 		bulk[i] = e.Client.RoutineExercise.Create().
-			SetNillableRestTimer(&v.Ent.RestTimer).
+			// SetNillableRestTimer(&v.Ent.RestTimer).
 			SetSets(v.Ent.Sets).
 			SetRoutineID(v.Ent.RoutineID).
 			SetExerciseID(v.Ent.ExerciseID).
@@ -57,7 +57,7 @@ func (e *RoutineExerciseStore) Update(
 	routineExerciseID pksuid.ID,
 ) error {
 	_, err := e.Client.RoutineExercise.UpdateOneID(routineExerciseID).
-		SetNillableRestTimer(&re.Ent.RestTimer).
+		// SetNillableRestTimer(&re.Ent.RestTimer).
 		SetSets(re.Ent.Sets).Save(ctx)
 	if err != nil {
 		return err
@@ -96,7 +96,6 @@ func (e *RoutineExerciseStore) GetAllForRoutine(
 		r = append(r, &types.RoutineExercise{
 			Ent: v,
 		})
-
 	}
 	return r, nil
 }
