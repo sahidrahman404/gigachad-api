@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi/v5"
@@ -36,6 +37,7 @@ func (app *application) routes() http.Handler {
 	srv := handler.NewDefaultServer(
 		gql.NewSchema(app.ent, app.mailer, app.storage, app.logger, &app.wg),
 	)
+	srv.Use(entgql.Transactioner{TxOpener: app.ent})
 	mux.Handle("/gql", playground.Handler("Gigachad", "/query"))
 	mux.Handle("/query", srv)
 
