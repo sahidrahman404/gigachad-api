@@ -9,6 +9,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type contextKey string
+
+const UserContextKey = contextKey("user")
+
 const (
 	bcryptCost = 12
 )
@@ -73,7 +77,6 @@ func (u *User) IsAnonymous() bool {
 
 func (u *User) Matches(plaintextPassword string) (bool, error) {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Ent.HashedPassword), []byte(plaintextPassword))
-
 	if err != nil {
 		switch {
 		case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
