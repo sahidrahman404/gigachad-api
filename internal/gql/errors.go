@@ -29,6 +29,11 @@ func (r *Resolver) serverError(err error) *gqlerror.Error {
 	return gqlerror.Errorf(message)
 }
 
+func (r *Resolver) notFound() *gqlerror.Error {
+	message := "The requested resource could not be found"
+	return gqlerror.Errorf(message)
+}
+
 func (r *Resolver) editConflict() *gqlerror.Error {
 	message := "unable to update the record due to an edit conflict, please try again"
 	return gqlerror.Errorf(message)
@@ -36,6 +41,21 @@ func (r *Resolver) editConflict() *gqlerror.Error {
 
 func (r *Resolver) invalidCredentials() *gqlerror.Error {
 	message := "invalid authentication credentials"
+	return gqlerror.Errorf(message)
+}
+
+func (r *Resolver) authenticationRequired() *gqlerror.Error {
+	message := "you must be authenticated to access this resource"
+	return gqlerror.Errorf(message)
+}
+
+func (r *Resolver) inactiveAccount() *gqlerror.Error {
+	message := "your user account must be activated to access this resource"
+	return gqlerror.Errorf(message)
+}
+
+func (r *Resolver) notPremittedError() *gqlerror.Error {
+	message := "your user account doesn't have the necessary permissions to access this resource"
 	return gqlerror.Errorf(message)
 }
 
