@@ -53,7 +53,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 	}
 
 	token, err := r.storage.Tokens.New(user.Ent.ID, 3*24*time.Hour, database.ScopeActivation)
-
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +90,7 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 
 	user.Ent.Activated = 1
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	allow := privacy.DecisionContext(ctx, privacy.Allow)
@@ -154,7 +153,7 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 		return nil, r.serverError(err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	allow := privacy.DecisionContext(ctx, privacy.Allow)
@@ -185,7 +184,7 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 
 // Viewer is the resolver for the viewer field.
 func (r *queryResolver) Viewer(ctx context.Context) (*ent.User, error) {
-	user := r.forContext(ctx)
+	user := r.getUserFromCtx(ctx)
 	return user.Ent, nil
 }
 

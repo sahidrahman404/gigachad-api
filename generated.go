@@ -13883,7 +13883,7 @@ func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"restTimer", "sets", "exerciseID", "userID"}
+	fieldsInOrder := [...]string{"restTimer", "sets", "exerciseID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -13917,15 +13917,6 @@ func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context
 				return it, err
 			}
 			it.ExerciseID = data
-		case "userID":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
-			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.UserID = data
 		}
 	}
 

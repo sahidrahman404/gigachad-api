@@ -14,12 +14,19 @@ import (
 
 // CreateRoutineWithChildren is the resolver for the CreateRoutineWithChildren field.
 func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input gigachad.CreateRoutineWithChildrenInput) (*ent.Routine, error) {
+	userCtx := r.getUserFromCtx(ctx)
+	user, err := r.requireActivatedUser(userCtx)
+	if err != nil {
+		return nil, err
+	}
+
 	routineID := pksuid.MustNew("RO")
 	if err := r.WithTx(ctx, func(tx *ent.Tx) error {
 		txClient := tx.Client()
 		routine, err := txClient.Routine.Create().
 			SetID(routineID).
 			SetName(input.Name).
+			SetUserID(user.ID).
 			Save(ctx)
 		if err != nil {
 			return err
@@ -30,7 +37,8 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 				c.SetNillableRestTimer(input.RoutineExercise[i].RestTimer).
 					SetSets(input.RoutineExercise[i].Sets).
 					SetRoutineID(routine.ID).
-					SetExerciseID(input.RoutineExercise[i].ExerciseID)
+					SetExerciseID(input.RoutineExercise[i].ExerciseID).
+					SetUserID(user.ID)
 			}).Save(ctx)
 		if err != nil {
 			return err

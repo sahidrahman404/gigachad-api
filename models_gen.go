@@ -25,7 +25,6 @@ type CreateRoutineExerciseInput struct {
 	RestTimer  *string           `json:"restTimer,omitempty"`
 	Sets       []*schematype.Set `json:"sets,omitempty"`
 	ExerciseID pksuid.ID         `json:"exerciseID"`
-	UserID     pksuid.ID         `json:"userID"`
 }
 
 type CreateRoutineWithChildrenInput struct {

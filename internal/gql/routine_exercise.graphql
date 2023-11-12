@@ -18,7 +18,6 @@ input CreateRoutineExerciseInput {
   restTimer: String
   sets: [SetInput!]
   exerciseID: ID!
-  userID: ID!
 }
 
 input CreateRoutineWithChildrenInput {
