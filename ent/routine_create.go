@@ -243,11 +243,15 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 // RoutineCreateBulk is the builder for creating many Routine entities in bulk.
 type RoutineCreateBulk struct {
 	config
+	err      error
 	builders []*RoutineCreate
 }
 
 // Save creates the Routine entities in the database.
 func (rcb *RoutineCreateBulk) Save(ctx context.Context) ([]*Routine, error) {
+	if rcb.err != nil {
+		return nil, rcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(rcb.builders))
 	nodes := make([]*Routine, len(rcb.builders))
 	mutators := make([]Mutator, len(rcb.builders))

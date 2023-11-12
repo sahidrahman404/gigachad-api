@@ -12,6 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // EquipmentCreate is the builder for creating a Equipment entity.
@@ -28,7 +29,7 @@ func (ec *EquipmentCreate) SetName(s string) *EquipmentCreate {
 }
 
 // SetImage sets the "image" field.
-func (ec *EquipmentCreate) SetImage(s string) *EquipmentCreate {
+func (ec *EquipmentCreate) SetImage(s schematype.Image) *EquipmentCreate {
 	ec.mutation.SetImage(s)
 	return ec
 }
@@ -151,7 +152,7 @@ func (ec *EquipmentCreate) createSpec() (*Equipment, *sqlgraph.CreateSpec) {
 		_node.Name = value
 	}
 	if value, ok := ec.mutation.Image(); ok {
-		_spec.SetField(equipment.FieldImage, field.TypeString, value)
+		_spec.SetField(equipment.FieldImage, field.TypeJSON, value)
 		_node.Image = value
 	}
 	if nodes := ec.mutation.ExercisesIDs(); len(nodes) > 0 {
@@ -176,11 +177,15 @@ func (ec *EquipmentCreate) createSpec() (*Equipment, *sqlgraph.CreateSpec) {
 // EquipmentCreateBulk is the builder for creating many Equipment entities in bulk.
 type EquipmentCreateBulk struct {
 	config
+	err      error
 	builders []*EquipmentCreate
 }
 
 // Save creates the Equipment entities in the database.
 func (ecb *EquipmentCreateBulk) Save(ctx context.Context) ([]*Equipment, error) {
+	if ecb.err != nil {
+		return nil, ecb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(ecb.builders))
 	nodes := make([]*Equipment, len(ecb.builders))
 	mutators := make([]Mutator, len(ecb.builders))

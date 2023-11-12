@@ -132,11 +132,6 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// ByImage orders the results by the image field.
-func ByImage(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldImage, opts...).ToFunc()
-}
-
 // ByHowTo orders the results by the how_to field.
 func ByHowTo(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldHowTo, opts...).ToFunc()

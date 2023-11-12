@@ -53,7 +53,7 @@ type EquipmentMutation struct {
 	typ              string
 	id               *pksuid.ID
 	name             *string
-	image            *string
+	image            *schematype.Image
 	clearedFields    map[string]struct{}
 	exercises        map[pksuid.ID]struct{}
 	removedexercises map[pksuid.ID]struct{}
@@ -204,12 +204,12 @@ func (m *EquipmentMutation) ResetName() {
 }
 
 // SetImage sets the "image" field.
-func (m *EquipmentMutation) SetImage(s string) {
+func (m *EquipmentMutation) SetImage(s schematype.Image) {
 	m.image = &s
 }
 
 // Image returns the value of the "image" field in the mutation.
-func (m *EquipmentMutation) Image() (r string, exists bool) {
+func (m *EquipmentMutation) Image() (r schematype.Image, exists bool) {
 	v := m.image
 	if v == nil {
 		return
@@ -220,7 +220,7 @@ func (m *EquipmentMutation) Image() (r string, exists bool) {
 // OldImage returns the old "image" field's value of the Equipment entity.
 // If the Equipment object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *EquipmentMutation) OldImage(ctx context.Context) (v string, err error) {
+func (m *EquipmentMutation) OldImage(ctx context.Context) (v schematype.Image, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldImage is only allowed on UpdateOne operations")
 	}
@@ -376,7 +376,7 @@ func (m *EquipmentMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	case equipment.FieldImage:
-		v, ok := value.(string)
+		v, ok := value.(schematype.Image)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -532,7 +532,7 @@ type ExerciseMutation struct {
 	typ                      string
 	id                       *pksuid.ID
 	name                     *string
-	image                    *string
+	image                    *schematype.Image
 	how_to                   *string
 	clearedFields            map[string]struct{}
 	workout_logs             map[pksuid.ID]struct{}
@@ -701,12 +701,12 @@ func (m *ExerciseMutation) ResetName() {
 }
 
 // SetImage sets the "image" field.
-func (m *ExerciseMutation) SetImage(s string) {
+func (m *ExerciseMutation) SetImage(s schematype.Image) {
 	m.image = &s
 }
 
 // Image returns the value of the "image" field in the mutation.
-func (m *ExerciseMutation) Image() (r string, exists bool) {
+func (m *ExerciseMutation) Image() (r schematype.Image, exists bool) {
 	v := m.image
 	if v == nil {
 		return
@@ -717,7 +717,7 @@ func (m *ExerciseMutation) Image() (r string, exists bool) {
 // OldImage returns the old "image" field's value of the Exercise entity.
 // If the Exercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ExerciseMutation) OldImage(ctx context.Context) (v *string, err error) {
+func (m *ExerciseMutation) OldImage(ctx context.Context) (v schematype.Image, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldImage is only allowed on UpdateOne operations")
 	}
@@ -731,22 +731,9 @@ func (m *ExerciseMutation) OldImage(ctx context.Context) (v *string, err error) 
 	return oldValue.Image, nil
 }
 
-// ClearImage clears the value of the "image" field.
-func (m *ExerciseMutation) ClearImage() {
-	m.image = nil
-	m.clearedFields[exercise.FieldImage] = struct{}{}
-}
-
-// ImageCleared returns if the "image" field was cleared in this mutation.
-func (m *ExerciseMutation) ImageCleared() bool {
-	_, ok := m.clearedFields[exercise.FieldImage]
-	return ok
-}
-
 // ResetImage resets all changes to the "image" field.
 func (m *ExerciseMutation) ResetImage() {
 	m.image = nil
-	delete(m.clearedFields, exercise.FieldImage)
 }
 
 // SetHowTo sets the "how_to" field.
@@ -909,6 +896,7 @@ func (m *ExerciseMutation) SetUsersID(id pksuid.ID) {
 // ClearUsers clears the "users" edge to the User entity.
 func (m *ExerciseMutation) ClearUsers() {
 	m.clearedusers = true
+	m.clearedFields[exercise.FieldUserID] = struct{}{}
 }
 
 // UsersCleared reports if the "users" edge to the User entity was cleared.
@@ -1307,7 +1295,7 @@ func (m *ExerciseMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	case exercise.FieldImage:
-		v, ok := value.(string)
+		v, ok := value.(schematype.Image)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1357,9 +1345,6 @@ func (m *ExerciseMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ExerciseMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(exercise.FieldImage) {
-		fields = append(fields, exercise.FieldImage)
-	}
 	if m.FieldCleared(exercise.FieldHowTo) {
 		fields = append(fields, exercise.FieldHowTo)
 	}
@@ -1380,9 +1365,6 @@ func (m *ExerciseMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ExerciseMutation) ClearField(name string) error {
 	switch name {
-	case exercise.FieldImage:
-		m.ClearImage()
-		return nil
 	case exercise.FieldHowTo:
 		m.ClearHowTo()
 		return nil
@@ -2201,7 +2183,7 @@ type MusclesGroupMutation struct {
 	typ              string
 	id               *pksuid.ID
 	name             *string
-	image            *string
+	image            *schematype.Image
 	clearedFields    map[string]struct{}
 	exercises        map[pksuid.ID]struct{}
 	removedexercises map[pksuid.ID]struct{}
@@ -2352,12 +2334,12 @@ func (m *MusclesGroupMutation) ResetName() {
 }
 
 // SetImage sets the "image" field.
-func (m *MusclesGroupMutation) SetImage(s string) {
+func (m *MusclesGroupMutation) SetImage(s schematype.Image) {
 	m.image = &s
 }
 
 // Image returns the value of the "image" field in the mutation.
-func (m *MusclesGroupMutation) Image() (r string, exists bool) {
+func (m *MusclesGroupMutation) Image() (r schematype.Image, exists bool) {
 	v := m.image
 	if v == nil {
 		return
@@ -2368,7 +2350,7 @@ func (m *MusclesGroupMutation) Image() (r string, exists bool) {
 // OldImage returns the old "image" field's value of the MusclesGroup entity.
 // If the MusclesGroup object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *MusclesGroupMutation) OldImage(ctx context.Context) (v string, err error) {
+func (m *MusclesGroupMutation) OldImage(ctx context.Context) (v schematype.Image, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldImage is only allowed on UpdateOne operations")
 	}
@@ -2524,7 +2506,7 @@ func (m *MusclesGroupMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	case musclesgroup.FieldImage:
-		v, ok := value.(string)
+		v, ok := value.(schematype.Image)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -2932,6 +2914,7 @@ func (m *RoutineMutation) SetUsersID(id pksuid.ID) {
 // ClearUsers clears the "users" edge to the User entity.
 func (m *RoutineMutation) ClearUsers() {
 	m.clearedusers = true
+	m.clearedFields[routine.FieldUserID] = struct{}{}
 }
 
 // UsersCleared reports if the "users" edge to the User entity was cleared.
@@ -3634,6 +3617,7 @@ func (m *RoutineExerciseMutation) SetRoutinesID(id pksuid.ID) {
 // ClearRoutines clears the "routines" edge to the Routine entity.
 func (m *RoutineExerciseMutation) ClearRoutines() {
 	m.clearedroutines = true
+	m.clearedFields[routineexercise.FieldRoutineID] = struct{}{}
 }
 
 // RoutinesCleared reports if the "routines" edge to the Routine entity was cleared.
@@ -3673,6 +3657,7 @@ func (m *RoutineExerciseMutation) SetExercisesID(id pksuid.ID) {
 // ClearExercises clears the "exercises" edge to the Exercise entity.
 func (m *RoutineExerciseMutation) ClearExercises() {
 	m.clearedexercises = true
+	m.clearedFields[routineexercise.FieldExerciseID] = struct{}{}
 }
 
 // ExercisesCleared reports if the "exercises" edge to the Exercise entity was cleared.
@@ -3712,6 +3697,7 @@ func (m *RoutineExerciseMutation) SetUsersID(id pksuid.ID) {
 // ClearUsers clears the "users" edge to the User entity.
 func (m *RoutineExerciseMutation) ClearUsers() {
 	m.clearedusers = true
+	m.clearedFields[routineexercise.FieldUserID] = struct{}{}
 }
 
 // UsersCleared reports if the "users" edge to the User entity was cleared.
@@ -4334,6 +4320,7 @@ func (m *TokenMutation) SetUsersID(id pksuid.ID) {
 // ClearUsers clears the "users" edge to the User entity.
 func (m *TokenMutation) ClearUsers() {
 	m.clearedusers = true
+	m.clearedFields[token.FieldUserID] = struct{}{}
 }
 
 // UsersCleared reports if the "users" edge to the User entity was cleared.
@@ -6404,6 +6391,7 @@ func (m *WorkoutMutation) SetUsersID(id pksuid.ID) {
 // ClearUsers clears the "users" edge to the User entity.
 func (m *WorkoutMutation) ClearUsers() {
 	m.clearedusers = true
+	m.clearedFields[workout.FieldUserID] = struct{}{}
 }
 
 // UsersCleared reports if the "users" edge to the User entity was cleared.
@@ -7168,6 +7156,7 @@ func (m *WorkoutLogMutation) SetUsersID(id pksuid.ID) {
 // ClearUsers clears the "users" edge to the User entity.
 func (m *WorkoutLogMutation) ClearUsers() {
 	m.clearedusers = true
+	m.clearedFields[workoutlog.FieldUserID] = struct{}{}
 }
 
 // UsersCleared reports if the "users" edge to the User entity was cleared.

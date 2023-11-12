@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // MusclesGroup is the model entity for the MusclesGroup schema.
@@ -20,7 +22,7 @@ type MusclesGroup struct {
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Image holds the value of the "image" field.
-	Image string `json:"image,omitempty"`
+	Image schematype.Image `json:"image,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the MusclesGroupQuery when eager-loading is set.
 	Edges        MusclesGroupEdges `json:"edges"`
@@ -54,9 +56,11 @@ func (*MusclesGroup) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case musclesgroup.FieldImage:
+			values[i] = new([]byte)
 		case musclesgroup.FieldID:
 			values[i] = new(pksuid.ID)
-		case musclesgroup.FieldName, musclesgroup.FieldImage:
+		case musclesgroup.FieldName:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -86,10 +90,12 @@ func (mg *MusclesGroup) assignValues(columns []string, values []any) error {
 				mg.Name = value.String
 			}
 		case musclesgroup.FieldImage:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field image", values[i])
-			} else if value.Valid {
-				mg.Image = value.String
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &mg.Image); err != nil {
+					return fmt.Errorf("unmarshal field image: %w", err)
+				}
 			}
 		default:
 			mg.selectValues.Set(columns[i], values[i])
@@ -136,7 +142,7 @@ func (mg *MusclesGroup) String() string {
 	builder.WriteString(mg.Name)
 	builder.WriteString(", ")
 	builder.WriteString("image=")
-	builder.WriteString(mg.Image)
+	builder.WriteString(fmt.Sprintf("%v", mg.Image))
 	builder.WriteByte(')')
 	return builder.String()
 }

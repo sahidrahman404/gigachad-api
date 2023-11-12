@@ -52,21 +52,6 @@ type EquipmentWhereInput struct {
 	NameEqualFold    *string  `json:"nameEqualFold,omitempty"`
 	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
 
-	// "image" field predicates.
-	Image             *string  `json:"image,omitempty"`
-	ImageNEQ          *string  `json:"imageNEQ,omitempty"`
-	ImageIn           []string `json:"imageIn,omitempty"`
-	ImageNotIn        []string `json:"imageNotIn,omitempty"`
-	ImageGT           *string  `json:"imageGT,omitempty"`
-	ImageGTE          *string  `json:"imageGTE,omitempty"`
-	ImageLT           *string  `json:"imageLT,omitempty"`
-	ImageLTE          *string  `json:"imageLTE,omitempty"`
-	ImageContains     *string  `json:"imageContains,omitempty"`
-	ImageHasPrefix    *string  `json:"imageHasPrefix,omitempty"`
-	ImageHasSuffix    *string  `json:"imageHasSuffix,omitempty"`
-	ImageEqualFold    *string  `json:"imageEqualFold,omitempty"`
-	ImageContainsFold *string  `json:"imageContainsFold,omitempty"`
-
 	// "exercises" edge predicates.
 	HasExercises     *bool                 `json:"hasExercises,omitempty"`
 	HasExercisesWith []*ExerciseWhereInput `json:"hasExercisesWith,omitempty"`
@@ -206,45 +191,6 @@ func (i *EquipmentWhereInput) P() (predicate.Equipment, error) {
 	if i.NameContainsFold != nil {
 		predicates = append(predicates, equipment.NameContainsFold(*i.NameContainsFold))
 	}
-	if i.Image != nil {
-		predicates = append(predicates, equipment.ImageEQ(*i.Image))
-	}
-	if i.ImageNEQ != nil {
-		predicates = append(predicates, equipment.ImageNEQ(*i.ImageNEQ))
-	}
-	if len(i.ImageIn) > 0 {
-		predicates = append(predicates, equipment.ImageIn(i.ImageIn...))
-	}
-	if len(i.ImageNotIn) > 0 {
-		predicates = append(predicates, equipment.ImageNotIn(i.ImageNotIn...))
-	}
-	if i.ImageGT != nil {
-		predicates = append(predicates, equipment.ImageGT(*i.ImageGT))
-	}
-	if i.ImageGTE != nil {
-		predicates = append(predicates, equipment.ImageGTE(*i.ImageGTE))
-	}
-	if i.ImageLT != nil {
-		predicates = append(predicates, equipment.ImageLT(*i.ImageLT))
-	}
-	if i.ImageLTE != nil {
-		predicates = append(predicates, equipment.ImageLTE(*i.ImageLTE))
-	}
-	if i.ImageContains != nil {
-		predicates = append(predicates, equipment.ImageContains(*i.ImageContains))
-	}
-	if i.ImageHasPrefix != nil {
-		predicates = append(predicates, equipment.ImageHasPrefix(*i.ImageHasPrefix))
-	}
-	if i.ImageHasSuffix != nil {
-		predicates = append(predicates, equipment.ImageHasSuffix(*i.ImageHasSuffix))
-	}
-	if i.ImageEqualFold != nil {
-		predicates = append(predicates, equipment.ImageEqualFold(*i.ImageEqualFold))
-	}
-	if i.ImageContainsFold != nil {
-		predicates = append(predicates, equipment.ImageContainsFold(*i.ImageContainsFold))
-	}
 
 	if i.HasExercises != nil {
 		p := equipment.HasExercises()
@@ -305,23 +251,6 @@ type ExerciseWhereInput struct {
 	NameHasSuffix    *string  `json:"nameHasSuffix,omitempty"`
 	NameEqualFold    *string  `json:"nameEqualFold,omitempty"`
 	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
-
-	// "image" field predicates.
-	Image             *string  `json:"image,omitempty"`
-	ImageNEQ          *string  `json:"imageNEQ,omitempty"`
-	ImageIn           []string `json:"imageIn,omitempty"`
-	ImageNotIn        []string `json:"imageNotIn,omitempty"`
-	ImageGT           *string  `json:"imageGT,omitempty"`
-	ImageGTE          *string  `json:"imageGTE,omitempty"`
-	ImageLT           *string  `json:"imageLT,omitempty"`
-	ImageLTE          *string  `json:"imageLTE,omitempty"`
-	ImageContains     *string  `json:"imageContains,omitempty"`
-	ImageHasPrefix    *string  `json:"imageHasPrefix,omitempty"`
-	ImageHasSuffix    *string  `json:"imageHasSuffix,omitempty"`
-	ImageIsNil        bool     `json:"imageIsNil,omitempty"`
-	ImageNotNil       bool     `json:"imageNotNil,omitempty"`
-	ImageEqualFold    *string  `json:"imageEqualFold,omitempty"`
-	ImageContainsFold *string  `json:"imageContainsFold,omitempty"`
 
 	// "how_to" field predicates.
 	HowTo             *string  `json:"howTo,omitempty"`
@@ -519,51 +448,6 @@ func (i *ExerciseWhereInput) P() (predicate.Exercise, error) {
 	}
 	if i.NameContainsFold != nil {
 		predicates = append(predicates, exercise.NameContainsFold(*i.NameContainsFold))
-	}
-	if i.Image != nil {
-		predicates = append(predicates, exercise.ImageEQ(*i.Image))
-	}
-	if i.ImageNEQ != nil {
-		predicates = append(predicates, exercise.ImageNEQ(*i.ImageNEQ))
-	}
-	if len(i.ImageIn) > 0 {
-		predicates = append(predicates, exercise.ImageIn(i.ImageIn...))
-	}
-	if len(i.ImageNotIn) > 0 {
-		predicates = append(predicates, exercise.ImageNotIn(i.ImageNotIn...))
-	}
-	if i.ImageGT != nil {
-		predicates = append(predicates, exercise.ImageGT(*i.ImageGT))
-	}
-	if i.ImageGTE != nil {
-		predicates = append(predicates, exercise.ImageGTE(*i.ImageGTE))
-	}
-	if i.ImageLT != nil {
-		predicates = append(predicates, exercise.ImageLT(*i.ImageLT))
-	}
-	if i.ImageLTE != nil {
-		predicates = append(predicates, exercise.ImageLTE(*i.ImageLTE))
-	}
-	if i.ImageContains != nil {
-		predicates = append(predicates, exercise.ImageContains(*i.ImageContains))
-	}
-	if i.ImageHasPrefix != nil {
-		predicates = append(predicates, exercise.ImageHasPrefix(*i.ImageHasPrefix))
-	}
-	if i.ImageHasSuffix != nil {
-		predicates = append(predicates, exercise.ImageHasSuffix(*i.ImageHasSuffix))
-	}
-	if i.ImageIsNil {
-		predicates = append(predicates, exercise.ImageIsNil())
-	}
-	if i.ImageNotNil {
-		predicates = append(predicates, exercise.ImageNotNil())
-	}
-	if i.ImageEqualFold != nil {
-		predicates = append(predicates, exercise.ImageEqualFold(*i.ImageEqualFold))
-	}
-	if i.ImageContainsFold != nil {
-		predicates = append(predicates, exercise.ImageContainsFold(*i.ImageContainsFold))
 	}
 	if i.HowTo != nil {
 		predicates = append(predicates, exercise.HowToEQ(*i.HowTo))
@@ -1078,21 +962,6 @@ type MusclesGroupWhereInput struct {
 	NameEqualFold    *string  `json:"nameEqualFold,omitempty"`
 	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
 
-	// "image" field predicates.
-	Image             *string  `json:"image,omitempty"`
-	ImageNEQ          *string  `json:"imageNEQ,omitempty"`
-	ImageIn           []string `json:"imageIn,omitempty"`
-	ImageNotIn        []string `json:"imageNotIn,omitempty"`
-	ImageGT           *string  `json:"imageGT,omitempty"`
-	ImageGTE          *string  `json:"imageGTE,omitempty"`
-	ImageLT           *string  `json:"imageLT,omitempty"`
-	ImageLTE          *string  `json:"imageLTE,omitempty"`
-	ImageContains     *string  `json:"imageContains,omitempty"`
-	ImageHasPrefix    *string  `json:"imageHasPrefix,omitempty"`
-	ImageHasSuffix    *string  `json:"imageHasSuffix,omitempty"`
-	ImageEqualFold    *string  `json:"imageEqualFold,omitempty"`
-	ImageContainsFold *string  `json:"imageContainsFold,omitempty"`
-
 	// "exercises" edge predicates.
 	HasExercises     *bool                 `json:"hasExercises,omitempty"`
 	HasExercisesWith []*ExerciseWhereInput `json:"hasExercisesWith,omitempty"`
@@ -1231,45 +1100,6 @@ func (i *MusclesGroupWhereInput) P() (predicate.MusclesGroup, error) {
 	}
 	if i.NameContainsFold != nil {
 		predicates = append(predicates, musclesgroup.NameContainsFold(*i.NameContainsFold))
-	}
-	if i.Image != nil {
-		predicates = append(predicates, musclesgroup.ImageEQ(*i.Image))
-	}
-	if i.ImageNEQ != nil {
-		predicates = append(predicates, musclesgroup.ImageNEQ(*i.ImageNEQ))
-	}
-	if len(i.ImageIn) > 0 {
-		predicates = append(predicates, musclesgroup.ImageIn(i.ImageIn...))
-	}
-	if len(i.ImageNotIn) > 0 {
-		predicates = append(predicates, musclesgroup.ImageNotIn(i.ImageNotIn...))
-	}
-	if i.ImageGT != nil {
-		predicates = append(predicates, musclesgroup.ImageGT(*i.ImageGT))
-	}
-	if i.ImageGTE != nil {
-		predicates = append(predicates, musclesgroup.ImageGTE(*i.ImageGTE))
-	}
-	if i.ImageLT != nil {
-		predicates = append(predicates, musclesgroup.ImageLT(*i.ImageLT))
-	}
-	if i.ImageLTE != nil {
-		predicates = append(predicates, musclesgroup.ImageLTE(*i.ImageLTE))
-	}
-	if i.ImageContains != nil {
-		predicates = append(predicates, musclesgroup.ImageContains(*i.ImageContains))
-	}
-	if i.ImageHasPrefix != nil {
-		predicates = append(predicates, musclesgroup.ImageHasPrefix(*i.ImageHasPrefix))
-	}
-	if i.ImageHasSuffix != nil {
-		predicates = append(predicates, musclesgroup.ImageHasSuffix(*i.ImageHasSuffix))
-	}
-	if i.ImageEqualFold != nil {
-		predicates = append(predicates, musclesgroup.ImageEqualFold(*i.ImageEqualFold))
-	}
-	if i.ImageContainsFold != nil {
-		predicates = append(predicates, musclesgroup.ImageContainsFold(*i.ImageContainsFold))
 	}
 
 	if i.HasExercises != nil {

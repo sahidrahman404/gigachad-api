@@ -273,11 +273,15 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 // RoutineExerciseCreateBulk is the builder for creating many RoutineExercise entities in bulk.
 type RoutineExerciseCreateBulk struct {
 	config
+	err      error
 	builders []*RoutineExerciseCreate
 }
 
 // Save creates the RoutineExercise entities in the database.
 func (recb *RoutineExerciseCreateBulk) Save(ctx context.Context) ([]*RoutineExercise, error) {
+	if recb.err != nil {
+		return nil, recb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(recb.builders))
 	nodes := make([]*RoutineExercise, len(recb.builders))
 	mutators := make([]Mutator, len(recb.builders))

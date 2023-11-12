@@ -59,11 +59,6 @@ func Name(v string) predicate.MusclesGroup {
 	return predicate.MusclesGroup(sql.FieldEQ(FieldName, v))
 }
 
-// Image applies equality check predicate on the "image" field. It's identical to ImageEQ.
-func Image(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldEQ(FieldImage, v))
-}
-
 // NameEQ applies the EQ predicate on the "name" field.
 func NameEQ(v string) predicate.MusclesGroup {
 	return predicate.MusclesGroup(sql.FieldEQ(FieldName, v))
@@ -129,71 +124,6 @@ func NameContainsFold(v string) predicate.MusclesGroup {
 	return predicate.MusclesGroup(sql.FieldContainsFold(FieldName, v))
 }
 
-// ImageEQ applies the EQ predicate on the "image" field.
-func ImageEQ(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldEQ(FieldImage, v))
-}
-
-// ImageNEQ applies the NEQ predicate on the "image" field.
-func ImageNEQ(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldNEQ(FieldImage, v))
-}
-
-// ImageIn applies the In predicate on the "image" field.
-func ImageIn(vs ...string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldIn(FieldImage, vs...))
-}
-
-// ImageNotIn applies the NotIn predicate on the "image" field.
-func ImageNotIn(vs ...string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldNotIn(FieldImage, vs...))
-}
-
-// ImageGT applies the GT predicate on the "image" field.
-func ImageGT(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldGT(FieldImage, v))
-}
-
-// ImageGTE applies the GTE predicate on the "image" field.
-func ImageGTE(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldGTE(FieldImage, v))
-}
-
-// ImageLT applies the LT predicate on the "image" field.
-func ImageLT(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldLT(FieldImage, v))
-}
-
-// ImageLTE applies the LTE predicate on the "image" field.
-func ImageLTE(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldLTE(FieldImage, v))
-}
-
-// ImageContains applies the Contains predicate on the "image" field.
-func ImageContains(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldContains(FieldImage, v))
-}
-
-// ImageHasPrefix applies the HasPrefix predicate on the "image" field.
-func ImageHasPrefix(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldHasPrefix(FieldImage, v))
-}
-
-// ImageHasSuffix applies the HasSuffix predicate on the "image" field.
-func ImageHasSuffix(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldHasSuffix(FieldImage, v))
-}
-
-// ImageEqualFold applies the EqualFold predicate on the "image" field.
-func ImageEqualFold(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldEqualFold(FieldImage, v))
-}
-
-// ImageContainsFold applies the ContainsFold predicate on the "image" field.
-func ImageContainsFold(v string) predicate.MusclesGroup {
-	return predicate.MusclesGroup(sql.FieldContainsFold(FieldImage, v))
-}
-
 // HasExercises applies the HasEdge predicate on the "exercises" edge.
 func HasExercises() predicate.MusclesGroup {
 	return predicate.MusclesGroup(func(s *sql.Selector) {
@@ -219,32 +149,15 @@ func HasExercisesWith(preds ...predicate.Exercise) predicate.MusclesGroup {
 
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.MusclesGroup) predicate.MusclesGroup {
-	return predicate.MusclesGroup(func(s *sql.Selector) {
-		s1 := s.Clone().SetP(nil)
-		for _, p := range predicates {
-			p(s1)
-		}
-		s.Where(s1.P())
-	})
+	return predicate.MusclesGroup(sql.AndPredicates(predicates...))
 }
 
 // Or groups predicates with the OR operator between them.
 func Or(predicates ...predicate.MusclesGroup) predicate.MusclesGroup {
-	return predicate.MusclesGroup(func(s *sql.Selector) {
-		s1 := s.Clone().SetP(nil)
-		for i, p := range predicates {
-			if i > 0 {
-				s1.Or()
-			}
-			p(s1)
-		}
-		s.Where(s1.P())
-	})
+	return predicate.MusclesGroup(sql.OrPredicates(predicates...))
 }
 
 // Not applies the not operator on the given predicate.
 func Not(p predicate.MusclesGroup) predicate.MusclesGroup {
-	return predicate.MusclesGroup(func(s *sql.Selector) {
-		p(s.Not())
-	})
+	return predicate.MusclesGroup(sql.NotPredicates(p))
 }

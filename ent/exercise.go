@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -21,7 +23,7 @@ type Exercise struct {
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Image holds the value of the "image" field.
-	Image *string `json:"image,omitempty"`
+	Image schematype.Image `json:"image,omitempty"`
 	// HowTo holds the value of the "how_to" field.
 	HowTo *string `json:"how_to,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -136,9 +138,11 @@ func (*Exercise) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case exercise.FieldUserID:
 			values[i] = &sql.NullScanner{S: new(pksuid.ID)}
+		case exercise.FieldImage:
+			values[i] = new([]byte)
 		case exercise.FieldID:
 			values[i] = new(pksuid.ID)
-		case exercise.FieldName, exercise.FieldImage, exercise.FieldHowTo:
+		case exercise.FieldName, exercise.FieldHowTo:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -168,11 +172,12 @@ func (e *Exercise) assignValues(columns []string, values []any) error {
 				e.Name = value.String
 			}
 		case exercise.FieldImage:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field image", values[i])
-			} else if value.Valid {
-				e.Image = new(string)
-				*e.Image = value.String
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &e.Image); err != nil {
+					return fmt.Errorf("unmarshal field image: %w", err)
+				}
 			}
 		case exercise.FieldHowTo:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -262,10 +267,8 @@ func (e *Exercise) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(e.Name)
 	builder.WriteString(", ")
-	if v := e.Image; v != nil {
-		builder.WriteString("image=")
-		builder.WriteString(*v)
-	}
+	builder.WriteString("image=")
+	builder.WriteString(fmt.Sprintf("%v", e.Image))
 	builder.WriteString(", ")
 	if v := e.HowTo; v != nil {
 		builder.WriteString("how_to=")

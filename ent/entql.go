@@ -36,7 +36,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 		Type: "Equipment",
 		Fields: map[string]*sqlgraph.FieldSpec{
 			equipment.FieldName:  {Type: field.TypeString, Column: equipment.FieldName},
-			equipment.FieldImage: {Type: field.TypeString, Column: equipment.FieldImage},
+			equipment.FieldImage: {Type: field.TypeJSON, Column: equipment.FieldImage},
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
@@ -51,7 +51,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 		Type: "Exercise",
 		Fields: map[string]*sqlgraph.FieldSpec{
 			exercise.FieldName:   {Type: field.TypeString, Column: exercise.FieldName},
-			exercise.FieldImage:  {Type: field.TypeString, Column: exercise.FieldImage},
+			exercise.FieldImage:  {Type: field.TypeJSON, Column: exercise.FieldImage},
 			exercise.FieldHowTo:  {Type: field.TypeString, Column: exercise.FieldHowTo},
 			exercise.FieldUserID: {Type: field.TypeString, Column: exercise.FieldUserID},
 		},
@@ -84,7 +84,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 		Type: "MusclesGroup",
 		Fields: map[string]*sqlgraph.FieldSpec{
 			musclesgroup.FieldName:  {Type: field.TypeString, Column: musclesgroup.FieldName},
-			musclesgroup.FieldImage: {Type: field.TypeString, Column: musclesgroup.FieldImage},
+			musclesgroup.FieldImage: {Type: field.TypeJSON, Column: musclesgroup.FieldImage},
 		},
 	}
 	graph.Nodes[4] = &sqlgraph.Node{
@@ -585,8 +585,8 @@ func (f *EquipmentFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(equipment.FieldName))
 }
 
-// WhereImage applies the entql string predicate on the image field.
-func (f *EquipmentFilter) WhereImage(p entql.StringP) {
+// WhereImage applies the entql json.RawMessage predicate on the image field.
+func (f *EquipmentFilter) WhereImage(p entql.BytesP) {
 	f.Where(p.Field(equipment.FieldImage))
 }
 
@@ -649,8 +649,8 @@ func (f *ExerciseFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(exercise.FieldName))
 }
 
-// WhereImage applies the entql string predicate on the image field.
-func (f *ExerciseFilter) WhereImage(p entql.StringP) {
+// WhereImage applies the entql json.RawMessage predicate on the image field.
+func (f *ExerciseFilter) WhereImage(p entql.BytesP) {
 	f.Where(p.Field(exercise.FieldImage))
 }
 
@@ -876,8 +876,8 @@ func (f *MusclesGroupFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(musclesgroup.FieldName))
 }
 
-// WhereImage applies the entql string predicate on the image field.
-func (f *MusclesGroupFilter) WhereImage(p entql.StringP) {
+// WhereImage applies the entql json.RawMessage predicate on the image field.
+func (f *MusclesGroupFilter) WhereImage(p entql.BytesP) {
 	f.Where(p.Field(musclesgroup.FieldImage))
 }
 

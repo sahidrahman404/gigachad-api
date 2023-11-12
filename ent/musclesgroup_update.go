@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // MusclesGroupUpdate is the builder for updating MusclesGroup entities.
@@ -36,7 +37,7 @@ func (mgu *MusclesGroupUpdate) SetName(s string) *MusclesGroupUpdate {
 }
 
 // SetImage sets the "image" field.
-func (mgu *MusclesGroupUpdate) SetImage(s string) *MusclesGroupUpdate {
+func (mgu *MusclesGroupUpdate) SetImage(s schematype.Image) *MusclesGroupUpdate {
 	mgu.mutation.SetImage(s)
 	return mgu
 }
@@ -122,7 +123,7 @@ func (mgu *MusclesGroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(musclesgroup.FieldName, field.TypeString, value)
 	}
 	if value, ok := mgu.mutation.Image(); ok {
-		_spec.SetField(musclesgroup.FieldImage, field.TypeString, value)
+		_spec.SetField(musclesgroup.FieldImage, field.TypeJSON, value)
 	}
 	if mgu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -196,7 +197,7 @@ func (mguo *MusclesGroupUpdateOne) SetName(s string) *MusclesGroupUpdateOne {
 }
 
 // SetImage sets the "image" field.
-func (mguo *MusclesGroupUpdateOne) SetImage(s string) *MusclesGroupUpdateOne {
+func (mguo *MusclesGroupUpdateOne) SetImage(s schematype.Image) *MusclesGroupUpdateOne {
 	mguo.mutation.SetImage(s)
 	return mguo
 }
@@ -312,7 +313,7 @@ func (mguo *MusclesGroupUpdateOne) sqlSave(ctx context.Context) (_node *MusclesG
 		_spec.SetField(musclesgroup.FieldName, field.TypeString, value)
 	}
 	if value, ok := mguo.mutation.Image(); ok {
-		_spec.SetField(musclesgroup.FieldImage, field.TypeString, value)
+		_spec.SetField(musclesgroup.FieldImage, field.TypeJSON, value)
 	}
 	if mguo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{

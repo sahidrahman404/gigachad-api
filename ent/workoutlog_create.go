@@ -272,11 +272,15 @@ func (wlc *WorkoutLogCreate) createSpec() (*WorkoutLog, *sqlgraph.CreateSpec) {
 // WorkoutLogCreateBulk is the builder for creating many WorkoutLog entities in bulk.
 type WorkoutLogCreateBulk struct {
 	config
+	err      error
 	builders []*WorkoutLogCreate
 }
 
 // Save creates the WorkoutLog entities in the database.
 func (wlcb *WorkoutLogCreateBulk) Save(ctx context.Context) ([]*WorkoutLog, error) {
+	if wlcb.err != nil {
+		return nil, wlcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(wlcb.builders))
 	nodes := make([]*WorkoutLog, len(wlcb.builders))
 	mutators := make([]Mutator, len(wlcb.builders))

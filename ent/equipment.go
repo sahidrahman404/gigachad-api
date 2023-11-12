@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // Equipment is the model entity for the Equipment schema.
@@ -20,7 +22,7 @@ type Equipment struct {
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Image holds the value of the "image" field.
-	Image string `json:"image,omitempty"`
+	Image schematype.Image `json:"image,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the EquipmentQuery when eager-loading is set.
 	Edges        EquipmentEdges `json:"edges"`
@@ -54,9 +56,11 @@ func (*Equipment) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case equipment.FieldImage:
+			values[i] = new([]byte)
 		case equipment.FieldID:
 			values[i] = new(pksuid.ID)
-		case equipment.FieldName, equipment.FieldImage:
+		case equipment.FieldName:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -86,10 +90,12 @@ func (e *Equipment) assignValues(columns []string, values []any) error {
 				e.Name = value.String
 			}
 		case equipment.FieldImage:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field image", values[i])
-			} else if value.Valid {
-				e.Image = value.String
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &e.Image); err != nil {
+					return fmt.Errorf("unmarshal field image: %w", err)
+				}
 			}
 		default:
 			e.selectValues.Set(columns[i], values[i])
@@ -136,7 +142,7 @@ func (e *Equipment) String() string {
 	builder.WriteString(e.Name)
 	builder.WriteString(", ")
 	builder.WriteString("image=")
-	builder.WriteString(e.Image)
+	builder.WriteString(fmt.Sprintf("%v", e.Image))
 	builder.WriteByte(')')
 	return builder.String()
 }

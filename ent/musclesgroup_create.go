@@ -12,6 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/musclesgroup"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // MusclesGroupCreate is the builder for creating a MusclesGroup entity.
@@ -28,7 +29,7 @@ func (mgc *MusclesGroupCreate) SetName(s string) *MusclesGroupCreate {
 }
 
 // SetImage sets the "image" field.
-func (mgc *MusclesGroupCreate) SetImage(s string) *MusclesGroupCreate {
+func (mgc *MusclesGroupCreate) SetImage(s schematype.Image) *MusclesGroupCreate {
 	mgc.mutation.SetImage(s)
 	return mgc
 }
@@ -151,7 +152,7 @@ func (mgc *MusclesGroupCreate) createSpec() (*MusclesGroup, *sqlgraph.CreateSpec
 		_node.Name = value
 	}
 	if value, ok := mgc.mutation.Image(); ok {
-		_spec.SetField(musclesgroup.FieldImage, field.TypeString, value)
+		_spec.SetField(musclesgroup.FieldImage, field.TypeJSON, value)
 		_node.Image = value
 	}
 	if nodes := mgc.mutation.ExercisesIDs(); len(nodes) > 0 {
@@ -176,11 +177,15 @@ func (mgc *MusclesGroupCreate) createSpec() (*MusclesGroup, *sqlgraph.CreateSpec
 // MusclesGroupCreateBulk is the builder for creating many MusclesGroup entities in bulk.
 type MusclesGroupCreateBulk struct {
 	config
+	err      error
 	builders []*MusclesGroupCreate
 }
 
 // Save creates the MusclesGroup entities in the database.
 func (mgcb *MusclesGroupCreateBulk) Save(ctx context.Context) ([]*MusclesGroup, error) {
+	if mgcb.err != nil {
+		return nil, mgcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(mgcb.builders))
 	nodes := make([]*MusclesGroup, len(mgcb.builders))
 	mutators := make([]Mutator, len(mgcb.builders))

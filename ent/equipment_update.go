@@ -14,6 +14,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // EquipmentUpdate is the builder for updating Equipment entities.
@@ -36,7 +37,7 @@ func (eu *EquipmentUpdate) SetName(s string) *EquipmentUpdate {
 }
 
 // SetImage sets the "image" field.
-func (eu *EquipmentUpdate) SetImage(s string) *EquipmentUpdate {
+func (eu *EquipmentUpdate) SetImage(s schematype.Image) *EquipmentUpdate {
 	eu.mutation.SetImage(s)
 	return eu
 }
@@ -122,7 +123,7 @@ func (eu *EquipmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(equipment.FieldName, field.TypeString, value)
 	}
 	if value, ok := eu.mutation.Image(); ok {
-		_spec.SetField(equipment.FieldImage, field.TypeString, value)
+		_spec.SetField(equipment.FieldImage, field.TypeJSON, value)
 	}
 	if eu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -196,7 +197,7 @@ func (euo *EquipmentUpdateOne) SetName(s string) *EquipmentUpdateOne {
 }
 
 // SetImage sets the "image" field.
-func (euo *EquipmentUpdateOne) SetImage(s string) *EquipmentUpdateOne {
+func (euo *EquipmentUpdateOne) SetImage(s schematype.Image) *EquipmentUpdateOne {
 	euo.mutation.SetImage(s)
 	return euo
 }
@@ -312,7 +313,7 @@ func (euo *EquipmentUpdateOne) sqlSave(ctx context.Context) (_node *Equipment, e
 		_spec.SetField(equipment.FieldName, field.TypeString, value)
 	}
 	if value, ok := euo.mutation.Image(); ok {
-		_spec.SetField(equipment.FieldImage, field.TypeString, value)
+		_spec.SetField(equipment.FieldImage, field.TypeJSON, value)
 	}
 	if euo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{

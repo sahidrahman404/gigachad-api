@@ -189,11 +189,15 @@ func (etc *ExerciseTypeCreate) createSpec() (*ExerciseType, *sqlgraph.CreateSpec
 // ExerciseTypeCreateBulk is the builder for creating many ExerciseType entities in bulk.
 type ExerciseTypeCreateBulk struct {
 	config
+	err      error
 	builders []*ExerciseTypeCreate
 }
 
 // Save creates the ExerciseType entities in the database.
 func (etcb *ExerciseTypeCreateBulk) Save(ctx context.Context) ([]*ExerciseType, error) {
+	if etcb.err != nil {
+		return nil, etcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(etcb.builders))
 	nodes := make([]*ExerciseType, len(etcb.builders))
 	mutators := make([]Mutator, len(etcb.builders))

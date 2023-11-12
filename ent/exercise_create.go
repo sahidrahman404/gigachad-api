@@ -16,6 +16,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
 )
@@ -34,16 +35,8 @@ func (ec *ExerciseCreate) SetName(s string) *ExerciseCreate {
 }
 
 // SetImage sets the "image" field.
-func (ec *ExerciseCreate) SetImage(s string) *ExerciseCreate {
+func (ec *ExerciseCreate) SetImage(s schematype.Image) *ExerciseCreate {
 	ec.mutation.SetImage(s)
-	return ec
-}
-
-// SetNillableImage sets the "image" field if the given value is not nil.
-func (ec *ExerciseCreate) SetNillableImage(s *string) *ExerciseCreate {
-	if s != nil {
-		ec.SetImage(*s)
-	}
 	return ec
 }
 
@@ -244,6 +237,9 @@ func (ec *ExerciseCreate) check() error {
 	if _, ok := ec.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Exercise.name"`)}
 	}
+	if _, ok := ec.mutation.Image(); !ok {
+		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Exercise.image"`)}
+	}
 	return nil
 }
 
@@ -284,8 +280,8 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		_node.Name = value
 	}
 	if value, ok := ec.mutation.Image(); ok {
-		_spec.SetField(exercise.FieldImage, field.TypeString, value)
-		_node.Image = &value
+		_spec.SetField(exercise.FieldImage, field.TypeJSON, value)
+		_node.Image = value
 	}
 	if value, ok := ec.mutation.HowTo(); ok {
 		_spec.SetField(exercise.FieldHowTo, field.TypeString, value)
@@ -417,11 +413,15 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 // ExerciseCreateBulk is the builder for creating many Exercise entities in bulk.
 type ExerciseCreateBulk struct {
 	config
+	err      error
 	builders []*ExerciseCreate
 }
 
 // Save creates the Exercise entities in the database.
 func (ecb *ExerciseCreateBulk) Save(ctx context.Context) ([]*Exercise, error) {
+	if ecb.err != nil {
+		return nil, ecb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(ecb.builders))
 	nodes := make([]*Exercise, len(ecb.builders))
 	mutators := make([]Mutator, len(ecb.builders))
