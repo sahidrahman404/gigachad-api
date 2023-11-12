@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 func (r *Resolver) backgroundTask(fn func() error) {
@@ -48,4 +49,16 @@ func (r *Resolver) WithTx(ctx context.Context, fn func(tx *ent.Tx) error) error 
 		return fmt.Errorf("committing transaction: %w", err)
 	}
 	return nil
+}
+
+func (r *Resolver) requireActivatedUser(u *types.User) (*ent.User, error) {
+	if u.IsAnonymous() {
+		return nil, r.authenticationRequired()
+	}
+
+	if u.Ent.Activated == 0 {
+		return nil, r.inactiveAccount()
+	}
+
+	return u.Ent, nil
 }
