@@ -31,8 +31,8 @@ type Exercise struct {
 func NewExerciseFromParams(p CreateExerciseParams, userID *pksuid.ID) *Exercise {
 	e := &Exercise{
 		Ent: &ent.Exercise{
-			Name:  p.Name,
-			Image: p.Image,
+			Name: p.Name,
+			// Image: p.Image,
 			// MusclesGroupID: p.MusclesGroupID,
 			// ExerciseTypeID: p.ExerciseTypeID,
 			UserID: userID,
@@ -65,7 +65,7 @@ func UpdateExerciseFromParams(e *UpdateExerciseParams, ex *Exercise) {
 	}
 
 	if e.Image != nil {
-		ex.Ent.Image = e.Image
+		// ex.Ent.Image = e.Image
 	}
 
 	// if e.EquipmentID != nil {

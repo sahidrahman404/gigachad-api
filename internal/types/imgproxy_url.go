@@ -17,13 +17,13 @@ import (
 // Common screen widths. These will be filtered
 // according to the image size and layout
 var DEFAULT_RESOLUTIONS = []int{
-	6016, // 6K
-	5120, // 5K
-	4480, // 4.5K
-	3840, // 4K
-	3200, // QHD+
-	2560, // WQXGA
-	2048, // QXGA
+	// 6016, // 6K
+	// 5120, // 5K
+	// 4480, // 4.5K
+	// 3840, // 4K
+	// 3200, // QHD+
+	// 2560, // WQXGA
+	// 2048, // QXGA
 	1920, // 1080p
 	1668, // Various iPads
 	1280, // 720p

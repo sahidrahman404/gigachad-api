@@ -32,7 +32,7 @@ func (e *ExerciseStore) Insert(ctx context.Context, ex *types.Exercise) error {
 		SetName(ex.Ent.Name).
 		SetNillableHowTo(ex.Ent.HowTo).
 		SetNillableUserID(ex.Ent.UserID).
-		SetNillableImage(ex.Ent.Image).
+		// SetNillableImage(ex.Ent.Image).
 		// SetEquipmentID(ex.Ent.EquipmentID).
 		// SetExerciseTypeID(ex.Ent.ExerciseTypeID).
 		// SetMusclesGroupID(ex.Ent.MusclesGroupID).
@@ -49,7 +49,7 @@ func (e *ExerciseStore) Update(ctx context.Context, ex *types.Exercise) error {
 		SetName(ex.Ent.Name).
 		SetNillableHowTo(ex.Ent.HowTo).
 		SetNillableUserID(ex.Ent.UserID).
-		SetNillableImage(ex.Ent.Image).
+		// SetNillableImage(ex.Ent.Image).
 		// SetEquipmentID(ex.Ent.EquipmentID).
 		// SetExerciseTypeID(ex.Ent.ExerciseTypeID).
 		// SetMusclesGroupID(ex.Ent.MusclesGroupID).

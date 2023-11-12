@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // Equipment holds the schema definition for the Equipment entity.
@@ -25,7 +26,7 @@ func (Equipment) Mixin() []ent.Mixin {
 func (Equipment) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.String("image"),
+		field.JSON("image", schematype.Image{}).Annotations(entgql.Type("Image")),
 	}
 }
 
@@ -44,6 +45,5 @@ func (Equipment) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
 		entgql.QueryField(),
-		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

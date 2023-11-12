@@ -5,6 +5,7 @@ schema:
   - ./internal/gql/ent.graphql
   - ./internal/gql/routine_exercise.graphql
   - ./internal/gql/routine.graphql
+  - ./internal/gql/image.graphql
 
 # resolver reports where the resolver implementations go.
 resolver:
@@ -33,3 +34,9 @@ models:
   SetInput:
     model:
       - github.com/sahidrahman404/gigachad-api/ent/schema/schematype.Set
+  Image:
+    model:
+      - github.com/sahidrahman404/gigachad-api/ent/schema/schematype.Image
+  ImageInput:
+    model:
+      - github.com/sahidrahman404/gigachad-api/ent/schema/schematype.Image

@@ -10,7 +10,6 @@ type CreateEquipmentParams struct {
 	Image string `json:"image"`
 }
 
-
 type UpdateEquipmentParams struct {
 	Name  *string `json:"name"`
 	Image *string `json:"image"`
@@ -23,8 +22,8 @@ type Equipment struct {
 func NewEquipmentFromParams(p CreateEquipmentParams) *Equipment {
 	return &Equipment{
 		Ent: &ent.Equipment{
-			Name:  p.Name,
-			Image: p.Image,
+			Name: p.Name,
+			// Image: p.Image,
 		},
 	}
 }
@@ -42,7 +41,6 @@ func UpdateEquipmentFromParams(ep *UpdateEquipmentParams, e *Equipment) {
 	}
 
 	if ep.Image != nil {
-		e.Ent.Image = *ep.Image
+		// e.Ent.Image = *ep.Image
 	}
-
 }

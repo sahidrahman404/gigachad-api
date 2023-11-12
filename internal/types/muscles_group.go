@@ -22,8 +22,8 @@ type MusclesGroup struct {
 func NewMusclesGroupFromParams(p CreateMusclesGroupParams) *MusclesGroup {
 	return &MusclesGroup{
 		Ent: &ent.MusclesGroup{
-			Name:  p.Name,
-			Image: p.Image,
+			Name: p.Name,
+			// Image: p.Image,
 		},
 	}
 }
@@ -40,7 +40,7 @@ func UpdateMusclesGroupFromParams(mgp *UpdateMusclesGroupParams, mg *MusclesGrou
 		mg.Ent.Name = *mgp.Name
 	}
 
-	if mgp.Image != nil {
-		mg.Ent.Image = *mgp.Image
-	}
+	// if mgp.Image != nil {
+	//  mg.Ent.Image = *mgp.Image
+	// }
 }

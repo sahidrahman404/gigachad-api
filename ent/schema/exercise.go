@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // Exercise holds the schema definition for the Exercise entity.
@@ -25,7 +26,7 @@ func (Exercise) Mixin() []ent.Mixin {
 func (Exercise) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.String("image").Optional().Nillable(),
+		field.JSON("image", schematype.Image{}).Annotations(entgql.Type("Image")),
 		field.String("how_to").Optional().Nillable(),
 		field.String("user_id").Optional().Nillable().GoType(pksuid.ID("")),
 	}
@@ -60,6 +61,5 @@ func (Exercise) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
 		entgql.QueryField(),
-		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

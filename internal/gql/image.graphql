@@ -1,0 +1,23 @@
+type Image {
+  Height: Float
+  AspectRatio: Float
+  Width: Int
+  Layout: String
+  Priority: String
+  ObjectFit: String
+  Background: String
+  Src: String
+  BreakPoints: [Int]
+}
+
+input ImageInput {
+  Height: Float
+  AspectRatio: Float
+  Width: Int
+  Layout: String!
+  Priority: String!
+  ObjectFit: String!
+  Background: String!
+  Src: String!
+  BreakPoints: [Int!]
+}
