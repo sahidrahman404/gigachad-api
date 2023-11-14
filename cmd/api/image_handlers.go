@@ -33,9 +33,9 @@ func (app *application) getSignedUrl(w http.ResponseWriter, r *http.Request) {
 	}
 
 	signedURL := signURL(
-		app.config.imgproxy.key,
-		app.config.imgproxy.salt,
-		app.config.imgproxy.imgproxyHost,
+		app.config.Key,
+		app.config.Salt,
+		app.config.ImgproxyHost,
 		*params.Width,
 		params.Height,
 		params.Src,
@@ -59,14 +59,14 @@ func (app *application) getTransformedUrls(w http.ResponseWriter, r *http.Reques
 	}
 
 	var result []*string
-	for _, breakpoint := range params.BreakPoint {
+	for _, breakpoint := range params.BreakPoints {
 		if params.AspectRatio != nil && params.Height != nil {
 			devided := float64(breakpoint) / *params.AspectRatio
 			transformedHeight := math.Round(devided)
 			transformed := signURL(
-				app.config.imgproxy.key,
-				app.config.imgproxy.salt,
-				app.config.imgproxy.imgproxyHost,
+				app.config.Key,
+				app.config.Salt,
+				app.config.ImgproxyHost,
 				breakpoint,
 				&transformedHeight,
 				params.Src,
@@ -77,9 +77,9 @@ func (app *application) getTransformedUrls(w http.ResponseWriter, r *http.Reques
 
 		if params.Height == nil {
 			transformed := signURL(
-				app.config.imgproxy.key,
-				app.config.imgproxy.salt,
-				app.config.imgproxy.imgproxyHost,
+				app.config.Key,
+				app.config.Salt,
+				app.config.ImgproxyHost,
 				breakpoint,
 				nil,
 				params.Src,

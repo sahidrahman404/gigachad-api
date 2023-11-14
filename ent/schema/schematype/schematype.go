@@ -8,14 +8,29 @@ type Set struct {
 	Set  *int    `json:"set,omitempty"`
 }
 
+type Style struct {
+	Width       *string `json:"width"`
+	Height      *string `json:"height"`
+	MaxWidth    *string `json:"max-width"`
+	MaxHeight   *string `json:"max-height"`
+	AspectRatio *string `json:"aspectRatio"`
+}
+
 type Image struct {
-	Height      *float64 `json:"height"`
-	AspectRatio *float64 `json:"aspectRatio"`
-	Width       *int     `json:"width"`
-	Layout      string   `json:"layout"`
-	Priority    string   `json:"priority"`
-	ObjectFit   string   `json:"objectFit"`
-	Background  string   `json:"background"`
-	Src         string   `json:"src"`
-	BreakPoints []int    `json:"breakpoints"`
+	Style
+	Height        *float64 `json:"height"`
+	AspectRatio   *float64 `json:"aspectRatio"`
+	Width         *int     `json:"width"`
+	Layout        string   `json:"layout"`
+	ObjectFit     string   `json:"objectFit"`
+	Src           string   `json:"src"`
+	SrcSet        string   `json:"srcset"`
+	Loading       *string  `json:"loading"`
+	FetchPriority *string  `json:"fetchpriority"`
+	Decoding      *string  `json:"decoding"`
+	Alt           *string  `json:"alt"`
+	Role          *string  `json:"role"`
+	Sizes         string   `json:"sizes"`
+	BreakPoints   []int    `json:"breakpoints"`
+	Priority      bool     `json:"priority"`
 }

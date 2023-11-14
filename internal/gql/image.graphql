@@ -1,23 +1,37 @@
+type Style {
+  width: String
+  height: String
+  maxWidth: String
+  maxHeight: String
+  aspectRatio: String
+}
+
 type Image {
-  Height: Float
-  AspectRatio: Float
-  Width: Int
-  Layout: String
-  Priority: String
-  ObjectFit: String
-  Background: String
-  Src: String
-  BreakPoints: [Int]
+  height: Float
+  aspectRatio: Float
+  width: Int
+  layout: String!
+  priority: Boolean!
+  objectFit: String!
+  src: String!
+  srcset: String!
+  breakpoints: [Int]
+  style: Style!
+  loading: String
+  fetchPriority: String
+  decoding: String
+  alt: String
+  role: String
+  sizes: String
 }
 
 input ImageInput {
-  Height: Float
-  AspectRatio: Float
-  Width: Int
-  Layout: String!
-  Priority: String!
-  ObjectFit: String!
-  Background: String!
-  Src: String!
-  BreakPoints: [Int!]
+  height: Float
+  aspectRatio: Float
+  width: Int
+  layout: String!
+  priority: Boolean!
+  objectFit: String!
+  src: String!
+  breakPoints: [Int!]
 }

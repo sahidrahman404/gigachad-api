@@ -35,7 +35,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/status", app.status)
 
 	srv := handler.NewDefaultServer(
-		gql.NewSchema(app.ent, app.mailer, app.storage, app.logger, &app.wg),
+		gql.NewSchema(app.ent, app.mailer, app.storage, app.logger, &app.wg, &app.config.Imgproxy),
 	)
 	srv.Use(entgql.Transactioner{TxOpener: app.ent})
 	mux.Handle("/gql", playground.Handler("Gigachad", "/query"))
