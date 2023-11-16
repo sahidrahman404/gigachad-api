@@ -6,6 +6,8 @@ schema:
   - ./internal/gql/routine_exercise.graphql
   - ./internal/gql/routine.graphql
   - ./internal/gql/image.graphql
+  - ./internal/gql/muscles_group.graphql
+  - ./internal/gql/exercise.graphql
 
 # resolver reports where the resolver implementations go.
 resolver:

@@ -1,0 +1,8 @@
+input CreateMusclesGroupInput {
+  name: String!
+  image: ImageInput!
+}
+
+extend type Mutation {
+  CreateMusclesGroup(input: CreateMusclesGroupInput!): MusclesGroup
+}

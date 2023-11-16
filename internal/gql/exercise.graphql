@@ -1,0 +1,10 @@
+input CreateExerciseInput {
+  name: String!
+  image: ImageInput!
+  howTo: String
+  userID: ID
+}
+
+extend type Mutation {
+  createExercise(input: CreateExerciseInput!): ExerciseConnection!
+}
