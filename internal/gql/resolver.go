@@ -9,6 +9,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/leveledlog"
 	"github.com/sahidrahman404/gigachad-api/internal/smtp"
+	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 // This file will not be regenerated automatically.
@@ -16,11 +17,12 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	client  *ent.Client
-	mailer  *smtp.Mailer
-	storage *database.Storage
-	logger  *leveledlog.Logger
-	wg      *sync.WaitGroup
+	client   *ent.Client
+	mailer   *smtp.Mailer
+	storage  *database.Storage
+	logger   *leveledlog.Logger
+	wg       *sync.WaitGroup
+	imgproxy *types.Imgproxy
 }
 
 // NewSchema creates a graphql executable schema.
@@ -30,14 +32,16 @@ func NewSchema(
 	s *database.Storage,
 	l *leveledlog.Logger,
 	wg *sync.WaitGroup,
+	i *types.Imgproxy,
 ) graphql.ExecutableSchema {
 	return gigachad.NewExecutableSchema(gigachad.Config{
 		Resolvers: &Resolver{
-			client:  c,
-			mailer:  m,
-			storage: s,
-			logger:  l,
-			wg:      wg,
+			client:   c,
+			mailer:   m,
+			storage:  s,
+			logger:   l,
+			wg:       wg,
+			imgproxy: i,
 		},
 	})
 }
