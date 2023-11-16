@@ -178,6 +178,11 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 		return nil, r.serverError(err)
 	}
 
+	err = r.storage.Tokens.DeleteAllForUser(database.SocpeAuthentication, user.Ent.ID)
+	if err != nil {
+		return nil, r.serverError(err)
+	}
+
 	message := "your password was successfully reset"
 	return &message, nil
 }
