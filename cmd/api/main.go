@@ -8,10 +8,12 @@ import (
 	"sync"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	_ "github.com/sahidrahman404/gigachad-api/ent/runtime"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/env"
 	"github.com/sahidrahman404/gigachad-api/internal/leveledlog"
 	"github.com/sahidrahman404/gigachad-api/internal/smtp"
+	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/version"
 )
 
@@ -38,11 +40,7 @@ type config struct {
 		password string
 		from     string
 	}
-	imgproxy struct {
-		key          string
-		salt         string
-		imgproxyHost string
-	}
+	types.Imgproxy
 }
 
 type application struct {
@@ -65,9 +63,9 @@ func run(logger *leveledlog.Logger) error {
 	cfg.smtp.username = env.GetString("SMTP_USERNAME", "example_username")
 	cfg.smtp.password = env.GetString("SMTP_PASSWORD", "pa55word")
 	cfg.smtp.from = env.GetString("SMTP_FROM", "Example Name <no_reply@example.org>")
-	cfg.imgproxy.key = env.GetString("KEY", "")
-	cfg.imgproxy.salt = env.GetString("SALT", "")
-	cfg.imgproxy.imgproxyHost = env.GetString("IMGPROXY_HOST", "")
+	cfg.Imgproxy.Key = env.GetString("KEY", "")
+	cfg.Imgproxy.Salt = env.GetString("SALT", "")
+	cfg.Imgproxy.ImgproxyHost = env.GetString("IMGPROXY_HOST", "")
 
 	showVersion := flag.Bool("version", false, "display version and exit")
 
