@@ -7,12 +7,26 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/privacy"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/rule"
 )
 
 // Routine holds the schema definition for the Routine entity.
 type Routine struct {
 	ent.Schema
+}
+
+func (Routine) Policy() ent.Policy {
+	return privacy.Policy{
+		Mutation: privacy.MutationPolicy{
+			// Deny if not set otherwise.
+			// privacy.AlwaysDenyRule(),
+		},
+		Query: privacy.QueryPolicy{
+			rule.FilterRoutineRule(),
+		},
+	}
 }
 
 func (Routine) Mixin() []ent.Mixin {
