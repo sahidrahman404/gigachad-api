@@ -5,6 +5,7 @@ package ent
 import (
 	"context"
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"math"
 
@@ -587,6 +588,12 @@ func (eq *ExerciseQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		eq.sql = prev
+	}
+	if exercise.Policy == nil {
+		return errors.New("ent: uninitialized exercise.Policy (forgotten import ent/runtime?)")
+	}
+	if err := exercise.Policy.EvalQuery(ctx, eq); err != nil {
+		return err
 	}
 	return nil
 }

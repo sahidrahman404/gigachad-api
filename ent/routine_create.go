@@ -97,7 +97,9 @@ func (rc *RoutineCreate) Mutation() *RoutineMutation {
 
 // Save creates the Routine in the database.
 func (rc *RoutineCreate) Save(ctx context.Context) (*Routine, error) {
-	rc.defaults()
+	if err := rc.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, rc.sqlSave, rc.mutation, rc.hooks)
 }
 
@@ -124,11 +126,15 @@ func (rc *RoutineCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (rc *RoutineCreate) defaults() {
+func (rc *RoutineCreate) defaults() error {
 	if _, ok := rc.mutation.ID(); !ok {
+		if routine.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized routine.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := routine.DefaultID()
 		rc.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

@@ -646,7 +646,8 @@ func (c *ExerciseClient) QueryRoutineExercises(e *Exercise) *RoutineExerciseQuer
 
 // Hooks returns the client hooks.
 func (c *ExerciseClient) Hooks() []Hook {
-	return c.hooks.Exercise
+	hooks := c.hooks.Exercise
+	return append(hooks[:len(hooks):len(hooks)], exercise.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -1125,7 +1126,8 @@ func (c *RoutineClient) QueryRoutineExercises(r *Routine) *RoutineExerciseQuery 
 
 // Hooks returns the client hooks.
 func (c *RoutineClient) Hooks() []Hook {
-	return c.hooks.Routine
+	hooks := c.hooks.Routine
+	return append(hooks[:len(hooks):len(hooks)], routine.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.

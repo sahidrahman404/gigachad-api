@@ -42,6 +42,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	Image() ImageResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 }
@@ -123,15 +124,22 @@ type ComplexityRoot struct {
 	}
 
 	Image struct {
-		AspectRatio func(childComplexity int) int
-		Background  func(childComplexity int) int
-		BreakPoints func(childComplexity int) int
-		Height      func(childComplexity int) int
-		Layout      func(childComplexity int) int
-		ObjectFit   func(childComplexity int) int
-		Priority    func(childComplexity int) int
-		Src         func(childComplexity int) int
-		Width       func(childComplexity int) int
+		Alt           func(childComplexity int) int
+		AspectRatio   func(childComplexity int) int
+		BreakPoints   func(childComplexity int) int
+		Decoding      func(childComplexity int) int
+		FetchPriority func(childComplexity int) int
+		Height        func(childComplexity int) int
+		Layout        func(childComplexity int) int
+		Loading       func(childComplexity int) int
+		ObjectFit     func(childComplexity int) int
+		Priority      func(childComplexity int) int
+		Role          func(childComplexity int) int
+		Sizes         func(childComplexity int) int
+		Src           func(childComplexity int) int
+		SrcSet        func(childComplexity int) int
+		Style         func(childComplexity int) int
+		Width         func(childComplexity int) int
 	}
 
 	MusclesGroup struct {
@@ -156,6 +164,8 @@ type ComplexityRoot struct {
 		ActivateUser              func(childComplexity int, input ActivateUserInput) int
 		CreateActivationToken     func(childComplexity int, input ActivationTokenInput) int
 		CreateAuthenticationToken func(childComplexity int, input LoginInput) int
+		CreateExercise            func(childComplexity int, input CreateExerciseInput) int
+		CreateMusclesGroup        func(childComplexity int, input CreateMusclesGroupInput) int
 		CreatePasswordResetToken  func(childComplexity int, input ResetPasswordInput) int
 		CreateRoutine             func(childComplexity int, input ent.CreateRoutineInput) int
 		CreateRoutineWithChildren func(childComplexity int, input CreateRoutineWithChildrenInput) int
@@ -235,6 +245,14 @@ type ComplexityRoot struct {
 		Reps func(childComplexity int) int
 		Set  func(childComplexity int) int
 		Time func(childComplexity int) int
+	}
+
+	Style struct {
+		AspectRatio func(childComplexity int) int
+		Height      func(childComplexity int) int
+		MaxHeight   func(childComplexity int) int
+		MaxWidth    func(childComplexity int) int
+		Width       func(childComplexity int) int
 	}
 
 	Token struct {
@@ -320,6 +338,9 @@ type ComplexityRoot struct {
 	}
 }
 
+type ImageResolver interface {
+	Style(ctx context.Context, obj *schematype.Image) (*Style, error)
+}
 type MutationResolver interface {
 	CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error)
 	ActivateUser(ctx context.Context, input ActivateUserInput) (*AuthenticationToken, error)
@@ -330,6 +351,8 @@ type MutationResolver interface {
 	CreateRoutineWithChildren(ctx context.Context, input CreateRoutineWithChildrenInput) (*ent.Routine, error)
 	CreateRoutine(ctx context.Context, input ent.CreateRoutineInput) (*ent.Routine, error)
 	DeleteRoutine(ctx context.Context, id pksuid.ID) (*DeletedID, error)
+	CreateMusclesGroup(ctx context.Context, input CreateMusclesGroupInput) (*ent.MusclesGroup, error)
+	CreateExercise(ctx context.Context, input CreateExerciseInput) (*ent.ExerciseConnection, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id pksuid.ID) (ent.Noder, error)
@@ -678,63 +701,112 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ExerciseTypeEdge.Node(childComplexity), true
 
-	case "Image.AspectRatio":
+	case "Image.alt":
+		if e.complexity.Image.Alt == nil {
+			break
+		}
+
+		return e.complexity.Image.Alt(childComplexity), true
+
+	case "Image.aspectRatio":
 		if e.complexity.Image.AspectRatio == nil {
 			break
 		}
 
 		return e.complexity.Image.AspectRatio(childComplexity), true
 
-	case "Image.Background":
-		if e.complexity.Image.Background == nil {
-			break
-		}
-
-		return e.complexity.Image.Background(childComplexity), true
-
-	case "Image.BreakPoints":
+	case "Image.breakpoints":
 		if e.complexity.Image.BreakPoints == nil {
 			break
 		}
 
 		return e.complexity.Image.BreakPoints(childComplexity), true
 
-	case "Image.Height":
+	case "Image.decoding":
+		if e.complexity.Image.Decoding == nil {
+			break
+		}
+
+		return e.complexity.Image.Decoding(childComplexity), true
+
+	case "Image.fetchPriority":
+		if e.complexity.Image.FetchPriority == nil {
+			break
+		}
+
+		return e.complexity.Image.FetchPriority(childComplexity), true
+
+	case "Image.height":
 		if e.complexity.Image.Height == nil {
 			break
 		}
 
 		return e.complexity.Image.Height(childComplexity), true
 
-	case "Image.Layout":
+	case "Image.layout":
 		if e.complexity.Image.Layout == nil {
 			break
 		}
 
 		return e.complexity.Image.Layout(childComplexity), true
 
-	case "Image.ObjectFit":
+	case "Image.loading":
+		if e.complexity.Image.Loading == nil {
+			break
+		}
+
+		return e.complexity.Image.Loading(childComplexity), true
+
+	case "Image.objectFit":
 		if e.complexity.Image.ObjectFit == nil {
 			break
 		}
 
 		return e.complexity.Image.ObjectFit(childComplexity), true
 
-	case "Image.Priority":
+	case "Image.priority":
 		if e.complexity.Image.Priority == nil {
 			break
 		}
 
 		return e.complexity.Image.Priority(childComplexity), true
 
-	case "Image.Src":
+	case "Image.role":
+		if e.complexity.Image.Role == nil {
+			break
+		}
+
+		return e.complexity.Image.Role(childComplexity), true
+
+	case "Image.sizes":
+		if e.complexity.Image.Sizes == nil {
+			break
+		}
+
+		return e.complexity.Image.Sizes(childComplexity), true
+
+	case "Image.src":
 		if e.complexity.Image.Src == nil {
 			break
 		}
 
 		return e.complexity.Image.Src(childComplexity), true
 
-	case "Image.Width":
+	case "Image.srcset":
+		if e.complexity.Image.SrcSet == nil {
+			break
+		}
+
+		return e.complexity.Image.SrcSet(childComplexity), true
+
+	case "Image.style":
+		if e.complexity.Image.Style == nil {
+			break
+		}
+
+		return e.complexity.Image.Style(childComplexity), true
+
+	case "Image.width":
 		if e.complexity.Image.Width == nil {
 			break
 		}
@@ -844,6 +916,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateAuthenticationToken(childComplexity, args["input"].(LoginInput)), true
+
+	case "Mutation.createExercise":
+		if e.complexity.Mutation.CreateExercise == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createExercise_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateExercise(childComplexity, args["input"].(CreateExerciseInput)), true
+
+	case "Mutation.CreateMusclesGroup":
+		if e.complexity.Mutation.CreateMusclesGroup == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_CreateMusclesGroup_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateMusclesGroup(childComplexity, args["input"].(CreateMusclesGroupInput)), true
 
 	case "Mutation.createPasswordResetToken":
 		if e.complexity.Mutation.CreatePasswordResetToken == nil {
@@ -1304,6 +1400,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Set.Time(childComplexity), true
 
+	case "Style.aspectRatio":
+		if e.complexity.Style.AspectRatio == nil {
+			break
+		}
+
+		return e.complexity.Style.AspectRatio(childComplexity), true
+
+	case "Style.height":
+		if e.complexity.Style.Height == nil {
+			break
+		}
+
+		return e.complexity.Style.Height(childComplexity), true
+
+	case "Style.maxHeight":
+		if e.complexity.Style.MaxHeight == nil {
+			break
+		}
+
+		return e.complexity.Style.MaxHeight(childComplexity), true
+
+	case "Style.maxWidth":
+		if e.complexity.Style.MaxWidth == nil {
+			break
+		}
+
+		return e.complexity.Style.MaxWidth(childComplexity), true
+
+	case "Style.width":
+		if e.complexity.Style.Width == nil {
+			break
+		}
+
+		return e.complexity.Style.Width(childComplexity), true
+
 	case "Token.expiry":
 		if e.complexity.Token.Expiry == nil {
 			break
@@ -1708,7 +1839,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputActivateUserInput,
 		ec.unmarshalInputActivationTokenInput,
+		ec.unmarshalInputCreateExerciseInput,
 		ec.unmarshalInputCreateExerciseTypeInput,
+		ec.unmarshalInputCreateMusclesGroupInput,
 		ec.unmarshalInputCreateRoutineExerciseInput,
 		ec.unmarshalInputCreateRoutineInput,
 		ec.unmarshalInputCreateRoutineWithChildrenInput,
@@ -1829,7 +1962,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 	return introspection.WrapTypeFromDef(ec.Schema(), ec.Schema().Types[name]), nil
 }
 
-//go:embed "internal/gql/user.graphql" "internal/gql/token.graphql" "internal/gql/ent.graphql" "internal/gql/routine_exercise.graphql" "internal/gql/routine.graphql" "internal/gql/image.graphql"
+//go:embed "internal/gql/user.graphql" "internal/gql/token.graphql" "internal/gql/ent.graphql" "internal/gql/routine_exercise.graphql" "internal/gql/routine.graphql" "internal/gql/image.graphql" "internal/gql/muscles_group.graphql" "internal/gql/exercise.graphql"
 var sourcesFS embed.FS
 
 func sourceData(filename string) string {
@@ -1847,6 +1980,8 @@ var sources = []*ast.Source{
 	{Name: "internal/gql/routine_exercise.graphql", Input: sourceData("internal/gql/routine_exercise.graphql"), BuiltIn: false},
 	{Name: "internal/gql/routine.graphql", Input: sourceData("internal/gql/routine.graphql"), BuiltIn: false},
 	{Name: "internal/gql/image.graphql", Input: sourceData("internal/gql/image.graphql"), BuiltIn: false},
+	{Name: "internal/gql/muscles_group.graphql", Input: sourceData("internal/gql/muscles_group.graphql"), BuiltIn: false},
+	{Name: "internal/gql/exercise.graphql", Input: sourceData("internal/gql/exercise.graphql"), BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
@@ -2313,6 +2448,21 @@ func (ec *executionContext) field_MusclesGroup_exercises_args(ctx context.Contex
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_CreateMusclesGroup_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 CreateMusclesGroupInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateMusclesGroupInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateMusclesGroupInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_CreateRoutineWithChildren_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2365,6 +2515,21 @@ func (ec *executionContext) field_Mutation_createAuthenticationToken_args(ctx co
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNLoginInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐLoginInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 CreateExerciseInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateExerciseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3682,24 +3847,38 @@ func (ec *executionContext) fieldContext_Equipment_image(ctx context.Context, fi
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Height":
-				return ec.fieldContext_Image_Height(ctx, field)
-			case "AspectRatio":
-				return ec.fieldContext_Image_AspectRatio(ctx, field)
-			case "Width":
-				return ec.fieldContext_Image_Width(ctx, field)
-			case "Layout":
-				return ec.fieldContext_Image_Layout(ctx, field)
-			case "Priority":
-				return ec.fieldContext_Image_Priority(ctx, field)
-			case "ObjectFit":
-				return ec.fieldContext_Image_ObjectFit(ctx, field)
-			case "Background":
-				return ec.fieldContext_Image_Background(ctx, field)
-			case "Src":
-				return ec.fieldContext_Image_Src(ctx, field)
-			case "BreakPoints":
-				return ec.fieldContext_Image_BreakPoints(ctx, field)
+			case "height":
+				return ec.fieldContext_Image_height(ctx, field)
+			case "aspectRatio":
+				return ec.fieldContext_Image_aspectRatio(ctx, field)
+			case "width":
+				return ec.fieldContext_Image_width(ctx, field)
+			case "layout":
+				return ec.fieldContext_Image_layout(ctx, field)
+			case "priority":
+				return ec.fieldContext_Image_priority(ctx, field)
+			case "objectFit":
+				return ec.fieldContext_Image_objectFit(ctx, field)
+			case "src":
+				return ec.fieldContext_Image_src(ctx, field)
+			case "srcset":
+				return ec.fieldContext_Image_srcset(ctx, field)
+			case "breakpoints":
+				return ec.fieldContext_Image_breakpoints(ctx, field)
+			case "style":
+				return ec.fieldContext_Image_style(ctx, field)
+			case "loading":
+				return ec.fieldContext_Image_loading(ctx, field)
+			case "fetchPriority":
+				return ec.fieldContext_Image_fetchPriority(ctx, field)
+			case "decoding":
+				return ec.fieldContext_Image_decoding(ctx, field)
+			case "alt":
+				return ec.fieldContext_Image_alt(ctx, field)
+			case "role":
+				return ec.fieldContext_Image_role(ctx, field)
+			case "sizes":
+				return ec.fieldContext_Image_sizes(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Image", field.Name)
 		},
@@ -4137,24 +4316,38 @@ func (ec *executionContext) fieldContext_Exercise_image(ctx context.Context, fie
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Height":
-				return ec.fieldContext_Image_Height(ctx, field)
-			case "AspectRatio":
-				return ec.fieldContext_Image_AspectRatio(ctx, field)
-			case "Width":
-				return ec.fieldContext_Image_Width(ctx, field)
-			case "Layout":
-				return ec.fieldContext_Image_Layout(ctx, field)
-			case "Priority":
-				return ec.fieldContext_Image_Priority(ctx, field)
-			case "ObjectFit":
-				return ec.fieldContext_Image_ObjectFit(ctx, field)
-			case "Background":
-				return ec.fieldContext_Image_Background(ctx, field)
-			case "Src":
-				return ec.fieldContext_Image_Src(ctx, field)
-			case "BreakPoints":
-				return ec.fieldContext_Image_BreakPoints(ctx, field)
+			case "height":
+				return ec.fieldContext_Image_height(ctx, field)
+			case "aspectRatio":
+				return ec.fieldContext_Image_aspectRatio(ctx, field)
+			case "width":
+				return ec.fieldContext_Image_width(ctx, field)
+			case "layout":
+				return ec.fieldContext_Image_layout(ctx, field)
+			case "priority":
+				return ec.fieldContext_Image_priority(ctx, field)
+			case "objectFit":
+				return ec.fieldContext_Image_objectFit(ctx, field)
+			case "src":
+				return ec.fieldContext_Image_src(ctx, field)
+			case "srcset":
+				return ec.fieldContext_Image_srcset(ctx, field)
+			case "breakpoints":
+				return ec.fieldContext_Image_breakpoints(ctx, field)
+			case "style":
+				return ec.fieldContext_Image_style(ctx, field)
+			case "loading":
+				return ec.fieldContext_Image_loading(ctx, field)
+			case "fetchPriority":
+				return ec.fieldContext_Image_fetchPriority(ctx, field)
+			case "decoding":
+				return ec.fieldContext_Image_decoding(ctx, field)
+			case "alt":
+				return ec.fieldContext_Image_alt(ctx, field)
+			case "role":
+				return ec.fieldContext_Image_role(ctx, field)
+			case "sizes":
+				return ec.fieldContext_Image_sizes(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Image", field.Name)
 		},
@@ -5428,8 +5621,8 @@ func (ec *executionContext) fieldContext_ExerciseTypeEdge_cursor(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _Image_Height(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_Height(ctx, field)
+func (ec *executionContext) _Image_height(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_height(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5456,7 +5649,7 @@ func (ec *executionContext) _Image_Height(ctx context.Context, field graphql.Col
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Image_Height(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Image_height(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Image",
 		Field:      field,
@@ -5469,8 +5662,8 @@ func (ec *executionContext) fieldContext_Image_Height(ctx context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Image_AspectRatio(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_AspectRatio(ctx, field)
+func (ec *executionContext) _Image_aspectRatio(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_aspectRatio(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5497,7 +5690,7 @@ func (ec *executionContext) _Image_AspectRatio(ctx context.Context, field graphq
 	return ec.marshalOFloat2ᚖfloat64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Image_AspectRatio(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Image_aspectRatio(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Image",
 		Field:      field,
@@ -5510,8 +5703,8 @@ func (ec *executionContext) fieldContext_Image_AspectRatio(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _Image_Width(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_Width(ctx, field)
+func (ec *executionContext) _Image_width(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_width(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5538,7 +5731,7 @@ func (ec *executionContext) _Image_Width(ctx context.Context, field graphql.Coll
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Image_Width(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Image_width(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Image",
 		Field:      field,
@@ -5551,8 +5744,8 @@ func (ec *executionContext) fieldContext_Image_Width(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Image_Layout(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_Layout(ctx, field)
+func (ec *executionContext) _Image_layout(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_layout(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5572,14 +5765,17 @@ func (ec *executionContext) _Image_Layout(ctx context.Context, field graphql.Col
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Image_Layout(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Image_layout(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Image",
 		Field:      field,
@@ -5592,8 +5788,8 @@ func (ec *executionContext) fieldContext_Image_Layout(ctx context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Image_Priority(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_Priority(ctx, field)
+func (ec *executionContext) _Image_priority(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_priority(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5613,28 +5809,31 @@ func (ec *executionContext) _Image_Priority(ctx context.Context, field graphql.C
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Image_Priority(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Image_priority(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Image",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Image_ObjectFit(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_ObjectFit(ctx, field)
+func (ec *executionContext) _Image_objectFit(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_objectFit(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5654,55 +5853,17 @@ func (ec *executionContext) _Image_ObjectFit(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Image_ObjectFit(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Image",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Image_Background(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_Background(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
 		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Background, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Image_Background(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Image_objectFit(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Image",
 		Field:      field,
@@ -5715,8 +5876,8 @@ func (ec *executionContext) fieldContext_Image_Background(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Image_Src(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_Src(ctx, field)
+func (ec *executionContext) _Image_src(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_src(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5736,14 +5897,17 @@ func (ec *executionContext) _Image_Src(ctx context.Context, field graphql.Collec
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Image_Src(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Image_src(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Image",
 		Field:      field,
@@ -5756,8 +5920,52 @@ func (ec *executionContext) fieldContext_Image_Src(ctx context.Context, field gr
 	return fc, nil
 }
 
-func (ec *executionContext) _Image_BreakPoints(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Image_BreakPoints(ctx, field)
+func (ec *executionContext) _Image_srcset(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_srcset(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SrcSet, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Image_srcset(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Image",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Image_breakpoints(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_breakpoints(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5784,7 +5992,7 @@ func (ec *executionContext) _Image_BreakPoints(ctx context.Context, field graphq
 	return ec.marshalOInt2ᚕint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Image_BreakPoints(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Image_breakpoints(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Image",
 		Field:      field,
@@ -5792,6 +6000,308 @@ func (ec *executionContext) fieldContext_Image_BreakPoints(ctx context.Context, 
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Image_style(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_style(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Image().Style(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*Style)
+	fc.Result = res
+	return ec.marshalNStyle2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐStyle(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Image_style(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Image",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_Style_width(ctx, field)
+			case "height":
+				return ec.fieldContext_Style_height(ctx, field)
+			case "maxWidth":
+				return ec.fieldContext_Style_maxWidth(ctx, field)
+			case "maxHeight":
+				return ec.fieldContext_Style_maxHeight(ctx, field)
+			case "aspectRatio":
+				return ec.fieldContext_Style_aspectRatio(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Style", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Image_loading(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_loading(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Loading, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Image_loading(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Image",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Image_fetchPriority(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_fetchPriority(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FetchPriority, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Image_fetchPriority(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Image",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Image_decoding(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_decoding(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Decoding, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Image_decoding(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Image",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Image_alt(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_alt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Alt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Image_alt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Image",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Image_role(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_role(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Role, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Image_role(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Image",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Image_sizes(ctx context.Context, field graphql.CollectedField, obj *schematype.Image) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Image_sizes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Sizes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Image_sizes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Image",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5924,24 +6434,38 @@ func (ec *executionContext) fieldContext_MusclesGroup_image(ctx context.Context,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Height":
-				return ec.fieldContext_Image_Height(ctx, field)
-			case "AspectRatio":
-				return ec.fieldContext_Image_AspectRatio(ctx, field)
-			case "Width":
-				return ec.fieldContext_Image_Width(ctx, field)
-			case "Layout":
-				return ec.fieldContext_Image_Layout(ctx, field)
-			case "Priority":
-				return ec.fieldContext_Image_Priority(ctx, field)
-			case "ObjectFit":
-				return ec.fieldContext_Image_ObjectFit(ctx, field)
-			case "Background":
-				return ec.fieldContext_Image_Background(ctx, field)
-			case "Src":
-				return ec.fieldContext_Image_Src(ctx, field)
-			case "BreakPoints":
-				return ec.fieldContext_Image_BreakPoints(ctx, field)
+			case "height":
+				return ec.fieldContext_Image_height(ctx, field)
+			case "aspectRatio":
+				return ec.fieldContext_Image_aspectRatio(ctx, field)
+			case "width":
+				return ec.fieldContext_Image_width(ctx, field)
+			case "layout":
+				return ec.fieldContext_Image_layout(ctx, field)
+			case "priority":
+				return ec.fieldContext_Image_priority(ctx, field)
+			case "objectFit":
+				return ec.fieldContext_Image_objectFit(ctx, field)
+			case "src":
+				return ec.fieldContext_Image_src(ctx, field)
+			case "srcset":
+				return ec.fieldContext_Image_srcset(ctx, field)
+			case "breakpoints":
+				return ec.fieldContext_Image_breakpoints(ctx, field)
+			case "style":
+				return ec.fieldContext_Image_style(ctx, field)
+			case "loading":
+				return ec.fieldContext_Image_loading(ctx, field)
+			case "fetchPriority":
+				return ec.fieldContext_Image_fetchPriority(ctx, field)
+			case "decoding":
+				return ec.fieldContext_Image_decoding(ctx, field)
+			case "alt":
+				return ec.fieldContext_Image_alt(ctx, field)
+			case "role":
+				return ec.fieldContext_Image_role(ctx, field)
+			case "sizes":
+				return ec.fieldContext_Image_sizes(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Image", field.Name)
 		},
@@ -6789,6 +7313,131 @@ func (ec *executionContext) fieldContext_Mutation_deleteRoutine(ctx context.Cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteRoutine_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_CreateMusclesGroup(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_CreateMusclesGroup(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateMusclesGroup(rctx, fc.Args["input"].(CreateMusclesGroupInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*ent.MusclesGroup)
+	fc.Result = res
+	return ec.marshalOMusclesGroup2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroup(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_CreateMusclesGroup(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_MusclesGroup_id(ctx, field)
+			case "name":
+				return ec.fieldContext_MusclesGroup_name(ctx, field)
+			case "image":
+				return ec.fieldContext_MusclesGroup_image(ctx, field)
+			case "exercises":
+				return ec.fieldContext_MusclesGroup_exercises(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MusclesGroup", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_CreateMusclesGroup_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createExercise(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateExercise(rctx, fc.Args["input"].(CreateExerciseInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.ExerciseConnection)
+	fc.Result = res
+	return ec.marshalNExerciseConnection2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createExercise(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_ExerciseConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_ExerciseConnection_pageInfo(ctx, field)
+			case "totalCount":
+				return ec.fieldContext_ExerciseConnection_totalCount(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ExerciseConnection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createExercise_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -9337,6 +9986,211 @@ func (ec *executionContext) fieldContext_Set_Km(ctx context.Context, field graph
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Style_width(ctx context.Context, field graphql.CollectedField, obj *Style) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Style_width(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Width, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Style_width(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Style",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Style_height(ctx context.Context, field graphql.CollectedField, obj *Style) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Style_height(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Height, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Style_height(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Style",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Style_maxWidth(ctx context.Context, field graphql.CollectedField, obj *Style) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Style_maxWidth(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MaxWidth, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Style_maxWidth(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Style",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Style_maxHeight(ctx context.Context, field graphql.CollectedField, obj *Style) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Style_maxHeight(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MaxHeight, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Style_maxHeight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Style",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Style_aspectRatio(ctx context.Context, field graphql.CollectedField, obj *Style) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Style_aspectRatio(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AspectRatio, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Style_aspectRatio(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Style",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -13820,6 +14674,62 @@ func (ec *executionContext) unmarshalInputActivationTokenInput(ctx context.Conte
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateExerciseInput(ctx context.Context, obj interface{}) (CreateExerciseInput, error) {
+	var it CreateExerciseInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "image", "howTo", "userID"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "image":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+			data, err := ec.unmarshalNImageInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Image = data
+		case "howTo":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howTo"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.HowTo = data
+		case "userID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UserID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateExerciseTypeInput(ctx context.Context, obj interface{}) (ent.CreateExerciseTypeInput, error) {
 	var it ent.CreateExerciseTypeInput
 	asMap := map[string]interface{}{}
@@ -13870,6 +14780,44 @@ func (ec *executionContext) unmarshalInputCreateExerciseTypeInput(ctx context.Co
 				return it, err
 			}
 			it.ExerciseIDs = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateMusclesGroupInput(ctx context.Context, obj interface{}) (CreateMusclesGroupInput, error) {
+	var it CreateMusclesGroupInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "image"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "image":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+			data, err := ec.unmarshalNImageInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Image = data
 		}
 	}
 
@@ -15474,89 +16422,80 @@ func (ec *executionContext) unmarshalInputImageInput(ctx context.Context, obj in
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"Height", "AspectRatio", "Width", "Layout", "Priority", "ObjectFit", "Background", "Src", "BreakPoints"}
+	fieldsInOrder := [...]string{"height", "aspectRatio", "width", "layout", "priority", "objectFit", "src", "breakPoints"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "Height":
+		case "height":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Height"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("height"))
 			data, err := ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Height = data
-		case "AspectRatio":
+		case "aspectRatio":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("AspectRatio"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("aspectRatio"))
 			data, err := ec.unmarshalOFloat2ᚖfloat64(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.AspectRatio = data
-		case "Width":
+		case "width":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Width"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("width"))
 			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Width = data
-		case "Layout":
+		case "layout":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Layout"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("layout"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Layout = data
-		case "Priority":
+		case "priority":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Priority"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("priority"))
+			data, err := ec.unmarshalNBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Priority = data
-		case "ObjectFit":
+		case "objectFit":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ObjectFit"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("objectFit"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.ObjectFit = data
-		case "Background":
+		case "src":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Background"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Background = data
-		case "Src":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Src"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("src"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Src = data
-		case "BreakPoints":
+		case "breakPoints":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("BreakPoints"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("breakPoints"))
 			data, err := ec.unmarshalOInt2ᚕintᚄ(ctx, v)
 			if err != nil {
 				return it, err
@@ -20868,24 +21807,87 @@ func (ec *executionContext) _Image(ctx context.Context, sel ast.SelectionSet, ob
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Image")
-		case "Height":
-			out.Values[i] = ec._Image_Height(ctx, field, obj)
-		case "AspectRatio":
-			out.Values[i] = ec._Image_AspectRatio(ctx, field, obj)
-		case "Width":
-			out.Values[i] = ec._Image_Width(ctx, field, obj)
-		case "Layout":
-			out.Values[i] = ec._Image_Layout(ctx, field, obj)
-		case "Priority":
-			out.Values[i] = ec._Image_Priority(ctx, field, obj)
-		case "ObjectFit":
-			out.Values[i] = ec._Image_ObjectFit(ctx, field, obj)
-		case "Background":
-			out.Values[i] = ec._Image_Background(ctx, field, obj)
-		case "Src":
-			out.Values[i] = ec._Image_Src(ctx, field, obj)
-		case "BreakPoints":
-			out.Values[i] = ec._Image_BreakPoints(ctx, field, obj)
+		case "height":
+			out.Values[i] = ec._Image_height(ctx, field, obj)
+		case "aspectRatio":
+			out.Values[i] = ec._Image_aspectRatio(ctx, field, obj)
+		case "width":
+			out.Values[i] = ec._Image_width(ctx, field, obj)
+		case "layout":
+			out.Values[i] = ec._Image_layout(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "priority":
+			out.Values[i] = ec._Image_priority(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "objectFit":
+			out.Values[i] = ec._Image_objectFit(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "src":
+			out.Values[i] = ec._Image_src(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "srcset":
+			out.Values[i] = ec._Image_srcset(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "breakpoints":
+			out.Values[i] = ec._Image_breakpoints(ctx, field, obj)
+		case "style":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Image_style(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "loading":
+			out.Values[i] = ec._Image_loading(ctx, field, obj)
+		case "fetchPriority":
+			out.Values[i] = ec._Image_fetchPriority(ctx, field, obj)
+		case "decoding":
+			out.Values[i] = ec._Image_decoding(ctx, field, obj)
+		case "alt":
+			out.Values[i] = ec._Image_alt(ctx, field, obj)
+		case "role":
+			out.Values[i] = ec._Image_role(ctx, field, obj)
+		case "sizes":
+			out.Values[i] = ec._Image_sizes(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -21139,6 +22141,17 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteRoutine(ctx, field)
 			})
+		case "CreateMusclesGroup":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_CreateMusclesGroup(ctx, field)
+			})
+		case "createExercise":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createExercise(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -22042,6 +23055,50 @@ func (ec *executionContext) _Set(ctx context.Context, sel ast.SelectionSet, obj 
 			out.Values[i] = ec._Set_Time(ctx, field, obj)
 		case "Km":
 			out.Values[i] = ec._Set_Km(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var styleImplementors = []string{"Style"}
+
+func (ec *executionContext) _Style(ctx context.Context, sel ast.SelectionSet, obj *Style) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, styleImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Style")
+		case "width":
+			out.Values[i] = ec._Style_width(ctx, field, obj)
+		case "height":
+			out.Values[i] = ec._Style_height(ctx, field, obj)
+		case "maxWidth":
+			out.Values[i] = ec._Style_maxWidth(ctx, field, obj)
+		case "maxHeight":
+			out.Values[i] = ec._Style_maxHeight(ctx, field, obj)
+		case "aspectRatio":
+			out.Values[i] = ec._Style_aspectRatio(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -23355,6 +24412,16 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNCreateExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateExerciseInput(ctx context.Context, v interface{}) (CreateExerciseInput, error) {
+	res, err := ec.unmarshalInputCreateExerciseInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNCreateMusclesGroupInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateMusclesGroupInput(ctx context.Context, v interface{}) (CreateMusclesGroupInput, error) {
+	res, err := ec.unmarshalInputCreateMusclesGroupInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInput(ctx context.Context, v interface{}) (*CreateRoutineExerciseInput, error) {
 	res, err := ec.unmarshalInputCreateRoutineExerciseInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
@@ -23496,6 +24563,11 @@ func (ec *executionContext) marshalNID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigach
 
 func (ec *executionContext) marshalNImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx context.Context, sel ast.SelectionSet, v schematype.Image) graphql.Marshaler {
 	return ec._Image(ctx, sel, &v)
+}
+
+func (ec *executionContext) unmarshalNImageInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx context.Context, v interface{}) (*schematype.Image, error) {
+	res, err := ec.unmarshalInputImageInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
@@ -23762,6 +24834,20 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalNStyle2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐStyle(ctx context.Context, sel ast.SelectionSet, v Style) graphql.Marshaler {
+	return ec._Style(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNStyle2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐStyle(ctx context.Context, sel ast.SelectionSet, v *Style) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Style(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNToken2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐToken(ctx context.Context, sel ast.SelectionSet, v *ent.Token) graphql.Marshaler {

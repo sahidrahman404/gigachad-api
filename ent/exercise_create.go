@@ -198,7 +198,9 @@ func (ec *ExerciseCreate) Mutation() *ExerciseMutation {
 
 // Save creates the Exercise in the database.
 func (ec *ExerciseCreate) Save(ctx context.Context) (*Exercise, error) {
-	ec.defaults()
+	if err := ec.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, ec.sqlSave, ec.mutation, ec.hooks)
 }
 
@@ -225,11 +227,15 @@ func (ec *ExerciseCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (ec *ExerciseCreate) defaults() {
+func (ec *ExerciseCreate) defaults() error {
 	if _, ok := ec.mutation.ID(); !ok {
+		if exercise.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized exercise.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := exercise.DefaultID()
 		ec.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

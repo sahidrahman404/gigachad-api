@@ -21,6 +21,18 @@ type AuthenticationToken struct {
 	TokenPlainText string    `json:"tokenPlainText"`
 }
 
+type CreateExerciseInput struct {
+	Name   string            `json:"name"`
+	Image  *schematype.Image `json:"image"`
+	HowTo  *string           `json:"howTo,omitempty"`
+	UserID *pksuid.ID        `json:"userID,omitempty"`
+}
+
+type CreateMusclesGroupInput struct {
+	Name  string            `json:"name"`
+	Image *schematype.Image `json:"image"`
+}
+
 type CreateRoutineExerciseInput struct {
 	RestTimer  *string           `json:"restTimer,omitempty"`
 	Sets       []*schematype.Set `json:"sets,omitempty"`
@@ -48,4 +60,12 @@ type ResetPasswordInput struct {
 type ResetUserPasswordInput struct {
 	Password       string `json:"password"`
 	TokenPlainText string `json:"tokenPlainText"`
+}
+
+type Style struct {
+	Width       *string `json:"width,omitempty"`
+	Height      *string `json:"height,omitempty"`
+	MaxWidth    *string `json:"maxWidth,omitempty"`
+	MaxHeight   *string `json:"maxHeight,omitempty"`
+	AspectRatio *string `json:"aspectRatio,omitempty"`
 }
