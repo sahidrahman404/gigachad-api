@@ -352,7 +352,7 @@ type MutationResolver interface {
 	CreateRoutine(ctx context.Context, input ent.CreateRoutineInput) (*ent.Routine, error)
 	DeleteRoutine(ctx context.Context, id pksuid.ID) (*DeletedID, error)
 	CreateMusclesGroup(ctx context.Context, input CreateMusclesGroupInput) (*ent.MusclesGroup, error)
-	CreateExercise(ctx context.Context, input CreateExerciseInput) (*ent.ExerciseConnection, error)
+	CreateExercise(ctx context.Context, input CreateExerciseInput) (*ent.Exercise, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id pksuid.ID) (ent.Noder, error)
@@ -7402,14 +7402,11 @@ func (ec *executionContext) _Mutation_createExercise(ctx context.Context, field 
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*ent.ExerciseConnection)
+	res := resTmp.(*ent.Exercise)
 	fc.Result = res
-	return ec.marshalNExerciseConnection2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseConnection(ctx, field.Selections, res)
+	return ec.marshalOExercise2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createExercise(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7420,14 +7417,32 @@ func (ec *executionContext) fieldContext_Mutation_createExercise(ctx context.Con
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "edges":
-				return ec.fieldContext_ExerciseConnection_edges(ctx, field)
-			case "pageInfo":
-				return ec.fieldContext_ExerciseConnection_pageInfo(ctx, field)
-			case "totalCount":
-				return ec.fieldContext_ExerciseConnection_totalCount(ctx, field)
+			case "id":
+				return ec.fieldContext_Exercise_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Exercise_name(ctx, field)
+			case "image":
+				return ec.fieldContext_Exercise_image(ctx, field)
+			case "howTo":
+				return ec.fieldContext_Exercise_howTo(ctx, field)
+			case "userID":
+				return ec.fieldContext_Exercise_userID(ctx, field)
+			case "workoutLogs":
+				return ec.fieldContext_Exercise_workoutLogs(ctx, field)
+			case "users":
+				return ec.fieldContext_Exercise_users(ctx, field)
+			case "equipment":
+				return ec.fieldContext_Exercise_equipment(ctx, field)
+			case "musclesGroups":
+				return ec.fieldContext_Exercise_musclesGroups(ctx, field)
+			case "exerciseTypes":
+				return ec.fieldContext_Exercise_exerciseTypes(ctx, field)
+			case "routines":
+				return ec.fieldContext_Exercise_routines(ctx, field)
+			case "routineExercises":
+				return ec.fieldContext_Exercise_routineExercises(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type ExerciseConnection", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Exercise", field.Name)
 		},
 	}
 	defer func() {
@@ -16422,7 +16437,7 @@ func (ec *executionContext) unmarshalInputImageInput(ctx context.Context, obj in
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"height", "aspectRatio", "width", "layout", "priority", "objectFit", "src", "breakPoints"}
+	fieldsInOrder := [...]string{"height", "aspectRatio", "width", "layout", "priority", "objectFit", "filename", "breakPoints"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -16483,15 +16498,15 @@ func (ec *executionContext) unmarshalInputImageInput(ctx context.Context, obj in
 				return it, err
 			}
 			it.ObjectFit = data
-		case "src":
+		case "filename":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("src"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("filename"))
 			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Src = data
+			it.Filename = data
 		case "breakPoints":
 			var err error
 
@@ -22149,9 +22164,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createExercise(ctx, field)
 			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

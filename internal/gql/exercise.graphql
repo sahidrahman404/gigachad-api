@@ -6,5 +6,5 @@ input CreateExerciseInput {
 }
 
 extend type Mutation {
-  createExercise(input: CreateExerciseInput!): ExerciseConnection!
+  createExercise(input: CreateExerciseInput!): Exercise
 }

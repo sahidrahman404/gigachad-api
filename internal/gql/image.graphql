@@ -32,6 +32,6 @@ input ImageInput {
   layout: String!
   priority: Boolean!
   objectFit: String!
-  src: String!
+  filename: String!
   breakPoints: [Int!]
 }

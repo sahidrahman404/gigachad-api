@@ -25,6 +25,7 @@ type Image struct {
 	ObjectFit     string   `json:"objectFit"`
 	Src           string   `json:"src"`
 	SrcSet        string   `json:"srcset"`
+	Filename      string   `json:"filename"`
 	Loading       *string  `json:"loading"`
 	FetchPriority *string  `json:"fetchpriority"`
 	Decoding      *string  `json:"decoding"`
