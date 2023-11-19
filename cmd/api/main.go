@@ -7,13 +7,15 @@ import (
 	"runtime/debug"
 	"sync"
 
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	_ "github.com/sahidrahman404/gigachad-api/ent/runtime"
+	"github.com/sahidrahman404/gigachad-api/internal/aws"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/env"
+	"github.com/sahidrahman404/gigachad-api/internal/img"
 	"github.com/sahidrahman404/gigachad-api/internal/leveledlog"
 	"github.com/sahidrahman404/gigachad-api/internal/smtp"
-	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/version"
 )
 
@@ -34,22 +36,24 @@ type config struct {
 		dsn string
 	}
 	smtp struct {
-		host     string
 		port     int
+		host     string
 		username string
 		password string
 		from     string
 	}
-	types.Imgproxy
+	img.Imgproxy
+	aws.AWSConfig
 }
 
 type application struct {
-	config  config
-	logger  *leveledlog.Logger
-	mailer  *smtp.Mailer
-	wg      sync.WaitGroup
-	storage *database.Storage
-	ent     *ent.Client
+	config        config
+	logger        *leveledlog.Logger
+	mailer        *smtp.Mailer
+	wg            sync.WaitGroup
+	storage       *database.Storage
+	ent           *ent.Client
+	presignClient *s3.PresignClient
 }
 
 func run(logger *leveledlog.Logger) error {
@@ -63,9 +67,13 @@ func run(logger *leveledlog.Logger) error {
 	cfg.smtp.username = env.GetString("SMTP_USERNAME", "example_username")
 	cfg.smtp.password = env.GetString("SMTP_PASSWORD", "pa55word")
 	cfg.smtp.from = env.GetString("SMTP_FROM", "Example Name <no_reply@example.org>")
-	cfg.Imgproxy.Key = env.GetString("KEY", "")
-	cfg.Imgproxy.Salt = env.GetString("SALT", "")
-	cfg.Imgproxy.ImgproxyHost = env.GetString("IMGPROXY_HOST", "")
+	cfg.Key = env.GetString("KEY", "")
+	cfg.Salt = env.GetString("SALT", "")
+	cfg.ImgproxyHost = env.GetString("IMGPROXY_HOST", "")
+	cfg.AccessKeyID = env.GetString("ACCESS_KEY_ID", "")
+	cfg.SecretAccessKey = env.GetString("SECRET_ACCESS_KEY", "")
+	cfg.AWSBucket = env.GetString("AWS_BUCKET", "")
+	cfg.AWSRegion = env.GetString("AWS_REGION", "")
 
 	showVersion := flag.Bool("version", false, "display version and exit")
 
@@ -82,6 +90,11 @@ func run(logger *leveledlog.Logger) error {
 	}
 	defer db.Db.Close()
 
+	awsConfig, err := aws.NewAWSConfig(cfg.AWSConfig)
+	if err != nil {
+		return err
+	}
+
 	mailer := smtp.NewMailer(
 		cfg.smtp.host,
 		cfg.smtp.port,
@@ -91,11 +104,12 @@ func run(logger *leveledlog.Logger) error {
 	)
 
 	app := &application{
-		config:  cfg,
-		logger:  logger,
-		mailer:  mailer,
-		storage: database.NewStorage(db.Ent),
-		ent:     db.Ent,
+		config:        cfg,
+		logger:        logger,
+		mailer:        mailer,
+		storage:       database.NewStorage(db.Ent),
+		ent:           db.Ent,
+		presignClient: aws.NewPresignClient(awsConfig),
 	}
 
 	return app.serveHTTP()

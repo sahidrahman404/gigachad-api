@@ -10,6 +10,7 @@ import (
 	"math"
 	"net/http"
 
+	"github.com/sahidrahman404/gigachad-api/internal/aws"
 	"github.com/sahidrahman404/gigachad-api/internal/request"
 	"github.com/sahidrahman404/gigachad-api/internal/response"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
@@ -125,4 +126,28 @@ func signURL(
 	signature := base64.RawURLEncoding.EncodeToString(mac.Sum(nil))
 
 	return fmt.Sprintf("%s/%s%s", imgproxyURL, signature, path)
+}
+
+func (app *application) getUploadURL(w http.ResponseWriter, r *http.Request) {
+	var params types.CreateUploadURLParams
+
+	err := request.DecodeJSONStrict(w, r, &params)
+	if err != nil {
+		app.badRequest(w, r, err)
+		return
+	}
+
+	uploadURL, err := aws.UploadURL(app.presignClient, params.Filename, app.config.AWSConfig)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	err = response.JSON(w, http.StatusOK, map[string]string{
+		"url":    uploadURL,
+		"method": "PUT",
+	})
+	if err != nil {
+		app.serverError(w, r, err)
+	}
 }

@@ -35,7 +35,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/status", app.status)
 
 	srv := handler.NewDefaultServer(
-		gql.NewSchema(app.ent, app.mailer, app.storage, app.logger, &app.wg, &app.config.Imgproxy),
+		gql.NewSchema(app.ent, app.mailer, app.storage, app.logger, &app.wg, &app.config.Imgproxy, &app.config.AWSConfig),
 	)
 	srv.Use(entgql.Transactioner{TxOpener: app.ent})
 	mux.Handle("/gql", playground.Handler("Gigachad", "/query"))
@@ -71,6 +71,7 @@ func (app *application) routes() http.Handler {
 			r.Get("/get", app.getCookieHandler)
 			r.Post("/img", app.getSignedUrl)
 			r.Post("/imgs", app.getTransformedUrls)
+			r.Post("/sign-s3", app.getUploadURL)
 		})
 
 		// equipment resources
