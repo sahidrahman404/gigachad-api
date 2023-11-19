@@ -64,9 +64,9 @@ func UpdateExerciseFromParams(e *UpdateExerciseParams, ex *Exercise) {
 		ex.Ent.HowTo = e.HowTo
 	}
 
-	if e.Image != nil {
-		// ex.Ent.Image = e.Image
-	}
+	// if e.Image != nil {
+	// ex.Ent.Image = e.Image
+	// }
 
 	// if e.EquipmentID != nil {
 	// 	ex.Ent.EquipmentID = *e.EquipmentID

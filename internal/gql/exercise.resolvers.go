@@ -7,77 +7,60 @@ package gql
 import (
 	"context"
 
-	"entgo.io/contrib/entgql"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
-	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
-	"github.com/sahidrahman404/gigachad-api/internal/types"
+	"github.com/sahidrahman404/gigachad-api/internal/img"
 )
 
 // CreateExercise is the resolver for the createExercise field.
-func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.CreateExerciseInput) (*ent.ExerciseConnection, error) {
+func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.CreateExerciseInput) (*ent.Exercise, error) {
 	uCtx := r.getUserFromCtx(ctx)
 
-	if uCtx.Ent != nil {
+	if uCtx.Ent == nil {
+		switch input.HowTo {
+		case nil:
+			ex, err := r.client.Exercise.Create().
+				SetName(input.Name).
+				SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
+				Save(ctx)
+			if err != nil {
+				return nil, r.serverError(err)
+			}
+			return ex, nil
+		default:
+			ex, err := r.client.Exercise.Create().
+				SetName(input.Name).
+				SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
+				SetHowTo(*input.HowTo).
+				Save(ctx)
+			if err != nil {
+				return nil, r.serverError(err)
+			}
+			return ex, nil
+		}
+	}
+
+	switch input.HowTo {
+	case nil:
 		ex, err := r.client.Exercise.Create().
 			SetName(input.Name).
-			SetImage(types.SetImageField(*input.Image, r.imgproxy)).
+			SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
 			SetUserID(uCtx.Ent.ID).
 			Save(ctx)
 		if err != nil {
 			return nil, r.serverError(err)
 		}
-
-		return &ent.ExerciseConnection{
-			Edges: []*ent.ExerciseEdge{
-				{
-					Node: ex,
-					Cursor: entgql.Cursor[pksuid.ID]{
-						ID: ex.ID,
-					},
-				},
-			},
-			PageInfo: entgql.PageInfo[pksuid.ID]{
-				HasNextPage:     false,
-				HasPreviousPage: false,
-				StartCursor: &entgql.Cursor[pksuid.ID]{
-					ID: ex.ID,
-				},
-				EndCursor: &entgql.Cursor[pksuid.ID]{
-					ID: ex.ID,
-				},
-			},
-			TotalCount: 1,
-		}, nil
+		return ex, nil
+	default:
+		ex, err := r.client.Exercise.Create().
+			SetName(input.Name).
+			SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
+			SetHowTo(*input.HowTo).
+			SetUserID(uCtx.Ent.ID).
+			Save(ctx)
+		if err != nil {
+			return nil, r.serverError(err)
+		}
+		return ex, nil
 	}
-
-	ex, err := r.client.Exercise.Create().
-		SetName(input.Name).
-		SetImage(types.SetImageField(*input.Image, r.imgproxy)).
-		Save(ctx)
-	if err != nil {
-		return nil, r.serverError(err)
-	}
-
-	return &ent.ExerciseConnection{
-		Edges: []*ent.ExerciseEdge{
-			{
-				Node: ex,
-				Cursor: entgql.Cursor[pksuid.ID]{
-					ID: ex.ID,
-				},
-			},
-		},
-		PageInfo: entgql.PageInfo[pksuid.ID]{
-			HasNextPage:     false,
-			HasPreviousPage: false,
-			StartCursor: &entgql.Cursor[pksuid.ID]{
-				ID: ex.ID,
-			},
-			EndCursor: &entgql.Cursor[pksuid.ID]{
-				ID: ex.ID,
-			},
-		},
-		TotalCount: 1,
-	}, nil
 }

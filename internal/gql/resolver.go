@@ -6,10 +6,11 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/internal/aws"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
+	"github.com/sahidrahman404/gigachad-api/internal/img"
 	"github.com/sahidrahman404/gigachad-api/internal/leveledlog"
 	"github.com/sahidrahman404/gigachad-api/internal/smtp"
-	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 // This file will not be regenerated automatically.
@@ -22,7 +23,8 @@ type Resolver struct {
 	storage  *database.Storage
 	logger   *leveledlog.Logger
 	wg       *sync.WaitGroup
-	imgproxy *types.Imgproxy
+	imgproxy *img.Imgproxy
+	awsCfg   *aws.AWSConfig
 }
 
 // NewSchema creates a graphql executable schema.
@@ -32,7 +34,8 @@ func NewSchema(
 	s *database.Storage,
 	l *leveledlog.Logger,
 	wg *sync.WaitGroup,
-	i *types.Imgproxy,
+	i *img.Imgproxy,
+	a *aws.AWSConfig,
 ) graphql.ExecutableSchema {
 	return gigachad.NewExecutableSchema(gigachad.Config{
 		Resolvers: &Resolver{
@@ -42,6 +45,7 @@ func NewSchema(
 			logger:   l,
 			wg:       wg,
 			imgproxy: i,
+			awsCfg:   a,
 		},
 	})
 }
