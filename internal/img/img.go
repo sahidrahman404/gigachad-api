@@ -42,6 +42,7 @@ type Imgproxy struct {
 	Key          string
 	Salt         string
 	ImgproxyHost string
+	OriginCDN    string
 }
 
 func SetImageField(p schematype.Image, awsCfg aws.AWSConfig, i *Imgproxy) schematype.Image {
@@ -59,8 +60,7 @@ func SetImageField(p schematype.Image, awsCfg aws.AWSConfig, i *Imgproxy) schema
 		aspectRatio := float64(*p.Width) / *p.Height
 		p.AspectRatio = &aspectRatio
 	}
-
-	src := fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s", awsCfg.AWSBucket, awsCfg.AWSRegion, p.Filename)
+	src := fmt.Sprintf("https://%s/%s", i.OriginCDN, p.Filename)
 	srcset := getSrcSet(p, awsCfg, i)
 	breakpoints := getBreakpoints(p.Width, p.Layout)
 	sizes := getSizes(p)

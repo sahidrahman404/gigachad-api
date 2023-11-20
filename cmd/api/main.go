@@ -72,6 +72,7 @@ func run(logger *leveledlog.Logger) error {
 	cfg.ImgproxyHost = env.GetString("IMGPROXY_HOST", "")
 	cfg.AccessKeyID = env.GetString("ACCESS_KEY_ID", "")
 	cfg.SecretAccessKey = env.GetString("SECRET_ACCESS_KEY", "")
+	cfg.OriginCDN = env.GetString("ORIGIN_CDN", "")
 	cfg.AWSBucket = env.GetString("AWS_BUCKET", "")
 	cfg.AWSRegion = env.GetString("AWS_REGION", "")
 

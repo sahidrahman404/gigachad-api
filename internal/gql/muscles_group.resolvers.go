@@ -9,12 +9,13 @@ import (
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/internal/img"
 )
 
 // CreateMusclesGroup is the resolver for the CreateMusclesGroup field.
 func (r *mutationResolver) CreateMusclesGroup(ctx context.Context, input gigachad.CreateMusclesGroupInput) (*ent.MusclesGroup, error) {
 	return r.client.MusclesGroup.Create().
 		SetName(input.Name).
-		// SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
+		SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
 		Save(ctx)
 }
