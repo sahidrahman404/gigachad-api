@@ -34,6 +34,14 @@ func (ec *EquipmentCreate) SetImage(s schematype.Image) *EquipmentCreate {
 	return ec
 }
 
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (ec *EquipmentCreate) SetNillableImage(s *schematype.Image) *EquipmentCreate {
+	if s != nil {
+		ec.SetImage(*s)
+	}
+	return ec
+}
+
 // SetID sets the "id" field.
 func (ec *EquipmentCreate) SetID(pk pksuid.ID) *EquipmentCreate {
 	ec.mutation.SetID(pk)
@@ -108,9 +116,6 @@ func (ec *EquipmentCreate) defaults() {
 func (ec *EquipmentCreate) check() error {
 	if _, ok := ec.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Equipment.name"`)}
-	}
-	if _, ok := ec.mutation.Image(); !ok {
-		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Equipment.image"`)}
 	}
 	return nil
 }

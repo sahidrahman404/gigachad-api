@@ -452,7 +452,7 @@ table "muscles_groups" {
     type = text
   }
   column "image" {
-    null = false
+    null = true
     type = json
   }
   primary_key {
@@ -470,7 +470,7 @@ table "equipment" {
     type = text
   }
   column "image" {
-    null = false
+    null = true
     type = json
   }
   primary_key {
@@ -488,7 +488,7 @@ table "exercises" {
     type = text
   }
   column "image" {
-    null = false
+    null = true
     type = json
   }
   column "how_to" {

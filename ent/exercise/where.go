@@ -134,6 +134,16 @@ func NameContainsFold(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldContainsFold(FieldName, v))
 }
 
+// ImageIsNil applies the IsNil predicate on the "image" field.
+func ImageIsNil() predicate.Exercise {
+	return predicate.Exercise(sql.FieldIsNull(FieldImage))
+}
+
+// ImageNotNil applies the NotNil predicate on the "image" field.
+func ImageNotNil() predicate.Exercise {
+	return predicate.Exercise(sql.FieldNotNull(FieldImage))
+}
+
 // HowToEQ applies the EQ predicate on the "how_to" field.
 func HowToEQ(v string) predicate.Exercise {
 	return predicate.Exercise(sql.FieldEQ(FieldHowTo, v))

@@ -124,6 +124,16 @@ func NameContainsFold(v string) predicate.Equipment {
 	return predicate.Equipment(sql.FieldContainsFold(FieldName, v))
 }
 
+// ImageIsNil applies the IsNil predicate on the "image" field.
+func ImageIsNil() predicate.Equipment {
+	return predicate.Equipment(sql.FieldIsNull(FieldImage))
+}
+
+// ImageNotNil applies the NotNil predicate on the "image" field.
+func ImageNotNil() predicate.Equipment {
+	return predicate.Equipment(sql.FieldNotNull(FieldImage))
+}
+
 // HasExercises applies the HasEdge predicate on the "exercises" edge.
 func HasExercises() predicate.Equipment {
 	return predicate.Equipment(func(s *sql.Selector) {

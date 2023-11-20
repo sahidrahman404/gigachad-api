@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -96,4 +97,12 @@ func (u *User) SetPassword(plaintextPassword string) error {
 	}
 	u.Ent.HashedPassword = string(hash)
 	return nil
+}
+
+func (u *User) GetUserID() *pksuid.ID {
+	user := u.Ent
+	if user == nil {
+		return nil
+	}
+	return &user.ID
 }

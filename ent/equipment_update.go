@@ -42,6 +42,20 @@ func (eu *EquipmentUpdate) SetImage(s schematype.Image) *EquipmentUpdate {
 	return eu
 }
 
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (eu *EquipmentUpdate) SetNillableImage(s *schematype.Image) *EquipmentUpdate {
+	if s != nil {
+		eu.SetImage(*s)
+	}
+	return eu
+}
+
+// ClearImage clears the value of the "image" field.
+func (eu *EquipmentUpdate) ClearImage() *EquipmentUpdate {
+	eu.mutation.ClearImage()
+	return eu
+}
+
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
 func (eu *EquipmentUpdate) AddExerciseIDs(ids ...pksuid.ID) *EquipmentUpdate {
 	eu.mutation.AddExerciseIDs(ids...)
@@ -125,6 +139,9 @@ func (eu *EquipmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := eu.mutation.Image(); ok {
 		_spec.SetField(equipment.FieldImage, field.TypeJSON, value)
 	}
+	if eu.mutation.ImageCleared() {
+		_spec.ClearField(equipment.FieldImage, field.TypeJSON)
+	}
 	if eu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -199,6 +216,20 @@ func (euo *EquipmentUpdateOne) SetName(s string) *EquipmentUpdateOne {
 // SetImage sets the "image" field.
 func (euo *EquipmentUpdateOne) SetImage(s schematype.Image) *EquipmentUpdateOne {
 	euo.mutation.SetImage(s)
+	return euo
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (euo *EquipmentUpdateOne) SetNillableImage(s *schematype.Image) *EquipmentUpdateOne {
+	if s != nil {
+		euo.SetImage(*s)
+	}
+	return euo
+}
+
+// ClearImage clears the value of the "image" field.
+func (euo *EquipmentUpdateOne) ClearImage() *EquipmentUpdateOne {
+	euo.mutation.ClearImage()
 	return euo
 }
 
@@ -314,6 +345,9 @@ func (euo *EquipmentUpdateOne) sqlSave(ctx context.Context) (_node *Equipment, e
 	}
 	if value, ok := euo.mutation.Image(); ok {
 		_spec.SetField(equipment.FieldImage, field.TypeJSON, value)
+	}
+	if euo.mutation.ImageCleared() {
+		_spec.ClearField(equipment.FieldImage, field.TypeJSON)
 	}
 	if euo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -12,7 +12,7 @@ var (
 	EquipmentColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "image", Type: field.TypeJSON},
+		{Name: "image", Type: field.TypeJSON, Nullable: true},
 	}
 	// EquipmentTable holds the schema information for the "equipment" table.
 	EquipmentTable = &schema.Table{
@@ -24,7 +24,7 @@ var (
 	ExercisesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "image", Type: field.TypeJSON},
+		{Name: "image", Type: field.TypeJSON, Nullable: true},
 		{Name: "how_to", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString, Nullable: true},
 	}
@@ -59,7 +59,7 @@ var (
 	MusclesGroupsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "image", Type: field.TypeJSON},
+		{Name: "image", Type: field.TypeJSON, Nullable: true},
 	}
 	// MusclesGroupsTable holds the schema information for the "muscles_groups" table.
 	MusclesGroupsTable = &schema.Table{

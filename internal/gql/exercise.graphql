@@ -1,6 +1,6 @@
 input CreateExerciseInput {
   name: String!
-  image: ImageInput!
+  image: ImageInput
   howTo: String
   userID: ID
 }

@@ -3829,14 +3829,11 @@ func (ec *executionContext) _Equipment_image(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(schematype.Image)
 	fc.Result = res
-	return ec.marshalNImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, field.Selections, res)
+	return ec.marshalOImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Equipment_image(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4298,14 +4295,11 @@ func (ec *executionContext) _Exercise_image(ctx context.Context, field graphql.C
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(schematype.Image)
 	fc.Result = res
-	return ec.marshalNImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, field.Selections, res)
+	return ec.marshalOImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Exercise_image(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6416,14 +6410,11 @@ func (ec *executionContext) _MusclesGroup_image(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(schematype.Image)
 	fc.Result = res
-	return ec.marshalNImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, field.Selections, res)
+	return ec.marshalOImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_MusclesGroup_image(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -14716,7 +14707,7 @@ func (ec *executionContext) unmarshalInputCreateExerciseInput(ctx context.Contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
-			data, err := ec.unmarshalNImageInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, v)
+			data, err := ec.unmarshalOImageInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -21096,9 +21087,6 @@ func (ec *executionContext) _Equipment(ctx context.Context, sel ast.SelectionSet
 			}
 		case "image":
 			out.Values[i] = ec._Equipment_image(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "exercises":
 			field := field
 
@@ -21268,9 +21256,6 @@ func (ec *executionContext) _Exercise(ctx context.Context, sel ast.SelectionSet,
 			}
 		case "image":
 			out.Values[i] = ec._Exercise_image(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "howTo":
 			out.Values[i] = ec._Exercise_howTo(ctx, field, obj)
 		case "userID":
@@ -21949,9 +21934,6 @@ func (ec *executionContext) _MusclesGroup(ctx context.Context, sel ast.Selection
 			}
 		case "image":
 			out.Values[i] = ec._MusclesGroup_image(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
 		case "exercises":
 			field := field
 
@@ -24573,10 +24555,6 @@ func (ec *executionContext) marshalNID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigach
 	return ret
 }
 
-func (ec *executionContext) marshalNImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx context.Context, sel ast.SelectionSet, v schematype.Image) graphql.Marshaler {
-	return ec._Image(ctx, sel, &v)
-}
-
 func (ec *executionContext) unmarshalNImageInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx context.Context, v interface{}) (*schematype.Image, error) {
 	res, err := ec.unmarshalInputImageInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
@@ -25594,6 +25572,18 @@ func (ec *executionContext) marshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigach
 		return graphql.Null
 	}
 	return v
+}
+
+func (ec *executionContext) marshalOImage2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx context.Context, sel ast.SelectionSet, v schematype.Image) graphql.Marshaler {
+	return ec._Image(ctx, sel, &v)
+}
+
+func (ec *executionContext) unmarshalOImageInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx context.Context, v interface{}) (*schematype.Image, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputImageInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOInt2int(ctx context.Context, v interface{}) (int, error) {

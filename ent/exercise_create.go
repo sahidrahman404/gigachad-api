@@ -40,6 +40,14 @@ func (ec *ExerciseCreate) SetImage(s schematype.Image) *ExerciseCreate {
 	return ec
 }
 
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (ec *ExerciseCreate) SetNillableImage(s *schematype.Image) *ExerciseCreate {
+	if s != nil {
+		ec.SetImage(*s)
+	}
+	return ec
+}
+
 // SetHowTo sets the "how_to" field.
 func (ec *ExerciseCreate) SetHowTo(s string) *ExerciseCreate {
 	ec.mutation.SetHowTo(s)
@@ -242,9 +250,6 @@ func (ec *ExerciseCreate) defaults() error {
 func (ec *ExerciseCreate) check() error {
 	if _, ok := ec.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Exercise.name"`)}
-	}
-	if _, ok := ec.mutation.Image(); !ok {
-		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "Exercise.image"`)}
 	}
 	return nil
 }

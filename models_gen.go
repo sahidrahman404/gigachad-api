@@ -23,7 +23,7 @@ type AuthenticationToken struct {
 
 type CreateExerciseInput struct {
 	Name   string            `json:"name"`
-	Image  *schematype.Image `json:"image"`
+	Image  *schematype.Image `json:"image,omitempty"`
 	HowTo  *string           `json:"howTo,omitempty"`
 	UserID *pksuid.ID        `json:"userID,omitempty"`
 }

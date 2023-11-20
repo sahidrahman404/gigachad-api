@@ -42,6 +42,20 @@ func (mgu *MusclesGroupUpdate) SetImage(s schematype.Image) *MusclesGroupUpdate 
 	return mgu
 }
 
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (mgu *MusclesGroupUpdate) SetNillableImage(s *schematype.Image) *MusclesGroupUpdate {
+	if s != nil {
+		mgu.SetImage(*s)
+	}
+	return mgu
+}
+
+// ClearImage clears the value of the "image" field.
+func (mgu *MusclesGroupUpdate) ClearImage() *MusclesGroupUpdate {
+	mgu.mutation.ClearImage()
+	return mgu
+}
+
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
 func (mgu *MusclesGroupUpdate) AddExerciseIDs(ids ...pksuid.ID) *MusclesGroupUpdate {
 	mgu.mutation.AddExerciseIDs(ids...)
@@ -125,6 +139,9 @@ func (mgu *MusclesGroupUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := mgu.mutation.Image(); ok {
 		_spec.SetField(musclesgroup.FieldImage, field.TypeJSON, value)
 	}
+	if mgu.mutation.ImageCleared() {
+		_spec.ClearField(musclesgroup.FieldImage, field.TypeJSON)
+	}
 	if mgu.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -199,6 +216,20 @@ func (mguo *MusclesGroupUpdateOne) SetName(s string) *MusclesGroupUpdateOne {
 // SetImage sets the "image" field.
 func (mguo *MusclesGroupUpdateOne) SetImage(s schematype.Image) *MusclesGroupUpdateOne {
 	mguo.mutation.SetImage(s)
+	return mguo
+}
+
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (mguo *MusclesGroupUpdateOne) SetNillableImage(s *schematype.Image) *MusclesGroupUpdateOne {
+	if s != nil {
+		mguo.SetImage(*s)
+	}
+	return mguo
+}
+
+// ClearImage clears the value of the "image" field.
+func (mguo *MusclesGroupUpdateOne) ClearImage() *MusclesGroupUpdateOne {
+	mguo.mutation.ClearImage()
 	return mguo
 }
 
@@ -314,6 +345,9 @@ func (mguo *MusclesGroupUpdateOne) sqlSave(ctx context.Context) (_node *MusclesG
 	}
 	if value, ok := mguo.mutation.Image(); ok {
 		_spec.SetField(musclesgroup.FieldImage, field.TypeJSON, value)
+	}
+	if mguo.mutation.ImageCleared() {
+		_spec.ClearField(musclesgroup.FieldImage, field.TypeJSON)
 	}
 	if mguo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{

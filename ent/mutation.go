@@ -234,9 +234,22 @@ func (m *EquipmentMutation) OldImage(ctx context.Context) (v schematype.Image, e
 	return oldValue.Image, nil
 }
 
+// ClearImage clears the value of the "image" field.
+func (m *EquipmentMutation) ClearImage() {
+	m.image = nil
+	m.clearedFields[equipment.FieldImage] = struct{}{}
+}
+
+// ImageCleared returns if the "image" field was cleared in this mutation.
+func (m *EquipmentMutation) ImageCleared() bool {
+	_, ok := m.clearedFields[equipment.FieldImage]
+	return ok
+}
+
 // ResetImage resets all changes to the "image" field.
 func (m *EquipmentMutation) ResetImage() {
 	m.image = nil
+	delete(m.clearedFields, equipment.FieldImage)
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by ids.
@@ -411,7 +424,11 @@ func (m *EquipmentMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *EquipmentMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(equipment.FieldImage) {
+		fields = append(fields, equipment.FieldImage)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -424,6 +441,11 @@ func (m *EquipmentMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *EquipmentMutation) ClearField(name string) error {
+	switch name {
+	case equipment.FieldImage:
+		m.ClearImage()
+		return nil
+	}
 	return fmt.Errorf("unknown Equipment nullable field %s", name)
 }
 
@@ -731,9 +753,22 @@ func (m *ExerciseMutation) OldImage(ctx context.Context) (v schematype.Image, er
 	return oldValue.Image, nil
 }
 
+// ClearImage clears the value of the "image" field.
+func (m *ExerciseMutation) ClearImage() {
+	m.image = nil
+	m.clearedFields[exercise.FieldImage] = struct{}{}
+}
+
+// ImageCleared returns if the "image" field was cleared in this mutation.
+func (m *ExerciseMutation) ImageCleared() bool {
+	_, ok := m.clearedFields[exercise.FieldImage]
+	return ok
+}
+
 // ResetImage resets all changes to the "image" field.
 func (m *ExerciseMutation) ResetImage() {
 	m.image = nil
+	delete(m.clearedFields, exercise.FieldImage)
 }
 
 // SetHowTo sets the "how_to" field.
@@ -1345,6 +1380,9 @@ func (m *ExerciseMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *ExerciseMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(exercise.FieldImage) {
+		fields = append(fields, exercise.FieldImage)
+	}
 	if m.FieldCleared(exercise.FieldHowTo) {
 		fields = append(fields, exercise.FieldHowTo)
 	}
@@ -1365,6 +1403,9 @@ func (m *ExerciseMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *ExerciseMutation) ClearField(name string) error {
 	switch name {
+	case exercise.FieldImage:
+		m.ClearImage()
+		return nil
 	case exercise.FieldHowTo:
 		m.ClearHowTo()
 		return nil
@@ -2364,9 +2405,22 @@ func (m *MusclesGroupMutation) OldImage(ctx context.Context) (v schematype.Image
 	return oldValue.Image, nil
 }
 
+// ClearImage clears the value of the "image" field.
+func (m *MusclesGroupMutation) ClearImage() {
+	m.image = nil
+	m.clearedFields[musclesgroup.FieldImage] = struct{}{}
+}
+
+// ImageCleared returns if the "image" field was cleared in this mutation.
+func (m *MusclesGroupMutation) ImageCleared() bool {
+	_, ok := m.clearedFields[musclesgroup.FieldImage]
+	return ok
+}
+
 // ResetImage resets all changes to the "image" field.
 func (m *MusclesGroupMutation) ResetImage() {
 	m.image = nil
+	delete(m.clearedFields, musclesgroup.FieldImage)
 }
 
 // AddExerciseIDs adds the "exercises" edge to the Exercise entity by ids.
@@ -2541,7 +2595,11 @@ func (m *MusclesGroupMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *MusclesGroupMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(musclesgroup.FieldImage) {
+		fields = append(fields, musclesgroup.FieldImage)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -2554,6 +2612,11 @@ func (m *MusclesGroupMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *MusclesGroupMutation) ClearField(name string) error {
+	switch name {
+	case musclesgroup.FieldImage:
+		m.ClearImage()
+		return nil
+	}
 	return fmt.Errorf("unknown MusclesGroup nullable field %s", name)
 }
 

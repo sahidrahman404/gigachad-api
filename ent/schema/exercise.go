@@ -40,7 +40,7 @@ func (Exercise) Mixin() []ent.Mixin {
 func (Exercise) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.JSON("image", schematype.Image{}).Annotations(entgql.Type("Image")),
+		field.JSON("image", schematype.Image{}).Annotations(entgql.Type("Image")).Optional(),
 		field.String("how_to").Optional().Nillable(),
 		field.String("user_id").Optional().Nillable().GoType(pksuid.ID("")),
 	}

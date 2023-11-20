@@ -34,6 +34,14 @@ func (mgc *MusclesGroupCreate) SetImage(s schematype.Image) *MusclesGroupCreate 
 	return mgc
 }
 
+// SetNillableImage sets the "image" field if the given value is not nil.
+func (mgc *MusclesGroupCreate) SetNillableImage(s *schematype.Image) *MusclesGroupCreate {
+	if s != nil {
+		mgc.SetImage(*s)
+	}
+	return mgc
+}
+
 // SetID sets the "id" field.
 func (mgc *MusclesGroupCreate) SetID(pk pksuid.ID) *MusclesGroupCreate {
 	mgc.mutation.SetID(pk)
@@ -108,9 +116,6 @@ func (mgc *MusclesGroupCreate) defaults() {
 func (mgc *MusclesGroupCreate) check() error {
 	if _, ok := mgc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "MusclesGroup.name"`)}
-	}
-	if _, ok := mgc.mutation.Image(); !ok {
-		return &ValidationError{Name: "image", err: errors.New(`ent: missing required field "MusclesGroup.image"`)}
 	}
 	return nil
 }

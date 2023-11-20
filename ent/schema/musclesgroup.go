@@ -26,7 +26,7 @@ func (MusclesGroup) Mixin() []ent.Mixin {
 func (MusclesGroup) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.JSON("image", schematype.Image{}).Annotations(entgql.Type("Image")),
+		field.JSON("image", schematype.Image{}).Annotations(entgql.Type("Image")).Optional(),
 	}
 }
 

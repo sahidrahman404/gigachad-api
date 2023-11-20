@@ -57,7 +57,7 @@ scalar Cursor
 type Equipment implements Node {
   id: ID!
   name: String!
-  image: Image!
+  image: Image
   exercises(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
@@ -129,7 +129,7 @@ input EquipmentWhereInput {
 type Exercise implements Node {
   id: ID!
   name: String!
-  image: Image!
+  image: Image
   howTo: String
   userID: ID
   workoutLogs(
@@ -421,7 +421,7 @@ input ExerciseWhereInput {
 type MusclesGroup implements Node {
   id: ID!
   name: String!
-  image: Image!
+  image: Image
   exercises(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor

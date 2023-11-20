@@ -124,6 +124,16 @@ func NameContainsFold(v string) predicate.MusclesGroup {
 	return predicate.MusclesGroup(sql.FieldContainsFold(FieldName, v))
 }
 
+// ImageIsNil applies the IsNil predicate on the "image" field.
+func ImageIsNil() predicate.MusclesGroup {
+	return predicate.MusclesGroup(sql.FieldIsNull(FieldImage))
+}
+
+// ImageNotNil applies the NotNil predicate on the "image" field.
+func ImageNotNil() predicate.MusclesGroup {
+	return predicate.MusclesGroup(sql.FieldNotNull(FieldImage))
+}
+
 // HasExercises applies the HasEdge predicate on the "exercises" edge.
 func HasExercises() predicate.MusclesGroup {
 	return predicate.MusclesGroup(func(s *sql.Selector) {

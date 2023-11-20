@@ -1,4 +1,4 @@
-h1:cYF4YK155Z4HeDcZrdOVpk81+YQa0LBKaIcR0KZnXKY=
+h1:bP0LyyePnA/CCJHMop83lW6aT+1Om98fG4W5FvFMWFE=
 20230628141405_add-users-tokens-tables.sql h1:fuOJ2sHOMEP/24Ni9DT6j31fuudcRRBHP9FR3B+iabk=
 20230628144036_change-activated-column-type-to-int.sql h1:iGspKnS3bD1Of/VsA9jPiu/F0UQnIZkaVlhfop++diY=
 20230629131540_add-unique-constraint-to-users-table.sql h1:RTfWHMm4IFP3xoYPiVdY6LaLopPZcPiDXV9fCMojdUo=
@@ -16,3 +16,4 @@ h1:cYF4YK155Z4HeDcZrdOVpk81+YQa0LBKaIcR0KZnXKY=
 20231109081914_fix-relationsships.sql h1:hXqQC0AEbm2NFMlSUYfX/6jMyikcEJvaMyKk9LxEUeg=
 20231110005559_fix-relationsships2.sql h1:/HxK40h16ofBdXMaoBtHUNVLcnCpoBwYw50Oc3OBAkc=
 20231111031919_change-image-column-field-type-to-json.sql h1:sdO03pBcDPRXkGShjoef9PokjPd8aXyCRfz5TlpMlnQ=
+20231120055049_make-image-column-field-optional.sql h1:UizQtHqNnYZPlJDqa9h77+GQLx1L9MWpwtzkomjGuKQ=

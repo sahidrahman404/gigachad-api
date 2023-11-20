@@ -16,51 +16,26 @@ import (
 func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.CreateExerciseInput) (*ent.Exercise, error) {
 	uCtx := r.getUserFromCtx(ctx)
 
-	if uCtx.Ent == nil {
-		switch input.HowTo {
-		case nil:
-			ex, err := r.client.Exercise.Create().
-				SetName(input.Name).
-				SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
-				Save(ctx)
-			if err != nil {
-				return nil, r.serverError(err)
-			}
-			return ex, nil
-		default:
-			ex, err := r.client.Exercise.Create().
-				SetName(input.Name).
-				SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
-				SetHowTo(*input.HowTo).
-				Save(ctx)
-			if err != nil {
-				return nil, r.serverError(err)
-			}
-			return ex, nil
+	if input.Image == nil {
+		ex, err := r.client.Exercise.Create().
+			SetName(input.Name).
+			SetNillableHowTo(input.HowTo).
+			SetNillableUserID(uCtx.GetUserID()).
+			Save(ctx)
+		if err != nil {
+			return nil, r.serverError(err)
 		}
+		return ex, nil
 	}
 
-	switch input.HowTo {
-	case nil:
-		ex, err := r.client.Exercise.Create().
-			SetName(input.Name).
-			SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
-			SetUserID(uCtx.Ent.ID).
-			Save(ctx)
-		if err != nil {
-			return nil, r.serverError(err)
-		}
-		return ex, nil
-	default:
-		ex, err := r.client.Exercise.Create().
-			SetName(input.Name).
-			SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
-			SetHowTo(*input.HowTo).
-			SetUserID(uCtx.Ent.ID).
-			Save(ctx)
-		if err != nil {
-			return nil, r.serverError(err)
-		}
-		return ex, nil
+	ex, err := r.client.Exercise.Create().
+		SetName(input.Name).
+		SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
+		SetNillableHowTo(input.HowTo).
+		SetNillableUserID(uCtx.GetUserID()).
+		Save(ctx)
+	if err != nil {
+		return nil, r.serverError(err)
 	}
+	return ex, nil
 }
