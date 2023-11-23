@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	_ "github.com/sahidrahman404/gigachad-api/ent/runtime"
 	"github.com/sahidrahman404/gigachad-api/internal/aws"
@@ -15,6 +16,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/env"
 	"github.com/sahidrahman404/gigachad-api/internal/img"
 	"github.com/sahidrahman404/gigachad-api/internal/leveledlog"
+	"github.com/sahidrahman404/gigachad-api/internal/purifier"
 	"github.com/sahidrahman404/gigachad-api/internal/smtp"
 	"github.com/sahidrahman404/gigachad-api/internal/version"
 )
@@ -54,6 +56,7 @@ type application struct {
 	storage       *database.Storage
 	ent           *ent.Client
 	presignClient *s3.PresignClient
+	purifier      *bluemonday.Policy
 }
 
 func run(logger *leveledlog.Logger) error {
@@ -104,6 +107,8 @@ func run(logger *leveledlog.Logger) error {
 		cfg.smtp.from,
 	)
 
+	p := purifier.NewPurifierPolicy()
+
 	app := &application{
 		config:        cfg,
 		logger:        logger,
@@ -111,6 +116,7 @@ func run(logger *leveledlog.Logger) error {
 		storage:       database.NewStorage(db.Ent),
 		ent:           db.Ent,
 		presignClient: aws.NewPresignClient(awsConfig),
+		purifier:      p,
 	}
 
 	return app.serveHTTP()

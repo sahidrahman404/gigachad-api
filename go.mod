@@ -17,6 +17,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/libsql/libsql-client-go v0.0.0-20231026052543-fce76c0f39a7
 	github.com/mattn/go-sqlite3 v1.14.18
+	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/segmentio/ksuid v1.0.4
 	github.com/vektah/gqlparser/v2 v2.5.10
 	golang.org/x/crypto v0.15.0
@@ -44,9 +45,11 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.20.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.25.3 // indirect
 	github.com/aws/smithy-go v1.17.0 // indirect
+	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.4.0 // indirect
+	github.com/gorilla/css v1.0.1 // indirect
 	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect

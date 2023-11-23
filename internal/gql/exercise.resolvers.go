@@ -10,6 +10,7 @@ import (
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/internal/img"
+	"github.com/sahidrahman404/gigachad-api/internal/purifier"
 )
 
 // CreateExercise is the resolver for the createExercise field.
@@ -19,7 +20,7 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 	if input.Image == nil {
 		ex, err := r.client.Exercise.Create().
 			SetName(input.Name).
-			SetNillableHowTo(input.HowTo).
+			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 			SetNillableUserID(uCtx.GetUserID()).
 			Save(ctx)
 		if err != nil {
@@ -31,7 +32,7 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 	ex, err := r.client.Exercise.Create().
 		SetName(input.Name).
 		SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
-		SetNillableHowTo(input.HowTo).
+		SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 		SetNillableUserID(uCtx.GetUserID()).
 		Save(ctx)
 	if err != nil {
