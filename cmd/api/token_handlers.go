@@ -154,7 +154,6 @@ func (app *application) createAuthenticationTokenHandler(w http.ResponseWriter, 
 	}
 
 	user, err := app.storage.Users.GetByEmail(input.Email)
-
 	if err != nil {
 		switch {
 		case errors.Is(err, database.ErrRecordNotFound):
@@ -195,15 +194,26 @@ func (app *application) setCookieHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	cookie := http.Cookie{
-		Name:     "auth",
-		Value:    tokenPlainText,
-		Path:     "/",
-		MaxAge:   3600,
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
+	maxAge := 60 * 60 * 24 * 30
+
+	cookie := types.GetCookieSetting(app.config.env, tokenPlainText, maxAge)
+
+	http.SetCookie(w, &cookie)
+
+	err = response.JSON(w, http.StatusOK, "cookie set!")
+	if err != nil {
+		app.serverError(w, r, err)
 	}
+}
+
+func (app *application) deleteCookieHandler(w http.ResponseWriter, r *http.Request) {
+	tokenPlainText, err := app.readParams("tokenPlainText", r)
+	if err != nil {
+		app.badRequest(w, r, err)
+		return
+	}
+
+	cookie := types.GetCookieSetting(app.config.env, tokenPlainText, -1)
 
 	http.SetCookie(w, &cookie)
 

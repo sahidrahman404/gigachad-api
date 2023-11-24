@@ -21,7 +21,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"https://*", "http://*"},
+		AllowedOrigins: []string{"https://gigachad.buzz", "http://localhost:3000"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -69,6 +69,7 @@ func (app *application) routes() http.Handler {
 			// Add token to client cookie using http cookies - for spa
 			r.Get("/set/{tokenPlainText}", app.setCookieHandler)
 			r.Get("/get", app.getCookieHandler)
+			r.Delete("/delete/{tokenPlainText}", app.deleteCookieHandler)
 			r.Post("/img", app.getSignedUrl)
 			r.Post("/imgs", app.getTransformedUrls)
 			r.Post("/sign-s3", app.getUploadURL)

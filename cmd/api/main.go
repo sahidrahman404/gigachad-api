@@ -46,6 +46,7 @@ type config struct {
 	}
 	img.Imgproxy
 	aws.AWSConfig
+	env string
 }
 
 type application struct {
@@ -78,6 +79,7 @@ func run(logger *leveledlog.Logger) error {
 	cfg.OriginCDN = env.GetString("ORIGIN_CDN", "")
 	cfg.AWSBucket = env.GetString("AWS_BUCKET", "")
 	cfg.AWSRegion = env.GetString("AWS_REGION", "")
+	cfg.env = env.GetString("ENV", "DEV")
 
 	showVersion := flag.Bool("version", false, "display version and exit")
 
