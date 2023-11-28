@@ -3,6 +3,8 @@ input CreateExerciseInput {
   image: ImageInput
   howTo: String
   userID: ID
+  musclesGroupIDs: [ID!]
+  exerciseTypeIDs: [ID!]
 }
 
 extend type Mutation {

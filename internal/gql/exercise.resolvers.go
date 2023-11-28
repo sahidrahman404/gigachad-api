@@ -22,6 +22,8 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 			SetName(input.Name).
 			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 			SetNillableUserID(uCtx.GetUserID()).
+			AddMusclesGroupIDs(input.MusclesGroupIDs...).
+			AddExerciseTypeIDs(input.ExerciseTypeIDs...).
 			Save(ctx)
 		if err != nil {
 			return nil, r.serverError(err)
@@ -34,6 +36,8 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 		SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
 		SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 		SetNillableUserID(uCtx.GetUserID()).
+		AddMusclesGroupIDs(input.MusclesGroupIDs...).
+		AddExerciseTypeIDs(input.ExerciseTypeIDs...).
 		Save(ctx)
 	if err != nil {
 		return nil, r.serverError(err)
