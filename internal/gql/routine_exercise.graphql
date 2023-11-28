@@ -26,5 +26,5 @@ input CreateRoutineWithChildrenInput {
 }
 
 extend type Mutation {
-  CreateRoutineWithChildren(input: CreateRoutineWithChildrenInput!): Routine
+  createRoutineWithChildren(input: CreateRoutineWithChildrenInput!): Routine!
 }

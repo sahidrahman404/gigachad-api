@@ -6,5 +6,5 @@ input CreateWorkoutLogInput {
 }
 
 extend type Mutation {
-  CreateWorkoutLog(input: CreateWorkoutLogInput!): WorkoutLog
+  createWorkoutLog(input: CreateWorkoutLogInput!): WorkoutLog!
 }

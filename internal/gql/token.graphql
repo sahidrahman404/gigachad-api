@@ -17,7 +17,7 @@ type AuthenticationToken {
 }
 
 extend type Mutation {
-  createAuthenticationToken(input: LoginInput!): AuthenticationToken
-  createActivationToken(input: ActivationTokenInput!): String
-  createPasswordResetToken(input: ResetPasswordInput!): String
+  createAuthenticationToken(input: LoginInput!): AuthenticationToken!
+  createActivationToken(input: ActivationTokenInput!): User!
+  createPasswordResetToken(input: ResetPasswordInput!): User!
 }

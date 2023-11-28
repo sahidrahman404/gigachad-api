@@ -9,8 +9,8 @@ input ResetUserPasswordInput {
 
 type Mutation {
   createUser(input: CreateUserInput!): User!
-  activateUser(input: ActivateUserInput!): AuthenticationToken
-  updateUserPassword(input: ResetUserPasswordInput!): String
+  activateUser(input: ActivateUserInput!): AuthenticationToken!
+  updateUserPassword(input: ResetUserPasswordInput!): User!
 }
 
 extend type Query {

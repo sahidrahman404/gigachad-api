@@ -4,5 +4,5 @@ input CreateMusclesGroupInput {
 }
 
 extend type Mutation {
-  CreateMusclesGroup(input: CreateMusclesGroupInput!): MusclesGroup
+  createMusclesGroup(input: CreateMusclesGroupInput!): MusclesGroup!
 }

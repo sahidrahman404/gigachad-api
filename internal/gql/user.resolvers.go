@@ -127,7 +127,7 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 }
 
 // UpdateUserPassword is the resolver for the updateUserPassword field.
-func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigachad.ResetUserPasswordInput) (*string, error) {
+func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigachad.ResetUserPasswordInput) (*ent.User, error) {
 	v := validator.NewValidator()
 
 	types.ValidatePasswordPlaintext(v, input.Password)
@@ -183,8 +183,7 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 		return nil, r.serverError(err)
 	}
 
-	message := "your password was successfully reset"
-	return &message, nil
+	return user.Ent, nil
 }
 
 // Viewer is the resolver for the viewer field.

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
+	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
@@ -27,7 +28,6 @@ func (r *mutationResolver) CreateAuthenticationToken(ctx context.Context, input 
 	}
 
 	user, err := r.storage.Users.GetByEmail(input.Email)
-
 	if err != nil {
 		switch {
 		case errors.Is(err, database.ErrRecordNotFound):
@@ -57,7 +57,7 @@ func (r *mutationResolver) CreateAuthenticationToken(ctx context.Context, input 
 }
 
 // CreateActivationToken is the resolver for the createActivationToken field.
-func (r *mutationResolver) CreateActivationToken(ctx context.Context, input gigachad.ActivationTokenInput) (*string, error) {
+func (r *mutationResolver) CreateActivationToken(ctx context.Context, input gigachad.ActivationTokenInput) (*ent.User, error) {
 	v := validator.NewValidator()
 
 	if types.ValidateEmail(v, input.Email); v.HasErrors() {
@@ -92,13 +92,11 @@ func (r *mutationResolver) CreateActivationToken(ctx context.Context, input giga
 		return r.mailer.Send(user.Ent.Email, data, "token_activation.tmpl")
 	})
 
-	message := "an email will be sent to you containing activation instructions"
-
-	return &message, nil
+	return user.Ent, nil
 }
 
 // CreatePasswordResetToken is the resolver for the createPasswordResetToken field.
-func (r *mutationResolver) CreatePasswordResetToken(ctx context.Context, input gigachad.ResetPasswordInput) (*string, error) {
+func (r *mutationResolver) CreatePasswordResetToken(ctx context.Context, input gigachad.ResetPasswordInput) (*ent.User, error) {
 	v := validator.NewValidator()
 
 	if types.ValidateEmail(v, input.Email); v.HasErrors() {
@@ -133,6 +131,5 @@ func (r *mutationResolver) CreatePasswordResetToken(ctx context.Context, input g
 		return r.mailer.Send(user.Ent.Email, data, "token_password_reset.tmpl")
 	})
 
-	message := "an email will be sent to you containing password instruction"
-	return &message, nil
+	return user.Ent, nil
 }
