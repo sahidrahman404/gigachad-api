@@ -40,9 +40,25 @@ func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
 	return uu
 }
 
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableEmail(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetEmail(*s)
+	}
+	return uu
+}
+
 // SetUsername sets the "username" field.
 func (uu *UserUpdate) SetUsername(s string) *UserUpdate {
 	uu.mutation.SetUsername(s)
+	return uu
+}
+
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableUsername(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetUsername(*s)
+	}
 	return uu
 }
 
@@ -52,9 +68,25 @@ func (uu *UserUpdate) SetHashedPassword(s string) *UserUpdate {
 	return uu
 }
 
+// SetNillableHashedPassword sets the "hashed_password" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableHashedPassword(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetHashedPassword(*s)
+	}
+	return uu
+}
+
 // SetName sets the "name" field.
 func (uu *UserUpdate) SetName(s string) *UserUpdate {
 	uu.mutation.SetName(s)
+	return uu
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetName(*s)
+	}
 	return uu
 }
 
@@ -694,9 +726,25 @@ func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
 	return uuo
 }
 
+// SetNillableEmail sets the "email" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableEmail(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetEmail(*s)
+	}
+	return uuo
+}
+
 // SetUsername sets the "username" field.
 func (uuo *UserUpdateOne) SetUsername(s string) *UserUpdateOne {
 	uuo.mutation.SetUsername(s)
+	return uuo
+}
+
+// SetNillableUsername sets the "username" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableUsername(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetUsername(*s)
+	}
 	return uuo
 }
 
@@ -706,9 +754,25 @@ func (uuo *UserUpdateOne) SetHashedPassword(s string) *UserUpdateOne {
 	return uuo
 }
 
+// SetNillableHashedPassword sets the "hashed_password" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableHashedPassword(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetHashedPassword(*s)
+	}
+	return uuo
+}
+
 // SetName sets the "name" field.
 func (uuo *UserUpdateOne) SetName(s string) *UserUpdateOne {
 	uuo.mutation.SetName(s)
+	return uuo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetName(*s)
+	}
 	return uuo
 }
 

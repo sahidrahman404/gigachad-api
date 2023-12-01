@@ -44,3 +44,12 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 	}
 	return ex, nil
 }
+
+// DeleteExercise is the resolver for the deleteExercise field.
+func (r *mutationResolver) DeleteExercise(ctx context.Context, input gigachad.DeleteExerciseInput) (*ent.Exercise, error) {
+	err := r.client.Exercise.DeleteOneID(input.ID).Exec(ctx)
+	if err != nil {
+		return nil, r.serverError(err)
+	}
+	return &ent.Exercise{ID: input.ID}, nil
+}

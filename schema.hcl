@@ -125,32 +125,6 @@ table "exercise_types" {
     columns = [column.id]
   }
 }
-table "exercise_muscles_groups" {
-  schema = schema.main
-  column "exercise_id" {
-    null = false
-    type = text
-  }
-  column "muscles_group_id" {
-    null = false
-    type = text
-  }
-  primary_key {
-    columns = [column.exercise_id, column.muscles_group_id]
-  }
-  foreign_key "exercise_muscles_groups_muscles_group_id" {
-    columns     = [column.muscles_group_id]
-    ref_columns = [table.muscles_groups.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "exercise_muscles_groups_exercise_id" {
-    columns     = [column.exercise_id]
-    ref_columns = [table.exercises.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-}
 table "equipment_exercises" {
   schema = schema.main
   column "equipment_id" {
@@ -337,62 +311,6 @@ table "tokens" {
     on_delete   = CASCADE
   }
 }
-table "routine_exercises" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "rest_timer" {
-    null = true
-    type = text
-  }
-  column "sets" {
-    null = false
-    type = json
-  }
-  column "routine_id" {
-    null = false
-    type = text
-  }
-  column "exercise_id" {
-    null = false
-    type = text
-  }
-  column "user_id" {
-    null = false
-    type = text
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "routine_exercises_users_routine_exercises" {
-    columns     = [column.user_id]
-    ref_columns = [table.users.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "routine_exercises_exercises_exercises" {
-    columns     = [column.exercise_id]
-    ref_columns = [table.exercises.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "routine_exercises_routines_routines" {
-    columns     = [column.routine_id]
-    ref_columns = [table.routines.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  index "routineexercise_routine_id" {
-    unique  = true
-    columns = [column.routine_id]
-  }
-  index "routineexercise_routine_id_exercise_id" {
-    unique  = true
-    columns = [column.routine_id, column.exercise_id]
-  }
-}
 table "workout_logs" {
   schema = schema.main
   column "id" {
@@ -507,6 +425,61 @@ table "exercises" {
     ref_columns = [table.users.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
+  }
+}
+table "routine_exercises" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "rest_timer" {
+    null = true
+    type = text
+  }
+  column "sets" {
+    null = false
+    type = json
+  }
+  column "routine_id" {
+    null = false
+    type = text
+  }
+  column "exercise_id" {
+    null = false
+    type = text
+  }
+  column "user_id" {
+    null = false
+    type = text
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "routine_exercises_users_routine_exercises" {
+    columns     = [column.user_id]
+    ref_columns = [table.users.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "routine_exercises_exercises_exercises" {
+    columns     = [column.exercise_id]
+    ref_columns = [table.exercises.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "routine_exercises_routines_routines" {
+    columns     = [column.routine_id]
+    ref_columns = [table.routines.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  index "routineexercise_routine_id" {
+    columns = [column.routine_id]
+  }
+  index "routineexercise_routine_id_exercise_id" {
+    unique  = true
+    columns = [column.routine_id, column.exercise_id]
   }
 }
 schema "main" {

@@ -36,10 +36,26 @@ func (wu *WorkoutUpdate) SetName(s string) *WorkoutUpdate {
 	return wu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (wu *WorkoutUpdate) SetNillableName(s *string) *WorkoutUpdate {
+	if s != nil {
+		wu.SetName(*s)
+	}
+	return wu
+}
+
 // SetVolume sets the "volume" field.
 func (wu *WorkoutUpdate) SetVolume(i int) *WorkoutUpdate {
 	wu.mutation.ResetVolume()
 	wu.mutation.SetVolume(i)
+	return wu
+}
+
+// SetNillableVolume sets the "volume" field if the given value is not nil.
+func (wu *WorkoutUpdate) SetNillableVolume(i *int) *WorkoutUpdate {
+	if i != nil {
+		wu.SetVolume(*i)
+	}
 	return wu
 }
 
@@ -53,6 +69,14 @@ func (wu *WorkoutUpdate) AddVolume(i int) *WorkoutUpdate {
 func (wu *WorkoutUpdate) SetReps(i int) *WorkoutUpdate {
 	wu.mutation.ResetReps()
 	wu.mutation.SetReps(i)
+	return wu
+}
+
+// SetNillableReps sets the "reps" field if the given value is not nil.
+func (wu *WorkoutUpdate) SetNillableReps(i *int) *WorkoutUpdate {
+	if i != nil {
+		wu.SetReps(*i)
+	}
 	return wu
 }
 
@@ -86,6 +110,14 @@ func (wu *WorkoutUpdate) ClearTime() *WorkoutUpdate {
 func (wu *WorkoutUpdate) SetSets(i int) *WorkoutUpdate {
 	wu.mutation.ResetSets()
 	wu.mutation.SetSets(i)
+	return wu
+}
+
+// SetNillableSets sets the "sets" field if the given value is not nil.
+func (wu *WorkoutUpdate) SetNillableSets(i *int) *WorkoutUpdate {
+	if i != nil {
+		wu.SetSets(*i)
+	}
 	return wu
 }
 
@@ -135,9 +167,25 @@ func (wu *WorkoutUpdate) SetDescription(s string) *WorkoutUpdate {
 	return wu
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (wu *WorkoutUpdate) SetNillableDescription(s *string) *WorkoutUpdate {
+	if s != nil {
+		wu.SetDescription(*s)
+	}
+	return wu
+}
+
 // SetUserID sets the "user_id" field.
 func (wu *WorkoutUpdate) SetUserID(pk pksuid.ID) *WorkoutUpdate {
 	wu.mutation.SetUserID(pk)
+	return wu
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (wu *WorkoutUpdate) SetNillableUserID(pk *pksuid.ID) *WorkoutUpdate {
+	if pk != nil {
+		wu.SetUserID(*pk)
+	}
 	return wu
 }
 
@@ -385,10 +433,26 @@ func (wuo *WorkoutUpdateOne) SetName(s string) *WorkoutUpdateOne {
 	return wuo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (wuo *WorkoutUpdateOne) SetNillableName(s *string) *WorkoutUpdateOne {
+	if s != nil {
+		wuo.SetName(*s)
+	}
+	return wuo
+}
+
 // SetVolume sets the "volume" field.
 func (wuo *WorkoutUpdateOne) SetVolume(i int) *WorkoutUpdateOne {
 	wuo.mutation.ResetVolume()
 	wuo.mutation.SetVolume(i)
+	return wuo
+}
+
+// SetNillableVolume sets the "volume" field if the given value is not nil.
+func (wuo *WorkoutUpdateOne) SetNillableVolume(i *int) *WorkoutUpdateOne {
+	if i != nil {
+		wuo.SetVolume(*i)
+	}
 	return wuo
 }
 
@@ -402,6 +466,14 @@ func (wuo *WorkoutUpdateOne) AddVolume(i int) *WorkoutUpdateOne {
 func (wuo *WorkoutUpdateOne) SetReps(i int) *WorkoutUpdateOne {
 	wuo.mutation.ResetReps()
 	wuo.mutation.SetReps(i)
+	return wuo
+}
+
+// SetNillableReps sets the "reps" field if the given value is not nil.
+func (wuo *WorkoutUpdateOne) SetNillableReps(i *int) *WorkoutUpdateOne {
+	if i != nil {
+		wuo.SetReps(*i)
+	}
 	return wuo
 }
 
@@ -435,6 +507,14 @@ func (wuo *WorkoutUpdateOne) ClearTime() *WorkoutUpdateOne {
 func (wuo *WorkoutUpdateOne) SetSets(i int) *WorkoutUpdateOne {
 	wuo.mutation.ResetSets()
 	wuo.mutation.SetSets(i)
+	return wuo
+}
+
+// SetNillableSets sets the "sets" field if the given value is not nil.
+func (wuo *WorkoutUpdateOne) SetNillableSets(i *int) *WorkoutUpdateOne {
+	if i != nil {
+		wuo.SetSets(*i)
+	}
 	return wuo
 }
 
@@ -484,9 +564,25 @@ func (wuo *WorkoutUpdateOne) SetDescription(s string) *WorkoutUpdateOne {
 	return wuo
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (wuo *WorkoutUpdateOne) SetNillableDescription(s *string) *WorkoutUpdateOne {
+	if s != nil {
+		wuo.SetDescription(*s)
+	}
+	return wuo
+}
+
 // SetUserID sets the "user_id" field.
 func (wuo *WorkoutUpdateOne) SetUserID(pk pksuid.ID) *WorkoutUpdateOne {
 	wuo.mutation.SetUserID(pk)
+	return wuo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (wuo *WorkoutUpdateOne) SetNillableUserID(pk *pksuid.ID) *WorkoutUpdateOne {
+	if pk != nil {
+		wuo.SetUserID(*pk)
+	}
 	return wuo
 }
 

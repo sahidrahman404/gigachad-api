@@ -43,7 +43,11 @@ type CreateRoutineExerciseInput struct {
 
 type CreateRoutineWithChildrenInput struct {
 	Name            string                        `json:"name"`
-	RoutineExercise []*CreateRoutineExerciseInput `json:"RoutineExercise,omitempty"`
+	RoutineExercise []*CreateRoutineExerciseInput `json:"routineExercise,omitempty"`
+}
+
+type DeleteExerciseInput struct {
+	ID pksuid.ID `json:"id"`
 }
 
 type DeletedID struct {

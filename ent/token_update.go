@@ -41,15 +41,39 @@ func (tu *TokenUpdate) SetExpiry(s string) *TokenUpdate {
 	return tu
 }
 
+// SetNillableExpiry sets the "expiry" field if the given value is not nil.
+func (tu *TokenUpdate) SetNillableExpiry(s *string) *TokenUpdate {
+	if s != nil {
+		tu.SetExpiry(*s)
+	}
+	return tu
+}
+
 // SetScope sets the "scope" field.
 func (tu *TokenUpdate) SetScope(s string) *TokenUpdate {
 	tu.mutation.SetScope(s)
 	return tu
 }
 
+// SetNillableScope sets the "scope" field if the given value is not nil.
+func (tu *TokenUpdate) SetNillableScope(s *string) *TokenUpdate {
+	if s != nil {
+		tu.SetScope(*s)
+	}
+	return tu
+}
+
 // SetUserID sets the "user_id" field.
 func (tu *TokenUpdate) SetUserID(pk pksuid.ID) *TokenUpdate {
 	tu.mutation.SetUserID(pk)
+	return tu
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (tu *TokenUpdate) SetNillableUserID(pk *pksuid.ID) *TokenUpdate {
+	if pk != nil {
+		tu.SetUserID(*pk)
+	}
 	return tu
 }
 
@@ -192,15 +216,39 @@ func (tuo *TokenUpdateOne) SetExpiry(s string) *TokenUpdateOne {
 	return tuo
 }
 
+// SetNillableExpiry sets the "expiry" field if the given value is not nil.
+func (tuo *TokenUpdateOne) SetNillableExpiry(s *string) *TokenUpdateOne {
+	if s != nil {
+		tuo.SetExpiry(*s)
+	}
+	return tuo
+}
+
 // SetScope sets the "scope" field.
 func (tuo *TokenUpdateOne) SetScope(s string) *TokenUpdateOne {
 	tuo.mutation.SetScope(s)
 	return tuo
 }
 
+// SetNillableScope sets the "scope" field if the given value is not nil.
+func (tuo *TokenUpdateOne) SetNillableScope(s *string) *TokenUpdateOne {
+	if s != nil {
+		tuo.SetScope(*s)
+	}
+	return tuo
+}
+
 // SetUserID sets the "user_id" field.
 func (tuo *TokenUpdateOne) SetUserID(pk pksuid.ID) *TokenUpdateOne {
 	tuo.mutation.SetUserID(pk)
+	return tuo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (tuo *TokenUpdateOne) SetNillableUserID(pk *pksuid.ID) *TokenUpdateOne {
+	if pk != nil {
+		tuo.SetUserID(*pk)
+	}
 	return tuo
 }
 

@@ -71,15 +71,39 @@ func (reu *RoutineExerciseUpdate) SetRoutineID(pk pksuid.ID) *RoutineExerciseUpd
 	return reu
 }
 
+// SetNillableRoutineID sets the "routine_id" field if the given value is not nil.
+func (reu *RoutineExerciseUpdate) SetNillableRoutineID(pk *pksuid.ID) *RoutineExerciseUpdate {
+	if pk != nil {
+		reu.SetRoutineID(*pk)
+	}
+	return reu
+}
+
 // SetExerciseID sets the "exercise_id" field.
 func (reu *RoutineExerciseUpdate) SetExerciseID(pk pksuid.ID) *RoutineExerciseUpdate {
 	reu.mutation.SetExerciseID(pk)
 	return reu
 }
 
+// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
+func (reu *RoutineExerciseUpdate) SetNillableExerciseID(pk *pksuid.ID) *RoutineExerciseUpdate {
+	if pk != nil {
+		reu.SetExerciseID(*pk)
+	}
+	return reu
+}
+
 // SetUserID sets the "user_id" field.
 func (reu *RoutineExerciseUpdate) SetUserID(pk pksuid.ID) *RoutineExerciseUpdate {
 	reu.mutation.SetUserID(pk)
+	return reu
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (reu *RoutineExerciseUpdate) SetNillableUserID(pk *pksuid.ID) *RoutineExerciseUpdate {
+	if pk != nil {
+		reu.SetUserID(*pk)
+	}
 	return reu
 }
 
@@ -351,15 +375,39 @@ func (reuo *RoutineExerciseUpdateOne) SetRoutineID(pk pksuid.ID) *RoutineExercis
 	return reuo
 }
 
+// SetNillableRoutineID sets the "routine_id" field if the given value is not nil.
+func (reuo *RoutineExerciseUpdateOne) SetNillableRoutineID(pk *pksuid.ID) *RoutineExerciseUpdateOne {
+	if pk != nil {
+		reuo.SetRoutineID(*pk)
+	}
+	return reuo
+}
+
 // SetExerciseID sets the "exercise_id" field.
 func (reuo *RoutineExerciseUpdateOne) SetExerciseID(pk pksuid.ID) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetExerciseID(pk)
 	return reuo
 }
 
+// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
+func (reuo *RoutineExerciseUpdateOne) SetNillableExerciseID(pk *pksuid.ID) *RoutineExerciseUpdateOne {
+	if pk != nil {
+		reuo.SetExerciseID(*pk)
+	}
+	return reuo
+}
+
 // SetUserID sets the "user_id" field.
 func (reuo *RoutineExerciseUpdateOne) SetUserID(pk pksuid.ID) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetUserID(pk)
+	return reuo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (reuo *RoutineExerciseUpdateOne) SetNillableUserID(pk *pksuid.ID) *RoutineExerciseUpdateOne {
+	if pk != nil {
+		reuo.SetUserID(*pk)
+	}
 	return reuo
 }
 

@@ -65,6 +65,14 @@ func (wlu *WorkoutLogUpdate) SetUserID(pk pksuid.ID) *WorkoutLogUpdate {
 	return wlu
 }
 
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (wlu *WorkoutLogUpdate) SetNillableUserID(pk *pksuid.ID) *WorkoutLogUpdate {
+	if pk != nil {
+		wlu.SetUserID(*pk)
+	}
+	return wlu
+}
+
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (wlu *WorkoutLogUpdate) SetUsersID(id pksuid.ID) *WorkoutLogUpdate {
 	wlu.mutation.SetUsersID(id)
@@ -331,6 +339,14 @@ func (wluo *WorkoutLogUpdateOne) SetNillableCreatedAt(s *string) *WorkoutLogUpda
 // SetUserID sets the "user_id" field.
 func (wluo *WorkoutLogUpdateOne) SetUserID(pk pksuid.ID) *WorkoutLogUpdateOne {
 	wluo.mutation.SetUserID(pk)
+	return wluo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (wluo *WorkoutLogUpdateOne) SetNillableUserID(pk *pksuid.ID) *WorkoutLogUpdateOne {
+	if pk != nil {
+		wluo.SetUserID(*pk)
+	}
 	return wluo
 }
 

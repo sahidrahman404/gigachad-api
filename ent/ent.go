@@ -138,7 +138,7 @@ func As(fn AggregateFunc, end string) AggregateFunc {
 // Count applies the "count" aggregation function on each group.
 func Count() AggregateFunc {
 	return func(s *sql.Selector) string {
-		return sql.As(sql.Count("*"), "count")
+		return sql.Count("*")
 	}
 }
 

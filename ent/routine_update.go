@@ -37,9 +37,25 @@ func (ru *RoutineUpdate) SetName(s string) *RoutineUpdate {
 	return ru
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ru *RoutineUpdate) SetNillableName(s *string) *RoutineUpdate {
+	if s != nil {
+		ru.SetName(*s)
+	}
+	return ru
+}
+
 // SetUserID sets the "user_id" field.
 func (ru *RoutineUpdate) SetUserID(pk pksuid.ID) *RoutineUpdate {
 	ru.mutation.SetUserID(pk)
+	return ru
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (ru *RoutineUpdate) SetNillableUserID(pk *pksuid.ID) *RoutineUpdate {
+	if pk != nil {
+		ru.SetUserID(*pk)
+	}
 	return ru
 }
 
@@ -353,9 +369,25 @@ func (ruo *RoutineUpdateOne) SetName(s string) *RoutineUpdateOne {
 	return ruo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ruo *RoutineUpdateOne) SetNillableName(s *string) *RoutineUpdateOne {
+	if s != nil {
+		ruo.SetName(*s)
+	}
+	return ruo
+}
+
 // SetUserID sets the "user_id" field.
 func (ruo *RoutineUpdateOne) SetUserID(pk pksuid.ID) *RoutineUpdateOne {
 	ruo.mutation.SetUserID(pk)
+	return ruo
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (ruo *RoutineUpdateOne) SetNillableUserID(pk *pksuid.ID) *RoutineUpdateOne {
+	if pk != nil {
+		ruo.SetUserID(*pk)
+	}
 	return ruo
 }
 

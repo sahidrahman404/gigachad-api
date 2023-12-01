@@ -36,6 +36,14 @@ func (etu *ExerciseTypeUpdate) SetName(s string) *ExerciseTypeUpdate {
 	return etu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (etu *ExerciseTypeUpdate) SetNillableName(s *string) *ExerciseTypeUpdate {
+	if s != nil {
+		etu.SetName(*s)
+	}
+	return etu
+}
+
 // SetProperties sets the "properties" field.
 func (etu *ExerciseTypeUpdate) SetProperties(s []string) *ExerciseTypeUpdate {
 	etu.mutation.SetProperties(s)
@@ -51,6 +59,14 @@ func (etu *ExerciseTypeUpdate) AppendProperties(s []string) *ExerciseTypeUpdate 
 // SetDescription sets the "description" field.
 func (etu *ExerciseTypeUpdate) SetDescription(s string) *ExerciseTypeUpdate {
 	etu.mutation.SetDescription(s)
+	return etu
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (etu *ExerciseTypeUpdate) SetNillableDescription(s *string) *ExerciseTypeUpdate {
+	if s != nil {
+		etu.SetDescription(*s)
+	}
 	return etu
 }
 
@@ -216,6 +232,14 @@ func (etuo *ExerciseTypeUpdateOne) SetName(s string) *ExerciseTypeUpdateOne {
 	return etuo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (etuo *ExerciseTypeUpdateOne) SetNillableName(s *string) *ExerciseTypeUpdateOne {
+	if s != nil {
+		etuo.SetName(*s)
+	}
+	return etuo
+}
+
 // SetProperties sets the "properties" field.
 func (etuo *ExerciseTypeUpdateOne) SetProperties(s []string) *ExerciseTypeUpdateOne {
 	etuo.mutation.SetProperties(s)
@@ -231,6 +255,14 @@ func (etuo *ExerciseTypeUpdateOne) AppendProperties(s []string) *ExerciseTypeUpd
 // SetDescription sets the "description" field.
 func (etuo *ExerciseTypeUpdateOne) SetDescription(s string) *ExerciseTypeUpdateOne {
 	etuo.mutation.SetDescription(s)
+	return etuo
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (etuo *ExerciseTypeUpdateOne) SetNillableDescription(s *string) *ExerciseTypeUpdateOne {
+	if s != nil {
+		etuo.SetDescription(*s)
+	}
 	return etuo
 }
 

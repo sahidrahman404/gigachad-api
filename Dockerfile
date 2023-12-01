@@ -7,6 +7,7 @@
 FROM golang:1.21-alpine as builder
 
 WORKDIR /app
+RUN apk add build-base
 
 COPY . .
 
@@ -17,7 +18,7 @@ RUN go build -buildvcs=false -tags osusergo,netgo -o /usr/local/bin/api ./cmd/ap
 ############################
 FROM alpine
 
-COPY --from=builder /usr/local/bin/api /usr/local/bin/api 
+COPY --from=builder /usr/local/bin/api /usr/local/bin/api
 
 # command to be used to execute when the image is used to start a container
 CMD [ "api" ]

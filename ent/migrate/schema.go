@@ -3,6 +3,7 @@
 package migrate
 
 import (
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/dialect/sql/schema"
 	"entgo.io/ent/schema/field"
 )
@@ -124,7 +125,7 @@ var (
 		Indexes: []*schema.Index{
 			{
 				Name:    "routineexercise_routine_id",
-				Unique:  true,
+				Unique:  false,
 				Columns: []*schema.Column{RoutineExercisesColumns[3]},
 			},
 			{
@@ -353,8 +354,11 @@ func init() {
 	WorkoutLogsTable.ForeignKeys[2].RefTable = WorkoutsTable
 	EquipmentExercisesTable.ForeignKeys[0].RefTable = EquipmentTable
 	EquipmentExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
+	EquipmentExercisesTable.Annotation = &entsql.Annotation{}
 	ExerciseTypeExercisesTable.ForeignKeys[0].RefTable = ExerciseTypesTable
 	ExerciseTypeExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
+	ExerciseTypeExercisesTable.Annotation = &entsql.Annotation{}
 	MusclesGroupExercisesTable.ForeignKeys[0].RefTable = MusclesGroupsTable
 	MusclesGroupExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
+	MusclesGroupExercisesTable.Annotation = &entsql.Annotation{}
 }

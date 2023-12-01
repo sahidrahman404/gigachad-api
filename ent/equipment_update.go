@@ -36,6 +36,14 @@ func (eu *EquipmentUpdate) SetName(s string) *EquipmentUpdate {
 	return eu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (eu *EquipmentUpdate) SetNillableName(s *string) *EquipmentUpdate {
+	if s != nil {
+		eu.SetName(*s)
+	}
+	return eu
+}
+
 // SetImage sets the "image" field.
 func (eu *EquipmentUpdate) SetImage(s schematype.Image) *EquipmentUpdate {
 	eu.mutation.SetImage(s)
@@ -210,6 +218,14 @@ type EquipmentUpdateOne struct {
 // SetName sets the "name" field.
 func (euo *EquipmentUpdateOne) SetName(s string) *EquipmentUpdateOne {
 	euo.mutation.SetName(s)
+	return euo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (euo *EquipmentUpdateOne) SetNillableName(s *string) *EquipmentUpdateOne {
+	if s != nil {
+		euo.SetName(*s)
+	}
 	return euo
 }
 

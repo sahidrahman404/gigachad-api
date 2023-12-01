@@ -36,6 +36,14 @@ func (mgu *MusclesGroupUpdate) SetName(s string) *MusclesGroupUpdate {
 	return mgu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (mgu *MusclesGroupUpdate) SetNillableName(s *string) *MusclesGroupUpdate {
+	if s != nil {
+		mgu.SetName(*s)
+	}
+	return mgu
+}
+
 // SetImage sets the "image" field.
 func (mgu *MusclesGroupUpdate) SetImage(s schematype.Image) *MusclesGroupUpdate {
 	mgu.mutation.SetImage(s)
@@ -210,6 +218,14 @@ type MusclesGroupUpdateOne struct {
 // SetName sets the "name" field.
 func (mguo *MusclesGroupUpdateOne) SetName(s string) *MusclesGroupUpdateOne {
 	mguo.mutation.SetName(s)
+	return mguo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (mguo *MusclesGroupUpdateOne) SetNillableName(s *string) *MusclesGroupUpdateOne {
+	if s != nil {
+		mguo.SetName(*s)
+	}
 	return mguo
 }
 

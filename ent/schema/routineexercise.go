@@ -61,7 +61,7 @@ func (RoutineExercise) Edges() []ent.Edge {
 
 func (RoutineExercise) Indexes() []ent.Index {
 	return []ent.Index{
-		index.Fields("routine_id").Unique(),
+		index.Fields("routine_id"),
 	}
 }
 

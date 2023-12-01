@@ -7,6 +7,11 @@ input CreateExerciseInput {
   exerciseTypeIDs: [ID!]
 }
 
+input DeleteExerciseInput {
+  id: ID!
+}
+
 extend type Mutation {
-  createExercise(input: CreateExerciseInput!): Exercise
+  createExercise(input: CreateExerciseInput!): Exercise!
+  deleteExercise(input: DeleteExerciseInput!): Exercise!
 }

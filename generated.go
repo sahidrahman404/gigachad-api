@@ -61,7 +61,7 @@ type ComplexityRoot struct {
 	}
 
 	Equipment struct {
-		Exercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) int
+		Exercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
 		ID        func(childComplexity int) int
 		Image     func(childComplexity int) int
 		Name      func(childComplexity int) int
@@ -79,18 +79,18 @@ type ComplexityRoot struct {
 	}
 
 	Exercise struct {
-		Equipment        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.EquipmentWhereInput) int
-		ExerciseTypes    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseTypeWhereInput) int
+		Equipment        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.EquipmentOrder, where *ent.EquipmentWhereInput) int
+		ExerciseTypes    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseTypeOrder, where *ent.ExerciseTypeWhereInput) int
 		HowTo            func(childComplexity int) int
 		ID               func(childComplexity int) int
 		Image            func(childComplexity int) int
-		MusclesGroups    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.MusclesGroupWhereInput) int
+		MusclesGroups    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.MusclesGroupOrder, where *ent.MusclesGroupWhereInput) int
 		Name             func(childComplexity int) int
-		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineExerciseWhereInput) int
-		Routines         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineWhereInput) int
+		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineExerciseOrder, where *ent.RoutineExerciseWhereInput) int
+		Routines         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineOrder, where *ent.RoutineWhereInput) int
 		UserID           func(childComplexity int) int
 		Users            func(childComplexity int) int
-		WorkoutLogs      func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutLogWhereInput) int
+		WorkoutLogs      func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) int
 	}
 
 	ExerciseConnection struct {
@@ -106,7 +106,7 @@ type ComplexityRoot struct {
 
 	ExerciseType struct {
 		Description func(childComplexity int) int
-		Exercises   func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) int
+		Exercises   func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
 		ID          func(childComplexity int) int
 		Name        func(childComplexity int) int
 		Properties  func(childComplexity int) int
@@ -143,7 +143,7 @@ type ComplexityRoot struct {
 	}
 
 	MusclesGroup struct {
-		Exercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) int
+		Exercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
 		ID        func(childComplexity int) int
 		Image     func(childComplexity int) int
 		Name      func(childComplexity int) int
@@ -171,6 +171,7 @@ type ComplexityRoot struct {
 		CreateRoutine             func(childComplexity int, input ent.CreateRoutineInput) int
 		CreateRoutineWithChildren func(childComplexity int, input CreateRoutineWithChildrenInput) int
 		CreateUser                func(childComplexity int, input ent.CreateUserInput) int
+		DeleteExercise            func(childComplexity int, input DeleteExerciseInput) int
 		DeleteRoutine             func(childComplexity int, id pksuid.ID) int
 		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordInput) int
 	}
@@ -183,25 +184,25 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		EquipmentSlice   func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.EquipmentWhereInput) int
-		ExerciseTypes    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseTypeWhereInput) int
-		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) int
-		MusclesGroups    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.MusclesGroupWhereInput) int
+		EquipmentSlice   func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.EquipmentOrder, where *ent.EquipmentWhereInput) int
+		ExerciseTypes    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseTypeOrder, where *ent.ExerciseTypeWhereInput) int
+		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
+		MusclesGroups    func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.MusclesGroupOrder, where *ent.MusclesGroupWhereInput) int
 		Node             func(childComplexity int, id pksuid.ID) int
 		Nodes            func(childComplexity int, ids []pksuid.ID) int
-		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineExerciseWhereInput) int
-		Routines         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineWhereInput) int
-		Users            func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.UserWhereInput) int
+		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineExerciseOrder, where *ent.RoutineExerciseWhereInput) int
+		Routines         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineOrder, where *ent.RoutineWhereInput) int
+		Users            func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) int
 		Viewer           func(childComplexity int) int
-		WorkoutLogs      func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutLogWhereInput) int
-		Workouts         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutWhereInput) int
+		WorkoutLogs      func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) int
+		Workouts         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutOrder, where *ent.WorkoutWhereInput) int
 	}
 
 	Routine struct {
-		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) int
+		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
-		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineExerciseWhereInput) int
+		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineExerciseOrder, where *ent.RoutineExerciseWhereInput) int
 		UserID           func(childComplexity int) int
 		Users            func(childComplexity int) int
 	}
@@ -268,16 +269,16 @@ type ComplexityRoot struct {
 		Activated        func(childComplexity int) int
 		CreatedAt        func(childComplexity int) int
 		Email            func(childComplexity int) int
-		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) int
+		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
-		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineExerciseWhereInput) int
-		Routines         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineWhereInput) int
+		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineExerciseOrder, where *ent.RoutineExerciseWhereInput) int
+		Routines         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineOrder, where *ent.RoutineWhereInput) int
 		Tokens           func(childComplexity int) int
 		Username         func(childComplexity int) int
 		Version          func(childComplexity int) int
-		WorkoutLogs      func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutLogWhereInput) int
-		Workouts         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutWhereInput) int
+		WorkoutLogs      func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) int
+		Workouts         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutOrder, where *ent.WorkoutWhereInput) int
 	}
 
 	UserConnection struct {
@@ -303,7 +304,7 @@ type ComplexityRoot struct {
 		UserID      func(childComplexity int) int
 		Users       func(childComplexity int) int
 		Volume      func(childComplexity int) int
-		WorkoutLogs func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutLogWhereInput) int
+		WorkoutLogs func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) int
 	}
 
 	WorkoutConnection struct {
@@ -354,20 +355,21 @@ type MutationResolver interface {
 	DeleteRoutine(ctx context.Context, id pksuid.ID) (*DeletedID, error)
 	CreateMusclesGroup(ctx context.Context, input CreateMusclesGroupInput) (*ent.MusclesGroup, error)
 	CreateExercise(ctx context.Context, input CreateExerciseInput) (*ent.Exercise, error)
+	DeleteExercise(ctx context.Context, input DeleteExerciseInput) (*ent.Exercise, error)
 	CreateExerciseType(ctx context.Context, input ent.CreateExerciseTypeInput) (*ent.ExerciseType, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id pksuid.ID) (ent.Noder, error)
 	Nodes(ctx context.Context, ids []pksuid.ID) ([]ent.Noder, error)
-	EquipmentSlice(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.EquipmentWhereInput) (*ent.EquipmentConnection, error)
-	Exercises(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseWhereInput) (*ent.ExerciseConnection, error)
-	ExerciseTypes(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.ExerciseTypeWhereInput) (*ent.ExerciseTypeConnection, error)
-	MusclesGroups(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.MusclesGroupWhereInput) (*ent.MusclesGroupConnection, error)
-	Routines(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineWhereInput) (*ent.RoutineConnection, error)
-	RoutineExercises(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.RoutineExerciseWhereInput) (*ent.RoutineExerciseConnection, error)
-	Users(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.UserWhereInput) (*ent.UserConnection, error)
-	Workouts(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutWhereInput) (*ent.WorkoutConnection, error)
-	WorkoutLogs(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, where *ent.WorkoutLogWhereInput) (*ent.WorkoutLogConnection, error)
+	EquipmentSlice(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.EquipmentOrder, where *ent.EquipmentWhereInput) (*ent.EquipmentConnection, error)
+	Exercises(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) (*ent.ExerciseConnection, error)
+	ExerciseTypes(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseTypeOrder, where *ent.ExerciseTypeWhereInput) (*ent.ExerciseTypeConnection, error)
+	MusclesGroups(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.MusclesGroupOrder, where *ent.MusclesGroupWhereInput) (*ent.MusclesGroupConnection, error)
+	Routines(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineOrder, where *ent.RoutineWhereInput) (*ent.RoutineConnection, error)
+	RoutineExercises(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineExerciseOrder, where *ent.RoutineExerciseWhereInput) (*ent.RoutineExerciseConnection, error)
+	Users(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error)
+	Workouts(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutOrder, where *ent.WorkoutWhereInput) (*ent.WorkoutConnection, error)
+	WorkoutLogs(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) (*ent.WorkoutLogConnection, error)
 	Viewer(ctx context.Context) (*ent.User, error)
 }
 
@@ -421,7 +423,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Equipment.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseWhereInput)), true
+		return e.complexity.Equipment.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.ExerciseOrder), args["where"].(*ent.ExerciseWhereInput)), true
 
 	case "Equipment.id":
 		if e.complexity.Equipment.ID == nil {
@@ -489,7 +491,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Exercise.Equipment(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.EquipmentWhereInput)), true
+		return e.complexity.Exercise.Equipment(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.EquipmentOrder), args["where"].(*ent.EquipmentWhereInput)), true
 
 	case "Exercise.exerciseTypes":
 		if e.complexity.Exercise.ExerciseTypes == nil {
@@ -501,7 +503,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Exercise.ExerciseTypes(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseTypeWhereInput)), true
+		return e.complexity.Exercise.ExerciseTypes(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.ExerciseTypeOrder), args["where"].(*ent.ExerciseTypeWhereInput)), true
 
 	case "Exercise.howTo":
 		if e.complexity.Exercise.HowTo == nil {
@@ -534,7 +536,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Exercise.MusclesGroups(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.MusclesGroupWhereInput)), true
+		return e.complexity.Exercise.MusclesGroups(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.MusclesGroupOrder), args["where"].(*ent.MusclesGroupWhereInput)), true
 
 	case "Exercise.name":
 		if e.complexity.Exercise.Name == nil {
@@ -553,7 +555,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Exercise.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.RoutineExerciseWhereInput)), true
+		return e.complexity.Exercise.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.RoutineExerciseOrder), args["where"].(*ent.RoutineExerciseWhereInput)), true
 
 	case "Exercise.routines":
 		if e.complexity.Exercise.Routines == nil {
@@ -565,7 +567,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Exercise.Routines(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.RoutineWhereInput)), true
+		return e.complexity.Exercise.Routines(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.RoutineOrder), args["where"].(*ent.RoutineWhereInput)), true
 
 	case "Exercise.userID":
 		if e.complexity.Exercise.UserID == nil {
@@ -591,7 +593,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Exercise.WorkoutLogs(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.WorkoutLogWhereInput)), true
+		return e.complexity.Exercise.WorkoutLogs(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.WorkoutLogOrder), args["where"].(*ent.WorkoutLogWhereInput)), true
 
 	case "ExerciseConnection.edges":
 		if e.complexity.ExerciseConnection.Edges == nil {
@@ -645,7 +647,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.ExerciseType.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseWhereInput)), true
+		return e.complexity.ExerciseType.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.ExerciseOrder), args["where"].(*ent.ExerciseWhereInput)), true
 
 	case "ExerciseType.id":
 		if e.complexity.ExerciseType.ID == nil {
@@ -825,7 +827,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.MusclesGroup.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseWhereInput)), true
+		return e.complexity.MusclesGroup.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.ExerciseOrder), args["where"].(*ent.ExerciseWhereInput)), true
 
 	case "MusclesGroup.id":
 		if e.complexity.MusclesGroup.ID == nil {
@@ -1003,6 +1005,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(ent.CreateUserInput)), true
 
+	case "Mutation.deleteExercise":
+		if e.complexity.Mutation.DeleteExercise == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteExercise_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteExercise(childComplexity, args["input"].(DeleteExerciseInput)), true
+
 	case "Mutation.deleteRoutine":
 		if e.complexity.Mutation.DeleteRoutine == nil {
 			break
@@ -1065,7 +1079,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.EquipmentSlice(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.EquipmentWhereInput)), true
+		return e.complexity.Query.EquipmentSlice(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.EquipmentOrder), args["where"].(*ent.EquipmentWhereInput)), true
 
 	case "Query.exerciseTypes":
 		if e.complexity.Query.ExerciseTypes == nil {
@@ -1077,7 +1091,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.ExerciseTypes(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseTypeWhereInput)), true
+		return e.complexity.Query.ExerciseTypes(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.ExerciseTypeOrder), args["where"].(*ent.ExerciseTypeWhereInput)), true
 
 	case "Query.exercises":
 		if e.complexity.Query.Exercises == nil {
@@ -1089,7 +1103,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseWhereInput)), true
+		return e.complexity.Query.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.ExerciseOrder), args["where"].(*ent.ExerciseWhereInput)), true
 
 	case "Query.musclesGroups":
 		if e.complexity.Query.MusclesGroups == nil {
@@ -1101,7 +1115,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.MusclesGroups(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.MusclesGroupWhereInput)), true
+		return e.complexity.Query.MusclesGroups(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.MusclesGroupOrder), args["where"].(*ent.MusclesGroupWhereInput)), true
 
 	case "Query.node":
 		if e.complexity.Query.Node == nil {
@@ -1137,7 +1151,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.RoutineExerciseWhereInput)), true
+		return e.complexity.Query.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.RoutineExerciseOrder), args["where"].(*ent.RoutineExerciseWhereInput)), true
 
 	case "Query.routines":
 		if e.complexity.Query.Routines == nil {
@@ -1149,7 +1163,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Routines(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.RoutineWhereInput)), true
+		return e.complexity.Query.Routines(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.RoutineOrder), args["where"].(*ent.RoutineWhereInput)), true
 
 	case "Query.users":
 		if e.complexity.Query.Users == nil {
@@ -1161,7 +1175,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Users(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.UserWhereInput)), true
+		return e.complexity.Query.Users(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.UserOrder), args["where"].(*ent.UserWhereInput)), true
 
 	case "Query.viewer":
 		if e.complexity.Query.Viewer == nil {
@@ -1180,7 +1194,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.WorkoutLogs(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.WorkoutLogWhereInput)), true
+		return e.complexity.Query.WorkoutLogs(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.WorkoutLogOrder), args["where"].(*ent.WorkoutLogWhereInput)), true
 
 	case "Query.workouts":
 		if e.complexity.Query.Workouts == nil {
@@ -1192,7 +1206,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Workouts(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.WorkoutWhereInput)), true
+		return e.complexity.Query.Workouts(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.WorkoutOrder), args["where"].(*ent.WorkoutWhereInput)), true
 
 	case "Routine.exercises":
 		if e.complexity.Routine.Exercises == nil {
@@ -1204,7 +1218,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Routine.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseWhereInput)), true
+		return e.complexity.Routine.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.ExerciseOrder), args["where"].(*ent.ExerciseWhereInput)), true
 
 	case "Routine.id":
 		if e.complexity.Routine.ID == nil {
@@ -1230,7 +1244,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Routine.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.RoutineExerciseWhereInput)), true
+		return e.complexity.Routine.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.RoutineExerciseOrder), args["where"].(*ent.RoutineExerciseWhereInput)), true
 
 	case "Routine.userID":
 		if e.complexity.Routine.UserID == nil {
@@ -1379,35 +1393,35 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RoutineExerciseEdge.Node(childComplexity), true
 
-	case "Set.Kg":
+	case "Set.kg":
 		if e.complexity.Set.Kg == nil {
 			break
 		}
 
 		return e.complexity.Set.Kg(childComplexity), true
 
-	case "Set.Km":
+	case "Set.km":
 		if e.complexity.Set.Km == nil {
 			break
 		}
 
 		return e.complexity.Set.Km(childComplexity), true
 
-	case "Set.Reps":
+	case "Set.reps":
 		if e.complexity.Set.Reps == nil {
 			break
 		}
 
 		return e.complexity.Set.Reps(childComplexity), true
 
-	case "Set.Set":
+	case "Set.set":
 		if e.complexity.Set.Set == nil {
 			break
 		}
 
 		return e.complexity.Set.Set(childComplexity), true
 
-	case "Set.Time":
+	case "Set.time":
 		if e.complexity.Set.Time == nil {
 			break
 		}
@@ -1515,7 +1529,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.User.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.ExerciseWhereInput)), true
+		return e.complexity.User.Exercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.ExerciseOrder), args["where"].(*ent.ExerciseWhereInput)), true
 
 	case "User.id":
 		if e.complexity.User.ID == nil {
@@ -1541,7 +1555,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.User.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.RoutineExerciseWhereInput)), true
+		return e.complexity.User.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.RoutineExerciseOrder), args["where"].(*ent.RoutineExerciseWhereInput)), true
 
 	case "User.routines":
 		if e.complexity.User.Routines == nil {
@@ -1553,7 +1567,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.User.Routines(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.RoutineWhereInput)), true
+		return e.complexity.User.Routines(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.RoutineOrder), args["where"].(*ent.RoutineWhereInput)), true
 
 	case "User.tokens":
 		if e.complexity.User.Tokens == nil {
@@ -1586,7 +1600,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.User.WorkoutLogs(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.WorkoutLogWhereInput)), true
+		return e.complexity.User.WorkoutLogs(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.WorkoutLogOrder), args["where"].(*ent.WorkoutLogWhereInput)), true
 
 	case "User.workouts":
 		if e.complexity.User.Workouts == nil {
@@ -1598,7 +1612,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.User.Workouts(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.WorkoutWhereInput)), true
+		return e.complexity.User.Workouts(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.WorkoutOrder), args["where"].(*ent.WorkoutWhereInput)), true
 
 	case "UserConnection.edges":
 		if e.complexity.UserConnection.Edges == nil {
@@ -1722,7 +1736,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Workout.WorkoutLogs(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["where"].(*ent.WorkoutLogWhereInput)), true
+		return e.complexity.Workout.WorkoutLogs(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.WorkoutLogOrder), args["where"].(*ent.WorkoutLogWhereInput)), true
 
 	case "WorkoutConnection.edges":
 		if e.complexity.WorkoutConnection.Edges == nil {
@@ -1861,24 +1875,35 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateRoutineWithChildrenInput,
 		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputCreateWorkoutInput,
+		ec.unmarshalInputDeleteExerciseInput,
+		ec.unmarshalInputEquipmentOrder,
 		ec.unmarshalInputEquipmentWhereInput,
+		ec.unmarshalInputExerciseOrder,
+		ec.unmarshalInputExerciseTypeOrder,
 		ec.unmarshalInputExerciseTypeWhereInput,
 		ec.unmarshalInputExerciseWhereInput,
 		ec.unmarshalInputImageInput,
 		ec.unmarshalInputLoginInput,
+		ec.unmarshalInputMusclesGroupOrder,
 		ec.unmarshalInputMusclesGroupWhereInput,
 		ec.unmarshalInputResetPasswordInput,
 		ec.unmarshalInputResetUserPasswordInput,
+		ec.unmarshalInputRoutineExerciseOrder,
 		ec.unmarshalInputRoutineExerciseWhereInput,
+		ec.unmarshalInputRoutineOrder,
 		ec.unmarshalInputRoutineWhereInput,
 		ec.unmarshalInputSetInput,
+		ec.unmarshalInputTokenOrder,
 		ec.unmarshalInputTokenWhereInput,
 		ec.unmarshalInputUpdateExerciseTypeInput,
 		ec.unmarshalInputUpdateRoutineInput,
 		ec.unmarshalInputUpdateUserInput,
 		ec.unmarshalInputUpdateWorkoutInput,
+		ec.unmarshalInputUserOrder,
 		ec.unmarshalInputUserWhereInput,
+		ec.unmarshalInputWorkoutLogOrder,
 		ec.unmarshalInputWorkoutLogWhereInput,
+		ec.unmarshalInputWorkoutOrder,
 		ec.unmarshalInputWorkoutWhereInput,
 	)
 	first := true
@@ -2043,15 +2068,24 @@ func (ec *executionContext) field_Equipment_exercises_args(ctx context.Context, 
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.ExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.ExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.ExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2094,15 +2128,24 @@ func (ec *executionContext) field_ExerciseType_exercises_args(ctx context.Contex
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.ExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.ExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.ExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2145,15 +2188,24 @@ func (ec *executionContext) field_Exercise_equipment_args(ctx context.Context, r
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.EquipmentWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOEquipmentWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentWhereInput(ctx, tmp)
+	var arg4 *ent.EquipmentOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOEquipmentOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.EquipmentWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOEquipmentWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2196,15 +2248,24 @@ func (ec *executionContext) field_Exercise_exerciseTypes_args(ctx context.Contex
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.ExerciseTypeWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOExerciseTypeWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeWhereInput(ctx, tmp)
+	var arg4 *ent.ExerciseTypeOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOExerciseTypeOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.ExerciseTypeWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOExerciseTypeWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2247,15 +2308,24 @@ func (ec *executionContext) field_Exercise_musclesGroups_args(ctx context.Contex
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.MusclesGroupWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOMusclesGroupWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupWhereInput(ctx, tmp)
+	var arg4 *ent.MusclesGroupOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOMusclesGroupOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.MusclesGroupWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOMusclesGroupWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2298,15 +2368,24 @@ func (ec *executionContext) field_Exercise_routineExercises_args(ctx context.Con
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.RoutineExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.RoutineExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalORoutineExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.RoutineExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2349,15 +2428,24 @@ func (ec *executionContext) field_Exercise_routines_args(ctx context.Context, ra
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.RoutineWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalORoutineWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineWhereInput(ctx, tmp)
+	var arg4 *ent.RoutineOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalORoutineOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.RoutineWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalORoutineWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2400,15 +2488,24 @@ func (ec *executionContext) field_Exercise_workoutLogs_args(ctx context.Context,
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.WorkoutLogWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx, tmp)
+	var arg4 *ent.WorkoutLogOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOWorkoutLogOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.WorkoutLogWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2451,15 +2548,24 @@ func (ec *executionContext) field_MusclesGroup_exercises_args(ctx context.Contex
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.ExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.ExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.ExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2613,6 +2719,21 @@ func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_deleteExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 DeleteExerciseInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeleteExerciseInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_deleteRoutine_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2697,15 +2818,24 @@ func (ec *executionContext) field_Query_equipmentSlice_args(ctx context.Context,
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.EquipmentWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOEquipmentWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentWhereInput(ctx, tmp)
+	var arg4 *ent.EquipmentOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOEquipmentOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.EquipmentWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOEquipmentWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2748,15 +2878,24 @@ func (ec *executionContext) field_Query_exerciseTypes_args(ctx context.Context, 
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.ExerciseTypeWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOExerciseTypeWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeWhereInput(ctx, tmp)
+	var arg4 *ent.ExerciseTypeOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOExerciseTypeOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.ExerciseTypeWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOExerciseTypeWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2799,15 +2938,24 @@ func (ec *executionContext) field_Query_exercises_args(ctx context.Context, rawA
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.ExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.ExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.ExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2850,15 +2998,24 @@ func (ec *executionContext) field_Query_musclesGroups_args(ctx context.Context, 
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.MusclesGroupWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOMusclesGroupWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupWhereInput(ctx, tmp)
+	var arg4 *ent.MusclesGroupOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOMusclesGroupOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.MusclesGroupWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOMusclesGroupWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2931,15 +3088,24 @@ func (ec *executionContext) field_Query_routineExercises_args(ctx context.Contex
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.RoutineExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.RoutineExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalORoutineExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.RoutineExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -2982,15 +3148,24 @@ func (ec *executionContext) field_Query_routines_args(ctx context.Context, rawAr
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.RoutineWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalORoutineWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineWhereInput(ctx, tmp)
+	var arg4 *ent.RoutineOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalORoutineOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.RoutineWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalORoutineWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3033,15 +3208,24 @@ func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.UserWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserWhereInput(ctx, tmp)
+	var arg4 *ent.UserOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOUserOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.UserWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3084,15 +3268,24 @@ func (ec *executionContext) field_Query_workoutLogs_args(ctx context.Context, ra
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.WorkoutLogWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx, tmp)
+	var arg4 *ent.WorkoutLogOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOWorkoutLogOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.WorkoutLogWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3135,15 +3328,24 @@ func (ec *executionContext) field_Query_workouts_args(ctx context.Context, rawAr
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.WorkoutWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOWorkoutWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutWhereInput(ctx, tmp)
+	var arg4 *ent.WorkoutOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOWorkoutOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.WorkoutWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOWorkoutWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3186,15 +3388,24 @@ func (ec *executionContext) field_Routine_exercises_args(ctx context.Context, ra
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.ExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.ExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.ExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3237,15 +3448,24 @@ func (ec *executionContext) field_Routine_routineExercises_args(ctx context.Cont
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.RoutineExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.RoutineExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalORoutineExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.RoutineExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3288,15 +3508,24 @@ func (ec *executionContext) field_User_exercises_args(ctx context.Context, rawAr
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.ExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.ExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.ExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3339,15 +3568,24 @@ func (ec *executionContext) field_User_routineExercises_args(ctx context.Context
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.RoutineExerciseWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx, tmp)
+	var arg4 *ent.RoutineExerciseOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalORoutineExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.RoutineExerciseWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3390,15 +3628,24 @@ func (ec *executionContext) field_User_routines_args(ctx context.Context, rawArg
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.RoutineWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalORoutineWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineWhereInput(ctx, tmp)
+	var arg4 *ent.RoutineOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalORoutineOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.RoutineWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalORoutineWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3441,15 +3688,24 @@ func (ec *executionContext) field_User_workoutLogs_args(ctx context.Context, raw
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.WorkoutLogWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx, tmp)
+	var arg4 *ent.WorkoutLogOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOWorkoutLogOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.WorkoutLogWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3492,15 +3748,24 @@ func (ec *executionContext) field_User_workouts_args(ctx context.Context, rawArg
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.WorkoutWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOWorkoutWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutWhereInput(ctx, tmp)
+	var arg4 *ent.WorkoutOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOWorkoutOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.WorkoutWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOWorkoutWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3543,15 +3808,24 @@ func (ec *executionContext) field_Workout_workoutLogs_args(ctx context.Context, 
 		}
 	}
 	args["last"] = arg3
-	var arg4 *ent.WorkoutLogWhereInput
-	if tmp, ok := rawArgs["where"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg4, err = ec.unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx, tmp)
+	var arg4 *ent.WorkoutLogOrder
+	if tmp, ok := rawArgs["orderBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
+		arg4, err = ec.unmarshalOWorkoutLogOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["where"] = arg4
+	args["orderBy"] = arg4
+	var arg5 *ent.WorkoutLogWhereInput
+	if tmp, ok := rawArgs["where"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
+		arg5, err = ec.unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["where"] = arg5
 	return args, nil
 }
 
@@ -3927,7 +4201,7 @@ func (ec *executionContext) _Equipment_exercises(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.ExerciseWhereInput))
+		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.ExerciseOrder), fc.Args["where"].(*ent.ExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4475,7 +4749,7 @@ func (ec *executionContext) _Exercise_workoutLogs(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.WorkoutLogs(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.WorkoutLogWhereInput))
+		return obj.WorkoutLogs(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.WorkoutLogOrder), fc.Args["where"].(*ent.WorkoutLogWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4607,7 +4881,7 @@ func (ec *executionContext) _Exercise_equipment(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Equipment(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.EquipmentWhereInput))
+		return obj.Equipment(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.EquipmentOrder), fc.Args["where"].(*ent.EquipmentWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4670,7 +4944,7 @@ func (ec *executionContext) _Exercise_musclesGroups(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.MusclesGroups(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.MusclesGroupWhereInput))
+		return obj.MusclesGroups(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.MusclesGroupOrder), fc.Args["where"].(*ent.MusclesGroupWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4733,7 +5007,7 @@ func (ec *executionContext) _Exercise_exerciseTypes(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ExerciseTypes(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.ExerciseTypeWhereInput))
+		return obj.ExerciseTypes(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.ExerciseTypeOrder), fc.Args["where"].(*ent.ExerciseTypeWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4796,7 +5070,7 @@ func (ec *executionContext) _Exercise_routines(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Routines(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.RoutineWhereInput))
+		return obj.Routines(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.RoutineOrder), fc.Args["where"].(*ent.RoutineWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4859,7 +5133,7 @@ func (ec *executionContext) _Exercise_routineExercises(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.RoutineExercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.RoutineExerciseWhereInput))
+		return obj.RoutineExercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.RoutineExerciseOrder), fc.Args["where"].(*ent.RoutineExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5354,7 +5628,7 @@ func (ec *executionContext) _ExerciseType_exercises(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.ExerciseWhereInput))
+		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.ExerciseOrder), fc.Args["where"].(*ent.ExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6508,7 +6782,7 @@ func (ec *executionContext) _MusclesGroup_exercises(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.ExerciseWhereInput))
+		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.ExerciseOrder), fc.Args["where"].(*ent.ExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7528,11 +7802,14 @@ func (ec *executionContext) _Mutation_createExercise(ctx context.Context, field 
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.(*ent.Exercise)
 	fc.Result = res
-	return ec.marshalOExercise2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExercise(ctx, field.Selections, res)
+	return ec.marshalNExercise2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExercise(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createExercise(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7579,6 +7856,87 @@ func (ec *executionContext) fieldContext_Mutation_createExercise(ctx context.Con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createExercise_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteExercise(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteExercise(rctx, fc.Args["input"].(DeleteExerciseInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Exercise)
+	fc.Result = res
+	return ec.marshalNExercise2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExercise(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteExercise(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Exercise_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Exercise_name(ctx, field)
+			case "image":
+				return ec.fieldContext_Exercise_image(ctx, field)
+			case "howTo":
+				return ec.fieldContext_Exercise_howTo(ctx, field)
+			case "userID":
+				return ec.fieldContext_Exercise_userID(ctx, field)
+			case "workoutLogs":
+				return ec.fieldContext_Exercise_workoutLogs(ctx, field)
+			case "users":
+				return ec.fieldContext_Exercise_users(ctx, field)
+			case "equipment":
+				return ec.fieldContext_Exercise_equipment(ctx, field)
+			case "musclesGroups":
+				return ec.fieldContext_Exercise_musclesGroups(ctx, field)
+			case "exerciseTypes":
+				return ec.fieldContext_Exercise_exerciseTypes(ctx, field)
+			case "routines":
+				return ec.fieldContext_Exercise_routines(ctx, field)
+			case "routineExercises":
+				return ec.fieldContext_Exercise_routineExercises(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Exercise", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteExercise_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -7943,7 +8301,7 @@ func (ec *executionContext) _Query_equipmentSlice(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().EquipmentSlice(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.EquipmentWhereInput))
+		return ec.resolvers.Query().EquipmentSlice(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.EquipmentOrder), fc.Args["where"].(*ent.EquipmentWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8006,7 +8364,7 @@ func (ec *executionContext) _Query_exercises(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Exercises(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.ExerciseWhereInput))
+		return ec.resolvers.Query().Exercises(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.ExerciseOrder), fc.Args["where"].(*ent.ExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8069,7 +8427,7 @@ func (ec *executionContext) _Query_exerciseTypes(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().ExerciseTypes(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.ExerciseTypeWhereInput))
+		return ec.resolvers.Query().ExerciseTypes(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.ExerciseTypeOrder), fc.Args["where"].(*ent.ExerciseTypeWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8132,7 +8490,7 @@ func (ec *executionContext) _Query_musclesGroups(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().MusclesGroups(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.MusclesGroupWhereInput))
+		return ec.resolvers.Query().MusclesGroups(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.MusclesGroupOrder), fc.Args["where"].(*ent.MusclesGroupWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8195,7 +8553,7 @@ func (ec *executionContext) _Query_routines(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Routines(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.RoutineWhereInput))
+		return ec.resolvers.Query().Routines(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.RoutineOrder), fc.Args["where"].(*ent.RoutineWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8258,7 +8616,7 @@ func (ec *executionContext) _Query_routineExercises(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().RoutineExercises(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.RoutineExerciseWhereInput))
+		return ec.resolvers.Query().RoutineExercises(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.RoutineExerciseOrder), fc.Args["where"].(*ent.RoutineExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8321,7 +8679,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Users(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.UserWhereInput))
+		return ec.resolvers.Query().Users(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.UserOrder), fc.Args["where"].(*ent.UserWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8384,7 +8742,7 @@ func (ec *executionContext) _Query_workouts(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Workouts(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.WorkoutWhereInput))
+		return ec.resolvers.Query().Workouts(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.WorkoutOrder), fc.Args["where"].(*ent.WorkoutWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8447,7 +8805,7 @@ func (ec *executionContext) _Query_workoutLogs(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().WorkoutLogs(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.WorkoutLogWhereInput))
+		return ec.resolvers.Query().WorkoutLogs(rctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.WorkoutLogOrder), fc.Args["where"].(*ent.WorkoutLogWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8840,7 +9198,7 @@ func (ec *executionContext) _Routine_exercises(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.ExerciseWhereInput))
+		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.ExerciseOrder), fc.Args["where"].(*ent.ExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8975,7 +9333,7 @@ func (ec *executionContext) _Routine_routineExercises(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.RoutineExercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.RoutineExerciseWhereInput))
+		return obj.RoutineExercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.RoutineExerciseOrder), fc.Args["where"].(*ent.RoutineExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9392,16 +9750,16 @@ func (ec *executionContext) fieldContext_RoutineExercise_sets(ctx context.Contex
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Set":
-				return ec.fieldContext_Set_Set(ctx, field)
-			case "Reps":
-				return ec.fieldContext_Set_Reps(ctx, field)
-			case "Kg":
-				return ec.fieldContext_Set_Kg(ctx, field)
-			case "Time":
-				return ec.fieldContext_Set_Time(ctx, field)
-			case "Km":
-				return ec.fieldContext_Set_Km(ctx, field)
+			case "set":
+				return ec.fieldContext_Set_set(ctx, field)
+			case "reps":
+				return ec.fieldContext_Set_reps(ctx, field)
+			case "kg":
+				return ec.fieldContext_Set_kg(ctx, field)
+			case "time":
+				return ec.fieldContext_Set_time(ctx, field)
+			case "km":
+				return ec.fieldContext_Set_km(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Set", field.Name)
 		},
@@ -9991,8 +10349,8 @@ func (ec *executionContext) fieldContext_RoutineExerciseEdge_cursor(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _Set_Set(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Set_Set(ctx, field)
+func (ec *executionContext) _Set_set(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_set(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10022,7 +10380,7 @@ func (ec *executionContext) _Set_Set(ctx context.Context, field graphql.Collecte
 	return ec.marshalNInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Set_Set(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Set_set(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Set",
 		Field:      field,
@@ -10035,8 +10393,8 @@ func (ec *executionContext) fieldContext_Set_Set(ctx context.Context, field grap
 	return fc, nil
 }
 
-func (ec *executionContext) _Set_Reps(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Set_Reps(ctx, field)
+func (ec *executionContext) _Set_reps(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_reps(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10063,7 +10421,7 @@ func (ec *executionContext) _Set_Reps(ctx context.Context, field graphql.Collect
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Set_Reps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Set_reps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Set",
 		Field:      field,
@@ -10076,8 +10434,8 @@ func (ec *executionContext) fieldContext_Set_Reps(ctx context.Context, field gra
 	return fc, nil
 }
 
-func (ec *executionContext) _Set_Kg(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Set_Kg(ctx, field)
+func (ec *executionContext) _Set_kg(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_kg(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10104,7 +10462,7 @@ func (ec *executionContext) _Set_Kg(ctx context.Context, field graphql.Collected
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Set_Kg(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Set_kg(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Set",
 		Field:      field,
@@ -10117,8 +10475,8 @@ func (ec *executionContext) fieldContext_Set_Kg(ctx context.Context, field graph
 	return fc, nil
 }
 
-func (ec *executionContext) _Set_Time(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Set_Time(ctx, field)
+func (ec *executionContext) _Set_time(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_time(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10145,7 +10503,7 @@ func (ec *executionContext) _Set_Time(ctx context.Context, field graphql.Collect
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Set_Time(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Set_time(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Set",
 		Field:      field,
@@ -10158,8 +10516,8 @@ func (ec *executionContext) fieldContext_Set_Time(ctx context.Context, field gra
 	return fc, nil
 }
 
-func (ec *executionContext) _Set_Km(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Set_Km(ctx, field)
+func (ec *executionContext) _Set_km(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_km(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10186,7 +10544,7 @@ func (ec *executionContext) _Set_Km(ctx context.Context, field graphql.Collected
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Set_Km(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Set_km(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Set",
 		Field:      field,
@@ -11027,7 +11385,7 @@ func (ec *executionContext) _User_exercises(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.ExerciseWhereInput))
+		return obj.Exercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.ExerciseOrder), fc.Args["where"].(*ent.ExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11090,7 +11448,7 @@ func (ec *executionContext) _User_routines(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Routines(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.RoutineWhereInput))
+		return obj.Routines(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.RoutineOrder), fc.Args["where"].(*ent.RoutineWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11153,7 +11511,7 @@ func (ec *executionContext) _User_workouts(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Workouts(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.WorkoutWhereInput))
+		return obj.Workouts(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.WorkoutOrder), fc.Args["where"].(*ent.WorkoutWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11216,7 +11574,7 @@ func (ec *executionContext) _User_workoutLogs(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.WorkoutLogs(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.WorkoutLogWhereInput))
+		return obj.WorkoutLogs(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.WorkoutLogOrder), fc.Args["where"].(*ent.WorkoutLogWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11279,7 +11637,7 @@ func (ec *executionContext) _User_routineExercises(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.RoutineExercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.RoutineExerciseWhereInput))
+		return obj.RoutineExercises(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.RoutineExerciseOrder), fc.Args["where"].(*ent.RoutineExerciseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12106,7 +12464,7 @@ func (ec *executionContext) _Workout_workoutLogs(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.WorkoutLogs(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["where"].(*ent.WorkoutLogWhereInput))
+		return obj.WorkoutLogs(ctx, fc.Args["after"].(*entgql.Cursor[pksuid.ID]), fc.Args["first"].(*int), fc.Args["before"].(*entgql.Cursor[pksuid.ID]), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.WorkoutLogOrder), fc.Args["where"].(*ent.WorkoutLogWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12494,16 +12852,16 @@ func (ec *executionContext) fieldContext_WorkoutLog_sets(ctx context.Context, fi
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "Set":
-				return ec.fieldContext_Set_Set(ctx, field)
-			case "Reps":
-				return ec.fieldContext_Set_Reps(ctx, field)
-			case "Kg":
-				return ec.fieldContext_Set_Kg(ctx, field)
-			case "Time":
-				return ec.fieldContext_Set_Time(ctx, field)
-			case "Km":
-				return ec.fieldContext_Set_Km(ctx, field)
+			case "set":
+				return ec.fieldContext_Set_set(ctx, field)
+			case "reps":
+				return ec.fieldContext_Set_reps(ctx, field)
+			case "kg":
+				return ec.fieldContext_Set_kg(ctx, field)
+			case "time":
+				return ec.fieldContext_Set_time(ctx, field)
+			case "km":
+				return ec.fieldContext_Set_km(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Set", field.Name)
 		},
@@ -15151,7 +15509,7 @@ func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "RoutineExercise"}
+	fieldsInOrder := [...]string{"name", "routineExercise"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -15167,10 +15525,10 @@ func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx con
 				return it, err
 			}
 			it.Name = data
-		case "RoutineExercise":
+		case "routineExercise":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("RoutineExercise"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("routineExercise"))
 			data, err := ec.unmarshalOCreateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
@@ -15378,6 +15736,77 @@ func (ec *executionContext) unmarshalInputCreateWorkoutInput(ctx context.Context
 				return it, err
 			}
 			it.WorkoutLogIDs = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputDeleteExerciseInput(ctx context.Context, obj interface{}) (DeleteExerciseInput, error) {
+	var it DeleteExerciseInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputEquipmentOrder(ctx context.Context, obj interface{}) (ent.EquipmentOrder, error) {
+	var it ent.EquipmentOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNEquipmentOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
 		}
 	}
 
@@ -15632,6 +16061,90 @@ func (ec *executionContext) unmarshalInputEquipmentWhereInput(ctx context.Contex
 				return it, err
 			}
 			it.HasExercisesWith = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputExerciseOrder(ctx context.Context, obj interface{}) (ent.ExerciseOrder, error) {
+	var it ent.ExerciseOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNExerciseOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputExerciseTypeOrder(ctx context.Context, obj interface{}) (ent.ExerciseTypeOrder, error) {
+	var it ent.ExerciseTypeOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNExerciseTypeOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
 		}
 	}
 
@@ -16771,6 +17284,48 @@ func (ec *executionContext) unmarshalInputLoginInput(ctx context.Context, obj in
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputMusclesGroupOrder(ctx context.Context, obj interface{}) (ent.MusclesGroupOrder, error) {
+	var it ent.MusclesGroupOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNMusclesGroupOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputMusclesGroupWhereInput(ctx context.Context, obj interface{}) (ent.MusclesGroupWhereInput, error) {
 	var it ent.MusclesGroupWhereInput
 	asMap := map[string]interface{}{}
@@ -17092,6 +17647,48 @@ func (ec *executionContext) unmarshalInputResetUserPasswordInput(ctx context.Con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputRoutineExerciseOrder(ctx context.Context, obj interface{}) (ent.RoutineExerciseOrder, error) {
+	var it ent.RoutineExerciseOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNRoutineExerciseOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputRoutineExerciseWhereInput(ctx context.Context, obj interface{}) (ent.RoutineExerciseWhereInput, error) {
 	var it ent.RoutineExerciseWhereInput
 	asMap := map[string]interface{}{}
@@ -17340,6 +17937,48 @@ func (ec *executionContext) unmarshalInputRoutineExerciseWhereInput(ctx context.
 				return it, err
 			}
 			it.RestTimerContainsFold = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputRoutineOrder(ctx context.Context, obj interface{}) (ent.RoutineOrder, error) {
+	var it ent.RoutineOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNRoutineOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
 		}
 	}
 
@@ -17760,58 +18399,100 @@ func (ec *executionContext) unmarshalInputSetInput(ctx context.Context, obj inte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"Set", "Reps", "Kg", "Time", "Km"}
+	fieldsInOrder := [...]string{"set", "reps", "kg", "time", "km"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "Set":
+		case "set":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Set"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("set"))
 			data, err := ec.unmarshalNInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Set = data
-		case "Reps":
+		case "reps":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Reps"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reps"))
 			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Reps = data
-		case "Kg":
+		case "kg":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Kg"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("kg"))
 			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Kg = data
-		case "Time":
+		case "time":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Time"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("time"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Time = data
-		case "Km":
+		case "km":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("Km"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("km"))
 			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
 			it.Km = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputTokenOrder(ctx context.Context, obj interface{}) (ent.TokenOrder, error) {
+	var it ent.TokenOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNTokenOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐTokenOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
 		}
 	}
 
@@ -18782,6 +19463,48 @@ func (ec *executionContext) unmarshalInputUpdateWorkoutInput(ctx context.Context
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUserOrder(ctx context.Context, obj interface{}) (ent.UserOrder, error) {
+	var it ent.UserOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNUserOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, obj interface{}) (ent.UserWhereInput, error) {
 	var it ent.UserWhereInput
 	asMap := map[string]interface{}{}
@@ -19621,6 +20344,48 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputWorkoutLogOrder(ctx context.Context, obj interface{}) (ent.WorkoutLogOrder, error) {
+	var it ent.WorkoutLogOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNWorkoutLogOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputWorkoutLogWhereInput(ctx context.Context, obj interface{}) (ent.WorkoutLogWhereInput, error) {
 	var it ent.WorkoutLogWhereInput
 	asMap := map[string]interface{}{}
@@ -20022,6 +20787,48 @@ func (ec *executionContext) unmarshalInputWorkoutLogWhereInput(ctx context.Conte
 				return it, err
 			}
 			it.HasWorkoutsWith = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputWorkoutOrder(ctx context.Context, obj interface{}) (ent.WorkoutOrder, error) {
+	var it ent.WorkoutOrder
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	if _, present := asMap["direction"]; !present {
+		asMap["direction"] = "ASC"
+	}
+
+	fieldsInOrder := [...]string{"direction", "field"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "direction":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("direction"))
+			data, err := ec.unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Direction = data
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			data, err := ec.unmarshalNWorkoutOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutOrderField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Field = data
 		}
 	}
 
@@ -22387,6 +23194,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createExercise(ctx, field)
 			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "deleteExercise":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteExercise(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "createExerciseType":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createExerciseType(ctx, field)
@@ -23284,19 +24101,19 @@ func (ec *executionContext) _Set(ctx context.Context, sel ast.SelectionSet, obj 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Set")
-		case "Set":
-			out.Values[i] = ec._Set_Set(ctx, field, obj)
+		case "set":
+			out.Values[i] = ec._Set_set(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "Reps":
-			out.Values[i] = ec._Set_Reps(ctx, field, obj)
-		case "Kg":
-			out.Values[i] = ec._Set_Kg(ctx, field, obj)
-		case "Time":
-			out.Values[i] = ec._Set_Time(ctx, field, obj)
-		case "Km":
-			out.Values[i] = ec._Set_Km(ctx, field, obj)
+		case "reps":
+			out.Values[i] = ec._Set_reps(ctx, field, obj)
+		case "kg":
+			out.Values[i] = ec._Set_kg(ctx, field, obj)
+		case "time":
+			out.Values[i] = ec._Set_time(ctx, field, obj)
+		case "km":
+			out.Values[i] = ec._Set_km(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -24713,6 +25530,11 @@ func (ec *executionContext) marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCurso
 	return v
 }
 
+func (ec *executionContext) unmarshalNDeleteExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeleteExerciseInput(ctx context.Context, v interface{}) (DeleteExerciseInput, error) {
+	res, err := ec.unmarshalInputDeleteExerciseInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNEquipmentConnection2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentConnection(ctx context.Context, sel ast.SelectionSet, v ent.EquipmentConnection) graphql.Marshaler {
 	return ec._EquipmentConnection(ctx, sel, &v)
 }
@@ -24727,9 +25549,29 @@ func (ec *executionContext) marshalNEquipmentConnection2ᚖgithubᚗcomᚋsahidr
 	return ec._EquipmentConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNEquipmentOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentOrderField(ctx context.Context, v interface{}) (*ent.EquipmentOrderField, error) {
+	var res = new(ent.EquipmentOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNEquipmentOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.EquipmentOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) unmarshalNEquipmentWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentWhereInput(ctx context.Context, v interface{}) (*ent.EquipmentWhereInput, error) {
 	res, err := ec.unmarshalInputEquipmentWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNExercise2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExercise(ctx context.Context, sel ast.SelectionSet, v ent.Exercise) graphql.Marshaler {
+	return ec._Exercise(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNExercise2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExercise(ctx context.Context, sel ast.SelectionSet, v *ent.Exercise) graphql.Marshaler {
@@ -24754,6 +25596,22 @@ func (ec *executionContext) marshalNExerciseConnection2ᚖgithubᚗcomᚋsahidra
 		return graphql.Null
 	}
 	return ec._ExerciseConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNExerciseOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrderField(ctx context.Context, v interface{}) (*ent.ExerciseOrderField, error) {
+	var res = new(ent.ExerciseOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNExerciseOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.ExerciseOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalNExerciseType2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseType(ctx context.Context, sel ast.SelectionSet, v ent.ExerciseType) graphql.Marshaler {
@@ -24782,6 +25640,22 @@ func (ec *executionContext) marshalNExerciseTypeConnection2ᚖgithubᚗcomᚋsah
 		return graphql.Null
 	}
 	return ec._ExerciseTypeConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNExerciseTypeOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeOrderField(ctx context.Context, v interface{}) (*ent.ExerciseTypeOrderField, error) {
+	var res = new(ent.ExerciseTypeOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNExerciseTypeOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.ExerciseTypeOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalNExerciseTypeWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeWhereInput(ctx context.Context, v interface{}) (*ent.ExerciseTypeWhereInput, error) {
@@ -24910,6 +25784,22 @@ func (ec *executionContext) marshalNMusclesGroupConnection2ᚖgithubᚗcomᚋsah
 	return ec._MusclesGroupConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNMusclesGroupOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupOrderField(ctx context.Context, v interface{}) (*ent.MusclesGroupOrderField, error) {
+	var res = new(ent.MusclesGroupOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNMusclesGroupOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.MusclesGroupOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) unmarshalNMusclesGroupWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupWhereInput(ctx context.Context, v interface{}) (*ent.MusclesGroupWhereInput, error) {
 	res, err := ec.unmarshalInputMusclesGroupWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
@@ -24951,6 +25841,16 @@ func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋsahidrahman404ᚋgiga
 	wg.Wait()
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx context.Context, v interface{}) (entgql.OrderDirection, error) {
+	var res entgql.OrderDirection
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNOrderDirection2entgoᚗioᚋcontribᚋentgqlᚐOrderDirection(ctx context.Context, sel ast.SelectionSet, v entgql.OrderDirection) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v entgql.PageInfo[pksuid.ID]) graphql.Marshaler {
@@ -25009,9 +25909,41 @@ func (ec *executionContext) marshalNRoutineExerciseConnection2ᚖgithubᚗcomᚋ
 	return ec._RoutineExerciseConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNRoutineExerciseOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrderField(ctx context.Context, v interface{}) (*ent.RoutineExerciseOrderField, error) {
+	var res = new(ent.RoutineExerciseOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNRoutineExerciseOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.RoutineExerciseOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) unmarshalNRoutineExerciseWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInput(ctx context.Context, v interface{}) (*ent.RoutineExerciseWhereInput, error) {
 	res, err := ec.unmarshalInputRoutineExerciseWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNRoutineOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineOrderField(ctx context.Context, v interface{}) (*ent.RoutineOrderField, error) {
+	var res = new(ent.RoutineOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNRoutineOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.RoutineOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalNRoutineWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineWhereInput(ctx context.Context, v interface{}) (*ent.RoutineWhereInput, error) {
@@ -25149,6 +26081,22 @@ func (ec *executionContext) marshalNToken2ᚖgithubᚗcomᚋsahidrahman404ᚋgig
 	return ec._Token(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNTokenOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐTokenOrderField(ctx context.Context, v interface{}) (*ent.TokenOrderField, error) {
+	var res = new(ent.TokenOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTokenOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐTokenOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.TokenOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) unmarshalNTokenWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐTokenWhereInput(ctx context.Context, v interface{}) (*ent.TokenWhereInput, error) {
 	res, err := ec.unmarshalInputTokenWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
@@ -25180,6 +26128,22 @@ func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋsahidrahman
 		return graphql.Null
 	}
 	return ec._UserConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNUserOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserOrderField(ctx context.Context, v interface{}) (*ent.UserOrderField, error) {
+	var res = new(ent.UserOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUserOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.UserOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalNUserWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
@@ -25215,9 +26179,41 @@ func (ec *executionContext) marshalNWorkoutLogConnection2ᚖgithubᚗcomᚋsahid
 	return ec._WorkoutLogConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNWorkoutLogOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogOrderField(ctx context.Context, v interface{}) (*ent.WorkoutLogOrderField, error) {
+	var res = new(ent.WorkoutLogOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNWorkoutLogOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.WorkoutLogOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) unmarshalNWorkoutLogWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInput(ctx context.Context, v interface{}) (*ent.WorkoutLogWhereInput, error) {
 	res, err := ec.unmarshalInputWorkoutLogWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNWorkoutOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutOrderField(ctx context.Context, v interface{}) (*ent.WorkoutOrderField, error) {
+	var res = new(ent.WorkoutOrderField)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNWorkoutOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.WorkoutOrderField) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalNWorkoutWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutWhereInput(ctx context.Context, v interface{}) (*ent.WorkoutWhereInput, error) {
@@ -25602,6 +26598,14 @@ func (ec *executionContext) marshalOEquipmentEdge2ᚖgithubᚗcomᚋsahidrahman4
 	return ec._EquipmentEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOEquipmentOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentOrder(ctx context.Context, v interface{}) (*ent.EquipmentOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputEquipmentOrder(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalOEquipmentWhereInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipmentWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.EquipmentWhereInput, error) {
 	if v == nil {
 		return nil, nil
@@ -25685,6 +26689,14 @@ func (ec *executionContext) marshalOExerciseEdge2ᚖgithubᚗcomᚋsahidrahman40
 	return ec._ExerciseEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseOrder(ctx context.Context, v interface{}) (*ent.ExerciseOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputExerciseOrder(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalOExerciseType2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseType(ctx context.Context, sel ast.SelectionSet, v *ent.ExerciseType) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -25738,6 +26750,14 @@ func (ec *executionContext) marshalOExerciseTypeEdge2ᚖgithubᚗcomᚋsahidrahm
 		return graphql.Null
 	}
 	return ec._ExerciseTypeEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOExerciseTypeOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeOrder(ctx context.Context, v interface{}) (*ent.ExerciseTypeOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputExerciseTypeOrder(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOExerciseTypeWhereInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExerciseTypeWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.ExerciseTypeWhereInput, error) {
@@ -26029,6 +27049,14 @@ func (ec *executionContext) marshalOMusclesGroupEdge2ᚖgithubᚗcomᚋsahidrahm
 	return ec._MusclesGroupEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOMusclesGroupOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupOrder(ctx context.Context, v interface{}) (*ent.MusclesGroupOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputMusclesGroupOrder(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalOMusclesGroupWhereInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐMusclesGroupWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.MusclesGroupWhereInput, error) {
 	if v == nil {
 		return nil, nil
@@ -26174,6 +27202,14 @@ func (ec *executionContext) marshalORoutineExerciseEdge2ᚖgithubᚗcomᚋsahidr
 	return ec._RoutineExerciseEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalORoutineExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrder(ctx context.Context, v interface{}) (*ent.RoutineExerciseOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputRoutineExerciseOrder(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalORoutineExerciseWhereInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.RoutineExerciseWhereInput, error) {
 	if v == nil {
 		return nil, nil
@@ -26199,6 +27235,14 @@ func (ec *executionContext) unmarshalORoutineExerciseWhereInput2ᚖgithubᚗcom�
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputRoutineExerciseWhereInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalORoutineOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineOrder(ctx context.Context, v interface{}) (*ent.RoutineOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputRoutineOrder(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -26444,6 +27488,14 @@ func (ec *executionContext) marshalOUserEdge2ᚖgithubᚗcomᚋsahidrahman404ᚋ
 	return ec._UserEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOUserOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserOrder(ctx context.Context, v interface{}) (*ent.UserOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputUserOrder(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUserWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.UserWhereInput, error) {
 	if v == nil {
 		return nil, nil
@@ -26582,6 +27634,14 @@ func (ec *executionContext) marshalOWorkoutLogEdge2ᚖgithubᚗcomᚋsahidrahman
 	return ec._WorkoutLogEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOWorkoutLogOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogOrder(ctx context.Context, v interface{}) (*ent.WorkoutLogOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputWorkoutLogOrder(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalOWorkoutLogWhereInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutLogWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.WorkoutLogWhereInput, error) {
 	if v == nil {
 		return nil, nil
@@ -26607,6 +27667,14 @@ func (ec *executionContext) unmarshalOWorkoutLogWhereInput2ᚖgithubᚗcomᚋsah
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputWorkoutLogWhereInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOWorkoutOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐWorkoutOrder(ctx context.Context, v interface{}) (*ent.WorkoutOrder, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputWorkoutOrder(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
