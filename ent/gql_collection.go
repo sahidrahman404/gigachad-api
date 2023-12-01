@@ -7,6 +7,7 @@ import (
 	"database/sql/driver"
 	"fmt"
 
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
@@ -78,7 +79,7 @@ func (e *EquipmentQuery) collectField(ctx context.Context, opCtx *graphql.Operat
 							joinT := sql.Table(equipment.ExercisesTable)
 							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(equipment.ExercisesPrimaryKey[1]))
 							s.Where(sql.InValues(joinT.C(equipment.ExercisesPrimaryKey[0]), ids...))
-							s.Select(joinT.C(equipment.ExercisesPrimaryKey[0]), sql.Count("*"))
+							s.Select(joinT.C(equipment.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(equipment.ExercisesPrimaryKey[0]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -175,6 +176,28 @@ func newEquipmentPaginateArgs(rv map[string]any) *equipmentPaginateArgs {
 	}
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &EquipmentOrder{Field: &EquipmentOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithEquipmentOrder(order))
+			}
+		case *EquipmentOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithEquipmentOrder(v))
+			}
+		}
 	}
 	if v, ok := rv[whereField].(*EquipmentWhereInput); ok {
 		args.opts = append(args.opts, WithEquipmentFilter(v.Filter))
@@ -336,7 +359,7 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 							joinT := sql.Table(exercise.EquipmentTable)
 							s.Join(joinT).On(s.C(equipment.FieldID), joinT.C(exercise.EquipmentPrimaryKey[0]))
 							s.Where(sql.InValues(joinT.C(exercise.EquipmentPrimaryKey[1]), ids...))
-							s.Select(joinT.C(exercise.EquipmentPrimaryKey[1]), sql.Count("*"))
+							s.Select(joinT.C(exercise.EquipmentPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercise.EquipmentPrimaryKey[1]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -424,7 +447,7 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 							joinT := sql.Table(exercise.MusclesGroupsTable)
 							s.Join(joinT).On(s.C(musclesgroup.FieldID), joinT.C(exercise.MusclesGroupsPrimaryKey[0]))
 							s.Where(sql.InValues(joinT.C(exercise.MusclesGroupsPrimaryKey[1]), ids...))
-							s.Select(joinT.C(exercise.MusclesGroupsPrimaryKey[1]), sql.Count("*"))
+							s.Select(joinT.C(exercise.MusclesGroupsPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercise.MusclesGroupsPrimaryKey[1]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -512,7 +535,7 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 							joinT := sql.Table(exercise.ExerciseTypesTable)
 							s.Join(joinT).On(s.C(exercisetype.FieldID), joinT.C(exercise.ExerciseTypesPrimaryKey[0]))
 							s.Where(sql.InValues(joinT.C(exercise.ExerciseTypesPrimaryKey[1]), ids...))
-							s.Select(joinT.C(exercise.ExerciseTypesPrimaryKey[1]), sql.Count("*"))
+							s.Select(joinT.C(exercise.ExerciseTypesPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercise.ExerciseTypesPrimaryKey[1]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -600,7 +623,7 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 							joinT := sql.Table(exercise.RoutinesTable)
 							s.Join(joinT).On(s.C(routine.FieldID), joinT.C(exercise.RoutinesPrimaryKey[0]))
 							s.Where(sql.InValues(joinT.C(exercise.RoutinesPrimaryKey[1]), ids...))
-							s.Select(joinT.C(exercise.RoutinesPrimaryKey[1]), sql.Count("*"))
+							s.Select(joinT.C(exercise.RoutinesPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercise.RoutinesPrimaryKey[1]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -792,6 +815,28 @@ func newExercisePaginateArgs(rv map[string]any) *exercisePaginateArgs {
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &ExerciseOrder{Field: &ExerciseOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithExerciseOrder(order))
+			}
+		case *ExerciseOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithExerciseOrder(v))
+			}
+		}
+	}
 	if v, ok := rv[whereField].(*ExerciseWhereInput); ok {
 		args.opts = append(args.opts, WithExerciseFilter(v.Filter))
 	}
@@ -854,7 +899,7 @@ func (et *ExerciseTypeQuery) collectField(ctx context.Context, opCtx *graphql.Op
 							joinT := sql.Table(exercisetype.ExercisesTable)
 							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(exercisetype.ExercisesPrimaryKey[1]))
 							s.Where(sql.InValues(joinT.C(exercisetype.ExercisesPrimaryKey[0]), ids...))
-							s.Select(joinT.C(exercisetype.ExercisesPrimaryKey[0]), sql.Count("*"))
+							s.Select(joinT.C(exercisetype.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercisetype.ExercisesPrimaryKey[0]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -957,6 +1002,28 @@ func newExerciseTypePaginateArgs(rv map[string]any) *exercisetypePaginateArgs {
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &ExerciseTypeOrder{Field: &ExerciseTypeOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithExerciseTypeOrder(order))
+			}
+		case *ExerciseTypeOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithExerciseTypeOrder(v))
+			}
+		}
+	}
 	if v, ok := rv[whereField].(*ExerciseTypeWhereInput); ok {
 		args.opts = append(args.opts, WithExerciseTypeFilter(v.Filter))
 	}
@@ -1019,7 +1086,7 @@ func (mg *MusclesGroupQuery) collectField(ctx context.Context, opCtx *graphql.Op
 							joinT := sql.Table(musclesgroup.ExercisesTable)
 							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(musclesgroup.ExercisesPrimaryKey[1]))
 							s.Where(sql.InValues(joinT.C(musclesgroup.ExercisesPrimaryKey[0]), ids...))
-							s.Select(joinT.C(musclesgroup.ExercisesPrimaryKey[0]), sql.Count("*"))
+							s.Select(joinT.C(musclesgroup.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(musclesgroup.ExercisesPrimaryKey[0]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -1117,6 +1184,28 @@ func newMusclesGroupPaginateArgs(rv map[string]any) *musclesgroupPaginateArgs {
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &MusclesGroupOrder{Field: &MusclesGroupOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithMusclesGroupOrder(order))
+			}
+		case *MusclesGroupOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithMusclesGroupOrder(v))
+			}
+		}
+	}
 	if v, ok := rv[whereField].(*MusclesGroupWhereInput); ok {
 		args.opts = append(args.opts, WithMusclesGroupFilter(v.Filter))
 	}
@@ -1179,7 +1268,7 @@ func (r *RoutineQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 							joinT := sql.Table(routine.ExercisesTable)
 							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(routine.ExercisesPrimaryKey[1]))
 							s.Where(sql.InValues(joinT.C(routine.ExercisesPrimaryKey[0]), ids...))
-							s.Select(joinT.C(routine.ExercisesPrimaryKey[0]), sql.Count("*"))
+							s.Select(joinT.C(routine.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(routine.ExercisesPrimaryKey[0]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -1375,6 +1464,28 @@ func newRoutinePaginateArgs(rv map[string]any) *routinePaginateArgs {
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &RoutineOrder{Field: &RoutineOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithRoutineOrder(order))
+			}
+		case *RoutineOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithRoutineOrder(v))
+			}
+		}
+	}
 	if v, ok := rv[whereField].(*RoutineWhereInput); ok {
 		args.opts = append(args.opts, WithRoutineFilter(v.Filter))
 	}
@@ -1504,6 +1615,28 @@ func newRoutineExercisePaginateArgs(rv map[string]any) *routineexercisePaginateA
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &RoutineExerciseOrder{Field: &RoutineExerciseOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithRoutineExerciseOrder(order))
+			}
+		case *RoutineExerciseOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithRoutineExerciseOrder(v))
+			}
+		}
+	}
 	if v, ok := rv[whereField].(*RoutineExerciseWhereInput); ok {
 		args.opts = append(args.opts, WithRoutineExerciseFilter(v.Filter))
 	}
@@ -1594,6 +1727,28 @@ func newTokenPaginateArgs(rv map[string]any) *tokenPaginateArgs {
 	}
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &TokenOrder{Field: &TokenOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithTokenOrder(order))
+			}
+		case *TokenOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithTokenOrder(v))
+			}
+		}
 	}
 	if v, ok := rv[whereField].(*TokenWhereInput); ok {
 		args.opts = append(args.opts, WithTokenFilter(v.Filter))
@@ -2119,6 +2274,28 @@ func newUserPaginateArgs(rv map[string]any) *userPaginateArgs {
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &UserOrder{Field: &UserOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithUserOrder(order))
+			}
+		case *UserOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithUserOrder(v))
+			}
+		}
+	}
 	if v, ok := rv[whereField].(*UserWhereInput); ok {
 		args.opts = append(args.opts, WithUserFilter(v.Filter))
 	}
@@ -2324,6 +2501,28 @@ func newWorkoutPaginateArgs(rv map[string]any) *workoutPaginateArgs {
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
 	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &WorkoutOrder{Field: &WorkoutOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithWorkoutOrder(order))
+			}
+		case *WorkoutOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithWorkoutOrder(v))
+			}
+		}
+	}
 	if v, ok := rv[whereField].(*WorkoutWhereInput); ok {
 		args.opts = append(args.opts, WithWorkoutFilter(v.Filter))
 	}
@@ -2434,6 +2633,28 @@ func newWorkoutLogPaginateArgs(rv map[string]any) *workoutlogPaginateArgs {
 	}
 	if v := rv[beforeField]; v != nil {
 		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]any:
+			var (
+				err1, err2 error
+				order      = &WorkoutLogOrder{Field: &WorkoutLogOrderField{}, Direction: entgql.OrderDirectionAsc}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithWorkoutLogOrder(order))
+			}
+		case *WorkoutLogOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithWorkoutLogOrder(v))
+			}
+		}
 	}
 	if v, ok := rv[whereField].(*WorkoutLogWhereInput); ok {
 		args.opts = append(args.opts, WithWorkoutLogFilter(v.Filter))

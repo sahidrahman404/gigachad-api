@@ -1,6 +1,7 @@
 package pksuid
 
 import (
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
@@ -23,7 +24,8 @@ func (m Mixin) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("id").
 			GoType(ID("")).
-			DefaultFunc(func() ID { return MustNew(m.prefix) }),
+			DefaultFunc(func() ID { return MustNew(m.prefix) }).
+			Annotations(entgql.OrderField("ID")),
 	}
 }
 

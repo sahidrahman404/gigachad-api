@@ -5,6 +5,9 @@ package ent
 import (
 	"context"
 	"errors"
+	"fmt"
+	"io"
+	"strconv"
 
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
@@ -312,6 +315,53 @@ func (e *EquipmentQuery) Paginate(
 	return conn, nil
 }
 
+var (
+	// EquipmentOrderFieldID orders Equipment by id.
+	EquipmentOrderFieldID = &EquipmentOrderField{
+		Value: func(e *Equipment) (ent.Value, error) {
+			return e.ID, nil
+		},
+		column: equipment.FieldID,
+		toTerm: equipment.ByID,
+		toCursor: func(e *Equipment) Cursor {
+			return Cursor{
+				ID:    e.ID,
+				Value: e.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f EquipmentOrderField) String() string {
+	var str string
+	switch f.column {
+	case EquipmentOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f EquipmentOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *EquipmentOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("EquipmentOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *EquipmentOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid EquipmentOrderField", str)
+	}
+	return nil
+}
+
 // EquipmentOrderField defines the ordering field of Equipment.
 type EquipmentOrderField struct {
 	// Value extracts the ordering value from the given Equipment.
@@ -558,6 +608,53 @@ func (e *ExerciseQuery) Paginate(
 	}
 	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
+}
+
+var (
+	// ExerciseOrderFieldID orders Exercise by id.
+	ExerciseOrderFieldID = &ExerciseOrderField{
+		Value: func(e *Exercise) (ent.Value, error) {
+			return e.ID, nil
+		},
+		column: exercise.FieldID,
+		toTerm: exercise.ByID,
+		toCursor: func(e *Exercise) Cursor {
+			return Cursor{
+				ID:    e.ID,
+				Value: e.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f ExerciseOrderField) String() string {
+	var str string
+	switch f.column {
+	case ExerciseOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f ExerciseOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *ExerciseOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("ExerciseOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *ExerciseOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid ExerciseOrderField", str)
+	}
+	return nil
 }
 
 // ExerciseOrderField defines the ordering field of Exercise.
@@ -808,6 +905,53 @@ func (et *ExerciseTypeQuery) Paginate(
 	return conn, nil
 }
 
+var (
+	// ExerciseTypeOrderFieldID orders ExerciseType by id.
+	ExerciseTypeOrderFieldID = &ExerciseTypeOrderField{
+		Value: func(et *ExerciseType) (ent.Value, error) {
+			return et.ID, nil
+		},
+		column: exercisetype.FieldID,
+		toTerm: exercisetype.ByID,
+		toCursor: func(et *ExerciseType) Cursor {
+			return Cursor{
+				ID:    et.ID,
+				Value: et.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f ExerciseTypeOrderField) String() string {
+	var str string
+	switch f.column {
+	case ExerciseTypeOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f ExerciseTypeOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *ExerciseTypeOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("ExerciseTypeOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *ExerciseTypeOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid ExerciseTypeOrderField", str)
+	}
+	return nil
+}
+
 // ExerciseTypeOrderField defines the ordering field of ExerciseType.
 type ExerciseTypeOrderField struct {
 	// Value extracts the ordering value from the given ExerciseType.
@@ -1054,6 +1198,53 @@ func (mg *MusclesGroupQuery) Paginate(
 	}
 	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
+}
+
+var (
+	// MusclesGroupOrderFieldID orders MusclesGroup by id.
+	MusclesGroupOrderFieldID = &MusclesGroupOrderField{
+		Value: func(mg *MusclesGroup) (ent.Value, error) {
+			return mg.ID, nil
+		},
+		column: musclesgroup.FieldID,
+		toTerm: musclesgroup.ByID,
+		toCursor: func(mg *MusclesGroup) Cursor {
+			return Cursor{
+				ID:    mg.ID,
+				Value: mg.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f MusclesGroupOrderField) String() string {
+	var str string
+	switch f.column {
+	case MusclesGroupOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f MusclesGroupOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *MusclesGroupOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("MusclesGroupOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *MusclesGroupOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid MusclesGroupOrderField", str)
+	}
+	return nil
 }
 
 // MusclesGroupOrderField defines the ordering field of MusclesGroup.
@@ -1304,6 +1495,53 @@ func (r *RoutineQuery) Paginate(
 	return conn, nil
 }
 
+var (
+	// RoutineOrderFieldID orders Routine by id.
+	RoutineOrderFieldID = &RoutineOrderField{
+		Value: func(r *Routine) (ent.Value, error) {
+			return r.ID, nil
+		},
+		column: routine.FieldID,
+		toTerm: routine.ByID,
+		toCursor: func(r *Routine) Cursor {
+			return Cursor{
+				ID:    r.ID,
+				Value: r.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f RoutineOrderField) String() string {
+	var str string
+	switch f.column {
+	case RoutineOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f RoutineOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *RoutineOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("RoutineOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *RoutineOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid RoutineOrderField", str)
+	}
+	return nil
+}
+
 // RoutineOrderField defines the ordering field of Routine.
 type RoutineOrderField struct {
 	// Value extracts the ordering value from the given Routine.
@@ -1550,6 +1788,53 @@ func (re *RoutineExerciseQuery) Paginate(
 	}
 	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
+}
+
+var (
+	// RoutineExerciseOrderFieldID orders RoutineExercise by id.
+	RoutineExerciseOrderFieldID = &RoutineExerciseOrderField{
+		Value: func(re *RoutineExercise) (ent.Value, error) {
+			return re.ID, nil
+		},
+		column: routineexercise.FieldID,
+		toTerm: routineexercise.ByID,
+		toCursor: func(re *RoutineExercise) Cursor {
+			return Cursor{
+				ID:    re.ID,
+				Value: re.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f RoutineExerciseOrderField) String() string {
+	var str string
+	switch f.column {
+	case RoutineExerciseOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f RoutineExerciseOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *RoutineExerciseOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("RoutineExerciseOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *RoutineExerciseOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid RoutineExerciseOrderField", str)
+	}
+	return nil
 }
 
 // RoutineExerciseOrderField defines the ordering field of RoutineExercise.
@@ -1800,6 +2085,53 @@ func (t *TokenQuery) Paginate(
 	return conn, nil
 }
 
+var (
+	// TokenOrderFieldID orders Token by id.
+	TokenOrderFieldID = &TokenOrderField{
+		Value: func(t *Token) (ent.Value, error) {
+			return t.ID, nil
+		},
+		column: token.FieldID,
+		toTerm: token.ByID,
+		toCursor: func(t *Token) Cursor {
+			return Cursor{
+				ID:    t.ID,
+				Value: t.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f TokenOrderField) String() string {
+	var str string
+	switch f.column {
+	case TokenOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f TokenOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *TokenOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("TokenOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *TokenOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid TokenOrderField", str)
+	}
+	return nil
+}
+
 // TokenOrderField defines the ordering field of Token.
 type TokenOrderField struct {
 	// Value extracts the ordering value from the given Token.
@@ -2046,6 +2378,53 @@ func (u *UserQuery) Paginate(
 	}
 	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
+}
+
+var (
+	// UserOrderFieldID orders User by id.
+	UserOrderFieldID = &UserOrderField{
+		Value: func(u *User) (ent.Value, error) {
+			return u.ID, nil
+		},
+		column: user.FieldID,
+		toTerm: user.ByID,
+		toCursor: func(u *User) Cursor {
+			return Cursor{
+				ID:    u.ID,
+				Value: u.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f UserOrderField) String() string {
+	var str string
+	switch f.column {
+	case UserOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f UserOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *UserOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("UserOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *UserOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid UserOrderField", str)
+	}
+	return nil
 }
 
 // UserOrderField defines the ordering field of User.
@@ -2296,6 +2675,53 @@ func (w *WorkoutQuery) Paginate(
 	return conn, nil
 }
 
+var (
+	// WorkoutOrderFieldID orders Workout by id.
+	WorkoutOrderFieldID = &WorkoutOrderField{
+		Value: func(w *Workout) (ent.Value, error) {
+			return w.ID, nil
+		},
+		column: workout.FieldID,
+		toTerm: workout.ByID,
+		toCursor: func(w *Workout) Cursor {
+			return Cursor{
+				ID:    w.ID,
+				Value: w.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f WorkoutOrderField) String() string {
+	var str string
+	switch f.column {
+	case WorkoutOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f WorkoutOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *WorkoutOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("WorkoutOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *WorkoutOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid WorkoutOrderField", str)
+	}
+	return nil
+}
+
 // WorkoutOrderField defines the ordering field of Workout.
 type WorkoutOrderField struct {
 	// Value extracts the ordering value from the given Workout.
@@ -2542,6 +2968,53 @@ func (wl *WorkoutLogQuery) Paginate(
 	}
 	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
+}
+
+var (
+	// WorkoutLogOrderFieldID orders WorkoutLog by id.
+	WorkoutLogOrderFieldID = &WorkoutLogOrderField{
+		Value: func(wl *WorkoutLog) (ent.Value, error) {
+			return wl.ID, nil
+		},
+		column: workoutlog.FieldID,
+		toTerm: workoutlog.ByID,
+		toCursor: func(wl *WorkoutLog) Cursor {
+			return Cursor{
+				ID:    wl.ID,
+				Value: wl.ID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f WorkoutLogOrderField) String() string {
+	var str string
+	switch f.column {
+	case WorkoutLogOrderFieldID.column:
+		str = "ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f WorkoutLogOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *WorkoutLogOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("WorkoutLogOrderField %T must be a string", v)
+	}
+	switch str {
+	case "ID":
+		*f = *WorkoutLogOrderFieldID
+	default:
+		return fmt.Errorf("%s is not a valid WorkoutLogOrderField", str)
+	}
+	return nil
 }
 
 // WorkoutLogOrderField defines the ordering field of WorkoutLog.

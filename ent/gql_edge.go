@@ -9,9 +9,10 @@ import (
 )
 
 func (e *Equipment) Exercises(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *ExerciseWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *ExerciseOrder, where *ExerciseWhereInput,
 ) (*ExerciseConnection, error) {
 	opts := []ExercisePaginateOption{
+		WithExerciseOrder(orderBy),
 		WithExerciseFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -29,9 +30,10 @@ func (e *Equipment) Exercises(
 }
 
 func (e *Exercise) WorkoutLogs(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *WorkoutLogWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *WorkoutLogOrder, where *WorkoutLogWhereInput,
 ) (*WorkoutLogConnection, error) {
 	opts := []WorkoutLogPaginateOption{
+		WithWorkoutLogOrder(orderBy),
 		WithWorkoutLogFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -57,9 +59,10 @@ func (e *Exercise) Users(ctx context.Context) (*User, error) {
 }
 
 func (e *Exercise) Equipment(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *EquipmentWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *EquipmentOrder, where *EquipmentWhereInput,
 ) (*EquipmentConnection, error) {
 	opts := []EquipmentPaginateOption{
+		WithEquipmentOrder(orderBy),
 		WithEquipmentFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -77,9 +80,10 @@ func (e *Exercise) Equipment(
 }
 
 func (e *Exercise) MusclesGroups(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *MusclesGroupWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *MusclesGroupOrder, where *MusclesGroupWhereInput,
 ) (*MusclesGroupConnection, error) {
 	opts := []MusclesGroupPaginateOption{
+		WithMusclesGroupOrder(orderBy),
 		WithMusclesGroupFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -97,9 +101,10 @@ func (e *Exercise) MusclesGroups(
 }
 
 func (e *Exercise) ExerciseTypes(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *ExerciseTypeWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *ExerciseTypeOrder, where *ExerciseTypeWhereInput,
 ) (*ExerciseTypeConnection, error) {
 	opts := []ExerciseTypePaginateOption{
+		WithExerciseTypeOrder(orderBy),
 		WithExerciseTypeFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -117,9 +122,10 @@ func (e *Exercise) ExerciseTypes(
 }
 
 func (e *Exercise) Routines(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *RoutineWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *RoutineOrder, where *RoutineWhereInput,
 ) (*RoutineConnection, error) {
 	opts := []RoutinePaginateOption{
+		WithRoutineOrder(orderBy),
 		WithRoutineFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -137,9 +143,10 @@ func (e *Exercise) Routines(
 }
 
 func (e *Exercise) RoutineExercises(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *RoutineExerciseWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *RoutineExerciseOrder, where *RoutineExerciseWhereInput,
 ) (*RoutineExerciseConnection, error) {
 	opts := []RoutineExercisePaginateOption{
+		WithRoutineExerciseOrder(orderBy),
 		WithRoutineExerciseFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -157,9 +164,10 @@ func (e *Exercise) RoutineExercises(
 }
 
 func (et *ExerciseType) Exercises(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *ExerciseWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *ExerciseOrder, where *ExerciseWhereInput,
 ) (*ExerciseConnection, error) {
 	opts := []ExercisePaginateOption{
+		WithExerciseOrder(orderBy),
 		WithExerciseFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -177,9 +185,10 @@ func (et *ExerciseType) Exercises(
 }
 
 func (mg *MusclesGroup) Exercises(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *ExerciseWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *ExerciseOrder, where *ExerciseWhereInput,
 ) (*ExerciseConnection, error) {
 	opts := []ExercisePaginateOption{
+		WithExerciseOrder(orderBy),
 		WithExerciseFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -197,9 +206,10 @@ func (mg *MusclesGroup) Exercises(
 }
 
 func (r *Routine) Exercises(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *ExerciseWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *ExerciseOrder, where *ExerciseWhereInput,
 ) (*ExerciseConnection, error) {
 	opts := []ExercisePaginateOption{
+		WithExerciseOrder(orderBy),
 		WithExerciseFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -225,9 +235,10 @@ func (r *Routine) Users(ctx context.Context) (*User, error) {
 }
 
 func (r *Routine) RoutineExercises(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *RoutineExerciseWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *RoutineExerciseOrder, where *RoutineExerciseWhereInput,
 ) (*RoutineExerciseConnection, error) {
 	opts := []RoutineExercisePaginateOption{
+		WithRoutineExerciseOrder(orderBy),
 		WithRoutineExerciseFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -289,9 +300,10 @@ func (u *User) Tokens(ctx context.Context) (result []*Token, err error) {
 }
 
 func (u *User) Exercises(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *ExerciseWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *ExerciseOrder, where *ExerciseWhereInput,
 ) (*ExerciseConnection, error) {
 	opts := []ExercisePaginateOption{
+		WithExerciseOrder(orderBy),
 		WithExerciseFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -309,9 +321,10 @@ func (u *User) Exercises(
 }
 
 func (u *User) Routines(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *RoutineWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *RoutineOrder, where *RoutineWhereInput,
 ) (*RoutineConnection, error) {
 	opts := []RoutinePaginateOption{
+		WithRoutineOrder(orderBy),
 		WithRoutineFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -329,9 +342,10 @@ func (u *User) Routines(
 }
 
 func (u *User) Workouts(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *WorkoutWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *WorkoutOrder, where *WorkoutWhereInput,
 ) (*WorkoutConnection, error) {
 	opts := []WorkoutPaginateOption{
+		WithWorkoutOrder(orderBy),
 		WithWorkoutFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -349,9 +363,10 @@ func (u *User) Workouts(
 }
 
 func (u *User) WorkoutLogs(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *WorkoutLogWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *WorkoutLogOrder, where *WorkoutLogWhereInput,
 ) (*WorkoutLogConnection, error) {
 	opts := []WorkoutLogPaginateOption{
+		WithWorkoutLogOrder(orderBy),
 		WithWorkoutLogFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -369,9 +384,10 @@ func (u *User) WorkoutLogs(
 }
 
 func (u *User) RoutineExercises(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *RoutineExerciseWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *RoutineExerciseOrder, where *RoutineExerciseWhereInput,
 ) (*RoutineExerciseConnection, error) {
 	opts := []RoutineExercisePaginateOption{
+		WithRoutineExerciseOrder(orderBy),
 		WithRoutineExerciseFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
@@ -397,9 +413,10 @@ func (w *Workout) Users(ctx context.Context) (*User, error) {
 }
 
 func (w *Workout) WorkoutLogs(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, where *WorkoutLogWhereInput,
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *WorkoutLogOrder, where *WorkoutLogWhereInput,
 ) (*WorkoutLogConnection, error) {
 	opts := []WorkoutLogPaginateOption{
+		WithWorkoutLogOrder(orderBy),
 		WithWorkoutLogFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
