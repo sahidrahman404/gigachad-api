@@ -26,9 +26,8 @@ type WorkoutLogQuery struct {
 	inters        []Interceptor
 	predicates    []predicate.WorkoutLog
 	withUsers     *UserQuery
-	withExercises *ExerciseQuery
 	withWorkouts  *WorkoutQuery
-	withFKs       bool
+	withExercises *ExerciseQuery
 	modifiers     []func(*sql.Selector)
 	loadTotal     []func(context.Context, []*WorkoutLog) error
 	// intermediate query (i.e. traversal path).
@@ -89,28 +88,6 @@ func (wlq *WorkoutLogQuery) QueryUsers() *UserQuery {
 	return query
 }
 
-// QueryExercises chains the current query on the "exercises" edge.
-func (wlq *WorkoutLogQuery) QueryExercises() *ExerciseQuery {
-	query := (&ExerciseClient{config: wlq.config}).Query()
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := wlq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		selector := wlq.sqlQuery(ctx)
-		if err := selector.Err(); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(workoutlog.Table, workoutlog.FieldID, selector),
-			sqlgraph.To(exercise.Table, exercise.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, workoutlog.ExercisesTable, workoutlog.ExercisesColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(wlq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
 // QueryWorkouts chains the current query on the "workouts" edge.
 func (wlq *WorkoutLogQuery) QueryWorkouts() *WorkoutQuery {
 	query := (&WorkoutClient{config: wlq.config}).Query()
@@ -125,7 +102,29 @@ func (wlq *WorkoutLogQuery) QueryWorkouts() *WorkoutQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(workoutlog.Table, workoutlog.FieldID, selector),
 			sqlgraph.To(workout.Table, workout.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, workoutlog.WorkoutsTable, workoutlog.WorkoutsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, workoutlog.WorkoutsTable, workoutlog.WorkoutsColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(wlq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryExercises chains the current query on the "exercises" edge.
+func (wlq *WorkoutLogQuery) QueryExercises() *ExerciseQuery {
+	query := (&ExerciseClient{config: wlq.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := wlq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := wlq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(workoutlog.Table, workoutlog.FieldID, selector),
+			sqlgraph.To(exercise.Table, exercise.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, workoutlog.ExercisesTable, workoutlog.ExercisesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(wlq.driver.Dialect(), step)
 		return fromU, nil
@@ -326,8 +325,8 @@ func (wlq *WorkoutLogQuery) Clone() *WorkoutLogQuery {
 		inters:        append([]Interceptor{}, wlq.inters...),
 		predicates:    append([]predicate.WorkoutLog{}, wlq.predicates...),
 		withUsers:     wlq.withUsers.Clone(),
-		withExercises: wlq.withExercises.Clone(),
 		withWorkouts:  wlq.withWorkouts.Clone(),
+		withExercises: wlq.withExercises.Clone(),
 		// clone intermediate query.
 		sql:  wlq.sql.Clone(),
 		path: wlq.path,
@@ -345,17 +344,6 @@ func (wlq *WorkoutLogQuery) WithUsers(opts ...func(*UserQuery)) *WorkoutLogQuery
 	return wlq
 }
 
-// WithExercises tells the query-builder to eager-load the nodes that are connected to
-// the "exercises" edge. The optional arguments are used to configure the query builder of the edge.
-func (wlq *WorkoutLogQuery) WithExercises(opts ...func(*ExerciseQuery)) *WorkoutLogQuery {
-	query := (&ExerciseClient{config: wlq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	wlq.withExercises = query
-	return wlq
-}
-
 // WithWorkouts tells the query-builder to eager-load the nodes that are connected to
 // the "workouts" edge. The optional arguments are used to configure the query builder of the edge.
 func (wlq *WorkoutLogQuery) WithWorkouts(opts ...func(*WorkoutQuery)) *WorkoutLogQuery {
@@ -364,6 +352,17 @@ func (wlq *WorkoutLogQuery) WithWorkouts(opts ...func(*WorkoutQuery)) *WorkoutLo
 		opt(query)
 	}
 	wlq.withWorkouts = query
+	return wlq
+}
+
+// WithExercises tells the query-builder to eager-load the nodes that are connected to
+// the "exercises" edge. The optional arguments are used to configure the query builder of the edge.
+func (wlq *WorkoutLogQuery) WithExercises(opts ...func(*ExerciseQuery)) *WorkoutLogQuery {
+	query := (&ExerciseClient{config: wlq.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	wlq.withExercises = query
 	return wlq
 }
 
@@ -444,20 +443,13 @@ func (wlq *WorkoutLogQuery) prepareQuery(ctx context.Context) error {
 func (wlq *WorkoutLogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*WorkoutLog, error) {
 	var (
 		nodes       = []*WorkoutLog{}
-		withFKs     = wlq.withFKs
 		_spec       = wlq.querySpec()
 		loadedTypes = [3]bool{
 			wlq.withUsers != nil,
-			wlq.withExercises != nil,
 			wlq.withWorkouts != nil,
+			wlq.withExercises != nil,
 		}
 	)
-	if wlq.withExercises != nil || wlq.withWorkouts != nil {
-		withFKs = true
-	}
-	if withFKs {
-		_spec.Node.Columns = append(_spec.Node.Columns, workoutlog.ForeignKeys...)
-	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*WorkoutLog).scanValues(nil, columns)
 	}
@@ -485,15 +477,15 @@ func (wlq *WorkoutLogQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 			return nil, err
 		}
 	}
-	if query := wlq.withExercises; query != nil {
-		if err := wlq.loadExercises(ctx, query, nodes, nil,
-			func(n *WorkoutLog, e *Exercise) { n.Edges.Exercises = e }); err != nil {
-			return nil, err
-		}
-	}
 	if query := wlq.withWorkouts; query != nil {
 		if err := wlq.loadWorkouts(ctx, query, nodes, nil,
 			func(n *WorkoutLog, e *Workout) { n.Edges.Workouts = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := wlq.withExercises; query != nil {
+		if err := wlq.loadExercises(ctx, query, nodes, nil,
+			func(n *WorkoutLog, e *Exercise) { n.Edges.Exercises = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -534,46 +526,11 @@ func (wlq *WorkoutLogQuery) loadUsers(ctx context.Context, query *UserQuery, nod
 	}
 	return nil
 }
-func (wlq *WorkoutLogQuery) loadExercises(ctx context.Context, query *ExerciseQuery, nodes []*WorkoutLog, init func(*WorkoutLog), assign func(*WorkoutLog, *Exercise)) error {
-	ids := make([]pksuid.ID, 0, len(nodes))
-	nodeids := make(map[pksuid.ID][]*WorkoutLog)
-	for i := range nodes {
-		if nodes[i].exercise_workout_logs == nil {
-			continue
-		}
-		fk := *nodes[i].exercise_workout_logs
-		if _, ok := nodeids[fk]; !ok {
-			ids = append(ids, fk)
-		}
-		nodeids[fk] = append(nodeids[fk], nodes[i])
-	}
-	if len(ids) == 0 {
-		return nil
-	}
-	query.Where(exercise.IDIn(ids...))
-	neighbors, err := query.All(ctx)
-	if err != nil {
-		return err
-	}
-	for _, n := range neighbors {
-		nodes, ok := nodeids[n.ID]
-		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "exercise_workout_logs" returned %v`, n.ID)
-		}
-		for i := range nodes {
-			assign(nodes[i], n)
-		}
-	}
-	return nil
-}
 func (wlq *WorkoutLogQuery) loadWorkouts(ctx context.Context, query *WorkoutQuery, nodes []*WorkoutLog, init func(*WorkoutLog), assign func(*WorkoutLog, *Workout)) error {
 	ids := make([]pksuid.ID, 0, len(nodes))
 	nodeids := make(map[pksuid.ID][]*WorkoutLog)
 	for i := range nodes {
-		if nodes[i].workout_workout_logs == nil {
-			continue
-		}
-		fk := *nodes[i].workout_workout_logs
+		fk := nodes[i].WorkoutID
 		if _, ok := nodeids[fk]; !ok {
 			ids = append(ids, fk)
 		}
@@ -590,7 +547,36 @@ func (wlq *WorkoutLogQuery) loadWorkouts(ctx context.Context, query *WorkoutQuer
 	for _, n := range neighbors {
 		nodes, ok := nodeids[n.ID]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "workout_workout_logs" returned %v`, n.ID)
+			return fmt.Errorf(`unexpected foreign-key "workout_id" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (wlq *WorkoutLogQuery) loadExercises(ctx context.Context, query *ExerciseQuery, nodes []*WorkoutLog, init func(*WorkoutLog), assign func(*WorkoutLog, *Exercise)) error {
+	ids := make([]pksuid.ID, 0, len(nodes))
+	nodeids := make(map[pksuid.ID][]*WorkoutLog)
+	for i := range nodes {
+		fk := nodes[i].ExerciseID
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(exercise.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "exercise_id" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)
@@ -629,6 +615,12 @@ func (wlq *WorkoutLogQuery) querySpec() *sqlgraph.QuerySpec {
 		}
 		if wlq.withUsers != nil {
 			_spec.Node.AddColumnOnce(workoutlog.FieldUserID)
+		}
+		if wlq.withWorkouts != nil {
+			_spec.Node.AddColumnOnce(workoutlog.FieldWorkoutID)
+		}
+		if wlq.withExercises != nil {
+			_spec.Node.AddColumnOnce(workoutlog.FieldExerciseID)
 		}
 	}
 	if ps := wlq.predicates; len(ps) > 0 {

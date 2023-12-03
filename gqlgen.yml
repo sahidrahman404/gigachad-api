@@ -9,6 +9,7 @@ schema:
   - ./internal/gql/muscles_group.graphql
   - ./internal/gql/exercise.graphql
   - ./internal/gql/exercise_type.graphql
+  - ./internal/gql/workout_log.graphql
 
 # resolver reports where the resolver implementations go.
 resolver:

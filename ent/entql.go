@@ -171,10 +171,10 @@ var schemaGraph = func() *sqlgraph.Schema {
 			workout.FieldName:        {Type: field.TypeString, Column: workout.FieldName},
 			workout.FieldVolume:      {Type: field.TypeInt, Column: workout.FieldVolume},
 			workout.FieldReps:        {Type: field.TypeInt, Column: workout.FieldReps},
-			workout.FieldTime:        {Type: field.TypeString, Column: workout.FieldTime},
+			workout.FieldDuration:    {Type: field.TypeString, Column: workout.FieldDuration},
 			workout.FieldSets:        {Type: field.TypeInt, Column: workout.FieldSets},
 			workout.FieldCreatedAt:   {Type: field.TypeString, Column: workout.FieldCreatedAt},
-			workout.FieldImage:       {Type: field.TypeString, Column: workout.FieldImage},
+			workout.FieldImage:       {Type: field.TypeJSON, Column: workout.FieldImage},
 			workout.FieldDescription: {Type: field.TypeString, Column: workout.FieldDescription},
 			workout.FieldUserID:      {Type: field.TypeString, Column: workout.FieldUserID},
 		},
@@ -190,9 +190,11 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "WorkoutLog",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			workoutlog.FieldSets:      {Type: field.TypeJSON, Column: workoutlog.FieldSets},
-			workoutlog.FieldCreatedAt: {Type: field.TypeString, Column: workoutlog.FieldCreatedAt},
-			workoutlog.FieldUserID:    {Type: field.TypeString, Column: workoutlog.FieldUserID},
+			workoutlog.FieldSets:       {Type: field.TypeJSON, Column: workoutlog.FieldSets},
+			workoutlog.FieldCreatedAt:  {Type: field.TypeString, Column: workoutlog.FieldCreatedAt},
+			workoutlog.FieldWorkoutID:  {Type: field.TypeString, Column: workoutlog.FieldWorkoutID},
+			workoutlog.FieldExerciseID: {Type: field.TypeString, Column: workoutlog.FieldExerciseID},
+			workoutlog.FieldUserID:     {Type: field.TypeString, Column: workoutlog.FieldUserID},
 		},
 	}
 	graph.MustAddE(
@@ -206,18 +208,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		"Equipment",
 		"Exercise",
-	)
-	graph.MustAddE(
-		"workout_logs",
-		&sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   exercise.WorkoutLogsTable,
-			Columns: []string{exercise.WorkoutLogsColumn},
-			Bidi:    false,
-		},
-		"Exercise",
-		"WorkoutLog",
 	)
 	graph.MustAddE(
 		"users",
@@ -280,6 +270,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 		"Routine",
 	)
 	graph.MustAddE(
+		"workouts",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   exercise.WorkoutsTable,
+			Columns: exercise.WorkoutsPrimaryKey,
+			Bidi:    false,
+		},
+		"Exercise",
+		"Workout",
+	)
+	graph.MustAddE(
 		"routine_exercises",
 		&sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -290,6 +292,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		"Exercise",
 		"RoutineExercise",
+	)
+	graph.MustAddE(
+		"workout_logs",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: true,
+			Table:   exercise.WorkoutLogsTable,
+			Columns: []string{exercise.WorkoutLogsColumn},
+			Bidi:    false,
+		},
+		"Exercise",
+		"WorkoutLog",
 	)
 	graph.MustAddE(
 		"exercises",
@@ -484,10 +498,22 @@ var schemaGraph = func() *sqlgraph.Schema {
 		"User",
 	)
 	graph.MustAddE(
+		"exercises",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   workout.ExercisesTable,
+			Columns: workout.ExercisesPrimaryKey,
+			Bidi:    false,
+		},
+		"Workout",
+		"Exercise",
+	)
+	graph.MustAddE(
 		"workout_logs",
 		&sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   workout.WorkoutLogsTable,
 			Columns: []string{workout.WorkoutLogsColumn},
 			Bidi:    false,
@@ -508,28 +534,28 @@ var schemaGraph = func() *sqlgraph.Schema {
 		"User",
 	)
 	graph.MustAddE(
-		"exercises",
-		&sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   workoutlog.ExercisesTable,
-			Columns: []string{workoutlog.ExercisesColumn},
-			Bidi:    false,
-		},
-		"WorkoutLog",
-		"Exercise",
-	)
-	graph.MustAddE(
 		"workouts",
 		&sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   workoutlog.WorkoutsTable,
 			Columns: []string{workoutlog.WorkoutsColumn},
 			Bidi:    false,
 		},
 		"WorkoutLog",
 		"Workout",
+	)
+	graph.MustAddE(
+		"exercises",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   workoutlog.ExercisesTable,
+			Columns: []string{workoutlog.ExercisesColumn},
+			Bidi:    false,
+		},
+		"WorkoutLog",
+		"Exercise",
 	)
 	return graph
 }()
@@ -664,20 +690,6 @@ func (f *ExerciseFilter) WhereUserID(p entql.StringP) {
 	f.Where(p.Field(exercise.FieldUserID))
 }
 
-// WhereHasWorkoutLogs applies a predicate to check if query has an edge workout_logs.
-func (f *ExerciseFilter) WhereHasWorkoutLogs() {
-	f.Where(entql.HasEdge("workout_logs"))
-}
-
-// WhereHasWorkoutLogsWith applies a predicate to check if query has an edge workout_logs with a given conditions (other predicates).
-func (f *ExerciseFilter) WhereHasWorkoutLogsWith(preds ...predicate.WorkoutLog) {
-	f.Where(entql.HasEdgeWith("workout_logs", sqlgraph.WrapFunc(func(s *sql.Selector) {
-		for _, p := range preds {
-			p(s)
-		}
-	})))
-}
-
 // WhereHasUsers applies a predicate to check if query has an edge users.
 func (f *ExerciseFilter) WhereHasUsers() {
 	f.Where(entql.HasEdge("users"))
@@ -748,6 +760,20 @@ func (f *ExerciseFilter) WhereHasRoutinesWith(preds ...predicate.Routine) {
 	})))
 }
 
+// WhereHasWorkouts applies a predicate to check if query has an edge workouts.
+func (f *ExerciseFilter) WhereHasWorkouts() {
+	f.Where(entql.HasEdge("workouts"))
+}
+
+// WhereHasWorkoutsWith applies a predicate to check if query has an edge workouts with a given conditions (other predicates).
+func (f *ExerciseFilter) WhereHasWorkoutsWith(preds ...predicate.Workout) {
+	f.Where(entql.HasEdgeWith("workouts", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
 // WhereHasRoutineExercises applies a predicate to check if query has an edge routine_exercises.
 func (f *ExerciseFilter) WhereHasRoutineExercises() {
 	f.Where(entql.HasEdge("routine_exercises"))
@@ -756,6 +782,20 @@ func (f *ExerciseFilter) WhereHasRoutineExercises() {
 // WhereHasRoutineExercisesWith applies a predicate to check if query has an edge routine_exercises with a given conditions (other predicates).
 func (f *ExerciseFilter) WhereHasRoutineExercisesWith(preds ...predicate.RoutineExercise) {
 	f.Where(entql.HasEdgeWith("routine_exercises", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// WhereHasWorkoutLogs applies a predicate to check if query has an edge workout_logs.
+func (f *ExerciseFilter) WhereHasWorkoutLogs() {
+	f.Where(entql.HasEdge("workout_logs"))
+}
+
+// WhereHasWorkoutLogsWith applies a predicate to check if query has an edge workout_logs with a given conditions (other predicates).
+func (f *ExerciseFilter) WhereHasWorkoutLogsWith(preds ...predicate.WorkoutLog) {
+	f.Where(entql.HasEdgeWith("workout_logs", sqlgraph.WrapFunc(func(s *sql.Selector) {
 		for _, p := range preds {
 			p(s)
 		}
@@ -1382,9 +1422,9 @@ func (f *WorkoutFilter) WhereReps(p entql.IntP) {
 	f.Where(p.Field(workout.FieldReps))
 }
 
-// WhereTime applies the entql string predicate on the time field.
-func (f *WorkoutFilter) WhereTime(p entql.StringP) {
-	f.Where(p.Field(workout.FieldTime))
+// WhereDuration applies the entql string predicate on the duration field.
+func (f *WorkoutFilter) WhereDuration(p entql.StringP) {
+	f.Where(p.Field(workout.FieldDuration))
 }
 
 // WhereSets applies the entql int predicate on the sets field.
@@ -1397,8 +1437,8 @@ func (f *WorkoutFilter) WhereCreatedAt(p entql.StringP) {
 	f.Where(p.Field(workout.FieldCreatedAt))
 }
 
-// WhereImage applies the entql string predicate on the image field.
-func (f *WorkoutFilter) WhereImage(p entql.StringP) {
+// WhereImage applies the entql json.RawMessage predicate on the image field.
+func (f *WorkoutFilter) WhereImage(p entql.BytesP) {
 	f.Where(p.Field(workout.FieldImage))
 }
 
@@ -1420,6 +1460,20 @@ func (f *WorkoutFilter) WhereHasUsers() {
 // WhereHasUsersWith applies a predicate to check if query has an edge users with a given conditions (other predicates).
 func (f *WorkoutFilter) WhereHasUsersWith(preds ...predicate.User) {
 	f.Where(entql.HasEdgeWith("users", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// WhereHasExercises applies a predicate to check if query has an edge exercises.
+func (f *WorkoutFilter) WhereHasExercises() {
+	f.Where(entql.HasEdge("exercises"))
+}
+
+// WhereHasExercisesWith applies a predicate to check if query has an edge exercises with a given conditions (other predicates).
+func (f *WorkoutFilter) WhereHasExercisesWith(preds ...predicate.Exercise) {
+	f.Where(entql.HasEdgeWith("exercises", sqlgraph.WrapFunc(func(s *sql.Selector) {
 		for _, p := range preds {
 			p(s)
 		}
@@ -1490,6 +1544,16 @@ func (f *WorkoutLogFilter) WhereCreatedAt(p entql.StringP) {
 	f.Where(p.Field(workoutlog.FieldCreatedAt))
 }
 
+// WhereWorkoutID applies the entql string predicate on the workout_id field.
+func (f *WorkoutLogFilter) WhereWorkoutID(p entql.StringP) {
+	f.Where(p.Field(workoutlog.FieldWorkoutID))
+}
+
+// WhereExerciseID applies the entql string predicate on the exercise_id field.
+func (f *WorkoutLogFilter) WhereExerciseID(p entql.StringP) {
+	f.Where(p.Field(workoutlog.FieldExerciseID))
+}
+
 // WhereUserID applies the entql string predicate on the user_id field.
 func (f *WorkoutLogFilter) WhereUserID(p entql.StringP) {
 	f.Where(p.Field(workoutlog.FieldUserID))
@@ -1509,20 +1573,6 @@ func (f *WorkoutLogFilter) WhereHasUsersWith(preds ...predicate.User) {
 	})))
 }
 
-// WhereHasExercises applies a predicate to check if query has an edge exercises.
-func (f *WorkoutLogFilter) WhereHasExercises() {
-	f.Where(entql.HasEdge("exercises"))
-}
-
-// WhereHasExercisesWith applies a predicate to check if query has an edge exercises with a given conditions (other predicates).
-func (f *WorkoutLogFilter) WhereHasExercisesWith(preds ...predicate.Exercise) {
-	f.Where(entql.HasEdgeWith("exercises", sqlgraph.WrapFunc(func(s *sql.Selector) {
-		for _, p := range preds {
-			p(s)
-		}
-	})))
-}
-
 // WhereHasWorkouts applies a predicate to check if query has an edge workouts.
 func (f *WorkoutLogFilter) WhereHasWorkouts() {
 	f.Where(entql.HasEdge("workouts"))
@@ -1531,6 +1581,20 @@ func (f *WorkoutLogFilter) WhereHasWorkouts() {
 // WhereHasWorkoutsWith applies a predicate to check if query has an edge workouts with a given conditions (other predicates).
 func (f *WorkoutLogFilter) WhereHasWorkoutsWith(preds ...predicate.Workout) {
 	f.Where(entql.HasEdgeWith("workouts", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// WhereHasExercises applies a predicate to check if query has an edge exercises.
+func (f *WorkoutLogFilter) WhereHasExercises() {
+	f.Where(entql.HasEdge("exercises"))
+}
+
+// WhereHasExercisesWith applies a predicate to check if query has an edge exercises with a given conditions (other predicates).
+func (f *WorkoutLogFilter) WhereHasExercisesWith(preds ...predicate.Exercise) {
+	f.Where(entql.HasEdgeWith("exercises", sqlgraph.WrapFunc(func(s *sql.Selector) {
 		for _, p := range preds {
 			p(s)
 		}

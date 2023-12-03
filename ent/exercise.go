@@ -23,7 +23,7 @@ type Exercise struct {
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Image holds the value of the "image" field.
-	Image schematype.Image `json:"image,omitempty"`
+	Image *schematype.Image `json:"image,omitempty"`
 	// HowTo holds the value of the "how_to" field.
 	HowTo *string `json:"how_to,omitempty"`
 	// UserID holds the value of the "user_id" field.
@@ -36,8 +36,6 @@ type Exercise struct {
 
 // ExerciseEdges holds the relations/edges for other nodes in the graph.
 type ExerciseEdges struct {
-	// WorkoutLogs holds the value of the workout_logs edge.
-	WorkoutLogs []*WorkoutLog `json:"workout_logs,omitempty"`
 	// Users holds the value of the users edge.
 	Users *User `json:"users,omitempty"`
 	// Equipment holds the value of the equipment edge.
@@ -48,35 +46,31 @@ type ExerciseEdges struct {
 	ExerciseTypes []*ExerciseType `json:"exercise_types,omitempty"`
 	// Routines holds the value of the routines edge.
 	Routines []*Routine `json:"routines,omitempty"`
+	// Workouts holds the value of the workouts edge.
+	Workouts []*Workout `json:"workouts,omitempty"`
 	// RoutineExercises holds the value of the routine_exercises edge.
 	RoutineExercises []*RoutineExercise `json:"routine_exercises,omitempty"`
+	// WorkoutLogs holds the value of the workout_logs edge.
+	WorkoutLogs []*WorkoutLog `json:"workout_logs,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [7]bool
+	loadedTypes [8]bool
 	// totalCount holds the count of the edges above.
-	totalCount [7]map[string]int
+	totalCount [8]map[string]int
 
-	namedWorkoutLogs      map[string][]*WorkoutLog
 	namedEquipment        map[string][]*Equipment
 	namedMusclesGroups    map[string][]*MusclesGroup
 	namedExerciseTypes    map[string][]*ExerciseType
 	namedRoutines         map[string][]*Routine
+	namedWorkouts         map[string][]*Workout
 	namedRoutineExercises map[string][]*RoutineExercise
-}
-
-// WorkoutLogsOrErr returns the WorkoutLogs value or an error if the edge
-// was not loaded in eager-loading.
-func (e ExerciseEdges) WorkoutLogsOrErr() ([]*WorkoutLog, error) {
-	if e.loadedTypes[0] {
-		return e.WorkoutLogs, nil
-	}
-	return nil, &NotLoadedError{edge: "workout_logs"}
+	namedWorkoutLogs      map[string][]*WorkoutLog
 }
 
 // UsersOrErr returns the Users value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e ExerciseEdges) UsersOrErr() (*User, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[0] {
 		if e.Users == nil {
 			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: user.Label}
@@ -89,7 +83,7 @@ func (e ExerciseEdges) UsersOrErr() (*User, error) {
 // EquipmentOrErr returns the Equipment value or an error if the edge
 // was not loaded in eager-loading.
 func (e ExerciseEdges) EquipmentOrErr() ([]*Equipment, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		return e.Equipment, nil
 	}
 	return nil, &NotLoadedError{edge: "equipment"}
@@ -98,7 +92,7 @@ func (e ExerciseEdges) EquipmentOrErr() ([]*Equipment, error) {
 // MusclesGroupsOrErr returns the MusclesGroups value or an error if the edge
 // was not loaded in eager-loading.
 func (e ExerciseEdges) MusclesGroupsOrErr() ([]*MusclesGroup, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		return e.MusclesGroups, nil
 	}
 	return nil, &NotLoadedError{edge: "muscles_groups"}
@@ -107,7 +101,7 @@ func (e ExerciseEdges) MusclesGroupsOrErr() ([]*MusclesGroup, error) {
 // ExerciseTypesOrErr returns the ExerciseTypes value or an error if the edge
 // was not loaded in eager-loading.
 func (e ExerciseEdges) ExerciseTypesOrErr() ([]*ExerciseType, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[3] {
 		return e.ExerciseTypes, nil
 	}
 	return nil, &NotLoadedError{edge: "exercise_types"}
@@ -116,10 +110,19 @@ func (e ExerciseEdges) ExerciseTypesOrErr() ([]*ExerciseType, error) {
 // RoutinesOrErr returns the Routines value or an error if the edge
 // was not loaded in eager-loading.
 func (e ExerciseEdges) RoutinesOrErr() ([]*Routine, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[4] {
 		return e.Routines, nil
 	}
 	return nil, &NotLoadedError{edge: "routines"}
+}
+
+// WorkoutsOrErr returns the Workouts value or an error if the edge
+// was not loaded in eager-loading.
+func (e ExerciseEdges) WorkoutsOrErr() ([]*Workout, error) {
+	if e.loadedTypes[5] {
+		return e.Workouts, nil
+	}
+	return nil, &NotLoadedError{edge: "workouts"}
 }
 
 // RoutineExercisesOrErr returns the RoutineExercises value or an error if the edge
@@ -129,6 +132,15 @@ func (e ExerciseEdges) RoutineExercisesOrErr() ([]*RoutineExercise, error) {
 		return e.RoutineExercises, nil
 	}
 	return nil, &NotLoadedError{edge: "routine_exercises"}
+}
+
+// WorkoutLogsOrErr returns the WorkoutLogs value or an error if the edge
+// was not loaded in eager-loading.
+func (e ExerciseEdges) WorkoutLogsOrErr() ([]*WorkoutLog, error) {
+	if e.loadedTypes[7] {
+		return e.WorkoutLogs, nil
+	}
+	return nil, &NotLoadedError{edge: "workout_logs"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -206,11 +218,6 @@ func (e *Exercise) Value(name string) (ent.Value, error) {
 	return e.selectValues.Get(name)
 }
 
-// QueryWorkoutLogs queries the "workout_logs" edge of the Exercise entity.
-func (e *Exercise) QueryWorkoutLogs() *WorkoutLogQuery {
-	return NewExerciseClient(e.config).QueryWorkoutLogs(e)
-}
-
 // QueryUsers queries the "users" edge of the Exercise entity.
 func (e *Exercise) QueryUsers() *UserQuery {
 	return NewExerciseClient(e.config).QueryUsers(e)
@@ -236,9 +243,19 @@ func (e *Exercise) QueryRoutines() *RoutineQuery {
 	return NewExerciseClient(e.config).QueryRoutines(e)
 }
 
+// QueryWorkouts queries the "workouts" edge of the Exercise entity.
+func (e *Exercise) QueryWorkouts() *WorkoutQuery {
+	return NewExerciseClient(e.config).QueryWorkouts(e)
+}
+
 // QueryRoutineExercises queries the "routine_exercises" edge of the Exercise entity.
 func (e *Exercise) QueryRoutineExercises() *RoutineExerciseQuery {
 	return NewExerciseClient(e.config).QueryRoutineExercises(e)
+}
+
+// QueryWorkoutLogs queries the "workout_logs" edge of the Exercise entity.
+func (e *Exercise) QueryWorkoutLogs() *WorkoutLogQuery {
+	return NewExerciseClient(e.config).QueryWorkoutLogs(e)
 }
 
 // Update returns a builder for updating this Exercise.
@@ -281,30 +298,6 @@ func (e *Exercise) String() string {
 	}
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// NamedWorkoutLogs returns the WorkoutLogs named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (e *Exercise) NamedWorkoutLogs(name string) ([]*WorkoutLog, error) {
-	if e.Edges.namedWorkoutLogs == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := e.Edges.namedWorkoutLogs[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (e *Exercise) appendNamedWorkoutLogs(name string, edges ...*WorkoutLog) {
-	if e.Edges.namedWorkoutLogs == nil {
-		e.Edges.namedWorkoutLogs = make(map[string][]*WorkoutLog)
-	}
-	if len(edges) == 0 {
-		e.Edges.namedWorkoutLogs[name] = []*WorkoutLog{}
-	} else {
-		e.Edges.namedWorkoutLogs[name] = append(e.Edges.namedWorkoutLogs[name], edges...)
-	}
 }
 
 // NamedEquipment returns the Equipment named value or an error if the edge was not
@@ -403,6 +396,30 @@ func (e *Exercise) appendNamedRoutines(name string, edges ...*Routine) {
 	}
 }
 
+// NamedWorkouts returns the Workouts named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (e *Exercise) NamedWorkouts(name string) ([]*Workout, error) {
+	if e.Edges.namedWorkouts == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := e.Edges.namedWorkouts[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (e *Exercise) appendNamedWorkouts(name string, edges ...*Workout) {
+	if e.Edges.namedWorkouts == nil {
+		e.Edges.namedWorkouts = make(map[string][]*Workout)
+	}
+	if len(edges) == 0 {
+		e.Edges.namedWorkouts[name] = []*Workout{}
+	} else {
+		e.Edges.namedWorkouts[name] = append(e.Edges.namedWorkouts[name], edges...)
+	}
+}
+
 // NamedRoutineExercises returns the RoutineExercises named value or an error if the edge was not
 // loaded in eager-loading with this name.
 func (e *Exercise) NamedRoutineExercises(name string) ([]*RoutineExercise, error) {
@@ -424,6 +441,30 @@ func (e *Exercise) appendNamedRoutineExercises(name string, edges ...*RoutineExe
 		e.Edges.namedRoutineExercises[name] = []*RoutineExercise{}
 	} else {
 		e.Edges.namedRoutineExercises[name] = append(e.Edges.namedRoutineExercises[name], edges...)
+	}
+}
+
+// NamedWorkoutLogs returns the WorkoutLogs named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (e *Exercise) NamedWorkoutLogs(name string) ([]*WorkoutLog, error) {
+	if e.Edges.namedWorkoutLogs == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := e.Edges.namedWorkoutLogs[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (e *Exercise) appendNamedWorkoutLogs(name string, edges ...*WorkoutLog) {
+	if e.Edges.namedWorkoutLogs == nil {
+		e.Edges.namedWorkoutLogs = make(map[string][]*WorkoutLog)
+	}
+	if len(edges) == 0 {
+		e.Edges.namedWorkoutLogs[name] = []*WorkoutLog{}
+	} else {
+		e.Edges.namedWorkoutLogs[name] = append(e.Edges.namedWorkoutLogs[name], edges...)
 	}
 }
 

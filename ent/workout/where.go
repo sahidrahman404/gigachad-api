@@ -69,9 +69,9 @@ func Reps(v int) predicate.Workout {
 	return predicate.Workout(sql.FieldEQ(FieldReps, v))
 }
 
-// Time applies equality check predicate on the "time" field. It's identical to TimeEQ.
-func Time(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldEQ(FieldTime, v))
+// Duration applies equality check predicate on the "duration" field. It's identical to DurationEQ.
+func Duration(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldEQ(FieldDuration, v))
 }
 
 // Sets applies equality check predicate on the "sets" field. It's identical to SetsEQ.
@@ -82,11 +82,6 @@ func Sets(v int) predicate.Workout {
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v string) predicate.Workout {
 	return predicate.Workout(sql.FieldEQ(FieldCreatedAt, v))
-}
-
-// Image applies equality check predicate on the "image" field. It's identical to ImageEQ.
-func Image(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldEQ(FieldImage, v))
 }
 
 // Description applies equality check predicate on the "description" field. It's identical to DescriptionEQ.
@@ -244,79 +239,69 @@ func RepsLTE(v int) predicate.Workout {
 	return predicate.Workout(sql.FieldLTE(FieldReps, v))
 }
 
-// TimeEQ applies the EQ predicate on the "time" field.
-func TimeEQ(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldEQ(FieldTime, v))
+// DurationEQ applies the EQ predicate on the "duration" field.
+func DurationEQ(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldEQ(FieldDuration, v))
 }
 
-// TimeNEQ applies the NEQ predicate on the "time" field.
-func TimeNEQ(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldNEQ(FieldTime, v))
+// DurationNEQ applies the NEQ predicate on the "duration" field.
+func DurationNEQ(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldNEQ(FieldDuration, v))
 }
 
-// TimeIn applies the In predicate on the "time" field.
-func TimeIn(vs ...string) predicate.Workout {
-	return predicate.Workout(sql.FieldIn(FieldTime, vs...))
+// DurationIn applies the In predicate on the "duration" field.
+func DurationIn(vs ...string) predicate.Workout {
+	return predicate.Workout(sql.FieldIn(FieldDuration, vs...))
 }
 
-// TimeNotIn applies the NotIn predicate on the "time" field.
-func TimeNotIn(vs ...string) predicate.Workout {
-	return predicate.Workout(sql.FieldNotIn(FieldTime, vs...))
+// DurationNotIn applies the NotIn predicate on the "duration" field.
+func DurationNotIn(vs ...string) predicate.Workout {
+	return predicate.Workout(sql.FieldNotIn(FieldDuration, vs...))
 }
 
-// TimeGT applies the GT predicate on the "time" field.
-func TimeGT(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldGT(FieldTime, v))
+// DurationGT applies the GT predicate on the "duration" field.
+func DurationGT(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldGT(FieldDuration, v))
 }
 
-// TimeGTE applies the GTE predicate on the "time" field.
-func TimeGTE(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldGTE(FieldTime, v))
+// DurationGTE applies the GTE predicate on the "duration" field.
+func DurationGTE(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldGTE(FieldDuration, v))
 }
 
-// TimeLT applies the LT predicate on the "time" field.
-func TimeLT(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldLT(FieldTime, v))
+// DurationLT applies the LT predicate on the "duration" field.
+func DurationLT(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldLT(FieldDuration, v))
 }
 
-// TimeLTE applies the LTE predicate on the "time" field.
-func TimeLTE(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldLTE(FieldTime, v))
+// DurationLTE applies the LTE predicate on the "duration" field.
+func DurationLTE(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldLTE(FieldDuration, v))
 }
 
-// TimeContains applies the Contains predicate on the "time" field.
-func TimeContains(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldContains(FieldTime, v))
+// DurationContains applies the Contains predicate on the "duration" field.
+func DurationContains(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldContains(FieldDuration, v))
 }
 
-// TimeHasPrefix applies the HasPrefix predicate on the "time" field.
-func TimeHasPrefix(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldHasPrefix(FieldTime, v))
+// DurationHasPrefix applies the HasPrefix predicate on the "duration" field.
+func DurationHasPrefix(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldHasPrefix(FieldDuration, v))
 }
 
-// TimeHasSuffix applies the HasSuffix predicate on the "time" field.
-func TimeHasSuffix(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldHasSuffix(FieldTime, v))
+// DurationHasSuffix applies the HasSuffix predicate on the "duration" field.
+func DurationHasSuffix(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldHasSuffix(FieldDuration, v))
 }
 
-// TimeIsNil applies the IsNil predicate on the "time" field.
-func TimeIsNil() predicate.Workout {
-	return predicate.Workout(sql.FieldIsNull(FieldTime))
+// DurationEqualFold applies the EqualFold predicate on the "duration" field.
+func DurationEqualFold(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldEqualFold(FieldDuration, v))
 }
 
-// TimeNotNil applies the NotNil predicate on the "time" field.
-func TimeNotNil() predicate.Workout {
-	return predicate.Workout(sql.FieldNotNull(FieldTime))
-}
-
-// TimeEqualFold applies the EqualFold predicate on the "time" field.
-func TimeEqualFold(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldEqualFold(FieldTime, v))
-}
-
-// TimeContainsFold applies the ContainsFold predicate on the "time" field.
-func TimeContainsFold(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldContainsFold(FieldTime, v))
+// DurationContainsFold applies the ContainsFold predicate on the "duration" field.
+func DurationContainsFold(v string) predicate.Workout {
+	return predicate.Workout(sql.FieldContainsFold(FieldDuration, v))
 }
 
 // SetsEQ applies the EQ predicate on the "sets" field.
@@ -424,61 +409,6 @@ func CreatedAtContainsFold(v string) predicate.Workout {
 	return predicate.Workout(sql.FieldContainsFold(FieldCreatedAt, v))
 }
 
-// ImageEQ applies the EQ predicate on the "image" field.
-func ImageEQ(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldEQ(FieldImage, v))
-}
-
-// ImageNEQ applies the NEQ predicate on the "image" field.
-func ImageNEQ(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldNEQ(FieldImage, v))
-}
-
-// ImageIn applies the In predicate on the "image" field.
-func ImageIn(vs ...string) predicate.Workout {
-	return predicate.Workout(sql.FieldIn(FieldImage, vs...))
-}
-
-// ImageNotIn applies the NotIn predicate on the "image" field.
-func ImageNotIn(vs ...string) predicate.Workout {
-	return predicate.Workout(sql.FieldNotIn(FieldImage, vs...))
-}
-
-// ImageGT applies the GT predicate on the "image" field.
-func ImageGT(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldGT(FieldImage, v))
-}
-
-// ImageGTE applies the GTE predicate on the "image" field.
-func ImageGTE(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldGTE(FieldImage, v))
-}
-
-// ImageLT applies the LT predicate on the "image" field.
-func ImageLT(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldLT(FieldImage, v))
-}
-
-// ImageLTE applies the LTE predicate on the "image" field.
-func ImageLTE(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldLTE(FieldImage, v))
-}
-
-// ImageContains applies the Contains predicate on the "image" field.
-func ImageContains(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldContains(FieldImage, v))
-}
-
-// ImageHasPrefix applies the HasPrefix predicate on the "image" field.
-func ImageHasPrefix(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldHasPrefix(FieldImage, v))
-}
-
-// ImageHasSuffix applies the HasSuffix predicate on the "image" field.
-func ImageHasSuffix(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldHasSuffix(FieldImage, v))
-}
-
 // ImageIsNil applies the IsNil predicate on the "image" field.
 func ImageIsNil() predicate.Workout {
 	return predicate.Workout(sql.FieldIsNull(FieldImage))
@@ -487,16 +417,6 @@ func ImageIsNil() predicate.Workout {
 // ImageNotNil applies the NotNil predicate on the "image" field.
 func ImageNotNil() predicate.Workout {
 	return predicate.Workout(sql.FieldNotNull(FieldImage))
-}
-
-// ImageEqualFold applies the EqualFold predicate on the "image" field.
-func ImageEqualFold(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldEqualFold(FieldImage, v))
-}
-
-// ImageContainsFold applies the ContainsFold predicate on the "image" field.
-func ImageContainsFold(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldContainsFold(FieldImage, v))
 }
 
 // DescriptionEQ applies the EQ predicate on the "description" field.
@@ -552,6 +472,16 @@ func DescriptionHasPrefix(v string) predicate.Workout {
 // DescriptionHasSuffix applies the HasSuffix predicate on the "description" field.
 func DescriptionHasSuffix(v string) predicate.Workout {
 	return predicate.Workout(sql.FieldHasSuffix(FieldDescription, v))
+}
+
+// DescriptionIsNil applies the IsNil predicate on the "description" field.
+func DescriptionIsNil() predicate.Workout {
+	return predicate.Workout(sql.FieldIsNull(FieldDescription))
+}
+
+// DescriptionNotNil applies the NotNil predicate on the "description" field.
+func DescriptionNotNil() predicate.Workout {
+	return predicate.Workout(sql.FieldNotNull(FieldDescription))
 }
 
 // DescriptionEqualFold applies the EqualFold predicate on the "description" field.
@@ -657,12 +587,35 @@ func HasUsersWith(preds ...predicate.User) predicate.Workout {
 	})
 }
 
+// HasExercises applies the HasEdge predicate on the "exercises" edge.
+func HasExercises() predicate.Workout {
+	return predicate.Workout(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, ExercisesTable, ExercisesPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasExercisesWith applies the HasEdge predicate on the "exercises" edge with a given conditions (other predicates).
+func HasExercisesWith(preds ...predicate.Exercise) predicate.Workout {
+	return predicate.Workout(func(s *sql.Selector) {
+		step := newExercisesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasWorkoutLogs applies the HasEdge predicate on the "workout_logs" edge.
 func HasWorkoutLogs() predicate.Workout {
 	return predicate.Workout(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, WorkoutLogsTable, WorkoutLogsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, true, WorkoutLogsTable, WorkoutLogsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})

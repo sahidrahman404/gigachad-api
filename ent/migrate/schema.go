@@ -192,11 +192,11 @@ var (
 		{Name: "name", Type: field.TypeString},
 		{Name: "volume", Type: field.TypeInt},
 		{Name: "reps", Type: field.TypeInt},
-		{Name: "time", Type: field.TypeString, Nullable: true},
+		{Name: "duration", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeInt},
 		{Name: "created_at", Type: field.TypeString},
-		{Name: "image", Type: field.TypeString, Nullable: true},
-		{Name: "description", Type: field.TypeString},
+		{Name: "image", Type: field.TypeJSON, Nullable: true},
+		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString},
 	}
 	// WorkoutsTable holds the schema information for the "workouts" table.
@@ -218,9 +218,9 @@ var (
 		{Name: "id", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeJSON},
 		{Name: "created_at", Type: field.TypeString},
-		{Name: "exercise_workout_logs", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString},
-		{Name: "workout_workout_logs", Type: field.TypeString, Nullable: true},
+		{Name: "workout_id", Type: field.TypeString},
+		{Name: "exercise_id", Type: field.TypeString},
 	}
 	// WorkoutLogsTable holds the schema information for the "workout_logs" table.
 	WorkoutLogsTable = &schema.Table{
@@ -229,22 +229,29 @@ var (
 		PrimaryKey: []*schema.Column{WorkoutLogsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "workout_logs_exercises_workout_logs",
-				Columns:    []*schema.Column{WorkoutLogsColumns[3]},
-				RefColumns: []*schema.Column{ExercisesColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
 				Symbol:     "workout_logs_users_workout_logs",
-				Columns:    []*schema.Column{WorkoutLogsColumns[4]},
+				Columns:    []*schema.Column{WorkoutLogsColumns[3]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
-				Symbol:     "workout_logs_workouts_workout_logs",
-				Columns:    []*schema.Column{WorkoutLogsColumns[5]},
+				Symbol:     "workout_logs_workouts_workouts",
+				Columns:    []*schema.Column{WorkoutLogsColumns[4]},
 				RefColumns: []*schema.Column{WorkoutsColumns[0]},
 				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "workout_logs_exercises_exercises",
+				Columns:    []*schema.Column{WorkoutLogsColumns[5]},
+				RefColumns: []*schema.Column{ExercisesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "workoutlog_workout_id_exercise_id",
+				Unique:  true,
+				Columns: []*schema.Column{WorkoutLogsColumns[4], WorkoutLogsColumns[5]},
 			},
 		},
 	}
@@ -349,9 +356,9 @@ func init() {
 	RoutineExercisesTable.ForeignKeys[2].RefTable = UsersTable
 	TokensTable.ForeignKeys[0].RefTable = UsersTable
 	WorkoutsTable.ForeignKeys[0].RefTable = UsersTable
-	WorkoutLogsTable.ForeignKeys[0].RefTable = ExercisesTable
-	WorkoutLogsTable.ForeignKeys[1].RefTable = UsersTable
-	WorkoutLogsTable.ForeignKeys[2].RefTable = WorkoutsTable
+	WorkoutLogsTable.ForeignKeys[0].RefTable = UsersTable
+	WorkoutLogsTable.ForeignKeys[1].RefTable = WorkoutsTable
+	WorkoutLogsTable.ForeignKeys[2].RefTable = ExercisesTable
 	EquipmentExercisesTable.ForeignKeys[0].RefTable = EquipmentTable
 	EquipmentExercisesTable.ForeignKeys[1].RefTable = ExercisesTable
 	EquipmentExercisesTable.Annotation = &entsql.Annotation{}

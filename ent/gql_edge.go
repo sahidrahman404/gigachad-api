@@ -29,27 +29,6 @@ func (e *Equipment) Exercises(
 	return e.QueryExercises().Paginate(ctx, after, first, before, last, opts...)
 }
 
-func (e *Exercise) WorkoutLogs(
-	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *WorkoutLogOrder, where *WorkoutLogWhereInput,
-) (*WorkoutLogConnection, error) {
-	opts := []WorkoutLogPaginateOption{
-		WithWorkoutLogOrder(orderBy),
-		WithWorkoutLogFilter(where.Filter),
-	}
-	alias := graphql.GetFieldContext(ctx).Field.Alias
-	totalCount, hasTotalCount := e.Edges.totalCount[0][alias]
-	if nodes, err := e.NamedWorkoutLogs(alias); err == nil || hasTotalCount {
-		pager, err := newWorkoutLogPager(opts, last != nil)
-		if err != nil {
-			return nil, err
-		}
-		conn := &WorkoutLogConnection{Edges: []*WorkoutLogEdge{}, TotalCount: totalCount}
-		conn.build(nodes, pager, after, first, before, last)
-		return conn, nil
-	}
-	return e.QueryWorkoutLogs().Paginate(ctx, after, first, before, last, opts...)
-}
-
 func (e *Exercise) Users(ctx context.Context) (*User, error) {
 	result, err := e.Edges.UsersOrErr()
 	if IsNotLoaded(err) {
@@ -66,7 +45,7 @@ func (e *Exercise) Equipment(
 		WithEquipmentFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
-	totalCount, hasTotalCount := e.Edges.totalCount[2][alias]
+	totalCount, hasTotalCount := e.Edges.totalCount[1][alias]
 	if nodes, err := e.NamedEquipment(alias); err == nil || hasTotalCount {
 		pager, err := newEquipmentPager(opts, last != nil)
 		if err != nil {
@@ -87,7 +66,7 @@ func (e *Exercise) MusclesGroups(
 		WithMusclesGroupFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
-	totalCount, hasTotalCount := e.Edges.totalCount[3][alias]
+	totalCount, hasTotalCount := e.Edges.totalCount[2][alias]
 	if nodes, err := e.NamedMusclesGroups(alias); err == nil || hasTotalCount {
 		pager, err := newMusclesGroupPager(opts, last != nil)
 		if err != nil {
@@ -108,7 +87,7 @@ func (e *Exercise) ExerciseTypes(
 		WithExerciseTypeFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
-	totalCount, hasTotalCount := e.Edges.totalCount[4][alias]
+	totalCount, hasTotalCount := e.Edges.totalCount[3][alias]
 	if nodes, err := e.NamedExerciseTypes(alias); err == nil || hasTotalCount {
 		pager, err := newExerciseTypePager(opts, last != nil)
 		if err != nil {
@@ -129,7 +108,7 @@ func (e *Exercise) Routines(
 		WithRoutineFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
-	totalCount, hasTotalCount := e.Edges.totalCount[5][alias]
+	totalCount, hasTotalCount := e.Edges.totalCount[4][alias]
 	if nodes, err := e.NamedRoutines(alias); err == nil || hasTotalCount {
 		pager, err := newRoutinePager(opts, last != nil)
 		if err != nil {
@@ -140,6 +119,27 @@ func (e *Exercise) Routines(
 		return conn, nil
 	}
 	return e.QueryRoutines().Paginate(ctx, after, first, before, last, opts...)
+}
+
+func (e *Exercise) Workouts(
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *WorkoutOrder, where *WorkoutWhereInput,
+) (*WorkoutConnection, error) {
+	opts := []WorkoutPaginateOption{
+		WithWorkoutOrder(orderBy),
+		WithWorkoutFilter(where.Filter),
+	}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := e.Edges.totalCount[5][alias]
+	if nodes, err := e.NamedWorkouts(alias); err == nil || hasTotalCount {
+		pager, err := newWorkoutPager(opts, last != nil)
+		if err != nil {
+			return nil, err
+		}
+		conn := &WorkoutConnection{Edges: []*WorkoutEdge{}, TotalCount: totalCount}
+		conn.build(nodes, pager, after, first, before, last)
+		return conn, nil
+	}
+	return e.QueryWorkouts().Paginate(ctx, after, first, before, last, opts...)
 }
 
 func (e *Exercise) RoutineExercises(
@@ -161,6 +161,27 @@ func (e *Exercise) RoutineExercises(
 		return conn, nil
 	}
 	return e.QueryRoutineExercises().Paginate(ctx, after, first, before, last, opts...)
+}
+
+func (e *Exercise) WorkoutLogs(
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *WorkoutLogOrder, where *WorkoutLogWhereInput,
+) (*WorkoutLogConnection, error) {
+	opts := []WorkoutLogPaginateOption{
+		WithWorkoutLogOrder(orderBy),
+		WithWorkoutLogFilter(where.Filter),
+	}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := e.Edges.totalCount[7][alias]
+	if nodes, err := e.NamedWorkoutLogs(alias); err == nil || hasTotalCount {
+		pager, err := newWorkoutLogPager(opts, last != nil)
+		if err != nil {
+			return nil, err
+		}
+		conn := &WorkoutLogConnection{Edges: []*WorkoutLogEdge{}, TotalCount: totalCount}
+		conn.build(nodes, pager, after, first, before, last)
+		return conn, nil
+	}
+	return e.QueryWorkoutLogs().Paginate(ctx, after, first, before, last, opts...)
 }
 
 func (et *ExerciseType) Exercises(
@@ -412,6 +433,27 @@ func (w *Workout) Users(ctx context.Context) (*User, error) {
 	return result, err
 }
 
+func (w *Workout) Exercises(
+	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *ExerciseOrder, where *ExerciseWhereInput,
+) (*ExerciseConnection, error) {
+	opts := []ExercisePaginateOption{
+		WithExerciseOrder(orderBy),
+		WithExerciseFilter(where.Filter),
+	}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := w.Edges.totalCount[1][alias]
+	if nodes, err := w.NamedExercises(alias); err == nil || hasTotalCount {
+		pager, err := newExercisePager(opts, last != nil)
+		if err != nil {
+			return nil, err
+		}
+		conn := &ExerciseConnection{Edges: []*ExerciseEdge{}, TotalCount: totalCount}
+		conn.build(nodes, pager, after, first, before, last)
+		return conn, nil
+	}
+	return w.QueryExercises().Paginate(ctx, after, first, before, last, opts...)
+}
+
 func (w *Workout) WorkoutLogs(
 	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *WorkoutLogOrder, where *WorkoutLogWhereInput,
 ) (*WorkoutLogConnection, error) {
@@ -420,7 +462,7 @@ func (w *Workout) WorkoutLogs(
 		WithWorkoutLogFilter(where.Filter),
 	}
 	alias := graphql.GetFieldContext(ctx).Field.Alias
-	totalCount, hasTotalCount := w.Edges.totalCount[1][alias]
+	totalCount, hasTotalCount := w.Edges.totalCount[2][alias]
 	if nodes, err := w.NamedWorkoutLogs(alias); err == nil || hasTotalCount {
 		pager, err := newWorkoutLogPager(opts, last != nil)
 		if err != nil {
@@ -441,18 +483,18 @@ func (wl *WorkoutLog) Users(ctx context.Context) (*User, error) {
 	return result, err
 }
 
-func (wl *WorkoutLog) Exercises(ctx context.Context) (*Exercise, error) {
-	result, err := wl.Edges.ExercisesOrErr()
-	if IsNotLoaded(err) {
-		result, err = wl.QueryExercises().Only(ctx)
-	}
-	return result, MaskNotFound(err)
-}
-
 func (wl *WorkoutLog) Workouts(ctx context.Context) (*Workout, error) {
 	result, err := wl.Edges.WorkoutsOrErr()
 	if IsNotLoaded(err) {
 		result, err = wl.QueryWorkouts().Only(ctx)
 	}
-	return result, MaskNotFound(err)
+	return result, err
+}
+
+func (wl *WorkoutLog) Exercises(ctx context.Context) (*Exercise, error) {
+	result, err := wl.Edges.ExercisesOrErr()
+	if IsNotLoaded(err) {
+		result, err = wl.QueryExercises().Only(ctx)
+	}
+	return result, err
 }

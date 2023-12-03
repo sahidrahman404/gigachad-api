@@ -267,3 +267,15 @@ func setAltRole(p *schematype.Image) {
 		p.Role = &role
 	}
 }
+
+func SetNillableImageField(
+	p *schematype.Image,
+	awsCfg aws.AWSConfig,
+	i *Imgproxy,
+) *schematype.Image {
+	if p == nil {
+		return nil
+	}
+	result := SetImageField(*p, awsCfg, i)
+	return &result
+}

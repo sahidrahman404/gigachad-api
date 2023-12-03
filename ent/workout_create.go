@@ -9,7 +9,9 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 	"github.com/sahidrahman404/gigachad-api/ent/workoutlog"
@@ -40,17 +42,9 @@ func (wc *WorkoutCreate) SetReps(i int) *WorkoutCreate {
 	return wc
 }
 
-// SetTime sets the "time" field.
-func (wc *WorkoutCreate) SetTime(s string) *WorkoutCreate {
-	wc.mutation.SetTime(s)
-	return wc
-}
-
-// SetNillableTime sets the "time" field if the given value is not nil.
-func (wc *WorkoutCreate) SetNillableTime(s *string) *WorkoutCreate {
-	if s != nil {
-		wc.SetTime(*s)
-	}
+// SetDuration sets the "duration" field.
+func (wc *WorkoutCreate) SetDuration(s string) *WorkoutCreate {
+	wc.mutation.SetDuration(s)
 	return wc
 }
 
@@ -75,22 +69,22 @@ func (wc *WorkoutCreate) SetNillableCreatedAt(s *string) *WorkoutCreate {
 }
 
 // SetImage sets the "image" field.
-func (wc *WorkoutCreate) SetImage(s string) *WorkoutCreate {
+func (wc *WorkoutCreate) SetImage(s *schematype.Image) *WorkoutCreate {
 	wc.mutation.SetImage(s)
-	return wc
-}
-
-// SetNillableImage sets the "image" field if the given value is not nil.
-func (wc *WorkoutCreate) SetNillableImage(s *string) *WorkoutCreate {
-	if s != nil {
-		wc.SetImage(*s)
-	}
 	return wc
 }
 
 // SetDescription sets the "description" field.
 func (wc *WorkoutCreate) SetDescription(s string) *WorkoutCreate {
 	wc.mutation.SetDescription(s)
+	return wc
+}
+
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (wc *WorkoutCreate) SetNillableDescription(s *string) *WorkoutCreate {
+	if s != nil {
+		wc.SetDescription(*s)
+	}
 	return wc
 }
 
@@ -123,6 +117,21 @@ func (wc *WorkoutCreate) SetUsersID(id pksuid.ID) *WorkoutCreate {
 // SetUsers sets the "users" edge to the User entity.
 func (wc *WorkoutCreate) SetUsers(u *User) *WorkoutCreate {
 	return wc.SetUsersID(u.ID)
+}
+
+// AddExerciseIDs adds the "exercises" edge to the Exercise entity by IDs.
+func (wc *WorkoutCreate) AddExerciseIDs(ids ...pksuid.ID) *WorkoutCreate {
+	wc.mutation.AddExerciseIDs(ids...)
+	return wc
+}
+
+// AddExercises adds the "exercises" edges to the Exercise entity.
+func (wc *WorkoutCreate) AddExercises(e ...*Exercise) *WorkoutCreate {
+	ids := make([]pksuid.ID, len(e))
+	for i := range e {
+		ids[i] = e[i].ID
+	}
+	return wc.AddExerciseIDs(ids...)
 }
 
 // AddWorkoutLogIDs adds the "workout_logs" edge to the WorkoutLog entity by IDs.
@@ -196,14 +205,14 @@ func (wc *WorkoutCreate) check() error {
 	if _, ok := wc.mutation.Reps(); !ok {
 		return &ValidationError{Name: "reps", err: errors.New(`ent: missing required field "Workout.reps"`)}
 	}
+	if _, ok := wc.mutation.Duration(); !ok {
+		return &ValidationError{Name: "duration", err: errors.New(`ent: missing required field "Workout.duration"`)}
+	}
 	if _, ok := wc.mutation.Sets(); !ok {
 		return &ValidationError{Name: "sets", err: errors.New(`ent: missing required field "Workout.sets"`)}
 	}
 	if _, ok := wc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Workout.created_at"`)}
-	}
-	if _, ok := wc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Workout.description"`)}
 	}
 	if _, ok := wc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "Workout.user_id"`)}
@@ -258,9 +267,9 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 		_spec.SetField(workout.FieldReps, field.TypeInt, value)
 		_node.Reps = value
 	}
-	if value, ok := wc.mutation.Time(); ok {
-		_spec.SetField(workout.FieldTime, field.TypeString, value)
-		_node.Time = value
+	if value, ok := wc.mutation.Duration(); ok {
+		_spec.SetField(workout.FieldDuration, field.TypeString, value)
+		_node.Duration = value
 	}
 	if value, ok := wc.mutation.Sets(); ok {
 		_spec.SetField(workout.FieldSets, field.TypeInt, value)
@@ -271,12 +280,12 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 		_node.CreatedAt = value
 	}
 	if value, ok := wc.mutation.Image(); ok {
-		_spec.SetField(workout.FieldImage, field.TypeString, value)
-		_node.Image = &value
+		_spec.SetField(workout.FieldImage, field.TypeJSON, value)
+		_node.Image = value
 	}
 	if value, ok := wc.mutation.Description(); ok {
 		_spec.SetField(workout.FieldDescription, field.TypeString, value)
-		_node.Description = value
+		_node.Description = &value
 	}
 	if nodes := wc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -295,10 +304,33 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
+	if nodes := wc.mutation.ExercisesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   workout.ExercisesTable,
+			Columns: workout.ExercisesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		createE := &WorkoutLogCreate{config: wc.config, mutation: newWorkoutLogMutation(wc.config, OpCreate)}
+		createE.defaults()
+		_, specE := createE.createSpec()
+		edge.Target.Fields = specE.Fields
+		if specE.ID.Value != nil {
+			edge.Target.Fields = append(edge.Target.Fields, specE.ID)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
 	if nodes := wc.mutation.WorkoutLogsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
-			Inverse: false,
+			Inverse: true,
 			Table:   workout.WorkoutLogsTable,
 			Columns: []string{workout.WorkoutLogsColumn},
 			Bidi:    false,

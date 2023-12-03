@@ -28,8 +28,8 @@ func NewEntWorkoutStore(c *ent.Client) *WorkoutStore {
 func (e *WorkoutStore) Insert(ctx context.Context, w *types.Workout) error {
 	workout, err := e.Client.Workout.Create().SetName(w.Ent.Name).
 		SetVolume(w.Ent.Volume).SetReps(w.Ent.Reps).
-		SetTime(w.Ent.Time).SetSets(w.Ent.Sets).
-		SetNillableImage(w.Ent.Image).SetDescription(w.Ent.Description).
+		// SetTime(w.Ent.Time).SetSets(w.Ent.Sets).
+		// SetNillableImage(w.Ent.Image).SetDescription(w.Ent.Description).
 		SetUserID(w.Ent.UserID).Save(ctx)
 	if err != nil {
 		return err

@@ -26,24 +26,26 @@ type WorkoutLog struct {
 	Sets []*schematype.Set `json:"sets,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt string `json:"created_at,omitempty"`
+	// WorkoutID holds the value of the "workout_id" field.
+	WorkoutID pksuid.ID `json:"workout_id,omitempty"`
+	// ExerciseID holds the value of the "exercise_id" field.
+	ExerciseID pksuid.ID `json:"exercise_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the WorkoutLogQuery when eager-loading is set.
-	Edges                 WorkoutLogEdges `json:"edges"`
-	exercise_workout_logs *pksuid.ID
-	workout_workout_logs  *pksuid.ID
-	selectValues          sql.SelectValues
+	Edges        WorkoutLogEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // WorkoutLogEdges holds the relations/edges for other nodes in the graph.
 type WorkoutLogEdges struct {
 	// Users holds the value of the users edge.
 	Users *User `json:"users,omitempty"`
-	// Exercises holds the value of the exercises edge.
-	Exercises *Exercise `json:"exercises,omitempty"`
 	// Workouts holds the value of the workouts edge.
 	Workouts *Workout `json:"workouts,omitempty"`
+	// Exercises holds the value of the exercises edge.
+	Exercises *Exercise `json:"exercises,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [3]bool
@@ -64,23 +66,10 @@ func (e WorkoutLogEdges) UsersOrErr() (*User, error) {
 	return nil, &NotLoadedError{edge: "users"}
 }
 
-// ExercisesOrErr returns the Exercises value or an error if the edge
-// was not loaded in eager-loading, or loaded but was not found.
-func (e WorkoutLogEdges) ExercisesOrErr() (*Exercise, error) {
-	if e.loadedTypes[1] {
-		if e.Exercises == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: exercise.Label}
-		}
-		return e.Exercises, nil
-	}
-	return nil, &NotLoadedError{edge: "exercises"}
-}
-
 // WorkoutsOrErr returns the Workouts value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e WorkoutLogEdges) WorkoutsOrErr() (*Workout, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[1] {
 		if e.Workouts == nil {
 			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: workout.Label}
@@ -90,6 +79,19 @@ func (e WorkoutLogEdges) WorkoutsOrErr() (*Workout, error) {
 	return nil, &NotLoadedError{edge: "workouts"}
 }
 
+// ExercisesOrErr returns the Exercises value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e WorkoutLogEdges) ExercisesOrErr() (*Exercise, error) {
+	if e.loadedTypes[2] {
+		if e.Exercises == nil {
+			// Edge was loaded but was not found.
+			return nil, &NotFoundError{label: exercise.Label}
+		}
+		return e.Exercises, nil
+	}
+	return nil, &NotLoadedError{edge: "exercises"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*WorkoutLog) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
@@ -97,14 +99,10 @@ func (*WorkoutLog) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case workoutlog.FieldSets:
 			values[i] = new([]byte)
-		case workoutlog.FieldID, workoutlog.FieldUserID:
+		case workoutlog.FieldID, workoutlog.FieldWorkoutID, workoutlog.FieldExerciseID, workoutlog.FieldUserID:
 			values[i] = new(pksuid.ID)
 		case workoutlog.FieldCreatedAt:
 			values[i] = new(sql.NullString)
-		case workoutlog.ForeignKeys[0]: // exercise_workout_logs
-			values[i] = &sql.NullScanner{S: new(pksuid.ID)}
-		case workoutlog.ForeignKeys[1]: // workout_workout_logs
-			values[i] = &sql.NullScanner{S: new(pksuid.ID)}
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -140,25 +138,23 @@ func (wl *WorkoutLog) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				wl.CreatedAt = value.String
 			}
+		case workoutlog.FieldWorkoutID:
+			if value, ok := values[i].(*pksuid.ID); !ok {
+				return fmt.Errorf("unexpected type %T for field workout_id", values[i])
+			} else if value != nil {
+				wl.WorkoutID = *value
+			}
+		case workoutlog.FieldExerciseID:
+			if value, ok := values[i].(*pksuid.ID); !ok {
+				return fmt.Errorf("unexpected type %T for field exercise_id", values[i])
+			} else if value != nil {
+				wl.ExerciseID = *value
+			}
 		case workoutlog.FieldUserID:
 			if value, ok := values[i].(*pksuid.ID); !ok {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
 				wl.UserID = *value
-			}
-		case workoutlog.ForeignKeys[0]:
-			if value, ok := values[i].(*sql.NullScanner); !ok {
-				return fmt.Errorf("unexpected type %T for field exercise_workout_logs", values[i])
-			} else if value.Valid {
-				wl.exercise_workout_logs = new(pksuid.ID)
-				*wl.exercise_workout_logs = *value.S.(*pksuid.ID)
-			}
-		case workoutlog.ForeignKeys[1]:
-			if value, ok := values[i].(*sql.NullScanner); !ok {
-				return fmt.Errorf("unexpected type %T for field workout_workout_logs", values[i])
-			} else if value.Valid {
-				wl.workout_workout_logs = new(pksuid.ID)
-				*wl.workout_workout_logs = *value.S.(*pksuid.ID)
 			}
 		default:
 			wl.selectValues.Set(columns[i], values[i])
@@ -178,14 +174,14 @@ func (wl *WorkoutLog) QueryUsers() *UserQuery {
 	return NewWorkoutLogClient(wl.config).QueryUsers(wl)
 }
 
-// QueryExercises queries the "exercises" edge of the WorkoutLog entity.
-func (wl *WorkoutLog) QueryExercises() *ExerciseQuery {
-	return NewWorkoutLogClient(wl.config).QueryExercises(wl)
-}
-
 // QueryWorkouts queries the "workouts" edge of the WorkoutLog entity.
 func (wl *WorkoutLog) QueryWorkouts() *WorkoutQuery {
 	return NewWorkoutLogClient(wl.config).QueryWorkouts(wl)
+}
+
+// QueryExercises queries the "exercises" edge of the WorkoutLog entity.
+func (wl *WorkoutLog) QueryExercises() *ExerciseQuery {
+	return NewWorkoutLogClient(wl.config).QueryExercises(wl)
 }
 
 // Update returns a builder for updating this WorkoutLog.
@@ -216,6 +212,12 @@ func (wl *WorkoutLog) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(wl.CreatedAt)
+	builder.WriteString(", ")
+	builder.WriteString("workout_id=")
+	builder.WriteString(fmt.Sprintf("%v", wl.WorkoutID))
+	builder.WriteString(", ")
+	builder.WriteString("exercise_id=")
+	builder.WriteString(fmt.Sprintf("%v", wl.ExerciseID))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", wl.UserID))

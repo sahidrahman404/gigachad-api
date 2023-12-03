@@ -152,7 +152,6 @@ type CreateUserInput struct {
 	ExerciseIDs    []pksuid.ID
 	RoutineIDs     []pksuid.ID
 	WorkoutIDs     []pksuid.ID
-	WorkoutLogIDs  []pksuid.ID
 }
 
 // Mutate applies the CreateUserInput on the UserMutation builder.
@@ -173,9 +172,6 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	if v := i.WorkoutIDs; len(v) > 0 {
 		m.AddWorkoutIDs(v...)
 	}
-	if v := i.WorkoutLogIDs; len(v) > 0 {
-		m.AddWorkoutLogIDs(v...)
-	}
 }
 
 // SetInput applies the change-set in the CreateUserInput on the UserCreate builder.
@@ -186,25 +182,22 @@ func (c *UserCreate) SetInput(i CreateUserInput) *UserCreate {
 
 // UpdateUserInput represents a mutation input for updating users.
 type UpdateUserInput struct {
-	Email               *string
-	Username            *string
-	HashedPassword      *string
-	Name                *string
-	ClearTokens         bool
-	AddTokenIDs         []pksuid.ID
-	RemoveTokenIDs      []pksuid.ID
-	ClearExercises      bool
-	AddExerciseIDs      []pksuid.ID
-	RemoveExerciseIDs   []pksuid.ID
-	ClearRoutines       bool
-	AddRoutineIDs       []pksuid.ID
-	RemoveRoutineIDs    []pksuid.ID
-	ClearWorkouts       bool
-	AddWorkoutIDs       []pksuid.ID
-	RemoveWorkoutIDs    []pksuid.ID
-	ClearWorkoutLogs    bool
-	AddWorkoutLogIDs    []pksuid.ID
-	RemoveWorkoutLogIDs []pksuid.ID
+	Email             *string
+	Username          *string
+	HashedPassword    *string
+	Name              *string
+	ClearTokens       bool
+	AddTokenIDs       []pksuid.ID
+	RemoveTokenIDs    []pksuid.ID
+	ClearExercises    bool
+	AddExerciseIDs    []pksuid.ID
+	RemoveExerciseIDs []pksuid.ID
+	ClearRoutines     bool
+	AddRoutineIDs     []pksuid.ID
+	RemoveRoutineIDs  []pksuid.ID
+	ClearWorkouts     bool
+	AddWorkoutIDs     []pksuid.ID
+	RemoveWorkoutIDs  []pksuid.ID
 }
 
 // Mutate applies the UpdateUserInput on the UserMutation builder.
@@ -257,15 +250,6 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	if v := i.RemoveWorkoutIDs; len(v) > 0 {
 		m.RemoveWorkoutIDs(v...)
 	}
-	if i.ClearWorkoutLogs {
-		m.ClearWorkoutLogs()
-	}
-	if v := i.AddWorkoutLogIDs; len(v) > 0 {
-		m.AddWorkoutLogIDs(v...)
-	}
-	if v := i.RemoveWorkoutLogIDs; len(v) > 0 {
-		m.RemoveWorkoutLogIDs(v...)
-	}
 }
 
 // SetInput applies the change-set in the UpdateUserInput on the UserUpdate builder.
@@ -276,116 +260,6 @@ func (c *UserUpdate) SetInput(i UpdateUserInput) *UserUpdate {
 
 // SetInput applies the change-set in the UpdateUserInput on the UserUpdateOne builder.
 func (c *UserUpdateOne) SetInput(i UpdateUserInput) *UserUpdateOne {
-	i.Mutate(c.Mutation())
-	return c
-}
-
-// CreateWorkoutInput represents a mutation input for creating workouts.
-type CreateWorkoutInput struct {
-	Name          string
-	Volume        int
-	Reps          int
-	Time          *string
-	Sets          int
-	Image         *string
-	Description   string
-	UsersID       pksuid.ID
-	WorkoutLogIDs []pksuid.ID
-}
-
-// Mutate applies the CreateWorkoutInput on the WorkoutMutation builder.
-func (i *CreateWorkoutInput) Mutate(m *WorkoutMutation) {
-	m.SetName(i.Name)
-	m.SetVolume(i.Volume)
-	m.SetReps(i.Reps)
-	if v := i.Time; v != nil {
-		m.SetTime(*v)
-	}
-	m.SetSets(i.Sets)
-	if v := i.Image; v != nil {
-		m.SetImage(*v)
-	}
-	m.SetDescription(i.Description)
-	m.SetUsersID(i.UsersID)
-	if v := i.WorkoutLogIDs; len(v) > 0 {
-		m.AddWorkoutLogIDs(v...)
-	}
-}
-
-// SetInput applies the change-set in the CreateWorkoutInput on the WorkoutCreate builder.
-func (c *WorkoutCreate) SetInput(i CreateWorkoutInput) *WorkoutCreate {
-	i.Mutate(c.Mutation())
-	return c
-}
-
-// UpdateWorkoutInput represents a mutation input for updating workouts.
-type UpdateWorkoutInput struct {
-	Name                *string
-	Volume              *int
-	Reps                *int
-	ClearTime           bool
-	Time                *string
-	Sets                *int
-	ClearImage          bool
-	Image               *string
-	Description         *string
-	UsersID             *pksuid.ID
-	ClearWorkoutLogs    bool
-	AddWorkoutLogIDs    []pksuid.ID
-	RemoveWorkoutLogIDs []pksuid.ID
-}
-
-// Mutate applies the UpdateWorkoutInput on the WorkoutMutation builder.
-func (i *UpdateWorkoutInput) Mutate(m *WorkoutMutation) {
-	if v := i.Name; v != nil {
-		m.SetName(*v)
-	}
-	if v := i.Volume; v != nil {
-		m.SetVolume(*v)
-	}
-	if v := i.Reps; v != nil {
-		m.SetReps(*v)
-	}
-	if i.ClearTime {
-		m.ClearTime()
-	}
-	if v := i.Time; v != nil {
-		m.SetTime(*v)
-	}
-	if v := i.Sets; v != nil {
-		m.SetSets(*v)
-	}
-	if i.ClearImage {
-		m.ClearImage()
-	}
-	if v := i.Image; v != nil {
-		m.SetImage(*v)
-	}
-	if v := i.Description; v != nil {
-		m.SetDescription(*v)
-	}
-	if v := i.UsersID; v != nil {
-		m.SetUsersID(*v)
-	}
-	if i.ClearWorkoutLogs {
-		m.ClearWorkoutLogs()
-	}
-	if v := i.AddWorkoutLogIDs; len(v) > 0 {
-		m.AddWorkoutLogIDs(v...)
-	}
-	if v := i.RemoveWorkoutLogIDs; len(v) > 0 {
-		m.RemoveWorkoutLogIDs(v...)
-	}
-}
-
-// SetInput applies the change-set in the UpdateWorkoutInput on the WorkoutUpdate builder.
-func (c *WorkoutUpdate) SetInput(i UpdateWorkoutInput) *WorkoutUpdate {
-	i.Mutate(c.Mutation())
-	return c
-}
-
-// SetInput applies the change-set in the UpdateWorkoutInput on the WorkoutUpdateOne builder.
-func (c *WorkoutUpdateOne) SetInput(i UpdateWorkoutInput) *WorkoutUpdateOne {
 	i.Mutate(c.Mutation())
 	return c
 }

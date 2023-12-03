@@ -17,23 +17,9 @@ import (
 func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.CreateExerciseInput) (*ent.Exercise, error) {
 	uCtx := r.getUserFromCtx(ctx)
 
-	if input.Image == nil {
-		ex, err := r.client.Exercise.Create().
-			SetName(input.Name).
-			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
-			SetNillableUserID(uCtx.GetUserID()).
-			AddMusclesGroupIDs(input.MusclesGroupIDs...).
-			AddExerciseTypeIDs(input.ExerciseTypeIDs...).
-			Save(ctx)
-		if err != nil {
-			return nil, r.serverError(err)
-		}
-		return ex, nil
-	}
-
 	ex, err := r.client.Exercise.Create().
 		SetName(input.Name).
-		SetImage(img.SetImageField(*input.Image, *r.awsCfg, r.imgproxy)).
+		SetImage(img.SetNillableImageField(input.Image, *r.awsCfg, r.imgproxy)).
 		SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 		SetNillableUserID(uCtx.GetUserID()).
 		AddMusclesGroupIDs(input.MusclesGroupIDs...).

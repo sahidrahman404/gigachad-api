@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -27,6 +28,8 @@ func (WorkoutLog) Fields() []ent.Field {
 		field.JSON("sets", []*schematype.Set{}).Annotations(entgql.Type("[Set!]")),
 		field.String("created_at").DefaultFunc(generateTime).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
+		field.String("workout_id").GoType(pksuid.ID("")),
+		field.String("exercise_id").GoType(pksuid.ID("")),
 		field.String("user_id").GoType(pksuid.ID("")),
 	}
 }
@@ -39,12 +42,20 @@ func (WorkoutLog) Edges() []ent.Edge {
 			Field("user_id").
 			Unique().
 			Required(),
-		edge.From("exercises", Exercise.Type).
-			Ref("workout_logs").
-			Unique(),
-		edge.From("workouts", Workout.Type).
-			Ref("workout_logs").
-			Unique(),
+		edge.To("workouts", Workout.Type).
+			Field("workout_id").
+			Unique().
+			Required().
+			Annotations(
+				entsql.OnDelete(entsql.Cascade),
+			),
+		edge.To("exercises", Exercise.Type).
+			Field("exercise_id").
+			Unique().
+			Required().
+			Annotations(
+				entsql.OnDelete(entsql.Cascade),
+			),
 	}
 }
 

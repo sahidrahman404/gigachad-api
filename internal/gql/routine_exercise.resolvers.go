@@ -32,12 +32,12 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 			return err
 		}
 		_, err = txClient.RoutineExercise.MapCreateBulk(
-			input.RoutineExercise,
+			input.RoutineExercises,
 			func(c *ent.RoutineExerciseCreate, i int) {
-				c.SetNillableRestTimer(input.RoutineExercise[i].RestTimer).
-					SetSets(input.RoutineExercise[i].Sets).
+				c.SetNillableRestTimer(input.RoutineExercises[i].RestTimer).
+					SetSets(input.RoutineExercises[i].Sets).
 					SetRoutineID(routine.ID).
-					SetExerciseID(input.RoutineExercise[i].ExerciseID).
+					SetExerciseID(input.RoutineExercises[i].ExerciseID).
 					SetUserID(user.ID)
 			}).Save(ctx)
 		if err != nil {

@@ -1,10 +1,19 @@
 input CreateWorkoutLogInput {
   sets: [SetInput!]!
-  exerciseID: ID
-  workoutID: ID
-  userID: ID
+  exerciseID: ID!
+}
+
+input CreateWorkoutWithChildrenInput {
+  name: String!
+  volume: Int!
+  reps: Int!
+  duration: String!
+  sets: Int!
+  image: ImageInput
+  description: String
+  workoutLogs: [CreateWorkoutLogInput!]
 }
 
 extend type Mutation {
-  createWorkoutLog(input: CreateWorkoutLogInput!): WorkoutLog!
+  createWorkoutWithChildren(input: CreateWorkoutWithChildrenInput!): Workout!
 }

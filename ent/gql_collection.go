@@ -79,7 +79,7 @@ func (e *EquipmentQuery) collectField(ctx context.Context, opCtx *graphql.Operat
 							joinT := sql.Table(equipment.ExercisesTable)
 							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(equipment.ExercisesPrimaryKey[1]))
 							s.Where(sql.InValues(joinT.C(equipment.ExercisesPrimaryKey[0]), ids...))
-							s.Select(joinT.C(equipment.ExercisesPrimaryKey[0]), sql.Count("*"))
+							s.Select(joinT.C(equipment.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(equipment.ExercisesPrimaryKey[0]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -226,90 +226,6 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 	)
 	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
 		switch field.Name {
-		case "workoutLogs":
-			var (
-				alias = field.Alias
-				path  = append(path, alias)
-				query = (&WorkoutLogClient{config: e.config}).Query()
-			)
-			args := newWorkoutLogPaginateArgs(fieldArgs(ctx, new(WorkoutLogWhereInput), path...))
-			if err := validateFirstLast(args.first, args.last); err != nil {
-				return fmt.Errorf("validate first and last in path %q: %w", path, err)
-			}
-			pager, err := newWorkoutLogPager(args.opts, args.last != nil)
-			if err != nil {
-				return fmt.Errorf("create new pager in path %q: %w", path, err)
-			}
-			if query, err = pager.applyFilter(query); err != nil {
-				return err
-			}
-			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
-			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
-				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
-				if hasPagination || ignoredEdges {
-					query := query.Clone()
-					e.loadTotal = append(e.loadTotal, func(ctx context.Context, nodes []*Exercise) error {
-						ids := make([]driver.Value, len(nodes))
-						for i := range nodes {
-							ids[i] = nodes[i].ID
-						}
-						var v []struct {
-							NodeID pksuid.ID `sql:"exercise_workout_logs"`
-							Count  int       `sql:"count"`
-						}
-						query.Where(func(s *sql.Selector) {
-							s.Where(sql.InValues(s.C(exercise.WorkoutLogsColumn), ids...))
-						})
-						if err := query.GroupBy(exercise.WorkoutLogsColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
-							return err
-						}
-						m := make(map[pksuid.ID]int, len(v))
-						for i := range v {
-							m[v[i].NodeID] = v[i].Count
-						}
-						for i := range nodes {
-							n := m[nodes[i].ID]
-							if nodes[i].Edges.totalCount[0] == nil {
-								nodes[i].Edges.totalCount[0] = make(map[string]int)
-							}
-							nodes[i].Edges.totalCount[0][alias] = n
-						}
-						return nil
-					})
-				} else {
-					e.loadTotal = append(e.loadTotal, func(_ context.Context, nodes []*Exercise) error {
-						for i := range nodes {
-							n := len(nodes[i].Edges.WorkoutLogs)
-							if nodes[i].Edges.totalCount[0] == nil {
-								nodes[i].Edges.totalCount[0] = make(map[string]int)
-							}
-							nodes[i].Edges.totalCount[0][alias] = n
-						}
-						return nil
-					})
-				}
-			}
-			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
-				continue
-			}
-			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
-				return err
-			}
-			path = append(path, edgesField, nodeField)
-			if field := collectedField(ctx, path...); field != nil {
-				if err := query.collectField(ctx, opCtx, *field, path, mayAddCondition(satisfies, workoutlogImplementors)...); err != nil {
-					return err
-				}
-			}
-			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(exercise.WorkoutLogsColumn, limit, pager.orderExpr(query))
-				query.modifiers = append(query.modifiers, modify)
-			} else {
-				query = pager.applyOrder(query)
-			}
-			e.WithNamedWorkoutLogs(alias, func(wq *WorkoutLogQuery) {
-				*wq = *query
-			})
 		case "users":
 			var (
 				alias = field.Alias
@@ -359,7 +275,7 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 							joinT := sql.Table(exercise.EquipmentTable)
 							s.Join(joinT).On(s.C(equipment.FieldID), joinT.C(exercise.EquipmentPrimaryKey[0]))
 							s.Where(sql.InValues(joinT.C(exercise.EquipmentPrimaryKey[1]), ids...))
-							s.Select(joinT.C(exercise.EquipmentPrimaryKey[1]), sql.Count("*"))
+							s.Select(joinT.C(exercise.EquipmentPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercise.EquipmentPrimaryKey[1]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -371,10 +287,10 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							if nodes[i].Edges.totalCount[2] == nil {
-								nodes[i].Edges.totalCount[2] = make(map[string]int)
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[2][alias] = n
+							nodes[i].Edges.totalCount[1][alias] = n
 						}
 						return nil
 					})
@@ -382,10 +298,10 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 					e.loadTotal = append(e.loadTotal, func(_ context.Context, nodes []*Exercise) error {
 						for i := range nodes {
 							n := len(nodes[i].Edges.Equipment)
-							if nodes[i].Edges.totalCount[2] == nil {
-								nodes[i].Edges.totalCount[2] = make(map[string]int)
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[2][alias] = n
+							nodes[i].Edges.totalCount[1][alias] = n
 						}
 						return nil
 					})
@@ -447,7 +363,7 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 							joinT := sql.Table(exercise.MusclesGroupsTable)
 							s.Join(joinT).On(s.C(musclesgroup.FieldID), joinT.C(exercise.MusclesGroupsPrimaryKey[0]))
 							s.Where(sql.InValues(joinT.C(exercise.MusclesGroupsPrimaryKey[1]), ids...))
-							s.Select(joinT.C(exercise.MusclesGroupsPrimaryKey[1]), sql.Count("*"))
+							s.Select(joinT.C(exercise.MusclesGroupsPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercise.MusclesGroupsPrimaryKey[1]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -459,10 +375,10 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							if nodes[i].Edges.totalCount[3] == nil {
-								nodes[i].Edges.totalCount[3] = make(map[string]int)
+							if nodes[i].Edges.totalCount[2] == nil {
+								nodes[i].Edges.totalCount[2] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[3][alias] = n
+							nodes[i].Edges.totalCount[2][alias] = n
 						}
 						return nil
 					})
@@ -470,10 +386,10 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 					e.loadTotal = append(e.loadTotal, func(_ context.Context, nodes []*Exercise) error {
 						for i := range nodes {
 							n := len(nodes[i].Edges.MusclesGroups)
-							if nodes[i].Edges.totalCount[3] == nil {
-								nodes[i].Edges.totalCount[3] = make(map[string]int)
+							if nodes[i].Edges.totalCount[2] == nil {
+								nodes[i].Edges.totalCount[2] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[3][alias] = n
+							nodes[i].Edges.totalCount[2][alias] = n
 						}
 						return nil
 					})
@@ -535,7 +451,7 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 							joinT := sql.Table(exercise.ExerciseTypesTable)
 							s.Join(joinT).On(s.C(exercisetype.FieldID), joinT.C(exercise.ExerciseTypesPrimaryKey[0]))
 							s.Where(sql.InValues(joinT.C(exercise.ExerciseTypesPrimaryKey[1]), ids...))
-							s.Select(joinT.C(exercise.ExerciseTypesPrimaryKey[1]), sql.Count("*"))
+							s.Select(joinT.C(exercise.ExerciseTypesPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercise.ExerciseTypesPrimaryKey[1]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -547,10 +463,10 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							if nodes[i].Edges.totalCount[4] == nil {
-								nodes[i].Edges.totalCount[4] = make(map[string]int)
+							if nodes[i].Edges.totalCount[3] == nil {
+								nodes[i].Edges.totalCount[3] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[4][alias] = n
+							nodes[i].Edges.totalCount[3][alias] = n
 						}
 						return nil
 					})
@@ -558,10 +474,10 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 					e.loadTotal = append(e.loadTotal, func(_ context.Context, nodes []*Exercise) error {
 						for i := range nodes {
 							n := len(nodes[i].Edges.ExerciseTypes)
-							if nodes[i].Edges.totalCount[4] == nil {
-								nodes[i].Edges.totalCount[4] = make(map[string]int)
+							if nodes[i].Edges.totalCount[3] == nil {
+								nodes[i].Edges.totalCount[3] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[4][alias] = n
+							nodes[i].Edges.totalCount[3][alias] = n
 						}
 						return nil
 					})
@@ -623,7 +539,7 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 							joinT := sql.Table(exercise.RoutinesTable)
 							s.Join(joinT).On(s.C(routine.FieldID), joinT.C(exercise.RoutinesPrimaryKey[0]))
 							s.Where(sql.InValues(joinT.C(exercise.RoutinesPrimaryKey[1]), ids...))
-							s.Select(joinT.C(exercise.RoutinesPrimaryKey[1]), sql.Count("*"))
+							s.Select(joinT.C(exercise.RoutinesPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercise.RoutinesPrimaryKey[1]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -635,10 +551,10 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							if nodes[i].Edges.totalCount[5] == nil {
-								nodes[i].Edges.totalCount[5] = make(map[string]int)
+							if nodes[i].Edges.totalCount[4] == nil {
+								nodes[i].Edges.totalCount[4] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[5][alias] = n
+							nodes[i].Edges.totalCount[4][alias] = n
 						}
 						return nil
 					})
@@ -646,10 +562,10 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 					e.loadTotal = append(e.loadTotal, func(_ context.Context, nodes []*Exercise) error {
 						for i := range nodes {
 							n := len(nodes[i].Edges.Routines)
-							if nodes[i].Edges.totalCount[5] == nil {
-								nodes[i].Edges.totalCount[5] = make(map[string]int)
+							if nodes[i].Edges.totalCount[4] == nil {
+								nodes[i].Edges.totalCount[4] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[5][alias] = n
+							nodes[i].Edges.totalCount[4][alias] = n
 						}
 						return nil
 					})
@@ -674,6 +590,94 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 				query = pager.applyOrder(query)
 			}
 			e.WithNamedRoutines(alias, func(wq *RoutineQuery) {
+				*wq = *query
+			})
+		case "workouts":
+			var (
+				alias = field.Alias
+				path  = append(path, alias)
+				query = (&WorkoutClient{config: e.config}).Query()
+			)
+			args := newWorkoutPaginateArgs(fieldArgs(ctx, new(WorkoutWhereInput), path...))
+			if err := validateFirstLast(args.first, args.last); err != nil {
+				return fmt.Errorf("validate first and last in path %q: %w", path, err)
+			}
+			pager, err := newWorkoutPager(args.opts, args.last != nil)
+			if err != nil {
+				return fmt.Errorf("create new pager in path %q: %w", path, err)
+			}
+			if query, err = pager.applyFilter(query); err != nil {
+				return err
+			}
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
+					query := query.Clone()
+					e.loadTotal = append(e.loadTotal, func(ctx context.Context, nodes []*Exercise) error {
+						ids := make([]driver.Value, len(nodes))
+						for i := range nodes {
+							ids[i] = nodes[i].ID
+						}
+						var v []struct {
+							NodeID pksuid.ID `sql:"exercise_id"`
+							Count  int       `sql:"count"`
+						}
+						query.Where(func(s *sql.Selector) {
+							joinT := sql.Table(exercise.WorkoutsTable)
+							s.Join(joinT).On(s.C(workout.FieldID), joinT.C(exercise.WorkoutsPrimaryKey[0]))
+							s.Where(sql.InValues(joinT.C(exercise.WorkoutsPrimaryKey[1]), ids...))
+							s.Select(joinT.C(exercise.WorkoutsPrimaryKey[1]), sql.As(sql.Count("*"), "count"))
+							s.GroupBy(joinT.C(exercise.WorkoutsPrimaryKey[1]))
+						})
+						if err := query.Select().Scan(ctx, &v); err != nil {
+							return err
+						}
+						m := make(map[pksuid.ID]int, len(v))
+						for i := range v {
+							m[v[i].NodeID] = v[i].Count
+						}
+						for i := range nodes {
+							n := m[nodes[i].ID]
+							if nodes[i].Edges.totalCount[5] == nil {
+								nodes[i].Edges.totalCount[5] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[5][alias] = n
+						}
+						return nil
+					})
+				} else {
+					e.loadTotal = append(e.loadTotal, func(_ context.Context, nodes []*Exercise) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.Workouts)
+							if nodes[i].Edges.totalCount[5] == nil {
+								nodes[i].Edges.totalCount[5] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[5][alias] = n
+						}
+						return nil
+					})
+				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
+				continue
+			}
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
+			path = append(path, edgesField, nodeField)
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, mayAddCondition(satisfies, workoutImplementors)...); err != nil {
+					return err
+				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(exercise.WorkoutsPrimaryKey[1], limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
+			}
+			e.WithNamedWorkouts(alias, func(wq *WorkoutQuery) {
 				*wq = *query
 			})
 		case "routineExercises":
@@ -758,6 +762,90 @@ func (e *ExerciseQuery) collectField(ctx context.Context, opCtx *graphql.Operati
 				query = pager.applyOrder(query)
 			}
 			e.WithNamedRoutineExercises(alias, func(wq *RoutineExerciseQuery) {
+				*wq = *query
+			})
+		case "workoutLogs":
+			var (
+				alias = field.Alias
+				path  = append(path, alias)
+				query = (&WorkoutLogClient{config: e.config}).Query()
+			)
+			args := newWorkoutLogPaginateArgs(fieldArgs(ctx, new(WorkoutLogWhereInput), path...))
+			if err := validateFirstLast(args.first, args.last); err != nil {
+				return fmt.Errorf("validate first and last in path %q: %w", path, err)
+			}
+			pager, err := newWorkoutLogPager(args.opts, args.last != nil)
+			if err != nil {
+				return fmt.Errorf("create new pager in path %q: %w", path, err)
+			}
+			if query, err = pager.applyFilter(query); err != nil {
+				return err
+			}
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
+					query := query.Clone()
+					e.loadTotal = append(e.loadTotal, func(ctx context.Context, nodes []*Exercise) error {
+						ids := make([]driver.Value, len(nodes))
+						for i := range nodes {
+							ids[i] = nodes[i].ID
+						}
+						var v []struct {
+							NodeID pksuid.ID `sql:"exercise_id"`
+							Count  int       `sql:"count"`
+						}
+						query.Where(func(s *sql.Selector) {
+							s.Where(sql.InValues(s.C(exercise.WorkoutLogsColumn), ids...))
+						})
+						if err := query.GroupBy(exercise.WorkoutLogsColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
+							return err
+						}
+						m := make(map[pksuid.ID]int, len(v))
+						for i := range v {
+							m[v[i].NodeID] = v[i].Count
+						}
+						for i := range nodes {
+							n := m[nodes[i].ID]
+							if nodes[i].Edges.totalCount[7] == nil {
+								nodes[i].Edges.totalCount[7] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[7][alias] = n
+						}
+						return nil
+					})
+				} else {
+					e.loadTotal = append(e.loadTotal, func(_ context.Context, nodes []*Exercise) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.WorkoutLogs)
+							if nodes[i].Edges.totalCount[7] == nil {
+								nodes[i].Edges.totalCount[7] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[7][alias] = n
+						}
+						return nil
+					})
+				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
+				continue
+			}
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
+			path = append(path, edgesField, nodeField)
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, mayAddCondition(satisfies, workoutlogImplementors)...); err != nil {
+					return err
+				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(exercise.WorkoutLogsColumn, limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
+			}
+			e.WithNamedWorkoutLogs(alias, func(wq *WorkoutLogQuery) {
 				*wq = *query
 			})
 		case "name":
@@ -899,7 +987,7 @@ func (et *ExerciseTypeQuery) collectField(ctx context.Context, opCtx *graphql.Op
 							joinT := sql.Table(exercisetype.ExercisesTable)
 							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(exercisetype.ExercisesPrimaryKey[1]))
 							s.Where(sql.InValues(joinT.C(exercisetype.ExercisesPrimaryKey[0]), ids...))
-							s.Select(joinT.C(exercisetype.ExercisesPrimaryKey[0]), sql.Count("*"))
+							s.Select(joinT.C(exercisetype.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(exercisetype.ExercisesPrimaryKey[0]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -1086,7 +1174,7 @@ func (mg *MusclesGroupQuery) collectField(ctx context.Context, opCtx *graphql.Op
 							joinT := sql.Table(musclesgroup.ExercisesTable)
 							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(musclesgroup.ExercisesPrimaryKey[1]))
 							s.Where(sql.InValues(joinT.C(musclesgroup.ExercisesPrimaryKey[0]), ids...))
-							s.Select(joinT.C(musclesgroup.ExercisesPrimaryKey[0]), sql.Count("*"))
+							s.Select(joinT.C(musclesgroup.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(musclesgroup.ExercisesPrimaryKey[0]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -1268,7 +1356,7 @@ func (r *RoutineQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 							joinT := sql.Table(routine.ExercisesTable)
 							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(routine.ExercisesPrimaryKey[1]))
 							s.Where(sql.InValues(joinT.C(routine.ExercisesPrimaryKey[0]), ids...))
-							s.Select(joinT.C(routine.ExercisesPrimaryKey[0]), sql.Count("*"))
+							s.Select(joinT.C(routine.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
 							s.GroupBy(joinT.C(routine.ExercisesPrimaryKey[0]))
 						})
 						if err := query.Select().Scan(ctx, &v); err != nil {
@@ -2337,6 +2425,94 @@ func (w *WorkoutQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 				selectedFields = append(selectedFields, workout.FieldUserID)
 				fieldSeen[workout.FieldUserID] = struct{}{}
 			}
+		case "exercises":
+			var (
+				alias = field.Alias
+				path  = append(path, alias)
+				query = (&ExerciseClient{config: w.config}).Query()
+			)
+			args := newExercisePaginateArgs(fieldArgs(ctx, new(ExerciseWhereInput), path...))
+			if err := validateFirstLast(args.first, args.last); err != nil {
+				return fmt.Errorf("validate first and last in path %q: %w", path, err)
+			}
+			pager, err := newExercisePager(args.opts, args.last != nil)
+			if err != nil {
+				return fmt.Errorf("create new pager in path %q: %w", path, err)
+			}
+			if query, err = pager.applyFilter(query); err != nil {
+				return err
+			}
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
+					query := query.Clone()
+					w.loadTotal = append(w.loadTotal, func(ctx context.Context, nodes []*Workout) error {
+						ids := make([]driver.Value, len(nodes))
+						for i := range nodes {
+							ids[i] = nodes[i].ID
+						}
+						var v []struct {
+							NodeID pksuid.ID `sql:"workout_id"`
+							Count  int       `sql:"count"`
+						}
+						query.Where(func(s *sql.Selector) {
+							joinT := sql.Table(workout.ExercisesTable)
+							s.Join(joinT).On(s.C(exercise.FieldID), joinT.C(workout.ExercisesPrimaryKey[1]))
+							s.Where(sql.InValues(joinT.C(workout.ExercisesPrimaryKey[0]), ids...))
+							s.Select(joinT.C(workout.ExercisesPrimaryKey[0]), sql.As(sql.Count("*"), "count"))
+							s.GroupBy(joinT.C(workout.ExercisesPrimaryKey[0]))
+						})
+						if err := query.Select().Scan(ctx, &v); err != nil {
+							return err
+						}
+						m := make(map[pksuid.ID]int, len(v))
+						for i := range v {
+							m[v[i].NodeID] = v[i].Count
+						}
+						for i := range nodes {
+							n := m[nodes[i].ID]
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
+						}
+						return nil
+					})
+				} else {
+					w.loadTotal = append(w.loadTotal, func(_ context.Context, nodes []*Workout) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.Exercises)
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
+						}
+						return nil
+					})
+				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
+				continue
+			}
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
+			path = append(path, edgesField, nodeField)
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, mayAddCondition(satisfies, exerciseImplementors)...); err != nil {
+					return err
+				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(workout.ExercisesPrimaryKey[0], limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
+			}
+			w.WithNamedExercises(alias, func(wq *ExerciseQuery) {
+				*wq = *query
+			})
 		case "workoutLogs":
 			var (
 				alias = field.Alias
@@ -2365,7 +2541,7 @@ func (w *WorkoutQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 							ids[i] = nodes[i].ID
 						}
 						var v []struct {
-							NodeID pksuid.ID `sql:"workout_workout_logs"`
+							NodeID pksuid.ID `sql:"workout_id"`
 							Count  int       `sql:"count"`
 						}
 						query.Where(func(s *sql.Selector) {
@@ -2380,10 +2556,10 @@ func (w *WorkoutQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							if nodes[i].Edges.totalCount[1] == nil {
-								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							if nodes[i].Edges.totalCount[2] == nil {
+								nodes[i].Edges.totalCount[2] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[1][alias] = n
+							nodes[i].Edges.totalCount[2][alias] = n
 						}
 						return nil
 					})
@@ -2391,10 +2567,10 @@ func (w *WorkoutQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 					w.loadTotal = append(w.loadTotal, func(_ context.Context, nodes []*Workout) error {
 						for i := range nodes {
 							n := len(nodes[i].Edges.WorkoutLogs)
-							if nodes[i].Edges.totalCount[1] == nil {
-								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							if nodes[i].Edges.totalCount[2] == nil {
+								nodes[i].Edges.totalCount[2] = make(map[string]int)
 							}
-							nodes[i].Edges.totalCount[1][alias] = n
+							nodes[i].Edges.totalCount[2][alias] = n
 						}
 						return nil
 					})
@@ -2436,10 +2612,10 @@ func (w *WorkoutQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 				selectedFields = append(selectedFields, workout.FieldReps)
 				fieldSeen[workout.FieldReps] = struct{}{}
 			}
-		case "time":
-			if _, ok := fieldSeen[workout.FieldTime]; !ok {
-				selectedFields = append(selectedFields, workout.FieldTime)
-				fieldSeen[workout.FieldTime] = struct{}{}
+		case "duration":
+			if _, ok := fieldSeen[workout.FieldDuration]; !ok {
+				selectedFields = append(selectedFields, workout.FieldDuration)
+				fieldSeen[workout.FieldDuration] = struct{}{}
 			}
 		case "sets":
 			if _, ok := fieldSeen[workout.FieldSets]; !ok {
@@ -2564,16 +2740,6 @@ func (wl *WorkoutLogQuery) collectField(ctx context.Context, opCtx *graphql.Oper
 				selectedFields = append(selectedFields, workoutlog.FieldUserID)
 				fieldSeen[workoutlog.FieldUserID] = struct{}{}
 			}
-		case "exercises":
-			var (
-				alias = field.Alias
-				path  = append(path, alias)
-				query = (&ExerciseClient{config: wl.config}).Query()
-			)
-			if err := query.collectField(ctx, opCtx, field, path, mayAddCondition(satisfies, exerciseImplementors)...); err != nil {
-				return err
-			}
-			wl.withExercises = query
 		case "workouts":
 			var (
 				alias = field.Alias
@@ -2584,6 +2750,24 @@ func (wl *WorkoutLogQuery) collectField(ctx context.Context, opCtx *graphql.Oper
 				return err
 			}
 			wl.withWorkouts = query
+			if _, ok := fieldSeen[workoutlog.FieldWorkoutID]; !ok {
+				selectedFields = append(selectedFields, workoutlog.FieldWorkoutID)
+				fieldSeen[workoutlog.FieldWorkoutID] = struct{}{}
+			}
+		case "exercises":
+			var (
+				alias = field.Alias
+				path  = append(path, alias)
+				query = (&ExerciseClient{config: wl.config}).Query()
+			)
+			if err := query.collectField(ctx, opCtx, field, path, mayAddCondition(satisfies, exerciseImplementors)...); err != nil {
+				return err
+			}
+			wl.withExercises = query
+			if _, ok := fieldSeen[workoutlog.FieldExerciseID]; !ok {
+				selectedFields = append(selectedFields, workoutlog.FieldExerciseID)
+				fieldSeen[workoutlog.FieldExerciseID] = struct{}{}
+			}
 		case "sets":
 			if _, ok := fieldSeen[workoutlog.FieldSets]; !ok {
 				selectedFields = append(selectedFields, workoutlog.FieldSets)
@@ -2593,6 +2777,16 @@ func (wl *WorkoutLogQuery) collectField(ctx context.Context, opCtx *graphql.Oper
 			if _, ok := fieldSeen[workoutlog.FieldCreatedAt]; !ok {
 				selectedFields = append(selectedFields, workoutlog.FieldCreatedAt)
 				fieldSeen[workoutlog.FieldCreatedAt] = struct{}{}
+			}
+		case "workoutID":
+			if _, ok := fieldSeen[workoutlog.FieldWorkoutID]; !ok {
+				selectedFields = append(selectedFields, workoutlog.FieldWorkoutID)
+				fieldSeen[workoutlog.FieldWorkoutID] = struct{}{}
+			}
+		case "exerciseID":
+			if _, ok := fieldSeen[workoutlog.FieldExerciseID]; !ok {
+				selectedFields = append(selectedFields, workoutlog.FieldExerciseID)
+				fieldSeen[workoutlog.FieldExerciseID] = struct{}{}
 			}
 		case "userID":
 			if _, ok := fieldSeen[workoutlog.FieldUserID]; !ok {

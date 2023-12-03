@@ -814,7 +814,6 @@ func (uq *UserQuery) loadWorkoutLogs(ctx context.Context, query *WorkoutLogQuery
 			init(nodes[i])
 		}
 	}
-	query.withFKs = true
 	if len(query.ctx.Fields) > 0 {
 		query.ctx.AppendFieldOnce(workoutlog.FieldUserID)
 	}

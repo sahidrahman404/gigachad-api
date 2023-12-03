@@ -3,7 +3,6 @@ package schema
 import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
-	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -40,7 +39,7 @@ func (Exercise) Mixin() []ent.Mixin {
 func (Exercise) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.JSON("image", schematype.Image{}).Annotations(entgql.Type("Image")).Optional(),
+		field.JSON("image", &schematype.Image{}).Annotations(entgql.Type("Image")).Optional(),
 		field.String("how_to").Optional().Nillable(),
 		field.String("user_id").Optional().Nillable().GoType(pksuid.ID("")),
 	}
@@ -49,11 +48,6 @@ func (Exercise) Fields() []ent.Field {
 // Edges of the Exercise.
 func (Exercise) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("workout_logs", WorkoutLog.Type).
-			Annotations(
-				entgql.RelayConnection(),
-				entsql.OnDelete(entsql.Cascade),
-			),
 		edge.From("users", User.Type).Ref("exercises").Field("user_id").Unique(),
 		edge.From("equipment", Equipment.Type).
 			Ref("exercises").
@@ -67,6 +61,10 @@ func (Exercise) Edges() []ent.Edge {
 		edge.From("routines", Routine.Type).
 			Ref("exercises").
 			Through("routine_exercises", RoutineExercise.Type).
+			Annotations(entgql.RelayConnection()),
+		edge.From("workouts", Workout.Type).
+			Ref("exercises").
+			Through("workout_logs", WorkoutLog.Type).
 			Annotations(entgql.RelayConnection()),
 	}
 }

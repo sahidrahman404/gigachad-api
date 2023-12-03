@@ -3,12 +3,14 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/ent/workout"
 )
@@ -24,16 +26,16 @@ type Workout struct {
 	Volume int `json:"volume,omitempty"`
 	// Reps holds the value of the "reps" field.
 	Reps int `json:"reps,omitempty"`
-	// Time holds the value of the "time" field.
-	Time string `json:"time,omitempty"`
+	// Duration holds the value of the "duration" field.
+	Duration string `json:"duration,omitempty"`
 	// Sets holds the value of the "sets" field.
 	Sets int `json:"sets,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt string `json:"created_at,omitempty"`
 	// Image holds the value of the "image" field.
-	Image *string `json:"image,omitempty"`
+	Image *schematype.Image `json:"image,omitempty"`
 	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -46,14 +48,17 @@ type Workout struct {
 type WorkoutEdges struct {
 	// Users holds the value of the users edge.
 	Users *User `json:"users,omitempty"`
+	// Exercises holds the value of the exercises edge.
+	Exercises []*Exercise `json:"exercises,omitempty"`
 	// WorkoutLogs holds the value of the workout_logs edge.
 	WorkoutLogs []*WorkoutLog `json:"workout_logs,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 	// totalCount holds the count of the edges above.
-	totalCount [2]map[string]int
+	totalCount [3]map[string]int
 
+	namedExercises   map[string][]*Exercise
 	namedWorkoutLogs map[string][]*WorkoutLog
 }
 
@@ -70,10 +75,19 @@ func (e WorkoutEdges) UsersOrErr() (*User, error) {
 	return nil, &NotLoadedError{edge: "users"}
 }
 
+// ExercisesOrErr returns the Exercises value or an error if the edge
+// was not loaded in eager-loading.
+func (e WorkoutEdges) ExercisesOrErr() ([]*Exercise, error) {
+	if e.loadedTypes[1] {
+		return e.Exercises, nil
+	}
+	return nil, &NotLoadedError{edge: "exercises"}
+}
+
 // WorkoutLogsOrErr returns the WorkoutLogs value or an error if the edge
 // was not loaded in eager-loading.
 func (e WorkoutEdges) WorkoutLogsOrErr() ([]*WorkoutLog, error) {
-	if e.loadedTypes[1] {
+	if e.loadedTypes[2] {
 		return e.WorkoutLogs, nil
 	}
 	return nil, &NotLoadedError{edge: "workout_logs"}
@@ -84,11 +98,13 @@ func (*Workout) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case workout.FieldImage:
+			values[i] = new([]byte)
 		case workout.FieldID, workout.FieldUserID:
 			values[i] = new(pksuid.ID)
 		case workout.FieldVolume, workout.FieldReps, workout.FieldSets:
 			values[i] = new(sql.NullInt64)
-		case workout.FieldName, workout.FieldTime, workout.FieldCreatedAt, workout.FieldImage, workout.FieldDescription:
+		case workout.FieldName, workout.FieldDuration, workout.FieldCreatedAt, workout.FieldDescription:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -129,11 +145,11 @@ func (w *Workout) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				w.Reps = int(value.Int64)
 			}
-		case workout.FieldTime:
+		case workout.FieldDuration:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field time", values[i])
+				return fmt.Errorf("unexpected type %T for field duration", values[i])
 			} else if value.Valid {
-				w.Time = value.String
+				w.Duration = value.String
 			}
 		case workout.FieldSets:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -148,17 +164,19 @@ func (w *Workout) assignValues(columns []string, values []any) error {
 				w.CreatedAt = value.String
 			}
 		case workout.FieldImage:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field image", values[i])
-			} else if value.Valid {
-				w.Image = new(string)
-				*w.Image = value.String
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &w.Image); err != nil {
+					return fmt.Errorf("unmarshal field image: %w", err)
+				}
 			}
 		case workout.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
-				w.Description = value.String
+				w.Description = new(string)
+				*w.Description = value.String
 			}
 		case workout.FieldUserID:
 			if value, ok := values[i].(*pksuid.ID); !ok {
@@ -182,6 +200,11 @@ func (w *Workout) Value(name string) (ent.Value, error) {
 // QueryUsers queries the "users" edge of the Workout entity.
 func (w *Workout) QueryUsers() *UserQuery {
 	return NewWorkoutClient(w.config).QueryUsers(w)
+}
+
+// QueryExercises queries the "exercises" edge of the Workout entity.
+func (w *Workout) QueryExercises() *ExerciseQuery {
+	return NewWorkoutClient(w.config).QueryExercises(w)
 }
 
 // QueryWorkoutLogs queries the "workout_logs" edge of the Workout entity.
@@ -221,8 +244,8 @@ func (w *Workout) String() string {
 	builder.WriteString("reps=")
 	builder.WriteString(fmt.Sprintf("%v", w.Reps))
 	builder.WriteString(", ")
-	builder.WriteString("time=")
-	builder.WriteString(w.Time)
+	builder.WriteString("duration=")
+	builder.WriteString(w.Duration)
 	builder.WriteString(", ")
 	builder.WriteString("sets=")
 	builder.WriteString(fmt.Sprintf("%v", w.Sets))
@@ -230,18 +253,42 @@ func (w *Workout) String() string {
 	builder.WriteString("created_at=")
 	builder.WriteString(w.CreatedAt)
 	builder.WriteString(", ")
-	if v := w.Image; v != nil {
-		builder.WriteString("image=")
+	builder.WriteString("image=")
+	builder.WriteString(fmt.Sprintf("%v", w.Image))
+	builder.WriteString(", ")
+	if v := w.Description; v != nil {
+		builder.WriteString("description=")
 		builder.WriteString(*v)
 	}
-	builder.WriteString(", ")
-	builder.WriteString("description=")
-	builder.WriteString(w.Description)
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", w.UserID))
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedExercises returns the Exercises named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (w *Workout) NamedExercises(name string) ([]*Exercise, error) {
+	if w.Edges.namedExercises == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := w.Edges.namedExercises[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (w *Workout) appendNamedExercises(name string, edges ...*Exercise) {
+	if w.Edges.namedExercises == nil {
+		w.Edges.namedExercises = make(map[string][]*Exercise)
+	}
+	if len(edges) == 0 {
+		w.Edges.namedExercises[name] = []*Exercise{}
+	} else {
+		w.Edges.namedExercises[name] = append(w.Edges.namedExercises[name], edges...)
+	}
 }
 
 // NamedWorkoutLogs returns the WorkoutLogs named value or an error if the edge was not

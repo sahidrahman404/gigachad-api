@@ -8,6 +8,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 )
 
 // Workout holds the schema definition for the Workout entity.
@@ -27,13 +28,13 @@ func (Workout) Fields() []ent.Field {
 		field.String("name"),
 		field.Int("volume"),
 		field.Int("reps"),
-		field.String("time").Optional(),
+		field.String("duration"),
 		field.Int("sets"),
 		field.String("created_at").
 			DefaultFunc(generateTime).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
-		field.String("image").Optional().Nillable(),
-		field.String("description"),
+		field.JSON("image", &schematype.Image{}).Annotations(entgql.Type("Image")).Optional(),
+		field.String("description").Optional().Nillable(),
 		field.String("user_id").GoType(pksuid.ID("")),
 	}
 }
@@ -46,7 +47,8 @@ func (Workout) Edges() []ent.Edge {
 			Field("user_id").
 			Unique().
 			Required(),
-		edge.To("workout_logs", WorkoutLog.Type).
+		edge.To("exercises", Exercise.Type).
+			Through("workout_logs", WorkoutLog.Type).
 			Annotations(
 				entgql.RelayConnection(),
 				entsql.OnDelete(entsql.Cascade),
@@ -58,6 +60,5 @@ func (Workout) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
 		entgql.QueryField(),
-		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

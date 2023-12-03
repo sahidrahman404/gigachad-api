@@ -1,5 +1,4 @@
 type Set {
-  set: Int!
   reps: Int
   kg: Int
   time: String
@@ -7,7 +6,6 @@ type Set {
 }
 
 input SetInput {
-  set: Int!
   reps: Int
   kg: Int
   time: String
@@ -22,7 +20,7 @@ input CreateRoutineExerciseInput {
 
 input CreateRoutineWithChildrenInput {
   name: String!
-  routineExercise: [CreateRoutineExerciseInput!]
+  routineExercises: [CreateRoutineExerciseInput!]
 }
 
 extend type Mutation {

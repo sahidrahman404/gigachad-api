@@ -44,6 +44,18 @@ func (wlc *WorkoutLogCreate) SetNillableCreatedAt(s *string) *WorkoutLogCreate {
 	return wlc
 }
 
+// SetWorkoutID sets the "workout_id" field.
+func (wlc *WorkoutLogCreate) SetWorkoutID(pk pksuid.ID) *WorkoutLogCreate {
+	wlc.mutation.SetWorkoutID(pk)
+	return wlc
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (wlc *WorkoutLogCreate) SetExerciseID(pk pksuid.ID) *WorkoutLogCreate {
+	wlc.mutation.SetExerciseID(pk)
+	return wlc
+}
+
 // SetUserID sets the "user_id" field.
 func (wlc *WorkoutLogCreate) SetUserID(pk pksuid.ID) *WorkoutLogCreate {
 	wlc.mutation.SetUserID(pk)
@@ -75,42 +87,26 @@ func (wlc *WorkoutLogCreate) SetUsers(u *User) *WorkoutLogCreate {
 	return wlc.SetUsersID(u.ID)
 }
 
-// SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
-func (wlc *WorkoutLogCreate) SetExercisesID(id pksuid.ID) *WorkoutLogCreate {
-	wlc.mutation.SetExercisesID(id)
-	return wlc
-}
-
-// SetNillableExercisesID sets the "exercises" edge to the Exercise entity by ID if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableExercisesID(id *pksuid.ID) *WorkoutLogCreate {
-	if id != nil {
-		wlc = wlc.SetExercisesID(*id)
-	}
-	return wlc
-}
-
-// SetExercises sets the "exercises" edge to the Exercise entity.
-func (wlc *WorkoutLogCreate) SetExercises(e *Exercise) *WorkoutLogCreate {
-	return wlc.SetExercisesID(e.ID)
-}
-
 // SetWorkoutsID sets the "workouts" edge to the Workout entity by ID.
 func (wlc *WorkoutLogCreate) SetWorkoutsID(id pksuid.ID) *WorkoutLogCreate {
 	wlc.mutation.SetWorkoutsID(id)
 	return wlc
 }
 
-// SetNillableWorkoutsID sets the "workouts" edge to the Workout entity by ID if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableWorkoutsID(id *pksuid.ID) *WorkoutLogCreate {
-	if id != nil {
-		wlc = wlc.SetWorkoutsID(*id)
-	}
-	return wlc
-}
-
 // SetWorkouts sets the "workouts" edge to the Workout entity.
 func (wlc *WorkoutLogCreate) SetWorkouts(w *Workout) *WorkoutLogCreate {
 	return wlc.SetWorkoutsID(w.ID)
+}
+
+// SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
+func (wlc *WorkoutLogCreate) SetExercisesID(id pksuid.ID) *WorkoutLogCreate {
+	wlc.mutation.SetExercisesID(id)
+	return wlc
+}
+
+// SetExercises sets the "exercises" edge to the Exercise entity.
+func (wlc *WorkoutLogCreate) SetExercises(e *Exercise) *WorkoutLogCreate {
+	return wlc.SetExercisesID(e.ID)
 }
 
 // Mutation returns the WorkoutLogMutation object of the builder.
@@ -166,11 +162,23 @@ func (wlc *WorkoutLogCreate) check() error {
 	if _, ok := wlc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "WorkoutLog.created_at"`)}
 	}
+	if _, ok := wlc.mutation.WorkoutID(); !ok {
+		return &ValidationError{Name: "workout_id", err: errors.New(`ent: missing required field "WorkoutLog.workout_id"`)}
+	}
+	if _, ok := wlc.mutation.ExerciseID(); !ok {
+		return &ValidationError{Name: "exercise_id", err: errors.New(`ent: missing required field "WorkoutLog.exercise_id"`)}
+	}
 	if _, ok := wlc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "WorkoutLog.user_id"`)}
 	}
 	if _, ok := wlc.mutation.UsersID(); !ok {
 		return &ValidationError{Name: "users", err: errors.New(`ent: missing required edge "WorkoutLog.users"`)}
+	}
+	if _, ok := wlc.mutation.WorkoutsID(); !ok {
+		return &ValidationError{Name: "workouts", err: errors.New(`ent: missing required edge "WorkoutLog.workouts"`)}
+	}
+	if _, ok := wlc.mutation.ExercisesID(); !ok {
+		return &ValidationError{Name: "exercises", err: errors.New(`ent: missing required edge "WorkoutLog.exercises"`)}
 	}
 	return nil
 }
@@ -232,27 +240,10 @@ func (wlc *WorkoutLogCreate) createSpec() (*WorkoutLog, *sqlgraph.CreateSpec) {
 		_node.UserID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := wlc.mutation.ExercisesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   workoutlog.ExercisesTable,
-			Columns: []string{workoutlog.ExercisesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_node.exercise_workout_logs = &nodes[0]
-		_spec.Edges = append(_spec.Edges, edge)
-	}
 	if nodes := wlc.mutation.WorkoutsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   workoutlog.WorkoutsTable,
 			Columns: []string{workoutlog.WorkoutsColumn},
 			Bidi:    false,
@@ -263,7 +254,24 @@ func (wlc *WorkoutLogCreate) createSpec() (*WorkoutLog, *sqlgraph.CreateSpec) {
 		for _, k := range nodes {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
-		_node.workout_workout_logs = &nodes[0]
+		_node.WorkoutID = nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := wlc.mutation.ExercisesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   workoutlog.ExercisesTable,
+			Columns: []string{workoutlog.ExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.ExerciseID = nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

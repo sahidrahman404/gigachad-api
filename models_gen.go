@@ -42,8 +42,24 @@ type CreateRoutineExerciseInput struct {
 }
 
 type CreateRoutineWithChildrenInput struct {
-	Name            string                        `json:"name"`
-	RoutineExercise []*CreateRoutineExerciseInput `json:"routineExercise,omitempty"`
+	Name             string                        `json:"name"`
+	RoutineExercises []*CreateRoutineExerciseInput `json:"routineExercises,omitempty"`
+}
+
+type CreateWorkoutLogInput struct {
+	Sets       []*schematype.Set `json:"sets"`
+	ExerciseID pksuid.ID         `json:"exerciseID"`
+}
+
+type CreateWorkoutWithChildrenInput struct {
+	Name        string                   `json:"name"`
+	Volume      int                      `json:"volume"`
+	Reps        int                      `json:"reps"`
+	Duration    string                   `json:"duration"`
+	Sets        int                      `json:"sets"`
+	Image       *schematype.Image        `json:"image,omitempty"`
+	Description *string                  `json:"description,omitempty"`
+	WorkoutLogs []*CreateWorkoutLogInput `json:"workoutLogs,omitempty"`
 }
 
 type DeleteExerciseInput struct {

@@ -59,6 +59,34 @@ func (wlu *WorkoutLogUpdate) SetNillableCreatedAt(s *string) *WorkoutLogUpdate {
 	return wlu
 }
 
+// SetWorkoutID sets the "workout_id" field.
+func (wlu *WorkoutLogUpdate) SetWorkoutID(pk pksuid.ID) *WorkoutLogUpdate {
+	wlu.mutation.SetWorkoutID(pk)
+	return wlu
+}
+
+// SetNillableWorkoutID sets the "workout_id" field if the given value is not nil.
+func (wlu *WorkoutLogUpdate) SetNillableWorkoutID(pk *pksuid.ID) *WorkoutLogUpdate {
+	if pk != nil {
+		wlu.SetWorkoutID(*pk)
+	}
+	return wlu
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (wlu *WorkoutLogUpdate) SetExerciseID(pk pksuid.ID) *WorkoutLogUpdate {
+	wlu.mutation.SetExerciseID(pk)
+	return wlu
+}
+
+// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
+func (wlu *WorkoutLogUpdate) SetNillableExerciseID(pk *pksuid.ID) *WorkoutLogUpdate {
+	if pk != nil {
+		wlu.SetExerciseID(*pk)
+	}
+	return wlu
+}
+
 // SetUserID sets the "user_id" field.
 func (wlu *WorkoutLogUpdate) SetUserID(pk pksuid.ID) *WorkoutLogUpdate {
 	wlu.mutation.SetUserID(pk)
@@ -84,42 +112,26 @@ func (wlu *WorkoutLogUpdate) SetUsers(u *User) *WorkoutLogUpdate {
 	return wlu.SetUsersID(u.ID)
 }
 
-// SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
-func (wlu *WorkoutLogUpdate) SetExercisesID(id pksuid.ID) *WorkoutLogUpdate {
-	wlu.mutation.SetExercisesID(id)
-	return wlu
-}
-
-// SetNillableExercisesID sets the "exercises" edge to the Exercise entity by ID if the given value is not nil.
-func (wlu *WorkoutLogUpdate) SetNillableExercisesID(id *pksuid.ID) *WorkoutLogUpdate {
-	if id != nil {
-		wlu = wlu.SetExercisesID(*id)
-	}
-	return wlu
-}
-
-// SetExercises sets the "exercises" edge to the Exercise entity.
-func (wlu *WorkoutLogUpdate) SetExercises(e *Exercise) *WorkoutLogUpdate {
-	return wlu.SetExercisesID(e.ID)
-}
-
 // SetWorkoutsID sets the "workouts" edge to the Workout entity by ID.
 func (wlu *WorkoutLogUpdate) SetWorkoutsID(id pksuid.ID) *WorkoutLogUpdate {
 	wlu.mutation.SetWorkoutsID(id)
 	return wlu
 }
 
-// SetNillableWorkoutsID sets the "workouts" edge to the Workout entity by ID if the given value is not nil.
-func (wlu *WorkoutLogUpdate) SetNillableWorkoutsID(id *pksuid.ID) *WorkoutLogUpdate {
-	if id != nil {
-		wlu = wlu.SetWorkoutsID(*id)
-	}
-	return wlu
-}
-
 // SetWorkouts sets the "workouts" edge to the Workout entity.
 func (wlu *WorkoutLogUpdate) SetWorkouts(w *Workout) *WorkoutLogUpdate {
 	return wlu.SetWorkoutsID(w.ID)
+}
+
+// SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
+func (wlu *WorkoutLogUpdate) SetExercisesID(id pksuid.ID) *WorkoutLogUpdate {
+	wlu.mutation.SetExercisesID(id)
+	return wlu
+}
+
+// SetExercises sets the "exercises" edge to the Exercise entity.
+func (wlu *WorkoutLogUpdate) SetExercises(e *Exercise) *WorkoutLogUpdate {
+	return wlu.SetExercisesID(e.ID)
 }
 
 // Mutation returns the WorkoutLogMutation object of the builder.
@@ -133,15 +145,15 @@ func (wlu *WorkoutLogUpdate) ClearUsers() *WorkoutLogUpdate {
 	return wlu
 }
 
-// ClearExercises clears the "exercises" edge to the Exercise entity.
-func (wlu *WorkoutLogUpdate) ClearExercises() *WorkoutLogUpdate {
-	wlu.mutation.ClearExercises()
-	return wlu
-}
-
 // ClearWorkouts clears the "workouts" edge to the Workout entity.
 func (wlu *WorkoutLogUpdate) ClearWorkouts() *WorkoutLogUpdate {
 	wlu.mutation.ClearWorkouts()
+	return wlu
+}
+
+// ClearExercises clears the "exercises" edge to the Exercise entity.
+func (wlu *WorkoutLogUpdate) ClearExercises() *WorkoutLogUpdate {
+	wlu.mutation.ClearExercises()
 	return wlu
 }
 
@@ -176,6 +188,12 @@ func (wlu *WorkoutLogUpdate) ExecX(ctx context.Context) {
 func (wlu *WorkoutLogUpdate) check() error {
 	if _, ok := wlu.mutation.UsersID(); wlu.mutation.UsersCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "WorkoutLog.users"`)
+	}
+	if _, ok := wlu.mutation.WorkoutsID(); wlu.mutation.WorkoutsCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "WorkoutLog.workouts"`)
+	}
+	if _, ok := wlu.mutation.ExercisesID(); wlu.mutation.ExercisesCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "WorkoutLog.exercises"`)
 	}
 	return nil
 }
@@ -232,39 +250,10 @@ func (wlu *WorkoutLogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if wlu.mutation.ExercisesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   workoutlog.ExercisesTable,
-			Columns: []string{workoutlog.ExercisesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := wlu.mutation.ExercisesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   workoutlog.ExercisesTable,
-			Columns: []string{workoutlog.ExercisesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if wlu.mutation.WorkoutsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   workoutlog.WorkoutsTable,
 			Columns: []string{workoutlog.WorkoutsColumn},
 			Bidi:    false,
@@ -277,12 +266,41 @@ func (wlu *WorkoutLogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if nodes := wlu.mutation.WorkoutsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   workoutlog.WorkoutsTable,
 			Columns: []string{workoutlog.WorkoutsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(workout.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if wlu.mutation.ExercisesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   workoutlog.ExercisesTable,
+			Columns: []string{workoutlog.ExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := wlu.mutation.ExercisesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   workoutlog.ExercisesTable,
+			Columns: []string{workoutlog.ExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {
@@ -336,6 +354,34 @@ func (wluo *WorkoutLogUpdateOne) SetNillableCreatedAt(s *string) *WorkoutLogUpda
 	return wluo
 }
 
+// SetWorkoutID sets the "workout_id" field.
+func (wluo *WorkoutLogUpdateOne) SetWorkoutID(pk pksuid.ID) *WorkoutLogUpdateOne {
+	wluo.mutation.SetWorkoutID(pk)
+	return wluo
+}
+
+// SetNillableWorkoutID sets the "workout_id" field if the given value is not nil.
+func (wluo *WorkoutLogUpdateOne) SetNillableWorkoutID(pk *pksuid.ID) *WorkoutLogUpdateOne {
+	if pk != nil {
+		wluo.SetWorkoutID(*pk)
+	}
+	return wluo
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (wluo *WorkoutLogUpdateOne) SetExerciseID(pk pksuid.ID) *WorkoutLogUpdateOne {
+	wluo.mutation.SetExerciseID(pk)
+	return wluo
+}
+
+// SetNillableExerciseID sets the "exercise_id" field if the given value is not nil.
+func (wluo *WorkoutLogUpdateOne) SetNillableExerciseID(pk *pksuid.ID) *WorkoutLogUpdateOne {
+	if pk != nil {
+		wluo.SetExerciseID(*pk)
+	}
+	return wluo
+}
+
 // SetUserID sets the "user_id" field.
 func (wluo *WorkoutLogUpdateOne) SetUserID(pk pksuid.ID) *WorkoutLogUpdateOne {
 	wluo.mutation.SetUserID(pk)
@@ -361,42 +407,26 @@ func (wluo *WorkoutLogUpdateOne) SetUsers(u *User) *WorkoutLogUpdateOne {
 	return wluo.SetUsersID(u.ID)
 }
 
-// SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
-func (wluo *WorkoutLogUpdateOne) SetExercisesID(id pksuid.ID) *WorkoutLogUpdateOne {
-	wluo.mutation.SetExercisesID(id)
-	return wluo
-}
-
-// SetNillableExercisesID sets the "exercises" edge to the Exercise entity by ID if the given value is not nil.
-func (wluo *WorkoutLogUpdateOne) SetNillableExercisesID(id *pksuid.ID) *WorkoutLogUpdateOne {
-	if id != nil {
-		wluo = wluo.SetExercisesID(*id)
-	}
-	return wluo
-}
-
-// SetExercises sets the "exercises" edge to the Exercise entity.
-func (wluo *WorkoutLogUpdateOne) SetExercises(e *Exercise) *WorkoutLogUpdateOne {
-	return wluo.SetExercisesID(e.ID)
-}
-
 // SetWorkoutsID sets the "workouts" edge to the Workout entity by ID.
 func (wluo *WorkoutLogUpdateOne) SetWorkoutsID(id pksuid.ID) *WorkoutLogUpdateOne {
 	wluo.mutation.SetWorkoutsID(id)
 	return wluo
 }
 
-// SetNillableWorkoutsID sets the "workouts" edge to the Workout entity by ID if the given value is not nil.
-func (wluo *WorkoutLogUpdateOne) SetNillableWorkoutsID(id *pksuid.ID) *WorkoutLogUpdateOne {
-	if id != nil {
-		wluo = wluo.SetWorkoutsID(*id)
-	}
-	return wluo
-}
-
 // SetWorkouts sets the "workouts" edge to the Workout entity.
 func (wluo *WorkoutLogUpdateOne) SetWorkouts(w *Workout) *WorkoutLogUpdateOne {
 	return wluo.SetWorkoutsID(w.ID)
+}
+
+// SetExercisesID sets the "exercises" edge to the Exercise entity by ID.
+func (wluo *WorkoutLogUpdateOne) SetExercisesID(id pksuid.ID) *WorkoutLogUpdateOne {
+	wluo.mutation.SetExercisesID(id)
+	return wluo
+}
+
+// SetExercises sets the "exercises" edge to the Exercise entity.
+func (wluo *WorkoutLogUpdateOne) SetExercises(e *Exercise) *WorkoutLogUpdateOne {
+	return wluo.SetExercisesID(e.ID)
 }
 
 // Mutation returns the WorkoutLogMutation object of the builder.
@@ -410,15 +440,15 @@ func (wluo *WorkoutLogUpdateOne) ClearUsers() *WorkoutLogUpdateOne {
 	return wluo
 }
 
-// ClearExercises clears the "exercises" edge to the Exercise entity.
-func (wluo *WorkoutLogUpdateOne) ClearExercises() *WorkoutLogUpdateOne {
-	wluo.mutation.ClearExercises()
-	return wluo
-}
-
 // ClearWorkouts clears the "workouts" edge to the Workout entity.
 func (wluo *WorkoutLogUpdateOne) ClearWorkouts() *WorkoutLogUpdateOne {
 	wluo.mutation.ClearWorkouts()
+	return wluo
+}
+
+// ClearExercises clears the "exercises" edge to the Exercise entity.
+func (wluo *WorkoutLogUpdateOne) ClearExercises() *WorkoutLogUpdateOne {
+	wluo.mutation.ClearExercises()
 	return wluo
 }
 
@@ -466,6 +496,12 @@ func (wluo *WorkoutLogUpdateOne) ExecX(ctx context.Context) {
 func (wluo *WorkoutLogUpdateOne) check() error {
 	if _, ok := wluo.mutation.UsersID(); wluo.mutation.UsersCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "WorkoutLog.users"`)
+	}
+	if _, ok := wluo.mutation.WorkoutsID(); wluo.mutation.WorkoutsCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "WorkoutLog.workouts"`)
+	}
+	if _, ok := wluo.mutation.ExercisesID(); wluo.mutation.ExercisesCleared() && !ok {
+		return errors.New(`ent: clearing a required unique edge "WorkoutLog.exercises"`)
 	}
 	return nil
 }
@@ -539,39 +575,10 @@ func (wluo *WorkoutLogUpdateOne) sqlSave(ctx context.Context) (_node *WorkoutLog
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if wluo.mutation.ExercisesCleared() {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   workoutlog.ExercisesTable,
-			Columns: []string{workoutlog.ExercisesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
-			},
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := wluo.mutation.ExercisesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2O,
-			Inverse: true,
-			Table:   workoutlog.ExercisesTable,
-			Columns: []string{workoutlog.ExercisesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if wluo.mutation.WorkoutsCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   workoutlog.WorkoutsTable,
 			Columns: []string{workoutlog.WorkoutsColumn},
 			Bidi:    false,
@@ -584,12 +591,41 @@ func (wluo *WorkoutLogUpdateOne) sqlSave(ctx context.Context) (_node *WorkoutLog
 	if nodes := wluo.mutation.WorkoutsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
-			Inverse: true,
+			Inverse: false,
 			Table:   workoutlog.WorkoutsTable,
 			Columns: []string{workoutlog.WorkoutsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(workout.FieldID, field.TypeString),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if wluo.mutation.ExercisesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   workoutlog.ExercisesTable,
+			Columns: []string{workoutlog.ExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := wluo.mutation.ExercisesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: false,
+			Table:   workoutlog.ExercisesTable,
+			Columns: []string{workoutlog.ExercisesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString),
 			},
 		}
 		for _, k := range nodes {

@@ -5,7 +5,6 @@ type Set struct {
 	Kg   *int    `json:"kg,omitempty"`
 	Time *string `json:"time,omitempty"`
 	Km   *int    `json:"km,omitempty"`
-	Set  *int    `json:"set,omitempty"`
 }
 
 type Style struct {

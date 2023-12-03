@@ -537,22 +537,6 @@ func (c *ExerciseClient) GetX(ctx context.Context, id pksuid.ID) *Exercise {
 	return obj
 }
 
-// QueryWorkoutLogs queries the workout_logs edge of a Exercise.
-func (c *ExerciseClient) QueryWorkoutLogs(e *Exercise) *WorkoutLogQuery {
-	query := (&WorkoutLogClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := e.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(exercise.Table, exercise.FieldID, id),
-			sqlgraph.To(workoutlog.Table, workoutlog.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, exercise.WorkoutLogsTable, exercise.WorkoutLogsColumn),
-		)
-		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryUsers queries the users edge of a Exercise.
 func (c *ExerciseClient) QueryUsers(e *Exercise) *UserQuery {
 	query := (&UserClient{config: c.config}).Query()
@@ -633,6 +617,22 @@ func (c *ExerciseClient) QueryRoutines(e *Exercise) *RoutineQuery {
 	return query
 }
 
+// QueryWorkouts queries the workouts edge of a Exercise.
+func (c *ExerciseClient) QueryWorkouts(e *Exercise) *WorkoutQuery {
+	query := (&WorkoutClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(exercise.Table, exercise.FieldID, id),
+			sqlgraph.To(workout.Table, workout.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, exercise.WorkoutsTable, exercise.WorkoutsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryRoutineExercises queries the routine_exercises edge of a Exercise.
 func (c *ExerciseClient) QueryRoutineExercises(e *Exercise) *RoutineExerciseQuery {
 	query := (&RoutineExerciseClient{config: c.config}).Query()
@@ -642,6 +642,22 @@ func (c *ExerciseClient) QueryRoutineExercises(e *Exercise) *RoutineExerciseQuer
 			sqlgraph.From(exercise.Table, exercise.FieldID, id),
 			sqlgraph.To(routineexercise.Table, routineexercise.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, true, exercise.RoutineExercisesTable, exercise.RoutineExercisesColumn),
+		)
+		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryWorkoutLogs queries the workout_logs edge of a Exercise.
+func (c *ExerciseClient) QueryWorkoutLogs(e *Exercise) *WorkoutLogQuery {
+	query := (&WorkoutLogClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := e.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(exercise.Table, exercise.FieldID, id),
+			sqlgraph.To(workoutlog.Table, workoutlog.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, true, exercise.WorkoutLogsTable, exercise.WorkoutLogsColumn),
 		)
 		fromV = sqlgraph.Neighbors(e.driver.Dialect(), step)
 		return fromV, nil
@@ -1838,6 +1854,22 @@ func (c *WorkoutClient) QueryUsers(w *Workout) *UserQuery {
 	return query
 }
 
+// QueryExercises queries the exercises edge of a Workout.
+func (c *WorkoutClient) QueryExercises(w *Workout) *ExerciseQuery {
+	query := (&ExerciseClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := w.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(workout.Table, workout.FieldID, id),
+			sqlgraph.To(exercise.Table, exercise.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, workout.ExercisesTable, workout.ExercisesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(w.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // QueryWorkoutLogs queries the workout_logs edge of a Workout.
 func (c *WorkoutClient) QueryWorkoutLogs(w *Workout) *WorkoutLogQuery {
 	query := (&WorkoutLogClient{config: c.config}).Query()
@@ -1846,7 +1878,7 @@ func (c *WorkoutClient) QueryWorkoutLogs(w *Workout) *WorkoutLogQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(workout.Table, workout.FieldID, id),
 			sqlgraph.To(workoutlog.Table, workoutlog.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, workout.WorkoutLogsTable, workout.WorkoutLogsColumn),
+			sqlgraph.Edge(sqlgraph.O2M, true, workout.WorkoutLogsTable, workout.WorkoutLogsColumn),
 		)
 		fromV = sqlgraph.Neighbors(w.driver.Dialect(), step)
 		return fromV, nil
@@ -2003,22 +2035,6 @@ func (c *WorkoutLogClient) QueryUsers(wl *WorkoutLog) *UserQuery {
 	return query
 }
 
-// QueryExercises queries the exercises edge of a WorkoutLog.
-func (c *WorkoutLogClient) QueryExercises(wl *WorkoutLog) *ExerciseQuery {
-	query := (&ExerciseClient{config: c.config}).Query()
-	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
-		id := wl.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(workoutlog.Table, workoutlog.FieldID, id),
-			sqlgraph.To(exercise.Table, exercise.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, workoutlog.ExercisesTable, workoutlog.ExercisesColumn),
-		)
-		fromV = sqlgraph.Neighbors(wl.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
 // QueryWorkouts queries the workouts edge of a WorkoutLog.
 func (c *WorkoutLogClient) QueryWorkouts(wl *WorkoutLog) *WorkoutQuery {
 	query := (&WorkoutClient{config: c.config}).Query()
@@ -2027,7 +2043,23 @@ func (c *WorkoutLogClient) QueryWorkouts(wl *WorkoutLog) *WorkoutQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(workoutlog.Table, workoutlog.FieldID, id),
 			sqlgraph.To(workout.Table, workout.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, workoutlog.WorkoutsTable, workoutlog.WorkoutsColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, workoutlog.WorkoutsTable, workoutlog.WorkoutsColumn),
+		)
+		fromV = sqlgraph.Neighbors(wl.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryExercises queries the exercises edge of a WorkoutLog.
+func (c *WorkoutLogClient) QueryExercises(wl *WorkoutLog) *ExerciseQuery {
+	query := (&ExerciseClient{config: c.config}).Query()
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
+		id := wl.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(workoutlog.Table, workoutlog.FieldID, id),
+			sqlgraph.To(exercise.Table, exercise.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, workoutlog.ExercisesTable, workoutlog.ExercisesColumn),
 		)
 		fromV = sqlgraph.Neighbors(wl.driver.Dialect(), step)
 		return fromV, nil
