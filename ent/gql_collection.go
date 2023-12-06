@@ -2607,11 +2607,6 @@ func (w *WorkoutQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 				selectedFields = append(selectedFields, workout.FieldVolume)
 				fieldSeen[workout.FieldVolume] = struct{}{}
 			}
-		case "reps":
-			if _, ok := fieldSeen[workout.FieldReps]; !ok {
-				selectedFields = append(selectedFields, workout.FieldReps)
-				fieldSeen[workout.FieldReps] = struct{}{}
-			}
 		case "duration":
 			if _, ok := fieldSeen[workout.FieldDuration]; !ok {
 				selectedFields = append(selectedFields, workout.FieldDuration)

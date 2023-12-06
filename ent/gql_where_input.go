@@ -2808,16 +2808,6 @@ type WorkoutWhereInput struct {
 	VolumeLT    *int  `json:"volumeLT,omitempty"`
 	VolumeLTE   *int  `json:"volumeLTE,omitempty"`
 
-	// "reps" field predicates.
-	Reps      *int  `json:"reps,omitempty"`
-	RepsNEQ   *int  `json:"repsNEQ,omitempty"`
-	RepsIn    []int `json:"repsIn,omitempty"`
-	RepsNotIn []int `json:"repsNotIn,omitempty"`
-	RepsGT    *int  `json:"repsGT,omitempty"`
-	RepsGTE   *int  `json:"repsGTE,omitempty"`
-	RepsLT    *int  `json:"repsLT,omitempty"`
-	RepsLTE   *int  `json:"repsLTE,omitempty"`
-
 	// "duration" field predicates.
 	Duration             *string  `json:"duration,omitempty"`
 	DurationNEQ          *string  `json:"durationNEQ,omitempty"`
@@ -3060,30 +3050,6 @@ func (i *WorkoutWhereInput) P() (predicate.Workout, error) {
 	}
 	if i.VolumeLTE != nil {
 		predicates = append(predicates, workout.VolumeLTE(*i.VolumeLTE))
-	}
-	if i.Reps != nil {
-		predicates = append(predicates, workout.RepsEQ(*i.Reps))
-	}
-	if i.RepsNEQ != nil {
-		predicates = append(predicates, workout.RepsNEQ(*i.RepsNEQ))
-	}
-	if len(i.RepsIn) > 0 {
-		predicates = append(predicates, workout.RepsIn(i.RepsIn...))
-	}
-	if len(i.RepsNotIn) > 0 {
-		predicates = append(predicates, workout.RepsNotIn(i.RepsNotIn...))
-	}
-	if i.RepsGT != nil {
-		predicates = append(predicates, workout.RepsGT(*i.RepsGT))
-	}
-	if i.RepsGTE != nil {
-		predicates = append(predicates, workout.RepsGTE(*i.RepsGTE))
-	}
-	if i.RepsLT != nil {
-		predicates = append(predicates, workout.RepsLT(*i.RepsLT))
-	}
-	if i.RepsLTE != nil {
-		predicates = append(predicates, workout.RepsLTE(*i.RepsLTE))
 	}
 	if i.Duration != nil {
 		predicates = append(predicates, workout.DurationEQ(*i.Duration))

@@ -36,12 +36,6 @@ func (wc *WorkoutCreate) SetVolume(i int) *WorkoutCreate {
 	return wc
 }
 
-// SetReps sets the "reps" field.
-func (wc *WorkoutCreate) SetReps(i int) *WorkoutCreate {
-	wc.mutation.SetReps(i)
-	return wc
-}
-
 // SetDuration sets the "duration" field.
 func (wc *WorkoutCreate) SetDuration(s string) *WorkoutCreate {
 	wc.mutation.SetDuration(s)
@@ -202,9 +196,6 @@ func (wc *WorkoutCreate) check() error {
 	if _, ok := wc.mutation.Volume(); !ok {
 		return &ValidationError{Name: "volume", err: errors.New(`ent: missing required field "Workout.volume"`)}
 	}
-	if _, ok := wc.mutation.Reps(); !ok {
-		return &ValidationError{Name: "reps", err: errors.New(`ent: missing required field "Workout.reps"`)}
-	}
 	if _, ok := wc.mutation.Duration(); !ok {
 		return &ValidationError{Name: "duration", err: errors.New(`ent: missing required field "Workout.duration"`)}
 	}
@@ -262,10 +253,6 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 	if value, ok := wc.mutation.Volume(); ok {
 		_spec.SetField(workout.FieldVolume, field.TypeInt, value)
 		_node.Volume = value
-	}
-	if value, ok := wc.mutation.Reps(); ok {
-		_spec.SetField(workout.FieldReps, field.TypeInt, value)
-		_node.Reps = value
 	}
 	if value, ok := wc.mutation.Duration(); ok {
 		_spec.SetField(workout.FieldDuration, field.TypeString, value)

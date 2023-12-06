@@ -191,7 +191,6 @@ var (
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
 		{Name: "volume", Type: field.TypeInt},
-		{Name: "reps", Type: field.TypeInt},
 		{Name: "duration", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeInt},
 		{Name: "created_at", Type: field.TypeString},
@@ -207,7 +206,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "workouts_users_workouts",
-				Columns:    []*schema.Column{WorkoutsColumns[9]},
+				Columns:    []*schema.Column{WorkoutsColumns[8]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},

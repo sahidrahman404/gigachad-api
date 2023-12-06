@@ -1,4 +1,4 @@
-h1:FyDRpNj/CLTEiuGUIddIQdJJsjMaeG4be8FknzvabDY=
+h1:Qkvr8nOZhUjAZIwmiOch466YG+jtx/eFQOdYU/uRpqQ=
 20230628141405_add-users-tokens-tables.sql h1:fuOJ2sHOMEP/24Ni9DT6j31fuudcRRBHP9FR3B+iabk=
 20230628144036_change-activated-column-type-to-int.sql h1:iGspKnS3bD1Of/VsA9jPiu/F0UQnIZkaVlhfop++diY=
 20230629131540_add-unique-constraint-to-users-table.sql h1:RTfWHMm4IFP3xoYPiVdY6LaLopPZcPiDXV9fCMojdUo=
@@ -20,3 +20,4 @@ h1:FyDRpNj/CLTEiuGUIddIQdJJsjMaeG4be8FknzvabDY=
 20231203083526_drop-unique-index-on-routine_id-column.sql h1:BOTh857szqxvJUMwlbZ4QMJ/Zcb4lqiVmry2DmSSO7E=
 20231204080414_update-workouts-workout_logs-exercises-tables.sql h1:gNRdV11PkqHlfAG41Cet9F1pMceSymt4jUH3QLeZkjY=
 20231205095646_change-time-column-name-to-duration.sql h1:b/WwRRVbaghvJ/WyNAUAxn84X5GyrGpLTJmbGXXASiY=
+20231206060612_remove-reps-column-from-workout-table.sql h1:39JQl9dVzjJu+/osbhHXzEaehJ4SB9q4vQENj2hN/6w=

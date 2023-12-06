@@ -448,10 +448,6 @@ table "workouts" {
     null = false
     type = integer
   }
-  column "reps" {
-    null = false
-    type = integer
-  }
   column "duration" {
     null = false
     type = text

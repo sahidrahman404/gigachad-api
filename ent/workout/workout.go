@@ -17,8 +17,6 @@ const (
 	FieldName = "name"
 	// FieldVolume holds the string denoting the volume field in the database.
 	FieldVolume = "volume"
-	// FieldReps holds the string denoting the reps field in the database.
-	FieldReps = "reps"
 	// FieldDuration holds the string denoting the duration field in the database.
 	FieldDuration = "duration"
 	// FieldSets holds the string denoting the sets field in the database.
@@ -65,7 +63,6 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldVolume,
-	FieldReps,
 	FieldDuration,
 	FieldSets,
 	FieldCreatedAt,
@@ -113,11 +110,6 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 // ByVolume orders the results by the volume field.
 func ByVolume(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldVolume, opts...).ToFunc()
-}
-
-// ByReps orders the results by the reps field.
-func ByReps(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldReps, opts...).ToFunc()
 }
 
 // ByDuration orders the results by the duration field.

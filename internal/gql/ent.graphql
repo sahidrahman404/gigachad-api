@@ -1350,7 +1350,6 @@ type Workout implements Node {
   id: ID!
   name: String!
   volume: Int!
-  reps: Int!
   duration: String!
   sets: Int!
   createdAt: String!
@@ -1534,15 +1533,6 @@ input WorkoutWhereInput {
   volumeGTE: Int
   volumeLT: Int
   volumeLTE: Int
-  """reps field predicates"""
-  reps: Int
-  repsNEQ: Int
-  repsIn: [Int!]
-  repsNotIn: [Int!]
-  repsGT: Int
-  repsGTE: Int
-  repsLT: Int
-  repsLTE: Int
   """duration field predicates"""
   duration: String
   durationNEQ: String

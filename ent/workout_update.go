@@ -67,27 +67,6 @@ func (wu *WorkoutUpdate) AddVolume(i int) *WorkoutUpdate {
 	return wu
 }
 
-// SetReps sets the "reps" field.
-func (wu *WorkoutUpdate) SetReps(i int) *WorkoutUpdate {
-	wu.mutation.ResetReps()
-	wu.mutation.SetReps(i)
-	return wu
-}
-
-// SetNillableReps sets the "reps" field if the given value is not nil.
-func (wu *WorkoutUpdate) SetNillableReps(i *int) *WorkoutUpdate {
-	if i != nil {
-		wu.SetReps(*i)
-	}
-	return wu
-}
-
-// AddReps adds i to the "reps" field.
-func (wu *WorkoutUpdate) AddReps(i int) *WorkoutUpdate {
-	wu.mutation.AddReps(i)
-	return wu
-}
-
 // SetDuration sets the "duration" field.
 func (wu *WorkoutUpdate) SetDuration(s string) *WorkoutUpdate {
 	wu.mutation.SetDuration(s)
@@ -333,12 +312,6 @@ func (wu *WorkoutUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := wu.mutation.AddedVolume(); ok {
 		_spec.AddField(workout.FieldVolume, field.TypeInt, value)
 	}
-	if value, ok := wu.mutation.Reps(); ok {
-		_spec.SetField(workout.FieldReps, field.TypeInt, value)
-	}
-	if value, ok := wu.mutation.AddedReps(); ok {
-		_spec.AddField(workout.FieldReps, field.TypeInt, value)
-	}
 	if value, ok := wu.mutation.Duration(); ok {
 		_spec.SetField(workout.FieldDuration, field.TypeString, value)
 	}
@@ -555,27 +528,6 @@ func (wuo *WorkoutUpdateOne) SetNillableVolume(i *int) *WorkoutUpdateOne {
 // AddVolume adds i to the "volume" field.
 func (wuo *WorkoutUpdateOne) AddVolume(i int) *WorkoutUpdateOne {
 	wuo.mutation.AddVolume(i)
-	return wuo
-}
-
-// SetReps sets the "reps" field.
-func (wuo *WorkoutUpdateOne) SetReps(i int) *WorkoutUpdateOne {
-	wuo.mutation.ResetReps()
-	wuo.mutation.SetReps(i)
-	return wuo
-}
-
-// SetNillableReps sets the "reps" field if the given value is not nil.
-func (wuo *WorkoutUpdateOne) SetNillableReps(i *int) *WorkoutUpdateOne {
-	if i != nil {
-		wuo.SetReps(*i)
-	}
-	return wuo
-}
-
-// AddReps adds i to the "reps" field.
-func (wuo *WorkoutUpdateOne) AddReps(i int) *WorkoutUpdateOne {
-	wuo.mutation.AddReps(i)
 	return wuo
 }
 
@@ -853,12 +805,6 @@ func (wuo *WorkoutUpdateOne) sqlSave(ctx context.Context) (_node *Workout, err e
 	}
 	if value, ok := wuo.mutation.AddedVolume(); ok {
 		_spec.AddField(workout.FieldVolume, field.TypeInt, value)
-	}
-	if value, ok := wuo.mutation.Reps(); ok {
-		_spec.SetField(workout.FieldReps, field.TypeInt, value)
-	}
-	if value, ok := wuo.mutation.AddedReps(); ok {
-		_spec.AddField(workout.FieldReps, field.TypeInt, value)
 	}
 	if value, ok := wuo.mutation.Duration(); ok {
 		_spec.SetField(workout.FieldDuration, field.TypeString, value)

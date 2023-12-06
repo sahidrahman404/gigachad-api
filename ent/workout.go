@@ -24,8 +24,6 @@ type Workout struct {
 	Name string `json:"name,omitempty"`
 	// Volume holds the value of the "volume" field.
 	Volume int `json:"volume,omitempty"`
-	// Reps holds the value of the "reps" field.
-	Reps int `json:"reps,omitempty"`
 	// Duration holds the value of the "duration" field.
 	Duration string `json:"duration,omitempty"`
 	// Sets holds the value of the "sets" field.
@@ -102,7 +100,7 @@ func (*Workout) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case workout.FieldID, workout.FieldUserID:
 			values[i] = new(pksuid.ID)
-		case workout.FieldVolume, workout.FieldReps, workout.FieldSets:
+		case workout.FieldVolume, workout.FieldSets:
 			values[i] = new(sql.NullInt64)
 		case workout.FieldName, workout.FieldDuration, workout.FieldCreatedAt, workout.FieldDescription:
 			values[i] = new(sql.NullString)
@@ -138,12 +136,6 @@ func (w *Workout) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field volume", values[i])
 			} else if value.Valid {
 				w.Volume = int(value.Int64)
-			}
-		case workout.FieldReps:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field reps", values[i])
-			} else if value.Valid {
-				w.Reps = int(value.Int64)
 			}
 		case workout.FieldDuration:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -240,9 +232,6 @@ func (w *Workout) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("volume=")
 	builder.WriteString(fmt.Sprintf("%v", w.Volume))
-	builder.WriteString(", ")
-	builder.WriteString("reps=")
-	builder.WriteString(fmt.Sprintf("%v", w.Reps))
 	builder.WriteString(", ")
 	builder.WriteString("duration=")
 	builder.WriteString(w.Duration)

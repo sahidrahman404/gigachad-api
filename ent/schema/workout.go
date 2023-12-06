@@ -27,7 +27,6 @@ func (Workout) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
 		field.Int("volume"),
-		field.Int("reps"),
 		field.String("duration"),
 		field.Int("sets"),
 		field.String("created_at").

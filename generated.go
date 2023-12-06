@@ -301,7 +301,6 @@ type ComplexityRoot struct {
 		ID          func(childComplexity int) int
 		Image       func(childComplexity int) int
 		Name        func(childComplexity int) int
-		Reps        func(childComplexity int) int
 		Sets        func(childComplexity int) int
 		UserID      func(childComplexity int) int
 		Users       func(childComplexity int) int
@@ -1724,13 +1723,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Workout.Name(childComplexity), true
-
-	case "Workout.reps":
-		if e.complexity.Workout.Reps == nil {
-			break
-		}
-
-		return e.complexity.Workout.Reps(childComplexity), true
 
 	case "Workout.sets":
 		if e.complexity.Workout.Sets == nil {
@@ -8308,8 +8300,6 @@ func (ec *executionContext) fieldContext_Mutation_createWorkoutWithChildren(ctx 
 				return ec.fieldContext_Workout_name(ctx, field)
 			case "volume":
 				return ec.fieldContext_Workout_volume(ctx, field)
-			case "reps":
-				return ec.fieldContext_Workout_reps(ctx, field)
 			case "duration":
 				return ec.fieldContext_Workout_duration(ctx, field)
 			case "sets":
@@ -12368,50 +12358,6 @@ func (ec *executionContext) fieldContext_Workout_volume(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Workout_reps(ctx context.Context, field graphql.CollectedField, obj *ent.Workout) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Workout_reps(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Reps, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Workout_reps(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Workout",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Workout_duration(ctx context.Context, field graphql.CollectedField, obj *ent.Workout) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Workout_duration(ctx, field)
 	if err != nil {
@@ -13089,8 +13035,6 @@ func (ec *executionContext) fieldContext_WorkoutEdge_node(ctx context.Context, f
 				return ec.fieldContext_Workout_name(ctx, field)
 			case "volume":
 				return ec.fieldContext_Workout_volume(ctx, field)
-			case "reps":
-				return ec.fieldContext_Workout_reps(ctx, field)
 			case "duration":
 				return ec.fieldContext_Workout_duration(ctx, field)
 			case "sets":
@@ -13551,8 +13495,6 @@ func (ec *executionContext) fieldContext_WorkoutLog_workouts(ctx context.Context
 				return ec.fieldContext_Workout_name(ctx, field)
 			case "volume":
 				return ec.fieldContext_Workout_volume(ctx, field)
-			case "reps":
-				return ec.fieldContext_Workout_reps(ctx, field)
 			case "duration":
 				return ec.fieldContext_Workout_duration(ctx, field)
 			case "sets":
@@ -16168,7 +16110,7 @@ func (ec *executionContext) unmarshalInputCreateWorkoutWithChildrenInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "volume", "reps", "duration", "sets", "image", "description", "workoutLogs"}
+	fieldsInOrder := [...]string{"name", "volume", "duration", "sets", "image", "description", "workoutLogs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -16193,15 +16135,6 @@ func (ec *executionContext) unmarshalInputCreateWorkoutWithChildrenInput(ctx con
 				return it, err
 			}
 			it.Volume = data
-		case "reps":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reps"))
-			data, err := ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Reps = data
 		case "duration":
 			var err error
 
@@ -21027,7 +20960,7 @@ func (ec *executionContext) unmarshalInputWorkoutWhereInput(ctx context.Context,
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "volume", "volumeNEQ", "volumeIn", "volumeNotIn", "volumeGT", "volumeGTE", "volumeLT", "volumeLTE", "reps", "repsNEQ", "repsIn", "repsNotIn", "repsGT", "repsGTE", "repsLT", "repsLTE", "duration", "durationNEQ", "durationIn", "durationNotIn", "durationGT", "durationGTE", "durationLT", "durationLTE", "durationContains", "durationHasPrefix", "durationHasSuffix", "durationEqualFold", "durationContainsFold", "sets", "setsNEQ", "setsIn", "setsNotIn", "setsGT", "setsGTE", "setsLT", "setsLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "createdAtContains", "createdAtHasPrefix", "createdAtHasSuffix", "createdAtEqualFold", "createdAtContainsFold", "description", "descriptionNEQ", "descriptionIn", "descriptionNotIn", "descriptionGT", "descriptionGTE", "descriptionLT", "descriptionLTE", "descriptionContains", "descriptionHasPrefix", "descriptionHasSuffix", "descriptionIsNil", "descriptionNotNil", "descriptionEqualFold", "descriptionContainsFold", "userID", "userIDNEQ", "userIDIn", "userIDNotIn", "userIDGT", "userIDGTE", "userIDLT", "userIDLTE", "userIDContains", "userIDHasPrefix", "userIDHasSuffix", "userIDEqualFold", "userIDContainsFold", "hasUsers", "hasUsersWith", "hasExercises", "hasExercisesWith", "hasWorkoutLogs", "hasWorkoutLogsWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "volume", "volumeNEQ", "volumeIn", "volumeNotIn", "volumeGT", "volumeGTE", "volumeLT", "volumeLTE", "duration", "durationNEQ", "durationIn", "durationNotIn", "durationGT", "durationGTE", "durationLT", "durationLTE", "durationContains", "durationHasPrefix", "durationHasSuffix", "durationEqualFold", "durationContainsFold", "sets", "setsNEQ", "setsIn", "setsNotIn", "setsGT", "setsGTE", "setsLT", "setsLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "createdAtContains", "createdAtHasPrefix", "createdAtHasSuffix", "createdAtEqualFold", "createdAtContainsFold", "description", "descriptionNEQ", "descriptionIn", "descriptionNotIn", "descriptionGT", "descriptionGTE", "descriptionLT", "descriptionLTE", "descriptionContains", "descriptionHasPrefix", "descriptionHasSuffix", "descriptionIsNil", "descriptionNotNil", "descriptionEqualFold", "descriptionContainsFold", "userID", "userIDNEQ", "userIDIn", "userIDNotIn", "userIDGT", "userIDGTE", "userIDLT", "userIDLTE", "userIDContains", "userIDHasPrefix", "userIDHasSuffix", "userIDEqualFold", "userIDContainsFold", "hasUsers", "hasUsersWith", "hasExercises", "hasExercisesWith", "hasWorkoutLogs", "hasWorkoutLogsWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -21322,78 +21255,6 @@ func (ec *executionContext) unmarshalInputWorkoutWhereInput(ctx context.Context,
 				return it, err
 			}
 			it.VolumeLTE = data
-		case "reps":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reps"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Reps = data
-		case "repsNEQ":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("repsNEQ"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RepsNEQ = data
-		case "repsIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("repsIn"))
-			data, err := ec.unmarshalOInt2ᚕintᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RepsIn = data
-		case "repsNotIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("repsNotIn"))
-			data, err := ec.unmarshalOInt2ᚕintᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RepsNotIn = data
-		case "repsGT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("repsGT"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RepsGT = data
-		case "repsGTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("repsGTE"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RepsGTE = data
-		case "repsLT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("repsLT"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RepsLT = data
-		case "repsLTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("repsLTE"))
-			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RepsLTE = data
 		case "duration":
 			var err error
 
@@ -24769,11 +24630,6 @@ func (ec *executionContext) _Workout(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "volume":
 			out.Values[i] = ec._Workout_volume(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "reps":
-			out.Values[i] = ec._Workout_reps(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}

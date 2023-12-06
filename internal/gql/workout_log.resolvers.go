@@ -28,7 +28,6 @@ func (r *mutationResolver) CreateWorkoutWithChildren(ctx context.Context, input 
 			SetID(workoutID).
 			SetName(input.Name).
 			SetVolume(input.Volume).
-			SetReps(input.Reps).
 			SetDuration(input.Duration).
 			SetSets(input.Sets).
 			SetImage(img.SetNillableImageField(input.Image, *r.awsCfg, r.imgproxy)).

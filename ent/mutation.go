@@ -5996,8 +5996,6 @@ type WorkoutMutation struct {
 	name                *string
 	volume              *int
 	addvolume           *int
-	reps                *int
-	addreps             *int
 	duration            *string
 	sets                *int
 	addsets             *int
@@ -6212,62 +6210,6 @@ func (m *WorkoutMutation) AddedVolume() (r int, exists bool) {
 func (m *WorkoutMutation) ResetVolume() {
 	m.volume = nil
 	m.addvolume = nil
-}
-
-// SetReps sets the "reps" field.
-func (m *WorkoutMutation) SetReps(i int) {
-	m.reps = &i
-	m.addreps = nil
-}
-
-// Reps returns the value of the "reps" field in the mutation.
-func (m *WorkoutMutation) Reps() (r int, exists bool) {
-	v := m.reps
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldReps returns the old "reps" field's value of the Workout entity.
-// If the Workout object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutMutation) OldReps(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldReps is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldReps requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldReps: %w", err)
-	}
-	return oldValue.Reps, nil
-}
-
-// AddReps adds i to the "reps" field.
-func (m *WorkoutMutation) AddReps(i int) {
-	if m.addreps != nil {
-		*m.addreps += i
-	} else {
-		m.addreps = &i
-	}
-}
-
-// AddedReps returns the value that was added to the "reps" field in this mutation.
-func (m *WorkoutMutation) AddedReps() (r int, exists bool) {
-	v := m.addreps
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetReps resets all changes to the "reps" field.
-func (m *WorkoutMutation) ResetReps() {
-	m.reps = nil
-	m.addreps = nil
 }
 
 // SetDuration sets the "duration" field.
@@ -6714,15 +6656,12 @@ func (m *WorkoutMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *WorkoutMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 8)
 	if m.name != nil {
 		fields = append(fields, workout.FieldName)
 	}
 	if m.volume != nil {
 		fields = append(fields, workout.FieldVolume)
-	}
-	if m.reps != nil {
-		fields = append(fields, workout.FieldReps)
 	}
 	if m.duration != nil {
 		fields = append(fields, workout.FieldDuration)
@@ -6754,8 +6693,6 @@ func (m *WorkoutMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case workout.FieldVolume:
 		return m.Volume()
-	case workout.FieldReps:
-		return m.Reps()
 	case workout.FieldDuration:
 		return m.Duration()
 	case workout.FieldSets:
@@ -6781,8 +6718,6 @@ func (m *WorkoutMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldName(ctx)
 	case workout.FieldVolume:
 		return m.OldVolume(ctx)
-	case workout.FieldReps:
-		return m.OldReps(ctx)
 	case workout.FieldDuration:
 		return m.OldDuration(ctx)
 	case workout.FieldSets:
@@ -6817,13 +6752,6 @@ func (m *WorkoutMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetVolume(v)
-		return nil
-	case workout.FieldReps:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetReps(v)
 		return nil
 	case workout.FieldDuration:
 		v, ok := value.(string)
@@ -6878,9 +6806,6 @@ func (m *WorkoutMutation) AddedFields() []string {
 	if m.addvolume != nil {
 		fields = append(fields, workout.FieldVolume)
 	}
-	if m.addreps != nil {
-		fields = append(fields, workout.FieldReps)
-	}
 	if m.addsets != nil {
 		fields = append(fields, workout.FieldSets)
 	}
@@ -6894,8 +6819,6 @@ func (m *WorkoutMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case workout.FieldVolume:
 		return m.AddedVolume()
-	case workout.FieldReps:
-		return m.AddedReps()
 	case workout.FieldSets:
 		return m.AddedSets()
 	}
@@ -6913,13 +6836,6 @@ func (m *WorkoutMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddVolume(v)
-		return nil
-	case workout.FieldReps:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddReps(v)
 		return nil
 	case workout.FieldSets:
 		v, ok := value.(int)
@@ -6975,9 +6891,6 @@ func (m *WorkoutMutation) ResetField(name string) error {
 		return nil
 	case workout.FieldVolume:
 		m.ResetVolume()
-		return nil
-	case workout.FieldReps:
-		m.ResetReps()
 		return nil
 	case workout.FieldDuration:
 		m.ResetDuration()

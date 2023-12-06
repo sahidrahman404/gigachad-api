@@ -64,11 +64,6 @@ func Volume(v int) predicate.Workout {
 	return predicate.Workout(sql.FieldEQ(FieldVolume, v))
 }
 
-// Reps applies equality check predicate on the "reps" field. It's identical to RepsEQ.
-func Reps(v int) predicate.Workout {
-	return predicate.Workout(sql.FieldEQ(FieldReps, v))
-}
-
 // Duration applies equality check predicate on the "duration" field. It's identical to DurationEQ.
 func Duration(v string) predicate.Workout {
 	return predicate.Workout(sql.FieldEQ(FieldDuration, v))
@@ -197,46 +192,6 @@ func VolumeLT(v int) predicate.Workout {
 // VolumeLTE applies the LTE predicate on the "volume" field.
 func VolumeLTE(v int) predicate.Workout {
 	return predicate.Workout(sql.FieldLTE(FieldVolume, v))
-}
-
-// RepsEQ applies the EQ predicate on the "reps" field.
-func RepsEQ(v int) predicate.Workout {
-	return predicate.Workout(sql.FieldEQ(FieldReps, v))
-}
-
-// RepsNEQ applies the NEQ predicate on the "reps" field.
-func RepsNEQ(v int) predicate.Workout {
-	return predicate.Workout(sql.FieldNEQ(FieldReps, v))
-}
-
-// RepsIn applies the In predicate on the "reps" field.
-func RepsIn(vs ...int) predicate.Workout {
-	return predicate.Workout(sql.FieldIn(FieldReps, vs...))
-}
-
-// RepsNotIn applies the NotIn predicate on the "reps" field.
-func RepsNotIn(vs ...int) predicate.Workout {
-	return predicate.Workout(sql.FieldNotIn(FieldReps, vs...))
-}
-
-// RepsGT applies the GT predicate on the "reps" field.
-func RepsGT(v int) predicate.Workout {
-	return predicate.Workout(sql.FieldGT(FieldReps, v))
-}
-
-// RepsGTE applies the GTE predicate on the "reps" field.
-func RepsGTE(v int) predicate.Workout {
-	return predicate.Workout(sql.FieldGTE(FieldReps, v))
-}
-
-// RepsLT applies the LT predicate on the "reps" field.
-func RepsLT(v int) predicate.Workout {
-	return predicate.Workout(sql.FieldLT(FieldReps, v))
-}
-
-// RepsLTE applies the LTE predicate on the "reps" field.
-func RepsLTE(v int) predicate.Workout {
-	return predicate.Workout(sql.FieldLTE(FieldReps, v))
 }
 
 // DurationEQ applies the EQ predicate on the "duration" field.

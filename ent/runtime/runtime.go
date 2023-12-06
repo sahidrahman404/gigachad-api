@@ -134,7 +134,7 @@ func init() {
 	workoutFields := schema.Workout{}.Fields()
 	_ = workoutFields
 	// workoutDescCreatedAt is the schema descriptor for created_at field.
-	workoutDescCreatedAt := workoutFields[5].Descriptor()
+	workoutDescCreatedAt := workoutFields[4].Descriptor()
 	// workout.DefaultCreatedAt holds the default value on creation for the created_at field.
 	workout.DefaultCreatedAt = workoutDescCreatedAt.Default.(func() string)
 	// workoutDescID is the schema descriptor for id field.
