@@ -5993,7 +5993,6 @@ type WorkoutMutation struct {
 	op                  Op
 	typ                 string
 	id                  *pksuid.ID
-	name                *string
 	volume              *int
 	addvolume           *int
 	duration            *string
@@ -6118,42 +6117,6 @@ func (m *WorkoutMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 	default:
 		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
 	}
-}
-
-// SetName sets the "name" field.
-func (m *WorkoutMutation) SetName(s string) {
-	m.name = &s
-}
-
-// Name returns the value of the "name" field in the mutation.
-func (m *WorkoutMutation) Name() (r string, exists bool) {
-	v := m.name
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldName returns the old "name" field's value of the Workout entity.
-// If the Workout object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutMutation) OldName(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldName is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldName requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldName: %w", err)
-	}
-	return oldValue.Name, nil
-}
-
-// ResetName resets all changes to the "name" field.
-func (m *WorkoutMutation) ResetName() {
-	m.name = nil
 }
 
 // SetVolume sets the "volume" field.
@@ -6656,10 +6619,7 @@ func (m *WorkoutMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *WorkoutMutation) Fields() []string {
-	fields := make([]string, 0, 8)
-	if m.name != nil {
-		fields = append(fields, workout.FieldName)
-	}
+	fields := make([]string, 0, 7)
 	if m.volume != nil {
 		fields = append(fields, workout.FieldVolume)
 	}
@@ -6689,8 +6649,6 @@ func (m *WorkoutMutation) Fields() []string {
 // schema.
 func (m *WorkoutMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case workout.FieldName:
-		return m.Name()
 	case workout.FieldVolume:
 		return m.Volume()
 	case workout.FieldDuration:
@@ -6714,8 +6672,6 @@ func (m *WorkoutMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *WorkoutMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case workout.FieldName:
-		return m.OldName(ctx)
 	case workout.FieldVolume:
 		return m.OldVolume(ctx)
 	case workout.FieldDuration:
@@ -6739,13 +6695,6 @@ func (m *WorkoutMutation) OldField(ctx context.Context, name string) (ent.Value,
 // type.
 func (m *WorkoutMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case workout.FieldName:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetName(v)
-		return nil
 	case workout.FieldVolume:
 		v, ok := value.(int)
 		if !ok {
@@ -6886,9 +6835,6 @@ func (m *WorkoutMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *WorkoutMutation) ResetField(name string) error {
 	switch name {
-	case workout.FieldName:
-		m.ResetName()
-		return nil
 	case workout.FieldVolume:
 		m.ResetVolume()
 		return nil

@@ -24,12 +24,6 @@ type WorkoutCreate struct {
 	hooks    []Hook
 }
 
-// SetName sets the "name" field.
-func (wc *WorkoutCreate) SetName(s string) *WorkoutCreate {
-	wc.mutation.SetName(s)
-	return wc
-}
-
 // SetVolume sets the "volume" field.
 func (wc *WorkoutCreate) SetVolume(i int) *WorkoutCreate {
 	wc.mutation.SetVolume(i)
@@ -190,9 +184,6 @@ func (wc *WorkoutCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (wc *WorkoutCreate) check() error {
-	if _, ok := wc.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Workout.name"`)}
-	}
 	if _, ok := wc.mutation.Volume(); !ok {
 		return &ValidationError{Name: "volume", err: errors.New(`ent: missing required field "Workout.volume"`)}
 	}
@@ -245,10 +236,6 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 	if id, ok := wc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
-	}
-	if value, ok := wc.mutation.Name(); ok {
-		_spec.SetField(workout.FieldName, field.TypeString, value)
-		_node.Name = value
 	}
 	if value, ok := wc.mutation.Volume(); ok {
 		_spec.SetField(workout.FieldVolume, field.TypeInt, value)

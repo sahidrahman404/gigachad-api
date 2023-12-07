@@ -22,7 +22,7 @@ type Workout struct {
 func NewWorkoutFromParams(p CreateWorkoutParams, userID pksuid.ID) *Workout {
 	return &Workout{
 		Ent: &ent.Workout{
-			Name:   p.Name,
+			// Name:   p.Name,
 			Volume: p.Volume,
 			// Reps:   p.Reps,
 			// Time:   p.Time,

@@ -440,10 +440,6 @@ table "workouts" {
     null = false
     type = text
   }
-  column "name" {
-    null = false
-    type = text
-  }
   column "volume" {
     null = false
     type = integer

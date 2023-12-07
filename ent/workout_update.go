@@ -32,20 +32,6 @@ func (wu *WorkoutUpdate) Where(ps ...predicate.Workout) *WorkoutUpdate {
 	return wu
 }
 
-// SetName sets the "name" field.
-func (wu *WorkoutUpdate) SetName(s string) *WorkoutUpdate {
-	wu.mutation.SetName(s)
-	return wu
-}
-
-// SetNillableName sets the "name" field if the given value is not nil.
-func (wu *WorkoutUpdate) SetNillableName(s *string) *WorkoutUpdate {
-	if s != nil {
-		wu.SetName(*s)
-	}
-	return wu
-}
-
 // SetVolume sets the "volume" field.
 func (wu *WorkoutUpdate) SetVolume(i int) *WorkoutUpdate {
 	wu.mutation.ResetVolume()
@@ -303,9 +289,6 @@ func (wu *WorkoutUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := wu.mutation.Name(); ok {
-		_spec.SetField(workout.FieldName, field.TypeString, value)
-	}
 	if value, ok := wu.mutation.Volume(); ok {
 		_spec.SetField(workout.FieldVolume, field.TypeInt, value)
 	}
@@ -494,20 +477,6 @@ type WorkoutUpdateOne struct {
 	fields   []string
 	hooks    []Hook
 	mutation *WorkoutMutation
-}
-
-// SetName sets the "name" field.
-func (wuo *WorkoutUpdateOne) SetName(s string) *WorkoutUpdateOne {
-	wuo.mutation.SetName(s)
-	return wuo
-}
-
-// SetNillableName sets the "name" field if the given value is not nil.
-func (wuo *WorkoutUpdateOne) SetNillableName(s *string) *WorkoutUpdateOne {
-	if s != nil {
-		wuo.SetName(*s)
-	}
-	return wuo
 }
 
 // SetVolume sets the "volume" field.
@@ -796,9 +765,6 @@ func (wuo *WorkoutUpdateOne) sqlSave(ctx context.Context) (_node *Workout, err e
 				ps[i](selector)
 			}
 		}
-	}
-	if value, ok := wuo.mutation.Name(); ok {
-		_spec.SetField(workout.FieldName, field.TypeString, value)
 	}
 	if value, ok := wuo.mutation.Volume(); ok {
 		_spec.SetField(workout.FieldVolume, field.TypeInt, value)

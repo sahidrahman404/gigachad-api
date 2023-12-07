@@ -1348,7 +1348,6 @@ input UserWhereInput {
 }
 type Workout implements Node {
   id: ID!
-  name: String!
   volume: Int!
   duration: String!
   sets: Int!
@@ -1510,20 +1509,6 @@ input WorkoutWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """name field predicates"""
-  name: String
-  nameNEQ: String
-  nameIn: [String!]
-  nameNotIn: [String!]
-  nameGT: String
-  nameGTE: String
-  nameLT: String
-  nameLTE: String
-  nameContains: String
-  nameHasPrefix: String
-  nameHasSuffix: String
-  nameEqualFold: String
-  nameContainsFold: String
   """volume field predicates"""
   volume: Int
   volumeNEQ: Int

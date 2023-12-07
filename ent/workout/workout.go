@@ -13,8 +13,6 @@ const (
 	Label = "workout"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldName holds the string denoting the name field in the database.
-	FieldName = "name"
 	// FieldVolume holds the string denoting the volume field in the database.
 	FieldVolume = "volume"
 	// FieldDuration holds the string denoting the duration field in the database.
@@ -61,7 +59,6 @@ const (
 // Columns holds all SQL columns for workout fields.
 var Columns = []string{
 	FieldID,
-	FieldName,
 	FieldVolume,
 	FieldDuration,
 	FieldSets,
@@ -100,11 +97,6 @@ type OrderOption func(*sql.Selector)
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
-}
-
-// ByName orders the results by the name field.
-func ByName(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
 // ByVolume orders the results by the volume field.

@@ -168,7 +168,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Workout",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			workout.FieldName:        {Type: field.TypeString, Column: workout.FieldName},
 			workout.FieldVolume:      {Type: field.TypeInt, Column: workout.FieldVolume},
 			workout.FieldDuration:    {Type: field.TypeString, Column: workout.FieldDuration},
 			workout.FieldSets:        {Type: field.TypeInt, Column: workout.FieldSets},
@@ -1404,11 +1403,6 @@ func (f *WorkoutFilter) Where(p entql.P) {
 // WhereID applies the entql string predicate on the id field.
 func (f *WorkoutFilter) WhereID(p entql.StringP) {
 	f.Where(p.Field(workout.FieldID))
-}
-
-// WhereName applies the entql string predicate on the name field.
-func (f *WorkoutFilter) WhereName(p entql.StringP) {
-	f.Where(p.Field(workout.FieldName))
 }
 
 // WhereVolume applies the entql int predicate on the volume field.

@@ -2597,11 +2597,6 @@ func (w *WorkoutQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 			w.WithNamedWorkoutLogs(alias, func(wq *WorkoutLogQuery) {
 				*wq = *query
 			})
-		case "name":
-			if _, ok := fieldSeen[workout.FieldName]; !ok {
-				selectedFields = append(selectedFields, workout.FieldName)
-				fieldSeen[workout.FieldName] = struct{}{}
-			}
 		case "volume":
 			if _, ok := fieldSeen[workout.FieldVolume]; !ok {
 				selectedFields = append(selectedFields, workout.FieldVolume)

@@ -300,7 +300,6 @@ type ComplexityRoot struct {
 		Exercises   func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
 		ID          func(childComplexity int) int
 		Image       func(childComplexity int) int
-		Name        func(childComplexity int) int
 		Sets        func(childComplexity int) int
 		UserID      func(childComplexity int) int
 		Users       func(childComplexity int) int
@@ -1716,13 +1715,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Workout.Image(childComplexity), true
-
-	case "Workout.name":
-		if e.complexity.Workout.Name == nil {
-			break
-		}
-
-		return e.complexity.Workout.Name(childComplexity), true
 
 	case "Workout.sets":
 		if e.complexity.Workout.Sets == nil {
@@ -8296,8 +8288,6 @@ func (ec *executionContext) fieldContext_Mutation_createWorkoutWithChildren(ctx 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Workout_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Workout_name(ctx, field)
 			case "volume":
 				return ec.fieldContext_Workout_volume(ctx, field)
 			case "duration":
@@ -12270,50 +12260,6 @@ func (ec *executionContext) fieldContext_Workout_id(ctx context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _Workout_name(ctx context.Context, field graphql.CollectedField, obj *ent.Workout) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Workout_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Workout_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Workout",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Workout_volume(ctx context.Context, field graphql.CollectedField, obj *ent.Workout) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Workout_volume(ctx, field)
 	if err != nil {
@@ -13031,8 +12977,6 @@ func (ec *executionContext) fieldContext_WorkoutEdge_node(ctx context.Context, f
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Workout_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Workout_name(ctx, field)
 			case "volume":
 				return ec.fieldContext_Workout_volume(ctx, field)
 			case "duration":
@@ -13491,8 +13435,6 @@ func (ec *executionContext) fieldContext_WorkoutLog_workouts(ctx context.Context
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Workout_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Workout_name(ctx, field)
 			case "volume":
 				return ec.fieldContext_Workout_volume(ctx, field)
 			case "duration":
@@ -16110,22 +16052,13 @@ func (ec *executionContext) unmarshalInputCreateWorkoutWithChildrenInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "volume", "duration", "sets", "image", "description", "workoutLogs"}
+	fieldsInOrder := [...]string{"volume", "duration", "sets", "image", "description", "workoutLogs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
 		case "volume":
 			var err error
 
@@ -20960,7 +20893,7 @@ func (ec *executionContext) unmarshalInputWorkoutWhereInput(ctx context.Context,
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "volume", "volumeNEQ", "volumeIn", "volumeNotIn", "volumeGT", "volumeGTE", "volumeLT", "volumeLTE", "duration", "durationNEQ", "durationIn", "durationNotIn", "durationGT", "durationGTE", "durationLT", "durationLTE", "durationContains", "durationHasPrefix", "durationHasSuffix", "durationEqualFold", "durationContainsFold", "sets", "setsNEQ", "setsIn", "setsNotIn", "setsGT", "setsGTE", "setsLT", "setsLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "createdAtContains", "createdAtHasPrefix", "createdAtHasSuffix", "createdAtEqualFold", "createdAtContainsFold", "description", "descriptionNEQ", "descriptionIn", "descriptionNotIn", "descriptionGT", "descriptionGTE", "descriptionLT", "descriptionLTE", "descriptionContains", "descriptionHasPrefix", "descriptionHasSuffix", "descriptionIsNil", "descriptionNotNil", "descriptionEqualFold", "descriptionContainsFold", "userID", "userIDNEQ", "userIDIn", "userIDNotIn", "userIDGT", "userIDGTE", "userIDLT", "userIDLTE", "userIDContains", "userIDHasPrefix", "userIDHasSuffix", "userIDEqualFold", "userIDContainsFold", "hasUsers", "hasUsersWith", "hasExercises", "hasExercisesWith", "hasWorkoutLogs", "hasWorkoutLogsWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "volume", "volumeNEQ", "volumeIn", "volumeNotIn", "volumeGT", "volumeGTE", "volumeLT", "volumeLTE", "duration", "durationNEQ", "durationIn", "durationNotIn", "durationGT", "durationGTE", "durationLT", "durationLTE", "durationContains", "durationHasPrefix", "durationHasSuffix", "durationEqualFold", "durationContainsFold", "sets", "setsNEQ", "setsIn", "setsNotIn", "setsGT", "setsGTE", "setsLT", "setsLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "createdAtContains", "createdAtHasPrefix", "createdAtHasSuffix", "createdAtEqualFold", "createdAtContainsFold", "description", "descriptionNEQ", "descriptionIn", "descriptionNotIn", "descriptionGT", "descriptionGTE", "descriptionLT", "descriptionLTE", "descriptionContains", "descriptionHasPrefix", "descriptionHasSuffix", "descriptionIsNil", "descriptionNotNil", "descriptionEqualFold", "descriptionContainsFold", "userID", "userIDNEQ", "userIDIn", "userIDNotIn", "userIDGT", "userIDGTE", "userIDLT", "userIDLTE", "userIDContains", "userIDHasPrefix", "userIDHasSuffix", "userIDEqualFold", "userIDContainsFold", "hasUsers", "hasUsersWith", "hasExercises", "hasExercisesWith", "hasWorkoutLogs", "hasWorkoutLogsWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -21066,123 +20999,6 @@ func (ec *executionContext) unmarshalInputWorkoutWhereInput(ctx context.Context,
 				return it, err
 			}
 			it.IDLTE = data
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		case "nameNEQ":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameNEQ"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameNEQ = data
-		case "nameIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameIn"))
-			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameIn = data
-		case "nameNotIn":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameNotIn"))
-			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameNotIn = data
-		case "nameGT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameGT"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameGT = data
-		case "nameGTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameGTE"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameGTE = data
-		case "nameLT":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameLT"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameLT = data
-		case "nameLTE":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameLTE"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameLTE = data
-		case "nameContains":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameContains"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameContains = data
-		case "nameHasPrefix":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameHasPrefix"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameHasPrefix = data
-		case "nameHasSuffix":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameHasSuffix"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameHasSuffix = data
-		case "nameEqualFold":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameEqualFold"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameEqualFold = data
-		case "nameContainsFold":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nameContainsFold"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.NameContainsFold = data
 		case "volume":
 			var err error
 
@@ -24620,11 +24436,6 @@ func (ec *executionContext) _Workout(ctx context.Context, sel ast.SelectionSet, 
 			out.Values[i] = graphql.MarshalString("Workout")
 		case "id":
 			out.Values[i] = ec._Workout_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "name":
-			out.Values[i] = ec._Workout_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
