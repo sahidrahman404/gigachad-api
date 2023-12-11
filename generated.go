@@ -244,10 +244,10 @@ type ComplexityRoot struct {
 	}
 
 	Set struct {
-		Kg   func(childComplexity int) int
-		Km   func(childComplexity int) int
-		Reps func(childComplexity int) int
-		Time func(childComplexity int) int
+		Duration func(childComplexity int) int
+		Kg       func(childComplexity int) int
+		Km       func(childComplexity int) int
+		Reps     func(childComplexity int) int
 	}
 
 	Style struct {
@@ -1420,6 +1420,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RoutineExerciseEdge.Node(childComplexity), true
 
+	case "Set.duration":
+		if e.complexity.Set.Duration == nil {
+			break
+		}
+
+		return e.complexity.Set.Duration(childComplexity), true
+
 	case "Set.kg":
 		if e.complexity.Set.Kg == nil {
 			break
@@ -1440,13 +1447,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Set.Reps(childComplexity), true
-
-	case "Set.time":
-		if e.complexity.Set.Time == nil {
-			break
-		}
-
-		return e.complexity.Set.Time(childComplexity), true
 
 	case "Style.aspectRatio":
 		if e.complexity.Style.AspectRatio == nil {
@@ -10070,8 +10070,8 @@ func (ec *executionContext) fieldContext_RoutineExercise_sets(ctx context.Contex
 				return ec.fieldContext_Set_reps(ctx, field)
 			case "kg":
 				return ec.fieldContext_Set_kg(ctx, field)
-			case "time":
-				return ec.fieldContext_Set_time(ctx, field)
+			case "duration":
+				return ec.fieldContext_Set_duration(ctx, field)
 			case "km":
 				return ec.fieldContext_Set_km(ctx, field)
 			}
@@ -10747,8 +10747,8 @@ func (ec *executionContext) fieldContext_Set_kg(ctx context.Context, field graph
 	return fc, nil
 }
 
-func (ec *executionContext) _Set_time(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Set_time(ctx, field)
+func (ec *executionContext) _Set_duration(ctx context.Context, field graphql.CollectedField, obj *schematype.Set) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Set_duration(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10761,7 +10761,7 @@ func (ec *executionContext) _Set_time(ctx context.Context, field graphql.Collect
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Time, nil
+		return obj.Duration, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10775,7 +10775,7 @@ func (ec *executionContext) _Set_time(ctx context.Context, field graphql.Collect
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Set_time(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Set_duration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Set",
 		Field:      field,
@@ -13135,8 +13135,8 @@ func (ec *executionContext) fieldContext_WorkoutLog_sets(ctx context.Context, fi
 				return ec.fieldContext_Set_reps(ctx, field)
 			case "kg":
 				return ec.fieldContext_Set_kg(ctx, field)
-			case "time":
-				return ec.fieldContext_Set_time(ctx, field)
+			case "duration":
+				return ec.fieldContext_Set_duration(ctx, field)
 			case "km":
 				return ec.fieldContext_Set_km(ctx, field)
 			}
@@ -18794,7 +18794,7 @@ func (ec *executionContext) unmarshalInputSetInput(ctx context.Context, obj inte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"reps", "kg", "time", "km"}
+	fieldsInOrder := [...]string{"reps", "kg", "duration", "km"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -18819,15 +18819,15 @@ func (ec *executionContext) unmarshalInputSetInput(ctx context.Context, obj inte
 				return it, err
 			}
 			it.Kg = data
-		case "time":
+		case "duration":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("time"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("duration"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Time = data
+			it.Duration = data
 		case "km":
 			var err error
 
@@ -23893,8 +23893,8 @@ func (ec *executionContext) _Set(ctx context.Context, sel ast.SelectionSet, obj 
 			out.Values[i] = ec._Set_reps(ctx, field, obj)
 		case "kg":
 			out.Values[i] = ec._Set_kg(ctx, field, obj)
-		case "time":
-			out.Values[i] = ec._Set_time(ctx, field, obj)
+		case "duration":
+			out.Values[i] = ec._Set_duration(ctx, field, obj)
 		case "km":
 			out.Values[i] = ec._Set_km(ctx, field, obj)
 		default:

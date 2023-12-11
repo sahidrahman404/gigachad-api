@@ -1,14 +1,14 @@
 type Set {
   reps: Int
   kg: Int
-  time: String
+  duration: String
   km: Int
 }
 
 input SetInput {
   reps: Int
   kg: Int
-  time: String
+  duration: String
   km: Int
 }
 
