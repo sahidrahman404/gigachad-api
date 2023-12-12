@@ -45,7 +45,7 @@ func (r *queryResolver) MusclesGroups(ctx context.Context, after *entgql.Cursor[
 
 // Routines is the resolver for the routines field.
 func (r *queryResolver) Routines(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineOrder, where *ent.RoutineWhereInput) (*ent.RoutineConnection, error) {
-	return r.client.Routine.Query().Paginate(ctx, after, first, before, last, ent.WithRoutineFilter(where.Filter))
+	return r.client.Routine.Query().Paginate(ctx, after, first, before, last, ent.WithRoutineFilter(where.Filter), ent.WithRoutineOrder(orderBy))
 }
 
 // RoutineExercises is the resolver for the routineExercises field.
