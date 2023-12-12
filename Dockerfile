@@ -4,7 +4,7 @@
 # STEP 1 build executable binary
 ############################
 
-FROM golang:1.21-alpine as builder
+FROM golang:1.21.5-alpine3.18 as builder
 
 WORKDIR /app
 RUN apk add build-base
