@@ -7,14 +7,18 @@ package gql
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/privacy"
+	"github.com/sahidrahman404/gigachad-api/internal/activity"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
+	"github.com/sahidrahman404/gigachad-api/internal/workflow"
+	"go.temporal.io/sdk/client"
 )
 
 // CreateUser is the resolver for the createUser field.
@@ -57,14 +61,34 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 		return nil, err
 	}
 
-	r.backgroundTask(func() error {
-		data := map[string]interface{}{
-			"activationToken": token.Plaintext,
-			"userID":          user.Ent.ID,
-		}
-
-		return r.mailer.Send(user.Ent.Email, data, "user_welcome.tmpl")
+	c, err := client.Dial(client.Options{
+		HostPort: client.DefaultHostPort,
 	})
+	if err != nil {
+		r.reportError(err)
+	}
+	defer c.Close()
+
+	data := map[string]interface{}{
+		"activationToken": token.Plaintext,
+		"userID":          user.Ent.ID,
+	}
+
+	m := activity.MailDetails{
+		Recipient: user.Ent.Email,
+		Data:      data,
+		Patterns:  []string{"user_welcome.tmpl"},
+	}
+
+	options := client.StartWorkflowOptions{
+		ID:        fmt.Sprintf("welcome-email-%s", user.Ent.ID),
+		TaskQueue: activity.SendEmailTaskQueueName,
+	}
+
+	_, err = c.ExecuteWorkflow(context.Background(), options, workflow.NewUser, m)
+	if err != nil {
+		return nil, err
+	}
 
 	return user.Ent, nil
 }
