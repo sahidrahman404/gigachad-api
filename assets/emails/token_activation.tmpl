@@ -1,7 +1,7 @@
 {{define "subject"}}Activate your Gigachad account{{end}}
 
 {{define "plainBody"}}
-Hi,
+Hi {{.name}},
 
 Enter the following token to verify your account
 
@@ -31,7 +31,7 @@ Jln Amd - Pandeglang, Banten 42218
       <tbody>
         <tr style="width:100%">
           <td>
-            <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Hi,</p>
+            <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Hi {{.name}},</p>
             <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Enter the following token to verify your account</p><code style="display:inline-block;padding:16px 4.5%;width:90.5%;background-color:#f4f4f4;border-radius:5px;border:1px solid #eee;color:#333">{{.activationToken}}</code>
             <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Please note that this is a one-time use token and it will expire in 3 days.</p>
             <p data-id="react-email-text" style="font-size:16px;line-height:26px;margin:16px 0">Best,<br />The Gigachad team</p>

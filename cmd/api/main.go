@@ -6,9 +6,13 @@ import (
 	"os"
 	"runtime/debug"
 	"sync"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/cschleiden/go-workflows/backend"
+	ridis "github.com/cschleiden/go-workflows/backend/redis"
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/redis/go-redis/v9"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	_ "github.com/sahidrahman404/gigachad-api/ent/runtime"
 	"github.com/sahidrahman404/gigachad-api/internal/aws"
@@ -44,20 +48,25 @@ type config struct {
 		password string
 		from     string
 	}
+	redis struct {
+		address  string
+		password string
+	}
 	img.Imgproxy
 	aws.AWSConfig
 	env string
 }
 
 type application struct {
-	config        config
-	logger        *leveledlog.Logger
-	mailer        *smtp.Mailer
-	wg            sync.WaitGroup
-	storage       *database.Storage
-	ent           *ent.Client
-	presignClient *s3.PresignClient
-	purifier      *bluemonday.Policy
+	config          config
+	logger          *leveledlog.Logger
+	mailer          *smtp.Mailer
+	wg              sync.WaitGroup
+	storage         *database.Storage
+	ent             *ent.Client
+	presignClient   *s3.PresignClient
+	purifier        *bluemonday.Policy
+	workflowBackend backend.Backend
 }
 
 func run(logger *leveledlog.Logger) error {
@@ -80,6 +89,8 @@ func run(logger *leveledlog.Logger) error {
 	cfg.AWSBucket = env.GetString("AWS_BUCKET", "")
 	cfg.AWSRegion = env.GetString("AWS_REGION", "")
 	cfg.env = env.GetString("ENV", "DEV")
+	cfg.redis.address = env.GetString("REDIS_ADDRESS", "localhost:6379")
+	cfg.redis.password = env.GetString("REDIS_PASSWORD", "")
 
 	showVersion := flag.Bool("version", false, "display version and exit")
 
@@ -111,14 +122,25 @@ func run(logger *leveledlog.Logger) error {
 
 	p := purifier.NewPurifierPolicy()
 
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+	b, err := ridis.NewRedisBackend(rdb, ridis.WithAutoExpiration(time.Hour*48))
+	if err != nil {
+		return err
+	}
+
 	app := &application{
-		config:        cfg,
-		logger:        logger,
-		mailer:        mailer,
-		storage:       database.NewStorage(db.Ent),
-		ent:           db.Ent,
-		presignClient: aws.NewPresignClient(awsConfig),
-		purifier:      p,
+		config:          cfg,
+		logger:          logger,
+		mailer:          mailer,
+		storage:         database.NewStorage(db.Ent),
+		ent:             db.Ent,
+		presignClient:   aws.NewPresignClient(awsConfig),
+		purifier:        p,
+		workflowBackend: b,
 	}
 
 	return app.serveHTTP()

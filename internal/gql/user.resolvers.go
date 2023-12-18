@@ -7,23 +7,30 @@ package gql
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
+	"github.com/cschleiden/go-workflows/client"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/privacy"
+	"github.com/sahidrahman404/gigachad-api/internal/activity"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
+	"github.com/sahidrahman404/gigachad-api/internal/workflow"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error) {
+	caser := cases.Title(language.AmericanEnglish)
 	params := types.CreateUserParams{
 		Username: input.Username,
 		Email:    input.Email,
 		Password: input.HashedPassword,
-		Name:     input.Name,
+		Name:     caser.String(input.Name),
 	}
 
 	v := validator.NewValidator()
@@ -57,14 +64,23 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 		return nil, err
 	}
 
-	r.backgroundTask(func() error {
-		data := map[string]interface{}{
-			"activationToken": token.Plaintext,
-			"userID":          user.Ent.ID,
-		}
+	data := map[string]interface{}{
+		"activationToken": token.Plaintext,
+		"name":            strings.Split(user.Ent.Name, " ")[0],
+	}
 
-		return r.mailer.Send(user.Ent.Email, data, "user_welcome.tmpl")
-	})
+	m := activity.MailDetails{
+		Recipient: user.Ent.Email,
+		Data:      data,
+		Patterns:  []string{"user_welcome.tmpl"},
+	}
+
+	options := client.WorkflowInstanceOptions{
+		InstanceID: string(user.Ent.ID),
+	}
+
+	c := client.New(r.workflowBackend)
+	_, _ = c.CreateWorkflowInstance(context.Background(), options, workflow.SendEmail, m)
 
 	return user.Ent, nil
 }
