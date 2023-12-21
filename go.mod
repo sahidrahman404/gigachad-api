@@ -16,7 +16,6 @@ require (
 	github.com/go-chi/cors v1.2.1
 	github.com/go-mail/mail/v2 v2.3.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/mattn/go-sqlite3 v1.14.18
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/redis/go-redis/v9 v9.3.0
 	github.com/segmentio/ksuid v1.0.4
@@ -25,6 +24,7 @@ require (
 	golang.org/x/crypto v0.16.0
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
 	golang.org/x/text v0.14.0
+	modernc.org/sqlite v1.28.0
 )
 
 require (
@@ -53,6 +53,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
@@ -63,13 +64,16 @@ require (
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/hashicorp/hcl/v2 v2.19.1 // indirect
 	github.com/jellydator/ttlcache/v3 v3.1.1 // indirect
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/libsql/sqlite-antlr4-parser v0.0.0-20230802215326-5cb5bb604475 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/mattn/go-sqlite3 v1.14.18 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
 	github.com/sosodev/duration v1.2.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
@@ -87,5 +91,14 @@ require (
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/mail.v2 v2.3.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	lukechampine.com/uint128 v1.2.0 // indirect
+	modernc.org/cc/v3 v3.40.0 // indirect
+	modernc.org/ccgo/v3 v3.16.13 // indirect
+	modernc.org/libc v1.29.0 // indirect
+	modernc.org/mathutil v1.6.0 // indirect
+	modernc.org/memory v1.7.2 // indirect
+	modernc.org/opt v0.1.3 // indirect
+	modernc.org/strutil v1.1.3 // indirect
+	modernc.org/token v1.0.1 // indirect
 	nhooyr.io/websocket v1.8.10 // indirect
 )

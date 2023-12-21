@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
