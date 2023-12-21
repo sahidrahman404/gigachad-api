@@ -123,8 +123,8 @@ func run(logger *leveledlog.Logger) error {
 	p := purifier.NewPurifierPolicy()
 
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
+		Addr:     cfg.redis.address,
+		Password: cfg.redis.password,
 		DB:       0,
 	})
 	b, err := ridis.NewRedisBackend(rdb, ridis.WithAutoExpiration(time.Hour*48))
