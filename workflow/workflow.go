@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/cschleiden/go-workflows/workflow"
-	"github.com/sahidrahman404/gigachad-api/internal/activity"
+	"github.com/sahidrahman404/gigachad-api/activity"
 )
 
 func SendEmail(ctx workflow.Context, data activity.MailDetails) error {

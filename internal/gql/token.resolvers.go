@@ -12,12 +12,12 @@ import (
 
 	"github.com/cschleiden/go-workflows/client"
 	gigachad "github.com/sahidrahman404/gigachad-api"
+	"github.com/sahidrahman404/gigachad-api/activity"
 	"github.com/sahidrahman404/gigachad-api/ent"
-	"github.com/sahidrahman404/gigachad-api/internal/activity"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
-	"github.com/sahidrahman404/gigachad-api/internal/workflow"
+	"github.com/sahidrahman404/gigachad-api/workflow"
 )
 
 // CreateAuthenticationToken is the resolver for the createAuthenticationToken field.
