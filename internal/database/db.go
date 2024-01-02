@@ -9,9 +9,9 @@ import (
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
-	_ "github.com/libsql/libsql-client-go/libsql"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sahidrahman404/gigachad-api/ent"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
 var (

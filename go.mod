@@ -15,10 +15,10 @@ require (
 	github.com/go-chi/cors v1.2.1
 	github.com/go-mail/mail/v2 v2.3.0
 	github.com/hashicorp/go-multierror v1.1.1
-	github.com/libsql/libsql-client-go v0.0.0-20231212112702-ff51beb13681
 	github.com/mattn/go-sqlite3 v1.14.18
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/segmentio/ksuid v1.0.4
+	github.com/tursodatabase/libsql-client-go v0.0.0-20231216154754-8383a53d618f
 	github.com/vektah/gqlparser/v2 v2.5.10
 	golang.org/x/crypto v0.16.0
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
