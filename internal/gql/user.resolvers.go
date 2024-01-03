@@ -37,34 +37,55 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 		return nil, err
 	}
 
-	err = r.storage.Users.Insert(user)
+	err = r.WithTx(ctx, func(tx *ent.Tx) error {
+		txClient := tx.Client()
+		u, err := txClient.User.Create().
+			SetUsername(user.Ent.Username).
+			SetEmail(user.Ent.Email).
+			SetHashedPassword(user.Ent.HashedPassword).
+			SetName(user.Ent.Name).
+			Save(ctx)
+		if err != nil {
+			return err
+		}
+
+		t, err := types.GenerateToken(u.ID, 3*24*time.Hour, database.ScopeActivation)
+		if err != nil {
+			return err
+		}
+
+		err = txClient.Token.Create().
+			SetExpiry(t.Ent.Expiry).
+			SetHash(t.Ent.Hash).
+			SetScope(t.Ent.Scope).
+			SetUserID(t.Ent.UserID).
+			Exec(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		r.backgroundTask(func() error {
+			data := map[string]interface{}{
+				"activationToken": t.Plaintext,
+				"userID":          user.Ent.ID,
+			}
+
+			return r.mailer.Send(user.Ent.Email, data, "user_welcome.tmpl")
+		})
+
+		return nil
+	})
 
 	if err != nil {
 		switch {
-		case errors.Is(err, database.ErrDuplicateUsername):
-			v.AddFieldError("username", "a user with this username already exists")
-			return nil, r.errorMessage(v)
-		case errors.Is(err, database.ErrDuplicateEmail):
-			v.AddFieldError("email", "a user with this email address already exists")
+		case ent.IsConstraintError(err):
+			v.AddFieldError("conflict", "a user with this email or username address already exists")
 			return nil, r.errorMessage(v)
 		default:
 			return nil, r.serverError(err)
 		}
 	}
-
-	token, err := r.storage.Tokens.New(user.Ent.ID, 3*24*time.Hour, database.ScopeActivation)
-	if err != nil {
-		return nil, err
-	}
-
-	r.backgroundTask(func() error {
-		data := map[string]interface{}{
-			"activationToken": token.Plaintext,
-			"userID":          user.Ent.ID,
-		}
-
-		return r.mailer.Send(user.Ent.Email, data, "user_welcome.tmpl")
-	})
 
 	return user.Ent, nil
 }
