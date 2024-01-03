@@ -16,6 +16,8 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // CreateUser is the resolver for the createUser field.
@@ -66,10 +68,13 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 			return err
 		}
 
+		caser := cases.Title(language.Indonesian)
+		name := caser.String(user.Ent.Name)
+
 		r.backgroundTask(func() error {
 			data := map[string]interface{}{
 				"activationToken": t.Plaintext,
-				"userID":          user.Ent.ID,
+				"name":            name,
 			}
 
 			return r.mailer.Send(user.Ent.Email, data, "user_welcome.tmpl")
