@@ -12,6 +12,10 @@ type ActivateUserInput struct {
 	TokenPlainText string `json:"tokenPlainText"`
 }
 
+type ActivateUserResult struct {
+	TokenPlainText string `json:"tokenPlainText"`
+}
+
 type ActivationTokenInput struct {
 	Email string `json:"email"`
 }

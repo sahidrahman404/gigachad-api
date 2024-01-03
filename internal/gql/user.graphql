@@ -2,6 +2,10 @@ input ActivateUserInput {
   tokenPlainText: String!
 }
 
+type ActivateUserResult {
+  tokenPlainText: String!
+}
+
 input ResetUserPasswordInput {
   password: String!
   tokenPlainText: String!
@@ -9,7 +13,7 @@ input ResetUserPasswordInput {
 
 type Mutation {
   createUser(input: CreateUserInput!): User!
-  activateUser(input: ActivateUserInput!): AuthenticationToken!
+  activateUser(input: ActivateUserInput!): ActivateUserResult!
   updateUserPassword(input: ResetUserPasswordInput!): User!
 }
 
