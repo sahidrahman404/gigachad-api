@@ -204,6 +204,11 @@ type ComplexityRoot struct {
 		Workouts         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutOrder, where *ent.WorkoutWhereInput) int
 	}
 
+	ResetUserPasswordResult struct {
+		Password       func(childComplexity int) int
+		TokenPlainText func(childComplexity int) int
+	}
+
 	Routine struct {
 		Exercises        func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
 		ID               func(childComplexity int) int
@@ -352,7 +357,7 @@ type ImageResolver interface {
 type MutationResolver interface {
 	CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error)
 	ActivateUser(ctx context.Context, input ActivateUserInput) (*ActivateUserResult, error)
-	UpdateUserPassword(ctx context.Context, input ResetUserPasswordInput) (*ent.User, error)
+	UpdateUserPassword(ctx context.Context, input ResetUserPasswordInput) (*ResetUserPasswordResult, error)
 	CreateAuthenticationToken(ctx context.Context, input LoginInput) (*AuthenticationToken, error)
 	CreateActivationToken(ctx context.Context, input ActivationTokenInput) (*ent.User, error)
 	CreatePasswordResetToken(ctx context.Context, input ResetPasswordInput) (*ent.User, error)
@@ -1245,6 +1250,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Workouts(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.WorkoutOrder), args["where"].(*ent.WorkoutWhereInput)), true
+
+	case "ResetUserPasswordResult.password":
+		if e.complexity.ResetUserPasswordResult.Password == nil {
+			break
+		}
+
+		return e.complexity.ResetUserPasswordResult.Password(childComplexity), true
+
+	case "ResetUserPasswordResult.tokenPlainText":
+		if e.complexity.ResetUserPasswordResult.TokenPlainText == nil {
+			break
+		}
+
+		return e.complexity.ResetUserPasswordResult.TokenPlainText(childComplexity), true
 
 	case "Routine.exercises":
 		if e.complexity.Routine.Exercises == nil {
@@ -7527,9 +7546,9 @@ func (ec *executionContext) _Mutation_updateUserPassword(ctx context.Context, fi
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*ent.User)
+	res := resTmp.(*ResetUserPasswordResult)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNResetUserPasswordResult2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordResult(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateUserPassword(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7540,34 +7559,12 @@ func (ec *executionContext) fieldContext_Mutation_updateUserPassword(ctx context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_User_id(ctx, field)
-			case "email":
-				return ec.fieldContext_User_email(ctx, field)
-			case "username":
-				return ec.fieldContext_User_username(ctx, field)
-			case "name":
-				return ec.fieldContext_User_name(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_User_createdAt(ctx, field)
-			case "activated":
-				return ec.fieldContext_User_activated(ctx, field)
-			case "version":
-				return ec.fieldContext_User_version(ctx, field)
-			case "tokens":
-				return ec.fieldContext_User_tokens(ctx, field)
-			case "exercises":
-				return ec.fieldContext_User_exercises(ctx, field)
-			case "routines":
-				return ec.fieldContext_User_routines(ctx, field)
-			case "workouts":
-				return ec.fieldContext_User_workouts(ctx, field)
-			case "workoutLogs":
-				return ec.fieldContext_User_workoutLogs(ctx, field)
-			case "routineExercises":
-				return ec.fieldContext_User_routineExercises(ctx, field)
+			case "password":
+				return ec.fieldContext_ResetUserPasswordResult_password(ctx, field)
+			case "tokenPlainText":
+				return ec.fieldContext_ResetUserPasswordResult_tokenPlainText(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type ResetUserPasswordResult", field.Name)
 		},
 	}
 	defer func() {
@@ -9416,6 +9413,94 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResetUserPasswordResult_password(ctx context.Context, field graphql.CollectedField, obj *ResetUserPasswordResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ResetUserPasswordResult_password(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Password, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ResetUserPasswordResult_password(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResetUserPasswordResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResetUserPasswordResult_tokenPlainText(ctx context.Context, field graphql.CollectedField, obj *ResetUserPasswordResult) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ResetUserPasswordResult_tokenPlainText(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TokenPlainText, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ResetUserPasswordResult_tokenPlainText(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResetUserPasswordResult",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -22294,6 +22379,50 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var resetUserPasswordResultImplementors = []string{"ResetUserPasswordResult"}
+
+func (ec *executionContext) _ResetUserPasswordResult(ctx context.Context, sel ast.SelectionSet, obj *ResetUserPasswordResult) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resetUserPasswordResultImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResetUserPasswordResult")
+		case "password":
+			out.Values[i] = ec._ResetUserPasswordResult_password(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "tokenPlainText":
+			out.Values[i] = ec._ResetUserPasswordResult_tokenPlainText(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var routineImplementors = []string{"Routine", "Node"}
 
 func (ec *executionContext) _Routine(ctx context.Context, sel ast.SelectionSet, obj *ent.Routine) graphql.Marshaler {
@@ -24609,6 +24738,20 @@ func (ec *executionContext) unmarshalNResetPasswordInput2githubᚗcomᚋsahidrah
 func (ec *executionContext) unmarshalNResetUserPasswordInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordInput(ctx context.Context, v interface{}) (ResetUserPasswordInput, error) {
 	res, err := ec.unmarshalInputResetUserPasswordInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNResetUserPasswordResult2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordResult(ctx context.Context, sel ast.SelectionSet, v ResetUserPasswordResult) graphql.Marshaler {
+	return ec._ResetUserPasswordResult(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNResetUserPasswordResult2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordResult(ctx context.Context, sel ast.SelectionSet, v *ResetUserPasswordResult) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ResetUserPasswordResult(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNRoutine2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutine(ctx context.Context, sel ast.SelectionSet, v ent.Routine) graphql.Marshaler {

@@ -7,14 +7,12 @@ package gql
 import (
 	"context"
 	"crypto/sha256"
-	"errors"
 	"time"
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
-	"github.com/sahidrahman404/gigachad-api/ent/privacy"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
-	"github.com/sahidrahman404/gigachad-api/ent/user"
+	userPredicate "github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
@@ -107,7 +105,7 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 		tokenHash := sha256.Sum256([]byte(input.TokenPlainText))
 		u, err := txClient.User.Query().
 			Where(
-				user.HasTokensWith(token.Hash(tokenHash[:]),
+				userPredicate.HasTokensWith(token.Hash(tokenHash[:]),
 					token.Scope(database.ScopeActivation),
 					token.ExpiryGT(time.Now().Format(time.RFC3339)),
 				),
@@ -133,7 +131,7 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 		}
 
 		_, err = txClient.Token.Delete().
-			Where(token.Scope(database.ScopeActivation), token.HasUsersWith(user.ID(u.ID))).
+			Where(token.Scope(database.ScopeActivation), token.HasUsersWith(userPredicate.ID(u.ID))).
 			Exec(ctx)
 
 		if err != nil {
@@ -157,7 +155,7 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 }
 
 // UpdateUserPassword is the resolver for the updateUserPassword field.
-func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigachad.ResetUserPasswordInput) (*ent.User, error) {
+func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigachad.ResetUserPasswordInput) (*gigachad.ResetUserPasswordResult, error) {
 	v := validator.NewValidator()
 
 	types.ValidatePasswordPlaintext(v, input.Password)
@@ -167,10 +165,66 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 		return nil, r.errorMessage(v)
 	}
 
-	user, err := r.storage.Users.GetForToken(database.ScopePasswordReset, input.TokenPlainText)
+	err := r.WithTx(ctx, func(tx *ent.Tx) error {
+		txClient := tx.Client()
+
+		tokenHash := sha256.Sum256([]byte(input.TokenPlainText))
+
+		u, err := txClient.User.Query().
+			Where(
+				userPredicate.HasTokensWith(token.Hash(tokenHash[:]),
+					token.Scope(database.ScopePasswordReset),
+					token.ExpiryGT(time.Now().Format(time.RFC3339)),
+				),
+			).
+			Only(ctx)
+		if err != nil {
+			return err
+		}
+
+		user := types.User{
+			Ent: u,
+		}
+
+		err = user.SetPassword(input.Password)
+		if err != nil {
+			return err
+		}
+
+		_, err = txClient.User.UpdateOneID(user.Ent.ID).
+			SetUsername(user.Ent.Username).
+			SetEmail(user.Ent.Email).
+			SetHashedPassword(user.Ent.HashedPassword).
+			SetActivated(user.Ent.Activated).
+			SetName(user.Ent.Name).
+			SetVersion(user.Ent.Version + 1).
+			Save(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		_, err = txClient.Token.Delete().
+			Where(token.Scope(database.ScopePasswordReset), token.HasUsersWith(userPredicate.ID(user.Ent.ID))).
+			Exec(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		_, err = txClient.Token.Delete().
+			Where(token.Scope(database.SocpeAuthentication), token.HasUsersWith(userPredicate.ID(user.Ent.ID))).
+			Exec(ctx)
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 	if err != nil {
 		switch {
-		case errors.Is(err, database.ErrRecordNotFound):
+		case ent.IsNotFound(err):
 			v.AddFieldError("token", "invalid or expired password reset token")
 			return nil, r.errorMessage(v)
 		default:
@@ -178,42 +232,10 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 		}
 	}
 
-	err = user.SetPassword(input.Password)
-	if err != nil {
-		return nil, r.serverError(err)
-	}
-
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
-	defer cancel()
-
-	allow := privacy.DecisionContext(ctx, privacy.Allow)
-	err = r.storage.Users.Update(user, allow)
-	if err != nil {
-		switch {
-		case errors.Is(err, database.ErrDuplicateUsername):
-			v.AddFieldError("username", "a user with this username already exists")
-			return nil, r.errorMessage(v)
-		case errors.Is(err, database.ErrDuplicateEmail):
-			v.AddFieldError("email", "a user with this email address already exists")
-			return nil, r.errorMessage(v)
-		case errors.Is(err, database.ErrEditConflict):
-			return nil, r.editConflict()
-		default:
-			return nil, r.serverError(err)
-		}
-	}
-
-	err = r.storage.Tokens.DeleteAllForUser(database.ScopePasswordReset, user.Ent.ID)
-	if err != nil {
-		return nil, r.serverError(err)
-	}
-
-	err = r.storage.Tokens.DeleteAllForUser(database.SocpeAuthentication, user.Ent.ID)
-	if err != nil {
-		return nil, r.serverError(err)
-	}
-
-	return user.Ent, nil
+	return &gigachad.ResetUserPasswordResult{
+		Password:       input.Password,
+		TokenPlainText: input.TokenPlainText,
+	}, nil
 }
 
 // Viewer is the resolver for the viewer field.

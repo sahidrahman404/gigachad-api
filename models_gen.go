@@ -86,6 +86,11 @@ type ResetUserPasswordInput struct {
 	TokenPlainText string `json:"tokenPlainText"`
 }
 
+type ResetUserPasswordResult struct {
+	Password       string `json:"password"`
+	TokenPlainText string `json:"tokenPlainText"`
+}
+
 type Style struct {
 	Width       *string `json:"width,omitempty"`
 	Height      *string `json:"height,omitempty"`
