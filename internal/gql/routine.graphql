@@ -1,8 +1,8 @@
-type DeletedID {
-  id: ID
+input DeleteRoutineInput {
+  id: ID!
 }
 
 extend type Mutation {
   createRoutine(input: CreateRoutineInput!): Routine
-  deleteRoutine(id: ID!): DeletedID
+  deleteRoutine(input: DeleteRoutineInput!): Routine
 }

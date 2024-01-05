@@ -59,6 +59,11 @@ func Name(v string) predicate.Routine {
 	return predicate.Routine(sql.FieldEQ(FieldName, v))
 }
 
+// ScheduleID applies equality check predicate on the "schedule_id" field. It's identical to ScheduleIDEQ.
+func ScheduleID(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldEQ(FieldScheduleID, v))
+}
+
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
 func UserID(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldEQ(FieldUserID, v))
@@ -127,6 +132,81 @@ func NameEqualFold(v string) predicate.Routine {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.Routine {
 	return predicate.Routine(sql.FieldContainsFold(FieldName, v))
+}
+
+// ScheduleIDEQ applies the EQ predicate on the "schedule_id" field.
+func ScheduleIDEQ(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldEQ(FieldScheduleID, v))
+}
+
+// ScheduleIDNEQ applies the NEQ predicate on the "schedule_id" field.
+func ScheduleIDNEQ(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldNEQ(FieldScheduleID, v))
+}
+
+// ScheduleIDIn applies the In predicate on the "schedule_id" field.
+func ScheduleIDIn(vs ...string) predicate.Routine {
+	return predicate.Routine(sql.FieldIn(FieldScheduleID, vs...))
+}
+
+// ScheduleIDNotIn applies the NotIn predicate on the "schedule_id" field.
+func ScheduleIDNotIn(vs ...string) predicate.Routine {
+	return predicate.Routine(sql.FieldNotIn(FieldScheduleID, vs...))
+}
+
+// ScheduleIDGT applies the GT predicate on the "schedule_id" field.
+func ScheduleIDGT(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldGT(FieldScheduleID, v))
+}
+
+// ScheduleIDGTE applies the GTE predicate on the "schedule_id" field.
+func ScheduleIDGTE(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldGTE(FieldScheduleID, v))
+}
+
+// ScheduleIDLT applies the LT predicate on the "schedule_id" field.
+func ScheduleIDLT(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldLT(FieldScheduleID, v))
+}
+
+// ScheduleIDLTE applies the LTE predicate on the "schedule_id" field.
+func ScheduleIDLTE(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldLTE(FieldScheduleID, v))
+}
+
+// ScheduleIDContains applies the Contains predicate on the "schedule_id" field.
+func ScheduleIDContains(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldContains(FieldScheduleID, v))
+}
+
+// ScheduleIDHasPrefix applies the HasPrefix predicate on the "schedule_id" field.
+func ScheduleIDHasPrefix(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldHasPrefix(FieldScheduleID, v))
+}
+
+// ScheduleIDHasSuffix applies the HasSuffix predicate on the "schedule_id" field.
+func ScheduleIDHasSuffix(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldHasSuffix(FieldScheduleID, v))
+}
+
+// ScheduleIDIsNil applies the IsNil predicate on the "schedule_id" field.
+func ScheduleIDIsNil() predicate.Routine {
+	return predicate.Routine(sql.FieldIsNull(FieldScheduleID))
+}
+
+// ScheduleIDNotNil applies the NotNil predicate on the "schedule_id" field.
+func ScheduleIDNotNil() predicate.Routine {
+	return predicate.Routine(sql.FieldNotNull(FieldScheduleID))
+}
+
+// ScheduleIDEqualFold applies the EqualFold predicate on the "schedule_id" field.
+func ScheduleIDEqualFold(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldEqualFold(FieldScheduleID, v))
+}
+
+// ScheduleIDContainsFold applies the ContainsFold predicate on the "schedule_id" field.
+func ScheduleIDContainsFold(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldContainsFold(FieldScheduleID, v))
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.

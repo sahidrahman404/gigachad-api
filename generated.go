@@ -60,10 +60,6 @@ type ComplexityRoot struct {
 		User           func(childComplexity int) int
 	}
 
-	DeletedID struct {
-		ID func(childComplexity int) int
-	}
-
 	Equipment struct {
 		Exercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.ExerciseOrder, where *ent.ExerciseWhereInput) int
 		ID        func(childComplexity int) int
@@ -178,7 +174,8 @@ type ComplexityRoot struct {
 		CreateUser                func(childComplexity int, input ent.CreateUserInput) int
 		CreateWorkoutWithChildren func(childComplexity int, input CreateWorkoutWithChildrenInput) int
 		DeleteExercise            func(childComplexity int, input DeleteExerciseInput) int
-		DeleteRoutine             func(childComplexity int, id pksuid.ID) int
+		DeleteRoutine             func(childComplexity int, input DeleteRoutineInput) int
+		UpdateRoutineWithChildren func(childComplexity int, input UpdateRoutineWithChildrenInput) int
 		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordInput) int
 	}
 
@@ -214,6 +211,7 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
 		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineExerciseOrder, where *ent.RoutineExerciseWhereInput) int
+		ScheduleID       func(childComplexity int) int
 		UserID           func(childComplexity int) int
 		Users            func(childComplexity int) int
 	}
@@ -362,8 +360,9 @@ type MutationResolver interface {
 	CreateActivationToken(ctx context.Context, input ActivationTokenInput) (*ent.User, error)
 	CreatePasswordResetToken(ctx context.Context, input ResetPasswordInput) (*ent.User, error)
 	CreateRoutineWithChildren(ctx context.Context, input CreateRoutineWithChildrenInput) (*ent.Routine, error)
+	UpdateRoutineWithChildren(ctx context.Context, input UpdateRoutineWithChildrenInput) (*ent.Routine, error)
 	CreateRoutine(ctx context.Context, input ent.CreateRoutineInput) (*ent.Routine, error)
-	DeleteRoutine(ctx context.Context, id pksuid.ID) (*DeletedID, error)
+	DeleteRoutine(ctx context.Context, input DeleteRoutineInput) (*ent.Routine, error)
 	CreateMusclesGroup(ctx context.Context, input CreateMusclesGroupInput) (*ent.MusclesGroup, error)
 	CreateExercise(ctx context.Context, input CreateExerciseInput) (*ent.Exercise, error)
 	DeleteExercise(ctx context.Context, input DeleteExerciseInput) (*ent.Exercise, error)
@@ -424,13 +423,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AuthenticationToken.User(childComplexity), true
-
-	case "DeletedID.id":
-		if e.complexity.DeletedID.ID == nil {
-			break
-		}
-
-		return e.complexity.DeletedID.ID(childComplexity), true
 
 	case "Equipment.exercises":
 		if e.complexity.Equipment.Exercises == nil {
@@ -1070,7 +1062,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.DeleteRoutine(childComplexity, args["id"].(pksuid.ID)), true
+		return e.complexity.Mutation.DeleteRoutine(childComplexity, args["input"].(DeleteRoutineInput)), true
+
+	case "Mutation.updateRoutineWithChildren":
+		if e.complexity.Mutation.UpdateRoutineWithChildren == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateRoutineWithChildren_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateRoutineWithChildren(childComplexity, args["input"].(UpdateRoutineWithChildrenInput)), true
 
 	case "Mutation.updateUserPassword":
 		if e.complexity.Mutation.UpdateUserPassword == nil {
@@ -1302,6 +1306,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Routine.RoutineExercises(childComplexity, args["after"].(*entgql.Cursor[pksuid.ID]), args["first"].(*int), args["before"].(*entgql.Cursor[pksuid.ID]), args["last"].(*int), args["orderBy"].(*ent.RoutineExerciseOrder), args["where"].(*ent.RoutineExerciseWhereInput)), true
+
+	case "Routine.scheduleID":
+		if e.complexity.Routine.ScheduleID == nil {
+			break
+		}
+
+		return e.complexity.Routine.ScheduleID(childComplexity), true
 
 	case "Routine.userID":
 		if e.complexity.Routine.UserID == nil {
@@ -1934,11 +1945,13 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateMusclesGroupInput,
 		ec.unmarshalInputCreateRoutineExerciseInput,
 		ec.unmarshalInputCreateRoutineInput,
+		ec.unmarshalInputCreateRoutineReminderInput,
 		ec.unmarshalInputCreateRoutineWithChildrenInput,
 		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputCreateWorkoutLogInput,
 		ec.unmarshalInputCreateWorkoutWithChildrenInput,
 		ec.unmarshalInputDeleteExerciseInput,
+		ec.unmarshalInputDeleteRoutineInput,
 		ec.unmarshalInputEquipmentOrder,
 		ec.unmarshalInputEquipmentWhereInput,
 		ec.unmarshalInputExerciseOrder,
@@ -1959,7 +1972,10 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputTokenOrder,
 		ec.unmarshalInputTokenWhereInput,
 		ec.unmarshalInputUpdateExerciseTypeInput,
+		ec.unmarshalInputUpdateRoutineExerciseInput,
 		ec.unmarshalInputUpdateRoutineInput,
+		ec.unmarshalInputUpdateRoutineSchedulesInput,
+		ec.unmarshalInputUpdateRoutineWithChildrenInput,
 		ec.unmarshalInputUpdateUserInput,
 		ec.unmarshalInputUserOrder,
 		ec.unmarshalInputUserWhereInput,
@@ -2875,15 +2891,30 @@ func (ec *executionContext) field_Mutation_deleteExercise_args(ctx context.Conte
 func (ec *executionContext) field_Mutation_deleteRoutine_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 pksuid.ID
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, tmp)
+	var arg0 DeleteRoutineInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteRoutineInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeleteRoutineInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["id"] = arg0
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateRoutineWithChildren_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 UpdateRoutineWithChildrenInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateRoutineWithChildrenInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineWithChildrenInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -4220,47 +4251,6 @@ func (ec *executionContext) fieldContext_AuthenticationToken_tokenPlainText(ctx 
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _DeletedID_id(ctx context.Context, field graphql.CollectedField, obj *DeletedID) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_DeletedID_id(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*pksuid.ID)
-	fc.Result = res
-	return ec.marshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_DeletedID_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "DeletedID",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type ID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -7851,6 +7841,8 @@ func (ec *executionContext) fieldContext_Mutation_createRoutineWithChildren(ctx 
 				return ec.fieldContext_Routine_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Routine_name(ctx, field)
+			case "scheduleID":
+				return ec.fieldContext_Routine_scheduleID(ctx, field)
 			case "userID":
 				return ec.fieldContext_Routine_userID(ctx, field)
 			case "exercises":
@@ -7871,6 +7863,77 @@ func (ec *executionContext) fieldContext_Mutation_createRoutineWithChildren(ctx 
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createRoutineWithChildren_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateRoutineWithChildren(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateRoutineWithChildren(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateRoutineWithChildren(rctx, fc.Args["input"].(UpdateRoutineWithChildrenInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Routine)
+	fc.Result = res
+	return ec.marshalNRoutine2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutine(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateRoutineWithChildren(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Routine_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Routine_name(ctx, field)
+			case "scheduleID":
+				return ec.fieldContext_Routine_scheduleID(ctx, field)
+			case "userID":
+				return ec.fieldContext_Routine_userID(ctx, field)
+			case "exercises":
+				return ec.fieldContext_Routine_exercises(ctx, field)
+			case "users":
+				return ec.fieldContext_Routine_users(ctx, field)
+			case "routineExercises":
+				return ec.fieldContext_Routine_routineExercises(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Routine", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateRoutineWithChildren_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -7917,6 +7980,8 @@ func (ec *executionContext) fieldContext_Mutation_createRoutine(ctx context.Cont
 				return ec.fieldContext_Routine_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Routine_name(ctx, field)
+			case "scheduleID":
+				return ec.fieldContext_Routine_scheduleID(ctx, field)
 			case "userID":
 				return ec.fieldContext_Routine_userID(ctx, field)
 			case "exercises":
@@ -7957,7 +8022,7 @@ func (ec *executionContext) _Mutation_deleteRoutine(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().DeleteRoutine(rctx, fc.Args["id"].(pksuid.ID))
+		return ec.resolvers.Mutation().DeleteRoutine(rctx, fc.Args["input"].(DeleteRoutineInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7966,9 +8031,9 @@ func (ec *executionContext) _Mutation_deleteRoutine(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*DeletedID)
+	res := resTmp.(*ent.Routine)
 	fc.Result = res
-	return ec.marshalODeletedID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeletedID(ctx, field.Selections, res)
+	return ec.marshalORoutine2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutine(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_deleteRoutine(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7980,9 +8045,21 @@ func (ec *executionContext) fieldContext_Mutation_deleteRoutine(ctx context.Cont
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
-				return ec.fieldContext_DeletedID_id(ctx, field)
+				return ec.fieldContext_Routine_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Routine_name(ctx, field)
+			case "scheduleID":
+				return ec.fieldContext_Routine_scheduleID(ctx, field)
+			case "userID":
+				return ec.fieldContext_Routine_userID(ctx, field)
+			case "exercises":
+				return ec.fieldContext_Routine_exercises(ctx, field)
+			case "users":
+				return ec.fieldContext_Routine_users(ctx, field)
+			case "routineExercises":
+				return ec.fieldContext_Routine_routineExercises(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type DeletedID", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type Routine", field.Name)
 		},
 	}
 	defer func() {
@@ -9594,6 +9671,47 @@ func (ec *executionContext) fieldContext_Routine_name(ctx context.Context, field
 	return fc, nil
 }
 
+func (ec *executionContext) _Routine_scheduleID(ctx context.Context, field graphql.CollectedField, obj *ent.Routine) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Routine_scheduleID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ScheduleID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Routine_scheduleID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Routine",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Routine_userID(ctx context.Context, field graphql.CollectedField, obj *ent.Routine) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Routine_userID(ctx, field)
 	if err != nil {
@@ -10021,6 +10139,8 @@ func (ec *executionContext) fieldContext_RoutineEdge_node(ctx context.Context, f
 				return ec.fieldContext_Routine_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Routine_name(ctx, field)
+			case "scheduleID":
+				return ec.fieldContext_Routine_scheduleID(ctx, field)
 			case "userID":
 				return ec.fieldContext_Routine_userID(ctx, field)
 			case "exercises":
@@ -10394,6 +10514,8 @@ func (ec *executionContext) fieldContext_RoutineExercise_routines(ctx context.Co
 				return ec.fieldContext_Routine_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Routine_name(ctx, field)
+			case "scheduleID":
+				return ec.fieldContext_Routine_scheduleID(ctx, field)
 			case "userID":
 				return ec.fieldContext_Routine_userID(ctx, field)
 			case "exercises":
@@ -15941,7 +16063,7 @@ func (ec *executionContext) unmarshalInputCreateRoutineInput(ctx context.Context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "exerciseIDs", "usersID"}
+	fieldsInOrder := [...]string{"name", "scheduleID", "exerciseIDs", "usersID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -15955,6 +16077,13 @@ func (ec *executionContext) unmarshalInputCreateRoutineInput(ctx context.Context
 				return it, err
 			}
 			it.Name = data
+		case "scheduleID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleID"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleID = data
 		case "exerciseIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exerciseIDs"))
 			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐIDᚄ(ctx, v)
@@ -15975,6 +16104,54 @@ func (ec *executionContext) unmarshalInputCreateRoutineInput(ctx context.Context
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateRoutineReminderInput(ctx context.Context, obj interface{}) (CreateRoutineReminderInput, error) {
+	var it CreateRoutineReminderInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"day", "second", "minute", "hour"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "day":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("day"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Day = data
+		case "second":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("second"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Second = data
+		case "minute":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("minute"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Minute = data
+		case "hour":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hour"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Hour = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx context.Context, obj interface{}) (CreateRoutineWithChildrenInput, error) {
 	var it CreateRoutineWithChildrenInput
 	asMap := map[string]interface{}{}
@@ -15982,7 +16159,7 @@ func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "routineExercises"}
+	fieldsInOrder := [...]string{"name", "reminder", "routineExercises"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -15996,6 +16173,13 @@ func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx con
 				return it, err
 			}
 			it.Name = data
+		case "reminder":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reminder"))
+			data, err := ec.unmarshalOCreateRoutineReminderInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineReminderInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Reminder = data
 		case "routineExercises":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("routineExercises"))
 			data, err := ec.unmarshalOCreateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInputᚄ(ctx, v)
@@ -16183,6 +16367,33 @@ func (ec *executionContext) unmarshalInputCreateWorkoutWithChildrenInput(ctx con
 
 func (ec *executionContext) unmarshalInputDeleteExerciseInput(ctx context.Context, obj interface{}) (DeleteExerciseInput, error) {
 	var it DeleteExerciseInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputDeleteRoutineInput(ctx context.Context, obj interface{}) (DeleteRoutineInput, error) {
+	var it DeleteRoutineInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -18023,7 +18234,7 @@ func (ec *executionContext) unmarshalInputRoutineWhereInput(ctx context.Context,
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "userID", "userIDNEQ", "userIDIn", "userIDNotIn", "userIDGT", "userIDGTE", "userIDLT", "userIDLTE", "userIDContains", "userIDHasPrefix", "userIDHasSuffix", "userIDEqualFold", "userIDContainsFold", "hasExercises", "hasExercisesWith", "hasUsers", "hasUsersWith", "hasRoutineExercises", "hasRoutineExercisesWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "scheduleID", "scheduleIDNEQ", "scheduleIDIn", "scheduleIDNotIn", "scheduleIDGT", "scheduleIDGTE", "scheduleIDLT", "scheduleIDLTE", "scheduleIDContains", "scheduleIDHasPrefix", "scheduleIDHasSuffix", "scheduleIDIsNil", "scheduleIDNotNil", "scheduleIDEqualFold", "scheduleIDContainsFold", "userID", "userIDNEQ", "userIDIn", "userIDNotIn", "userIDGT", "userIDGTE", "userIDLT", "userIDLTE", "userIDContains", "userIDHasPrefix", "userIDHasSuffix", "userIDEqualFold", "userIDContainsFold", "hasExercises", "hasExercisesWith", "hasUsers", "hasUsersWith", "hasRoutineExercises", "hasRoutineExercisesWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -18198,6 +18409,111 @@ func (ec *executionContext) unmarshalInputRoutineWhereInput(ctx context.Context,
 				return it, err
 			}
 			it.NameContainsFold = data
+		case "scheduleID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleID"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleID = data
+		case "scheduleIDNEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDNEQ"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDNEQ = data
+		case "scheduleIDIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDIn = data
+		case "scheduleIDNotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDNotIn"))
+			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDNotIn = data
+		case "scheduleIDGT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDGT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDGT = data
+		case "scheduleIDGTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDGTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDGTE = data
+		case "scheduleIDLT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDLT"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDLT = data
+		case "scheduleIDLTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDLTE"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDLTE = data
+		case "scheduleIDContains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDContains"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDContains = data
+		case "scheduleIDHasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDHasPrefix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDHasPrefix = data
+		case "scheduleIDHasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDHasSuffix"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDHasSuffix = data
+		case "scheduleIDIsNil":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDIsNil"))
+			data, err := ec.unmarshalOBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDIsNil = data
+		case "scheduleIDNotNil":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDNotNil"))
+			data, err := ec.unmarshalOBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDNotNil = data
+		case "scheduleIDEqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDEqualFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDEqualFold = data
+		case "scheduleIDContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleIDContainsFold"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleIDContainsFold = data
 		case "userID":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
 			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
@@ -18876,6 +19192,54 @@ func (ec *executionContext) unmarshalInputUpdateExerciseTypeInput(ctx context.Co
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context.Context, obj interface{}) (UpdateRoutineExerciseInput, error) {
+	var it UpdateRoutineExerciseInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "restTimer", "sets", "exerciseID"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "restTimer":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimer"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RestTimer = data
+		case "sets":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
+			data, err := ec.unmarshalOSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Sets = data
+		case "exerciseID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exerciseID"))
+			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ExerciseID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateRoutineInput(ctx context.Context, obj interface{}) (ent.UpdateRoutineInput, error) {
 	var it ent.UpdateRoutineInput
 	asMap := map[string]interface{}{}
@@ -18883,7 +19247,7 @@ func (ec *executionContext) unmarshalInputUpdateRoutineInput(ctx context.Context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "addExerciseIDs", "removeExerciseIDs", "clearExercises", "usersID"}
+	fieldsInOrder := [...]string{"name", "scheduleID", "clearScheduleID", "addExerciseIDs", "removeExerciseIDs", "clearExercises", "usersID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -18897,6 +19261,20 @@ func (ec *executionContext) unmarshalInputUpdateRoutineInput(ctx context.Context
 				return it, err
 			}
 			it.Name = data
+		case "scheduleID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("scheduleID"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ScheduleID = data
+		case "clearScheduleID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clearScheduleID"))
+			data, err := ec.unmarshalOBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ClearScheduleID = data
 		case "addExerciseIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addExerciseIDs"))
 			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐIDᚄ(ctx, v)
@@ -18925,6 +19303,88 @@ func (ec *executionContext) unmarshalInputUpdateRoutineInput(ctx context.Context
 				return it, err
 			}
 			it.UsersID = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateRoutineSchedulesInput(ctx context.Context, obj interface{}) (UpdateRoutineSchedulesInput, error) {
+	var it UpdateRoutineSchedulesInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "schedules"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "schedules":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("schedules"))
+			data, err := ec.unmarshalOCreateRoutineReminderInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineReminderInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Schedules = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateRoutineWithChildrenInput(ctx context.Context, obj interface{}) (UpdateRoutineWithChildrenInput, error) {
+	var it UpdateRoutineWithChildrenInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "name", "reminder", "routineExercises"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "reminder":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reminder"))
+			data, err := ec.unmarshalOUpdateRoutineSchedulesInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineSchedulesInput(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Reminder = data
+		case "routineExercises":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("routineExercises"))
+			data, err := ec.unmarshalOUpdateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInputᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RoutineExercises = data
 		}
 	}
 
@@ -20801,42 +21261,6 @@ func (ec *executionContext) _AuthenticationToken(ctx context.Context, sel ast.Se
 	return out
 }
 
-var deletedIDImplementors = []string{"DeletedID"}
-
-func (ec *executionContext) _DeletedID(ctx context.Context, sel ast.SelectionSet, obj *DeletedID) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, deletedIDImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("DeletedID")
-		case "id":
-			out.Values[i] = ec._DeletedID_id(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var equipmentImplementors = []string{"Equipment", "Node"}
 
 func (ec *executionContext) _Equipment(ctx context.Context, sel ast.SelectionSet, obj *ent.Equipment) graphql.Marshaler {
@@ -21957,6 +22381,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "updateRoutineWithChildren":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateRoutineWithChildren(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "createRoutine":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createRoutine(ctx, field)
@@ -22444,6 +22875,8 @@ func (ec *executionContext) _Routine(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
+		case "scheduleID":
+			out.Values[i] = ec._Routine_scheduleID(ctx, field, obj)
 		case "userID":
 			out.Values[i] = ec._Routine_userID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -24394,6 +24827,11 @@ func (ec *executionContext) unmarshalNCreateRoutineInput2githubᚗcomᚋsahidrah
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateRoutineReminderInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineReminderInput(ctx context.Context, v interface{}) (*CreateRoutineReminderInput, error) {
+	res, err := ec.unmarshalInputCreateRoutineReminderInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateRoutineWithChildrenInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineWithChildrenInput(ctx context.Context, v interface{}) (CreateRoutineWithChildrenInput, error) {
 	res, err := ec.unmarshalInputCreateRoutineWithChildrenInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -24426,6 +24864,11 @@ func (ec *executionContext) marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCurso
 
 func (ec *executionContext) unmarshalNDeleteExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeleteExerciseInput(ctx context.Context, v interface{}) (DeleteExerciseInput, error) {
 	res, err := ec.unmarshalInputDeleteExerciseInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNDeleteRoutineInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeleteRoutineInput(ctx context.Context, v interface{}) (DeleteRoutineInput, error) {
+	res, err := ec.unmarshalInputDeleteRoutineInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -25006,6 +25449,16 @@ func (ec *executionContext) unmarshalNTokenWhereInput2ᚖgithubᚗcomᚋsahidrah
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdateRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInput(ctx context.Context, v interface{}) (*UpdateRoutineExerciseInput, error) {
+	res, err := ec.unmarshalInputUpdateRoutineExerciseInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateRoutineWithChildrenInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineWithChildrenInput(ctx context.Context, v interface{}) (UpdateRoutineWithChildrenInput, error) {
+	res, err := ec.unmarshalInputUpdateRoutineWithChildrenInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNUser2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v ent.User) graphql.Marshaler {
 	return ec._User(ctx, sel, &v)
 }
@@ -25438,6 +25891,26 @@ func (ec *executionContext) unmarshalOCreateRoutineExerciseInput2ᚕᚖgithubᚗ
 	return res, nil
 }
 
+func (ec *executionContext) unmarshalOCreateRoutineReminderInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineReminderInputᚄ(ctx context.Context, v interface{}) ([]*CreateRoutineReminderInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*CreateRoutineReminderInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCreateRoutineReminderInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineReminderInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
 func (ec *executionContext) unmarshalOCreateWorkoutLogInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateWorkoutLogInputᚄ(ctx context.Context, v interface{}) ([]*CreateWorkoutLogInput, error) {
 	if v == nil {
 		return nil, nil
@@ -25472,13 +25945,6 @@ func (ec *executionContext) marshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCu
 		return graphql.Null
 	}
 	return v
-}
-
-func (ec *executionContext) marshalODeletedID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeletedID(ctx context.Context, sel ast.SelectionSet, v *DeletedID) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._DeletedID(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOEquipment2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐEquipment(ctx context.Context, sel ast.SelectionSet, v *ent.Equipment) graphql.Marshaler {
@@ -26375,6 +26841,34 @@ func (ec *executionContext) unmarshalOTokenWhereInput2ᚖgithubᚗcomᚋsahidrah
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputTokenWhereInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOUpdateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInputᚄ(ctx context.Context, v interface{}) ([]*UpdateRoutineExerciseInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*UpdateRoutineExerciseInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNUpdateRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalOUpdateRoutineSchedulesInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineSchedulesInput(ctx context.Context, v interface{}) (*UpdateRoutineSchedulesInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputUpdateRoutineSchedulesInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

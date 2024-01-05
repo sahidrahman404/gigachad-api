@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
@@ -20,6 +22,7 @@ type EquipmentCreate struct {
 	config
 	mutation *EquipmentMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetName sets the "name" field.
@@ -148,6 +151,7 @@ func (ec *EquipmentCreate) createSpec() (*Equipment, *sqlgraph.CreateSpec) {
 		_node = &Equipment{config: ec.config}
 		_spec = sqlgraph.NewCreateSpec(equipment.Table, sqlgraph.NewFieldSpec(equipment.FieldID, field.TypeString))
 	)
+	_spec.OnConflict = ec.conflict
 	if id, ok := ec.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -179,11 +183,212 @@ func (ec *EquipmentCreate) createSpec() (*Equipment, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Equipment.Create().
+//		SetName(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.EquipmentUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (ec *EquipmentCreate) OnConflict(opts ...sql.ConflictOption) *EquipmentUpsertOne {
+	ec.conflict = opts
+	return &EquipmentUpsertOne{
+		create: ec,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Equipment.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (ec *EquipmentCreate) OnConflictColumns(columns ...string) *EquipmentUpsertOne {
+	ec.conflict = append(ec.conflict, sql.ConflictColumns(columns...))
+	return &EquipmentUpsertOne{
+		create: ec,
+	}
+}
+
+type (
+	// EquipmentUpsertOne is the builder for "upsert"-ing
+	//  one Equipment node.
+	EquipmentUpsertOne struct {
+		create *EquipmentCreate
+	}
+
+	// EquipmentUpsert is the "OnConflict" setter.
+	EquipmentUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetName sets the "name" field.
+func (u *EquipmentUpsert) SetName(v string) *EquipmentUpsert {
+	u.Set(equipment.FieldName, v)
+	return u
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *EquipmentUpsert) UpdateName() *EquipmentUpsert {
+	u.SetExcluded(equipment.FieldName)
+	return u
+}
+
+// SetImage sets the "image" field.
+func (u *EquipmentUpsert) SetImage(v schematype.Image) *EquipmentUpsert {
+	u.Set(equipment.FieldImage, v)
+	return u
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *EquipmentUpsert) UpdateImage() *EquipmentUpsert {
+	u.SetExcluded(equipment.FieldImage)
+	return u
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *EquipmentUpsert) ClearImage() *EquipmentUpsert {
+	u.SetNull(equipment.FieldImage)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Equipment.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(equipment.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *EquipmentUpsertOne) UpdateNewValues() *EquipmentUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(equipment.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Equipment.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *EquipmentUpsertOne) Ignore() *EquipmentUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *EquipmentUpsertOne) DoNothing() *EquipmentUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the EquipmentCreate.OnConflict
+// documentation for more info.
+func (u *EquipmentUpsertOne) Update(set func(*EquipmentUpsert)) *EquipmentUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&EquipmentUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *EquipmentUpsertOne) SetName(v string) *EquipmentUpsertOne {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *EquipmentUpsertOne) UpdateName() *EquipmentUpsertOne {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *EquipmentUpsertOne) SetImage(v schematype.Image) *EquipmentUpsertOne {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *EquipmentUpsertOne) UpdateImage() *EquipmentUpsertOne {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.UpdateImage()
+	})
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *EquipmentUpsertOne) ClearImage() *EquipmentUpsertOne {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.ClearImage()
+	})
+}
+
+// Exec executes the query.
+func (u *EquipmentUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for EquipmentCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *EquipmentUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *EquipmentUpsertOne) ID(ctx context.Context) (id pksuid.ID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: EquipmentUpsertOne.ID is not supported by MySQL driver. Use EquipmentUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *EquipmentUpsertOne) IDX(ctx context.Context) pksuid.ID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // EquipmentCreateBulk is the builder for creating many Equipment entities in bulk.
 type EquipmentCreateBulk struct {
 	config
 	err      error
 	builders []*EquipmentCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Equipment entities in the database.
@@ -213,6 +418,7 @@ func (ecb *EquipmentCreateBulk) Save(ctx context.Context) ([]*Equipment, error) 
 					_, err = mutators[i+1].Mutate(root, ecb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = ecb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, ecb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -259,6 +465,155 @@ func (ecb *EquipmentCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (ecb *EquipmentCreateBulk) ExecX(ctx context.Context) {
 	if err := ecb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Equipment.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.EquipmentUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (ecb *EquipmentCreateBulk) OnConflict(opts ...sql.ConflictOption) *EquipmentUpsertBulk {
+	ecb.conflict = opts
+	return &EquipmentUpsertBulk{
+		create: ecb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Equipment.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (ecb *EquipmentCreateBulk) OnConflictColumns(columns ...string) *EquipmentUpsertBulk {
+	ecb.conflict = append(ecb.conflict, sql.ConflictColumns(columns...))
+	return &EquipmentUpsertBulk{
+		create: ecb,
+	}
+}
+
+// EquipmentUpsertBulk is the builder for "upsert"-ing
+// a bulk of Equipment nodes.
+type EquipmentUpsertBulk struct {
+	create *EquipmentCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Equipment.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(equipment.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *EquipmentUpsertBulk) UpdateNewValues() *EquipmentUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(equipment.FieldID)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Equipment.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *EquipmentUpsertBulk) Ignore() *EquipmentUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *EquipmentUpsertBulk) DoNothing() *EquipmentUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the EquipmentCreateBulk.OnConflict
+// documentation for more info.
+func (u *EquipmentUpsertBulk) Update(set func(*EquipmentUpsert)) *EquipmentUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&EquipmentUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *EquipmentUpsertBulk) SetName(v string) *EquipmentUpsertBulk {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *EquipmentUpsertBulk) UpdateName() *EquipmentUpsertBulk {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *EquipmentUpsertBulk) SetImage(v schematype.Image) *EquipmentUpsertBulk {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *EquipmentUpsertBulk) UpdateImage() *EquipmentUpsertBulk {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.UpdateImage()
+	})
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *EquipmentUpsertBulk) ClearImage() *EquipmentUpsertBulk {
+	return u.Update(func(s *EquipmentUpsert) {
+		s.ClearImage()
+	})
+}
+
+// Exec executes the query.
+func (u *EquipmentUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the EquipmentCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for EquipmentCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *EquipmentUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

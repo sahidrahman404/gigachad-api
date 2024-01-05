@@ -45,6 +45,26 @@ func (ru *RoutineUpdate) SetNillableName(s *string) *RoutineUpdate {
 	return ru
 }
 
+// SetScheduleID sets the "schedule_id" field.
+func (ru *RoutineUpdate) SetScheduleID(s string) *RoutineUpdate {
+	ru.mutation.SetScheduleID(s)
+	return ru
+}
+
+// SetNillableScheduleID sets the "schedule_id" field if the given value is not nil.
+func (ru *RoutineUpdate) SetNillableScheduleID(s *string) *RoutineUpdate {
+	if s != nil {
+		ru.SetScheduleID(*s)
+	}
+	return ru
+}
+
+// ClearScheduleID clears the value of the "schedule_id" field.
+func (ru *RoutineUpdate) ClearScheduleID() *RoutineUpdate {
+	ru.mutation.ClearScheduleID()
+	return ru
+}
+
 // SetUserID sets the "user_id" field.
 func (ru *RoutineUpdate) SetUserID(pk pksuid.ID) *RoutineUpdate {
 	ru.mutation.SetUserID(pk)
@@ -202,6 +222,12 @@ func (ru *RoutineUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := ru.mutation.Name(); ok {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
+	}
+	if value, ok := ru.mutation.ScheduleID(); ok {
+		_spec.SetField(routine.FieldScheduleID, field.TypeString, value)
+	}
+	if ru.mutation.ScheduleIDCleared() {
+		_spec.ClearField(routine.FieldScheduleID, field.TypeString)
 	}
 	if ru.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -374,6 +400,26 @@ func (ruo *RoutineUpdateOne) SetNillableName(s *string) *RoutineUpdateOne {
 	if s != nil {
 		ruo.SetName(*s)
 	}
+	return ruo
+}
+
+// SetScheduleID sets the "schedule_id" field.
+func (ruo *RoutineUpdateOne) SetScheduleID(s string) *RoutineUpdateOne {
+	ruo.mutation.SetScheduleID(s)
+	return ruo
+}
+
+// SetNillableScheduleID sets the "schedule_id" field if the given value is not nil.
+func (ruo *RoutineUpdateOne) SetNillableScheduleID(s *string) *RoutineUpdateOne {
+	if s != nil {
+		ruo.SetScheduleID(*s)
+	}
+	return ruo
+}
+
+// ClearScheduleID clears the value of the "schedule_id" field.
+func (ruo *RoutineUpdateOne) ClearScheduleID() *RoutineUpdateOne {
+	ruo.mutation.ClearScheduleID()
 	return ruo
 }
 
@@ -564,6 +610,12 @@ func (ruo *RoutineUpdateOne) sqlSave(ctx context.Context) (_node *Routine, err e
 	}
 	if value, ok := ruo.mutation.Name(); ok {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
+	}
+	if value, ok := ruo.mutation.ScheduleID(); ok {
+		_spec.SetField(routine.FieldScheduleID, field.TypeString, value)
+	}
+	if ruo.mutation.ScheduleIDCleared() {
+		_spec.ClearField(routine.FieldScheduleID, field.TypeString)
 	}
 	if ruo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{

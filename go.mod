@@ -17,6 +17,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/mattn/go-sqlite3 v1.14.18
 	github.com/microcosm-cc/bluemonday v1.0.26
+	github.com/pborman/uuid v1.2.1
 	github.com/segmentio/ksuid v1.0.4
 	github.com/tursodatabase/libsql-client-go v0.0.0-20231216154754-8383a53d618f
 	github.com/vektah/gqlparser/v2 v2.5.10
@@ -64,12 +65,12 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/hashicorp/hcl/v2 v2.19.1 // indirect
+	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/libsql/sqlite-antlr4-parser v0.0.0-20230802215326-5cb5bb604475 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
-	github.com/pborman/uuid v1.2.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/sosodev/duration v1.2.0 // indirect

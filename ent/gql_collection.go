@@ -1512,6 +1512,11 @@ func (r *RoutineQuery) collectField(ctx context.Context, opCtx *graphql.Operatio
 				selectedFields = append(selectedFields, routine.FieldName)
 				fieldSeen[routine.FieldName] = struct{}{}
 			}
+		case "scheduleID":
+			if _, ok := fieldSeen[routine.FieldScheduleID]; !ok {
+				selectedFields = append(selectedFields, routine.FieldScheduleID)
+				fieldSeen[routine.FieldScheduleID] = struct{}{}
+			}
 		case "userID":
 			if _, ok := fieldSeen[routine.FieldUserID]; !ok {
 				selectedFields = append(selectedFields, routine.FieldUserID)

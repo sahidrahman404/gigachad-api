@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
@@ -21,11 +23,26 @@ type RoutineCreate struct {
 	config
 	mutation *RoutineMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetName sets the "name" field.
 func (rc *RoutineCreate) SetName(s string) *RoutineCreate {
 	rc.mutation.SetName(s)
+	return rc
+}
+
+// SetScheduleID sets the "schedule_id" field.
+func (rc *RoutineCreate) SetScheduleID(s string) *RoutineCreate {
+	rc.mutation.SetScheduleID(s)
+	return rc
+}
+
+// SetNillableScheduleID sets the "schedule_id" field if the given value is not nil.
+func (rc *RoutineCreate) SetNillableScheduleID(s *string) *RoutineCreate {
+	if s != nil {
+		rc.SetScheduleID(*s)
+	}
 	return rc
 }
 
@@ -179,6 +196,7 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 		_node = &Routine{config: rc.config}
 		_spec = sqlgraph.NewCreateSpec(routine.Table, sqlgraph.NewFieldSpec(routine.FieldID, field.TypeString))
 	)
+	_spec.OnConflict = rc.conflict
 	if id, ok := rc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -186,6 +204,10 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 	if value, ok := rc.mutation.Name(); ok {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
 		_node.Name = value
+	}
+	if value, ok := rc.mutation.ScheduleID(); ok {
+		_spec.SetField(routine.FieldScheduleID, field.TypeString, value)
+		_node.ScheduleID = &value
 	}
 	if nodes := rc.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -246,11 +268,238 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Routine.Create().
+//		SetName(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.RoutineUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (rc *RoutineCreate) OnConflict(opts ...sql.ConflictOption) *RoutineUpsertOne {
+	rc.conflict = opts
+	return &RoutineUpsertOne{
+		create: rc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Routine.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (rc *RoutineCreate) OnConflictColumns(columns ...string) *RoutineUpsertOne {
+	rc.conflict = append(rc.conflict, sql.ConflictColumns(columns...))
+	return &RoutineUpsertOne{
+		create: rc,
+	}
+}
+
+type (
+	// RoutineUpsertOne is the builder for "upsert"-ing
+	//  one Routine node.
+	RoutineUpsertOne struct {
+		create *RoutineCreate
+	}
+
+	// RoutineUpsert is the "OnConflict" setter.
+	RoutineUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetName sets the "name" field.
+func (u *RoutineUpsert) SetName(v string) *RoutineUpsert {
+	u.Set(routine.FieldName, v)
+	return u
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *RoutineUpsert) UpdateName() *RoutineUpsert {
+	u.SetExcluded(routine.FieldName)
+	return u
+}
+
+// SetScheduleID sets the "schedule_id" field.
+func (u *RoutineUpsert) SetScheduleID(v string) *RoutineUpsert {
+	u.Set(routine.FieldScheduleID, v)
+	return u
+}
+
+// UpdateScheduleID sets the "schedule_id" field to the value that was provided on create.
+func (u *RoutineUpsert) UpdateScheduleID() *RoutineUpsert {
+	u.SetExcluded(routine.FieldScheduleID)
+	return u
+}
+
+// ClearScheduleID clears the value of the "schedule_id" field.
+func (u *RoutineUpsert) ClearScheduleID() *RoutineUpsert {
+	u.SetNull(routine.FieldScheduleID)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *RoutineUpsert) SetUserID(v pksuid.ID) *RoutineUpsert {
+	u.Set(routine.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *RoutineUpsert) UpdateUserID() *RoutineUpsert {
+	u.SetExcluded(routine.FieldUserID)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Routine.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(routine.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *RoutineUpsertOne) UpdateNewValues() *RoutineUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(routine.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Routine.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *RoutineUpsertOne) Ignore() *RoutineUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *RoutineUpsertOne) DoNothing() *RoutineUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the RoutineCreate.OnConflict
+// documentation for more info.
+func (u *RoutineUpsertOne) Update(set func(*RoutineUpsert)) *RoutineUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&RoutineUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *RoutineUpsertOne) SetName(v string) *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *RoutineUpsertOne) UpdateName() *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetScheduleID sets the "schedule_id" field.
+func (u *RoutineUpsertOne) SetScheduleID(v string) *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.SetScheduleID(v)
+	})
+}
+
+// UpdateScheduleID sets the "schedule_id" field to the value that was provided on create.
+func (u *RoutineUpsertOne) UpdateScheduleID() *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.UpdateScheduleID()
+	})
+}
+
+// ClearScheduleID clears the value of the "schedule_id" field.
+func (u *RoutineUpsertOne) ClearScheduleID() *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.ClearScheduleID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *RoutineUpsertOne) SetUserID(v pksuid.ID) *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *RoutineUpsertOne) UpdateUserID() *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *RoutineUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for RoutineCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *RoutineUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *RoutineUpsertOne) ID(ctx context.Context) (id pksuid.ID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: RoutineUpsertOne.ID is not supported by MySQL driver. Use RoutineUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *RoutineUpsertOne) IDX(ctx context.Context) pksuid.ID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // RoutineCreateBulk is the builder for creating many Routine entities in bulk.
 type RoutineCreateBulk struct {
 	config
 	err      error
 	builders []*RoutineCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Routine entities in the database.
@@ -280,6 +529,7 @@ func (rcb *RoutineCreateBulk) Save(ctx context.Context) ([]*Routine, error) {
 					_, err = mutators[i+1].Mutate(root, rcb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = rcb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, rcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -326,6 +576,169 @@ func (rcb *RoutineCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (rcb *RoutineCreateBulk) ExecX(ctx context.Context) {
 	if err := rcb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Routine.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.RoutineUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (rcb *RoutineCreateBulk) OnConflict(opts ...sql.ConflictOption) *RoutineUpsertBulk {
+	rcb.conflict = opts
+	return &RoutineUpsertBulk{
+		create: rcb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Routine.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (rcb *RoutineCreateBulk) OnConflictColumns(columns ...string) *RoutineUpsertBulk {
+	rcb.conflict = append(rcb.conflict, sql.ConflictColumns(columns...))
+	return &RoutineUpsertBulk{
+		create: rcb,
+	}
+}
+
+// RoutineUpsertBulk is the builder for "upsert"-ing
+// a bulk of Routine nodes.
+type RoutineUpsertBulk struct {
+	create *RoutineCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Routine.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(routine.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *RoutineUpsertBulk) UpdateNewValues() *RoutineUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(routine.FieldID)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Routine.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *RoutineUpsertBulk) Ignore() *RoutineUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *RoutineUpsertBulk) DoNothing() *RoutineUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the RoutineCreateBulk.OnConflict
+// documentation for more info.
+func (u *RoutineUpsertBulk) Update(set func(*RoutineUpsert)) *RoutineUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&RoutineUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *RoutineUpsertBulk) SetName(v string) *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *RoutineUpsertBulk) UpdateName() *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetScheduleID sets the "schedule_id" field.
+func (u *RoutineUpsertBulk) SetScheduleID(v string) *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.SetScheduleID(v)
+	})
+}
+
+// UpdateScheduleID sets the "schedule_id" field to the value that was provided on create.
+func (u *RoutineUpsertBulk) UpdateScheduleID() *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.UpdateScheduleID()
+	})
+}
+
+// ClearScheduleID clears the value of the "schedule_id" field.
+func (u *RoutineUpsertBulk) ClearScheduleID() *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.ClearScheduleID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *RoutineUpsertBulk) SetUserID(v pksuid.ID) *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *RoutineUpsertBulk) UpdateUserID() *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *RoutineUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the RoutineCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for RoutineCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *RoutineUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

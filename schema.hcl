@@ -203,30 +203,6 @@ table "muscles_group_exercises" {
     on_delete   = CASCADE
   }
 }
-table "routines" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "name" {
-    null = false
-    type = text
-  }
-  column "user_id" {
-    null = false
-    type = text
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "routines_users_routines" {
-    columns     = [column.user_id]
-    ref_columns = [table.users.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-}
 table "tokens" {
   schema = schema.main
   column "id" {
@@ -472,6 +448,34 @@ table "workouts" {
     columns = [column.id]
   }
   foreign_key "workouts_users_workouts" {
+    columns     = [column.user_id]
+    ref_columns = [table.users.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+}
+table "routines" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "name" {
+    null = false
+    type = text
+  }
+  column "schedule_id" {
+    null = true
+    type = text
+  }
+  column "user_id" {
+    null = false
+    type = text
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "routines_users_routines" {
     columns     = [column.user_id]
     ref_columns = [table.users.column.id]
     on_update   = NO_ACTION

@@ -2808,6 +2808,7 @@ type RoutineMutation struct {
 	typ                      string
 	id                       *pksuid.ID
 	name                     *string
+	schedule_id              *string
 	clearedFields            map[string]struct{}
 	exercises                map[pksuid.ID]struct{}
 	removedexercises         map[pksuid.ID]struct{}
@@ -2960,6 +2961,55 @@ func (m *RoutineMutation) OldName(ctx context.Context) (v string, err error) {
 // ResetName resets all changes to the "name" field.
 func (m *RoutineMutation) ResetName() {
 	m.name = nil
+}
+
+// SetScheduleID sets the "schedule_id" field.
+func (m *RoutineMutation) SetScheduleID(s string) {
+	m.schedule_id = &s
+}
+
+// ScheduleID returns the value of the "schedule_id" field in the mutation.
+func (m *RoutineMutation) ScheduleID() (r string, exists bool) {
+	v := m.schedule_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldScheduleID returns the old "schedule_id" field's value of the Routine entity.
+// If the Routine object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoutineMutation) OldScheduleID(ctx context.Context) (v *string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldScheduleID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldScheduleID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldScheduleID: %w", err)
+	}
+	return oldValue.ScheduleID, nil
+}
+
+// ClearScheduleID clears the value of the "schedule_id" field.
+func (m *RoutineMutation) ClearScheduleID() {
+	m.schedule_id = nil
+	m.clearedFields[routine.FieldScheduleID] = struct{}{}
+}
+
+// ScheduleIDCleared returns if the "schedule_id" field was cleared in this mutation.
+func (m *RoutineMutation) ScheduleIDCleared() bool {
+	_, ok := m.clearedFields[routine.FieldScheduleID]
+	return ok
+}
+
+// ResetScheduleID resets all changes to the "schedule_id" field.
+func (m *RoutineMutation) ResetScheduleID() {
+	m.schedule_id = nil
+	delete(m.clearedFields, routine.FieldScheduleID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -3180,9 +3230,12 @@ func (m *RoutineMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoutineMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 3)
 	if m.name != nil {
 		fields = append(fields, routine.FieldName)
+	}
+	if m.schedule_id != nil {
+		fields = append(fields, routine.FieldScheduleID)
 	}
 	if m.users != nil {
 		fields = append(fields, routine.FieldUserID)
@@ -3197,6 +3250,8 @@ func (m *RoutineMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case routine.FieldName:
 		return m.Name()
+	case routine.FieldScheduleID:
+		return m.ScheduleID()
 	case routine.FieldUserID:
 		return m.UserID()
 	}
@@ -3210,6 +3265,8 @@ func (m *RoutineMutation) OldField(ctx context.Context, name string) (ent.Value,
 	switch name {
 	case routine.FieldName:
 		return m.OldName(ctx)
+	case routine.FieldScheduleID:
+		return m.OldScheduleID(ctx)
 	case routine.FieldUserID:
 		return m.OldUserID(ctx)
 	}
@@ -3227,6 +3284,13 @@ func (m *RoutineMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case routine.FieldScheduleID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetScheduleID(v)
 		return nil
 	case routine.FieldUserID:
 		v, ok := value.(pksuid.ID)
@@ -3264,7 +3328,11 @@ func (m *RoutineMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *RoutineMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(routine.FieldScheduleID) {
+		fields = append(fields, routine.FieldScheduleID)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -3277,6 +3345,11 @@ func (m *RoutineMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *RoutineMutation) ClearField(name string) error {
+	switch name {
+	case routine.FieldScheduleID:
+		m.ClearScheduleID()
+		return nil
+	}
 	return fmt.Errorf("unknown Routine nullable field %s", name)
 }
 
@@ -3286,6 +3359,9 @@ func (m *RoutineMutation) ResetField(name string) error {
 	switch name {
 	case routine.FieldName:
 		m.ResetName()
+		return nil
+	case routine.FieldScheduleID:
+		m.ResetScheduleID()
 		return nil
 	case routine.FieldUserID:
 		m.ResetUserID()

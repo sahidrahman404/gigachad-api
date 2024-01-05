@@ -16,6 +16,8 @@ const (
 	FieldID = "id"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldScheduleID holds the string denoting the schedule_id field in the database.
+	FieldScheduleID = "schedule_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
 	// EdgeExercises holds the string denoting the exercises edge name in mutations.
@@ -51,6 +53,7 @@ const (
 var Columns = []string{
 	FieldID,
 	FieldName,
+	FieldScheduleID,
 	FieldUserID,
 }
 
@@ -93,6 +96,11 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByScheduleID orders the results by the schedule_id field.
+func ByScheduleID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldScheduleID, opts...).ToFunc()
 }
 
 // ByUserID orders the results by the user_id field.

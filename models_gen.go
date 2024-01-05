@@ -45,8 +45,16 @@ type CreateRoutineExerciseInput struct {
 	ExerciseID pksuid.ID         `json:"exerciseID"`
 }
 
+type CreateRoutineReminderInput struct {
+	Day    int `json:"day"`
+	Second int `json:"second"`
+	Minute int `json:"minute"`
+	Hour   int `json:"hour"`
+}
+
 type CreateRoutineWithChildrenInput struct {
 	Name             string                        `json:"name"`
+	Reminder         []*CreateRoutineReminderInput `json:"reminder,omitempty"`
 	RoutineExercises []*CreateRoutineExerciseInput `json:"routineExercises,omitempty"`
 }
 
@@ -68,8 +76,8 @@ type DeleteExerciseInput struct {
 	ID pksuid.ID `json:"id"`
 }
 
-type DeletedID struct {
-	ID *pksuid.ID `json:"id,omitempty"`
+type DeleteRoutineInput struct {
+	ID pksuid.ID `json:"id"`
 }
 
 type LoginInput struct {
@@ -97,4 +105,23 @@ type Style struct {
 	MaxWidth    *string `json:"maxWidth,omitempty"`
 	MaxHeight   *string `json:"maxHeight,omitempty"`
 	AspectRatio *string `json:"aspectRatio,omitempty"`
+}
+
+type UpdateRoutineExerciseInput struct {
+	ID         *pksuid.ID        `json:"id,omitempty"`
+	RestTimer  *string           `json:"restTimer,omitempty"`
+	Sets       []*schematype.Set `json:"sets,omitempty"`
+	ExerciseID pksuid.ID         `json:"exerciseID"`
+}
+
+type UpdateRoutineSchedulesInput struct {
+	ID        *string                       `json:"id,omitempty"`
+	Schedules []*CreateRoutineReminderInput `json:"schedules,omitempty"`
+}
+
+type UpdateRoutineWithChildrenInput struct {
+	ID               pksuid.ID                     `json:"id"`
+	Name             string                        `json:"name"`
+	Reminder         *UpdateRoutineSchedulesInput  `json:"reminder,omitempty"`
+	RoutineExercises []*UpdateRoutineExerciseInput `json:"routineExercises,omitempty"`
 }
