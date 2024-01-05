@@ -19,6 +19,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/purifier"
 	"github.com/sahidrahman404/gigachad-api/internal/smtp"
 	"github.com/sahidrahman404/gigachad-api/internal/version"
+	"go.temporal.io/sdk/client"
 )
 
 func main() {
@@ -50,14 +51,15 @@ type config struct {
 }
 
 type application struct {
-	config        config
-	logger        *leveledlog.Logger
-	mailer        *smtp.Mailer
-	wg            sync.WaitGroup
-	storage       *database.Storage
-	ent           *ent.Client
-	presignClient *s3.PresignClient
-	purifier      *bluemonday.Policy
+	config         config
+	logger         *leveledlog.Logger
+	mailer         *smtp.Mailer
+	wg             sync.WaitGroup
+	storage        *database.Storage
+	ent            *ent.Client
+	presignClient  *s3.PresignClient
+	purifier       *bluemonday.Policy
+	temporalClient *client.Client
 }
 
 func run(logger *leveledlog.Logger) error {
@@ -111,14 +113,22 @@ func run(logger *leveledlog.Logger) error {
 
 	p := purifier.NewPurifierPolicy()
 
+	tc, err := client.Dial(client.Options{})
+	if err != nil {
+		return err
+	}
+
+	defer tc.Close()
+
 	app := &application{
-		config:        cfg,
-		logger:        logger,
-		mailer:        mailer,
-		storage:       database.NewStorage(db.Ent),
-		ent:           db.Ent,
-		presignClient: aws.NewPresignClient(awsConfig),
-		purifier:      p,
+		config:         cfg,
+		logger:         logger,
+		mailer:         mailer,
+		storage:        database.NewStorage(db.Ent),
+		ent:            db.Ent,
+		presignClient:  aws.NewPresignClient(awsConfig),
+		purifier:       p,
+		temporalClient: &tc,
 	}
 
 	return app.serveHTTP()

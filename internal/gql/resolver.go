@@ -12,6 +12,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/img"
 	"github.com/sahidrahman404/gigachad-api/internal/leveledlog"
 	"github.com/sahidrahman404/gigachad-api/internal/smtp"
+	"go.temporal.io/sdk/client"
 )
 
 // This file will not be regenerated automatically.
@@ -19,14 +20,15 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	client   *ent.Client
-	mailer   *smtp.Mailer
-	storage  *database.Storage
-	logger   *leveledlog.Logger
-	wg       *sync.WaitGroup
-	imgproxy *img.Imgproxy
-	awsCfg   *aws.AWSConfig
-	purifier *bluemonday.Policy
+	client         *ent.Client
+	mailer         *smtp.Mailer
+	storage        *database.Storage
+	logger         *leveledlog.Logger
+	wg             *sync.WaitGroup
+	imgproxy       *img.Imgproxy
+	awsCfg         *aws.AWSConfig
+	purifier       *bluemonday.Policy
+	temporalClient *client.Client
 }
 
 // NewSchema creates a graphql executable schema.
@@ -39,17 +41,19 @@ func NewSchema(
 	i *img.Imgproxy,
 	a *aws.AWSConfig,
 	h *bluemonday.Policy,
+	tc *client.Client,
 ) graphql.ExecutableSchema {
 	return gigachad.NewExecutableSchema(gigachad.Config{
 		Resolvers: &Resolver{
-			client:   c,
-			mailer:   m,
-			storage:  s,
-			logger:   l,
-			wg:       wg,
-			imgproxy: i,
-			awsCfg:   a,
-			purifier: h,
+			client:         c,
+			mailer:         m,
+			storage:        s,
+			logger:         l,
+			wg:             wg,
+			imgproxy:       i,
+			awsCfg:         a,
+			purifier:       h,
+			temporalClient: tc,
 		},
 	})
 }
