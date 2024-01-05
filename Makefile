@@ -48,6 +48,12 @@ test/cover:
 .PHONY: build
 build:
 	go build -o=/tmp/bin/api ./cmd/api
+
+
+## build/worker: build the cmd/worker application
+.PHONY: build/worker
+build/worker:
+	go build -o=/tmp/bin/worker ./cmd/worker
 	
 ## run: run the cmd/api application
 .PHONY: run
@@ -59,6 +65,16 @@ run: build
 run/live:
 	go run github.com/cosmtrek/air@v1.43.0 \
 		--build.cmd "make build" --build.bin "/tmp/bin/api" --build.delay "100" \
+		--build.exclude_dir "" \
+		--build.include_ext "go, tpl, tmpl, html, css, scss, js, ts, sql, jpeg, jpg, gif, png, bmp, svg, webp, ico" \
+		--misc.clean_on_exit "true"
+
+
+## run/worker/live: run the worker with reloading on file changes
+.PHONY: run/worker/live
+run/worker/live:
+	go run github.com/cosmtrek/air@v1.43.0 \
+		--build.cmd "make build/worker" --build.bin "/tmp/bin/worker" --build.delay "100" \
 		--build.exclude_dir "" \
 		--build.include_ext "go, tpl, tmpl, html, css, scss, js, ts, sql, jpeg, jpg, gif, png, bmp, svg, webp, ico" \
 		--misc.clean_on_exit "true"
