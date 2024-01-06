@@ -2,18 +2,20 @@ package smtp
 
 import (
 	"context"
+
+	"github.com/sahidrahman404/gigachad-api/ent"
 )
 
 type DailyWorkoutReminderInput struct {
 	Recipient   string
-	Name        string
-	WorkoutName string
+	RoutineData RoutineData
+}
+
+type RoutineData struct {
+	Routine  ent.Routine
+	UserName string
 }
 
 func (m *Mailer) SendDailyWorkoutReminder(ctx context.Context, input DailyWorkoutReminderInput) error {
-	data := map[string]interface{}{
-		"name":        input.Name,
-		"workoutName": input.WorkoutName,
-	}
-	return m.Send(input.Recipient, data, "daily_workout_reminder.tmpl")
+	return m.Send(input.Recipient, input.RoutineData, "daily_workout_reminder.tmpl")
 }

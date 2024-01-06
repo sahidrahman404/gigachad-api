@@ -29,7 +29,7 @@ func (wr *WorkoutReminder) GetUserData(ctx context.Context, input pksuid.ID) (*e
 }
 
 type CreateDailyWorkoutScheduleInput struct {
-	WorkoutName string
+	RoutineData smtp.RoutineData
 	ScheduleID  string
 	User        *ent.User
 	Reminders   []*gigachad.CreateRoutineReminderInput
@@ -71,8 +71,7 @@ func (wr *WorkoutReminder) CreateDailyWorkoutSchedule(ctx context.Context, input
 
 	args := smtp.DailyWorkoutReminderInput{
 		Recipient:   u.Email,
-		Name:        u.Name,
-		WorkoutName: input.WorkoutName,
+		RoutineData: input.RoutineData,
 	}
 
 	action := client.ScheduleWorkflowAction{
