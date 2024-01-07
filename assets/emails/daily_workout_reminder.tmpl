@@ -2,7 +2,6 @@
 
 {{define "plainBody"}}
 
-
 Hi {{.UserName}},
 
 We hope you're ready to tackle another fantastic day of workouts and make progress towards your fitness goals! This email is to remind you about your daily workout scheduled in our fitness tracking app. Get ready to sweat and push yourself to new heights!
@@ -10,14 +9,14 @@ We hope you're ready to tackle another fantastic day of workouts and make progre
 Workout Details:
 
 Workout Name: {{.Routine.Name}}
-
-{{$RoutineExercises := $.Routine.Edges.RoutineExercises}}
-
-{{range $RoutineExercise := $RoutineExercises}}
-
-{{$RoutineName := $RoutineExercise.Edges.Exercises.Name}}
-{{$RoutineName}}
+{{if .Routine.Edges.RoutineExercises}}
+{{range $RoutineExercise := .Routine.Edges.RoutineExercises}}
+{{$RoutineExercise.Edges.Exercises.Name}}
 Sets      Reps           Kg          Duration
+{{range $i, $set := $RoutineExercise.Sets}}
+{{incr $i}} {{$s := $set.Display}} {{$s.Reps}}  {{$s.Kg}} {{$s.Duration}}
+{{end}}
+{{end}}
 {{end}}
 
 Remember, consistency is key to achieving your fitness goals, and your commitment is inspiring. Take this opportunity to challenge yourself, improve your fitness level, and have fun during your workout session.
