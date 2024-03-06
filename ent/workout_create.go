@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
@@ -22,6 +24,7 @@ type WorkoutCreate struct {
 	config
 	mutation *WorkoutMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetVolume sets the "volume" field.
@@ -233,6 +236,7 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 		_node = &Workout{config: wc.config}
 		_spec = sqlgraph.NewCreateSpec(workout.Table, sqlgraph.NewFieldSpec(workout.FieldID, field.TypeString))
 	)
+	_spec.OnConflict = wc.conflict
 	if id, ok := wc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -320,11 +324,381 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Workout.Create().
+//		SetVolume(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.WorkoutUpsert) {
+//			SetVolume(v+v).
+//		}).
+//		Exec(ctx)
+func (wc *WorkoutCreate) OnConflict(opts ...sql.ConflictOption) *WorkoutUpsertOne {
+	wc.conflict = opts
+	return &WorkoutUpsertOne{
+		create: wc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Workout.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (wc *WorkoutCreate) OnConflictColumns(columns ...string) *WorkoutUpsertOne {
+	wc.conflict = append(wc.conflict, sql.ConflictColumns(columns...))
+	return &WorkoutUpsertOne{
+		create: wc,
+	}
+}
+
+type (
+	// WorkoutUpsertOne is the builder for "upsert"-ing
+	//  one Workout node.
+	WorkoutUpsertOne struct {
+		create *WorkoutCreate
+	}
+
+	// WorkoutUpsert is the "OnConflict" setter.
+	WorkoutUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetVolume sets the "volume" field.
+func (u *WorkoutUpsert) SetVolume(v int) *WorkoutUpsert {
+	u.Set(workout.FieldVolume, v)
+	return u
+}
+
+// UpdateVolume sets the "volume" field to the value that was provided on create.
+func (u *WorkoutUpsert) UpdateVolume() *WorkoutUpsert {
+	u.SetExcluded(workout.FieldVolume)
+	return u
+}
+
+// AddVolume adds v to the "volume" field.
+func (u *WorkoutUpsert) AddVolume(v int) *WorkoutUpsert {
+	u.Add(workout.FieldVolume, v)
+	return u
+}
+
+// SetDuration sets the "duration" field.
+func (u *WorkoutUpsert) SetDuration(v string) *WorkoutUpsert {
+	u.Set(workout.FieldDuration, v)
+	return u
+}
+
+// UpdateDuration sets the "duration" field to the value that was provided on create.
+func (u *WorkoutUpsert) UpdateDuration() *WorkoutUpsert {
+	u.SetExcluded(workout.FieldDuration)
+	return u
+}
+
+// SetSets sets the "sets" field.
+func (u *WorkoutUpsert) SetSets(v int) *WorkoutUpsert {
+	u.Set(workout.FieldSets, v)
+	return u
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *WorkoutUpsert) UpdateSets() *WorkoutUpsert {
+	u.SetExcluded(workout.FieldSets)
+	return u
+}
+
+// AddSets adds v to the "sets" field.
+func (u *WorkoutUpsert) AddSets(v int) *WorkoutUpsert {
+	u.Add(workout.FieldSets, v)
+	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *WorkoutUpsert) SetCreatedAt(v string) *WorkoutUpsert {
+	u.Set(workout.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *WorkoutUpsert) UpdateCreatedAt() *WorkoutUpsert {
+	u.SetExcluded(workout.FieldCreatedAt)
+	return u
+}
+
+// SetImage sets the "image" field.
+func (u *WorkoutUpsert) SetImage(v *schematype.Image) *WorkoutUpsert {
+	u.Set(workout.FieldImage, v)
+	return u
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *WorkoutUpsert) UpdateImage() *WorkoutUpsert {
+	u.SetExcluded(workout.FieldImage)
+	return u
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *WorkoutUpsert) ClearImage() *WorkoutUpsert {
+	u.SetNull(workout.FieldImage)
+	return u
+}
+
+// SetDescription sets the "description" field.
+func (u *WorkoutUpsert) SetDescription(v string) *WorkoutUpsert {
+	u.Set(workout.FieldDescription, v)
+	return u
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *WorkoutUpsert) UpdateDescription() *WorkoutUpsert {
+	u.SetExcluded(workout.FieldDescription)
+	return u
+}
+
+// ClearDescription clears the value of the "description" field.
+func (u *WorkoutUpsert) ClearDescription() *WorkoutUpsert {
+	u.SetNull(workout.FieldDescription)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *WorkoutUpsert) SetUserID(v pksuid.ID) *WorkoutUpsert {
+	u.Set(workout.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *WorkoutUpsert) UpdateUserID() *WorkoutUpsert {
+	u.SetExcluded(workout.FieldUserID)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Workout.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(workout.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *WorkoutUpsertOne) UpdateNewValues() *WorkoutUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(workout.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Workout.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *WorkoutUpsertOne) Ignore() *WorkoutUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *WorkoutUpsertOne) DoNothing() *WorkoutUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the WorkoutCreate.OnConflict
+// documentation for more info.
+func (u *WorkoutUpsertOne) Update(set func(*WorkoutUpsert)) *WorkoutUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&WorkoutUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetVolume sets the "volume" field.
+func (u *WorkoutUpsertOne) SetVolume(v int) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetVolume(v)
+	})
+}
+
+// AddVolume adds v to the "volume" field.
+func (u *WorkoutUpsertOne) AddVolume(v int) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.AddVolume(v)
+	})
+}
+
+// UpdateVolume sets the "volume" field to the value that was provided on create.
+func (u *WorkoutUpsertOne) UpdateVolume() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateVolume()
+	})
+}
+
+// SetDuration sets the "duration" field.
+func (u *WorkoutUpsertOne) SetDuration(v string) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetDuration(v)
+	})
+}
+
+// UpdateDuration sets the "duration" field to the value that was provided on create.
+func (u *WorkoutUpsertOne) UpdateDuration() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateDuration()
+	})
+}
+
+// SetSets sets the "sets" field.
+func (u *WorkoutUpsertOne) SetSets(v int) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetSets(v)
+	})
+}
+
+// AddSets adds v to the "sets" field.
+func (u *WorkoutUpsertOne) AddSets(v int) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.AddSets(v)
+	})
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *WorkoutUpsertOne) UpdateSets() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateSets()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *WorkoutUpsertOne) SetCreatedAt(v string) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *WorkoutUpsertOne) UpdateCreatedAt() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *WorkoutUpsertOne) SetImage(v *schematype.Image) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *WorkoutUpsertOne) UpdateImage() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateImage()
+	})
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *WorkoutUpsertOne) ClearImage() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.ClearImage()
+	})
+}
+
+// SetDescription sets the "description" field.
+func (u *WorkoutUpsertOne) SetDescription(v string) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetDescription(v)
+	})
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *WorkoutUpsertOne) UpdateDescription() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateDescription()
+	})
+}
+
+// ClearDescription clears the value of the "description" field.
+func (u *WorkoutUpsertOne) ClearDescription() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.ClearDescription()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *WorkoutUpsertOne) SetUserID(v pksuid.ID) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *WorkoutUpsertOne) UpdateUserID() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *WorkoutUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for WorkoutCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *WorkoutUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *WorkoutUpsertOne) ID(ctx context.Context) (id pksuid.ID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: WorkoutUpsertOne.ID is not supported by MySQL driver. Use WorkoutUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *WorkoutUpsertOne) IDX(ctx context.Context) pksuid.ID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // WorkoutCreateBulk is the builder for creating many Workout entities in bulk.
 type WorkoutCreateBulk struct {
 	config
 	err      error
 	builders []*WorkoutCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Workout entities in the database.
@@ -354,6 +728,7 @@ func (wcb *WorkoutCreateBulk) Save(ctx context.Context) ([]*Workout, error) {
 					_, err = mutators[i+1].Mutate(root, wcb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = wcb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, wcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -400,6 +775,246 @@ func (wcb *WorkoutCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (wcb *WorkoutCreateBulk) ExecX(ctx context.Context) {
 	if err := wcb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Workout.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.WorkoutUpsert) {
+//			SetVolume(v+v).
+//		}).
+//		Exec(ctx)
+func (wcb *WorkoutCreateBulk) OnConflict(opts ...sql.ConflictOption) *WorkoutUpsertBulk {
+	wcb.conflict = opts
+	return &WorkoutUpsertBulk{
+		create: wcb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Workout.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (wcb *WorkoutCreateBulk) OnConflictColumns(columns ...string) *WorkoutUpsertBulk {
+	wcb.conflict = append(wcb.conflict, sql.ConflictColumns(columns...))
+	return &WorkoutUpsertBulk{
+		create: wcb,
+	}
+}
+
+// WorkoutUpsertBulk is the builder for "upsert"-ing
+// a bulk of Workout nodes.
+type WorkoutUpsertBulk struct {
+	create *WorkoutCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Workout.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(workout.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *WorkoutUpsertBulk) UpdateNewValues() *WorkoutUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(workout.FieldID)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Workout.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *WorkoutUpsertBulk) Ignore() *WorkoutUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *WorkoutUpsertBulk) DoNothing() *WorkoutUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the WorkoutCreateBulk.OnConflict
+// documentation for more info.
+func (u *WorkoutUpsertBulk) Update(set func(*WorkoutUpsert)) *WorkoutUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&WorkoutUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetVolume sets the "volume" field.
+func (u *WorkoutUpsertBulk) SetVolume(v int) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetVolume(v)
+	})
+}
+
+// AddVolume adds v to the "volume" field.
+func (u *WorkoutUpsertBulk) AddVolume(v int) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.AddVolume(v)
+	})
+}
+
+// UpdateVolume sets the "volume" field to the value that was provided on create.
+func (u *WorkoutUpsertBulk) UpdateVolume() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateVolume()
+	})
+}
+
+// SetDuration sets the "duration" field.
+func (u *WorkoutUpsertBulk) SetDuration(v string) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetDuration(v)
+	})
+}
+
+// UpdateDuration sets the "duration" field to the value that was provided on create.
+func (u *WorkoutUpsertBulk) UpdateDuration() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateDuration()
+	})
+}
+
+// SetSets sets the "sets" field.
+func (u *WorkoutUpsertBulk) SetSets(v int) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetSets(v)
+	})
+}
+
+// AddSets adds v to the "sets" field.
+func (u *WorkoutUpsertBulk) AddSets(v int) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.AddSets(v)
+	})
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *WorkoutUpsertBulk) UpdateSets() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateSets()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *WorkoutUpsertBulk) SetCreatedAt(v string) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *WorkoutUpsertBulk) UpdateCreatedAt() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *WorkoutUpsertBulk) SetImage(v *schematype.Image) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *WorkoutUpsertBulk) UpdateImage() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateImage()
+	})
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *WorkoutUpsertBulk) ClearImage() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.ClearImage()
+	})
+}
+
+// SetDescription sets the "description" field.
+func (u *WorkoutUpsertBulk) SetDescription(v string) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetDescription(v)
+	})
+}
+
+// UpdateDescription sets the "description" field to the value that was provided on create.
+func (u *WorkoutUpsertBulk) UpdateDescription() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateDescription()
+	})
+}
+
+// ClearDescription clears the value of the "description" field.
+func (u *WorkoutUpsertBulk) ClearDescription() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.ClearDescription()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *WorkoutUpsertBulk) SetUserID(v pksuid.ID) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *WorkoutUpsertBulk) UpdateUserID() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *WorkoutUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the WorkoutCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for WorkoutCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *WorkoutUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

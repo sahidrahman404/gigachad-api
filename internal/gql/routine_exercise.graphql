@@ -18,11 +18,39 @@ input CreateRoutineExerciseInput {
   exerciseID: ID!
 }
 
+input UpdateRoutineExerciseInput {
+  id: ID
+  restTimer: String
+  sets: [SetInput!]
+  exerciseID: ID!
+}
+
+input CreateRoutineReminderInput {
+  day: Int!
+  second: Int!
+  minute: Int!
+  hour: Int!
+}
+
+input UpdateRoutineSchedulesInput {
+  id: String
+  schedules: [CreateRoutineReminderInput!]
+}
+
 input CreateRoutineWithChildrenInput {
   name: String!
+  reminder: [CreateRoutineReminderInput!]
   routineExercises: [CreateRoutineExerciseInput!]
+}
+
+input UpdateRoutineWithChildrenInput {
+  id: ID!
+  name: String!
+  reminder: UpdateRoutineSchedulesInput
+  routineExercises: [UpdateRoutineExerciseInput!]
 }
 
 extend type Mutation {
   createRoutineWithChildren(input: CreateRoutineWithChildrenInput!): Routine!
+  updateRoutineWithChildren(input: UpdateRoutineWithChildrenInput!): Routine!
 }

@@ -83,6 +83,7 @@ func (c *ExerciseTypeUpdateOne) SetInput(i UpdateExerciseTypeInput) *ExerciseTyp
 // CreateRoutineInput represents a mutation input for creating routines.
 type CreateRoutineInput struct {
 	Name        string
+	ScheduleID  *string
 	ExerciseIDs []pksuid.ID
 	UsersID     pksuid.ID
 }
@@ -90,6 +91,9 @@ type CreateRoutineInput struct {
 // Mutate applies the CreateRoutineInput on the RoutineMutation builder.
 func (i *CreateRoutineInput) Mutate(m *RoutineMutation) {
 	m.SetName(i.Name)
+	if v := i.ScheduleID; v != nil {
+		m.SetScheduleID(*v)
+	}
 	if v := i.ExerciseIDs; len(v) > 0 {
 		m.AddExerciseIDs(v...)
 	}
@@ -105,6 +109,8 @@ func (c *RoutineCreate) SetInput(i CreateRoutineInput) *RoutineCreate {
 // UpdateRoutineInput represents a mutation input for updating routines.
 type UpdateRoutineInput struct {
 	Name              *string
+	ClearScheduleID   bool
+	ScheduleID        *string
 	ClearExercises    bool
 	AddExerciseIDs    []pksuid.ID
 	RemoveExerciseIDs []pksuid.ID
@@ -115,6 +121,12 @@ type UpdateRoutineInput struct {
 func (i *UpdateRoutineInput) Mutate(m *RoutineMutation) {
 	if v := i.Name; v != nil {
 		m.SetName(*v)
+	}
+	if i.ClearScheduleID {
+		m.ClearScheduleID()
+	}
+	if v := i.ScheduleID; v != nil {
+		m.SetScheduleID(*v)
 	}
 	if i.ClearExercises {
 		m.ClearExercises()

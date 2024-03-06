@@ -2,15 +2,24 @@ input ActivateUserInput {
   tokenPlainText: String!
 }
 
+type ActivateUserResult {
+  tokenPlainText: String!
+}
+
 input ResetUserPasswordInput {
+  password: String!
+  tokenPlainText: String!
+}
+
+type ResetUserPasswordResult {
   password: String!
   tokenPlainText: String!
 }
 
 type Mutation {
   createUser(input: CreateUserInput!): User!
-  activateUser(input: ActivateUserInput!): AuthenticationToken!
-  updateUserPassword(input: ResetUserPasswordInput!): User!
+  activateUser(input: ActivateUserInput!): ActivateUserResult!
+  updateUserPassword(input: ResetUserPasswordInput!): ResetUserPasswordResult!
 }
 
 extend type Query {

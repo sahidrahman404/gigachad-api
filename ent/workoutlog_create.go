@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
@@ -22,6 +24,7 @@ type WorkoutLogCreate struct {
 	config
 	mutation *WorkoutLogMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetSets sets the "sets" field.
@@ -211,6 +214,7 @@ func (wlc *WorkoutLogCreate) createSpec() (*WorkoutLog, *sqlgraph.CreateSpec) {
 		_node = &WorkoutLog{config: wlc.config}
 		_spec = sqlgraph.NewCreateSpec(workoutlog.Table, sqlgraph.NewFieldSpec(workoutlog.FieldID, field.TypeString))
 	)
+	_spec.OnConflict = wlc.conflict
 	if id, ok := wlc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -277,11 +281,277 @@ func (wlc *WorkoutLogCreate) createSpec() (*WorkoutLog, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.WorkoutLog.Create().
+//		SetSets(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.WorkoutLogUpsert) {
+//			SetSets(v+v).
+//		}).
+//		Exec(ctx)
+func (wlc *WorkoutLogCreate) OnConflict(opts ...sql.ConflictOption) *WorkoutLogUpsertOne {
+	wlc.conflict = opts
+	return &WorkoutLogUpsertOne{
+		create: wlc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.WorkoutLog.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (wlc *WorkoutLogCreate) OnConflictColumns(columns ...string) *WorkoutLogUpsertOne {
+	wlc.conflict = append(wlc.conflict, sql.ConflictColumns(columns...))
+	return &WorkoutLogUpsertOne{
+		create: wlc,
+	}
+}
+
+type (
+	// WorkoutLogUpsertOne is the builder for "upsert"-ing
+	//  one WorkoutLog node.
+	WorkoutLogUpsertOne struct {
+		create *WorkoutLogCreate
+	}
+
+	// WorkoutLogUpsert is the "OnConflict" setter.
+	WorkoutLogUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetSets sets the "sets" field.
+func (u *WorkoutLogUpsert) SetSets(v []*schematype.Set) *WorkoutLogUpsert {
+	u.Set(workoutlog.FieldSets, v)
+	return u
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *WorkoutLogUpsert) UpdateSets() *WorkoutLogUpsert {
+	u.SetExcluded(workoutlog.FieldSets)
+	return u
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *WorkoutLogUpsert) SetCreatedAt(v string) *WorkoutLogUpsert {
+	u.Set(workoutlog.FieldCreatedAt, v)
+	return u
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *WorkoutLogUpsert) UpdateCreatedAt() *WorkoutLogUpsert {
+	u.SetExcluded(workoutlog.FieldCreatedAt)
+	return u
+}
+
+// SetWorkoutID sets the "workout_id" field.
+func (u *WorkoutLogUpsert) SetWorkoutID(v pksuid.ID) *WorkoutLogUpsert {
+	u.Set(workoutlog.FieldWorkoutID, v)
+	return u
+}
+
+// UpdateWorkoutID sets the "workout_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsert) UpdateWorkoutID() *WorkoutLogUpsert {
+	u.SetExcluded(workoutlog.FieldWorkoutID)
+	return u
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (u *WorkoutLogUpsert) SetExerciseID(v pksuid.ID) *WorkoutLogUpsert {
+	u.Set(workoutlog.FieldExerciseID, v)
+	return u
+}
+
+// UpdateExerciseID sets the "exercise_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsert) UpdateExerciseID() *WorkoutLogUpsert {
+	u.SetExcluded(workoutlog.FieldExerciseID)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *WorkoutLogUpsert) SetUserID(v pksuid.ID) *WorkoutLogUpsert {
+	u.Set(workoutlog.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsert) UpdateUserID() *WorkoutLogUpsert {
+	u.SetExcluded(workoutlog.FieldUserID)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.WorkoutLog.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(workoutlog.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *WorkoutLogUpsertOne) UpdateNewValues() *WorkoutLogUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(workoutlog.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.WorkoutLog.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *WorkoutLogUpsertOne) Ignore() *WorkoutLogUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *WorkoutLogUpsertOne) DoNothing() *WorkoutLogUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the WorkoutLogCreate.OnConflict
+// documentation for more info.
+func (u *WorkoutLogUpsertOne) Update(set func(*WorkoutLogUpsert)) *WorkoutLogUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&WorkoutLogUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetSets sets the "sets" field.
+func (u *WorkoutLogUpsertOne) SetSets(v []*schematype.Set) *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetSets(v)
+	})
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *WorkoutLogUpsertOne) UpdateSets() *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateSets()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *WorkoutLogUpsertOne) SetCreatedAt(v string) *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *WorkoutLogUpsertOne) UpdateCreatedAt() *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetWorkoutID sets the "workout_id" field.
+func (u *WorkoutLogUpsertOne) SetWorkoutID(v pksuid.ID) *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetWorkoutID(v)
+	})
+}
+
+// UpdateWorkoutID sets the "workout_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsertOne) UpdateWorkoutID() *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateWorkoutID()
+	})
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (u *WorkoutLogUpsertOne) SetExerciseID(v pksuid.ID) *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetExerciseID(v)
+	})
+}
+
+// UpdateExerciseID sets the "exercise_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsertOne) UpdateExerciseID() *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateExerciseID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *WorkoutLogUpsertOne) SetUserID(v pksuid.ID) *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsertOne) UpdateUserID() *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *WorkoutLogUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for WorkoutLogCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *WorkoutLogUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *WorkoutLogUpsertOne) ID(ctx context.Context) (id pksuid.ID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: WorkoutLogUpsertOne.ID is not supported by MySQL driver. Use WorkoutLogUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *WorkoutLogUpsertOne) IDX(ctx context.Context) pksuid.ID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // WorkoutLogCreateBulk is the builder for creating many WorkoutLog entities in bulk.
 type WorkoutLogCreateBulk struct {
 	config
 	err      error
 	builders []*WorkoutLogCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the WorkoutLog entities in the database.
@@ -311,6 +581,7 @@ func (wlcb *WorkoutLogCreateBulk) Save(ctx context.Context) ([]*WorkoutLog, erro
 					_, err = mutators[i+1].Mutate(root, wlcb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = wlcb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, wlcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -357,6 +628,190 @@ func (wlcb *WorkoutLogCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (wlcb *WorkoutLogCreateBulk) ExecX(ctx context.Context) {
 	if err := wlcb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.WorkoutLog.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.WorkoutLogUpsert) {
+//			SetSets(v+v).
+//		}).
+//		Exec(ctx)
+func (wlcb *WorkoutLogCreateBulk) OnConflict(opts ...sql.ConflictOption) *WorkoutLogUpsertBulk {
+	wlcb.conflict = opts
+	return &WorkoutLogUpsertBulk{
+		create: wlcb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.WorkoutLog.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (wlcb *WorkoutLogCreateBulk) OnConflictColumns(columns ...string) *WorkoutLogUpsertBulk {
+	wlcb.conflict = append(wlcb.conflict, sql.ConflictColumns(columns...))
+	return &WorkoutLogUpsertBulk{
+		create: wlcb,
+	}
+}
+
+// WorkoutLogUpsertBulk is the builder for "upsert"-ing
+// a bulk of WorkoutLog nodes.
+type WorkoutLogUpsertBulk struct {
+	create *WorkoutLogCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.WorkoutLog.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(workoutlog.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *WorkoutLogUpsertBulk) UpdateNewValues() *WorkoutLogUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(workoutlog.FieldID)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.WorkoutLog.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *WorkoutLogUpsertBulk) Ignore() *WorkoutLogUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *WorkoutLogUpsertBulk) DoNothing() *WorkoutLogUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the WorkoutLogCreateBulk.OnConflict
+// documentation for more info.
+func (u *WorkoutLogUpsertBulk) Update(set func(*WorkoutLogUpsert)) *WorkoutLogUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&WorkoutLogUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetSets sets the "sets" field.
+func (u *WorkoutLogUpsertBulk) SetSets(v []*schematype.Set) *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetSets(v)
+	})
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *WorkoutLogUpsertBulk) UpdateSets() *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateSets()
+	})
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (u *WorkoutLogUpsertBulk) SetCreatedAt(v string) *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetCreatedAt(v)
+	})
+}
+
+// UpdateCreatedAt sets the "created_at" field to the value that was provided on create.
+func (u *WorkoutLogUpsertBulk) UpdateCreatedAt() *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateCreatedAt()
+	})
+}
+
+// SetWorkoutID sets the "workout_id" field.
+func (u *WorkoutLogUpsertBulk) SetWorkoutID(v pksuid.ID) *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetWorkoutID(v)
+	})
+}
+
+// UpdateWorkoutID sets the "workout_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsertBulk) UpdateWorkoutID() *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateWorkoutID()
+	})
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (u *WorkoutLogUpsertBulk) SetExerciseID(v pksuid.ID) *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetExerciseID(v)
+	})
+}
+
+// UpdateExerciseID sets the "exercise_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsertBulk) UpdateExerciseID() *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateExerciseID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *WorkoutLogUpsertBulk) SetUserID(v pksuid.ID) *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *WorkoutLogUpsertBulk) UpdateUserID() *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *WorkoutLogUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the WorkoutLogCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for WorkoutLogCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *WorkoutLogUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

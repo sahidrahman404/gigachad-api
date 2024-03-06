@@ -1,0 +1,393 @@
+{{define "subject"}}Your Daily Workout Reminder{{end}}
+
+{{define "plainBody"}}
+
+Hi {{.UserName}},
+
+We hope you're ready to tackle another fantastic day of workouts and make progress towards your fitness goals! This email is to remind you about your daily workout scheduled in our fitness tracking app. Get ready to sweat and push yourself to new heights!
+
+Workout Details:
+
+Workout Name: {{.Routine.Name}}
+{{if .Routine.Edges.RoutineExercises}}
+{{range $RoutineExercise := .Routine.Edges.RoutineExercises}}
+{{$RoutineExercise.Edges.Exercises.Name}}
+Sets      Reps           Kg          Duration
+{{range $i, $set := $RoutineExercise.Sets}}
+{{incr $i}} {{$s := $set.Display}} {{$s.Reps}}  {{$s.Kg}} {{$s.Duration}}
+{{end}}
+{{end}}
+{{end}}
+
+Remember, consistency is key to achieving your fitness goals, and your commitment is inspiring. Take this opportunity to challenge yourself, improve your fitness level, and have fun during your workout session.
+
+To make the most out of your workout, consider the following tips:
+
+1. Hydrate well before, during, and after your workout.
+
+2. Wear comfortable workout attire and proper footwear.
+
+3. Warm up adequately before starting your exercise routine.
+
+4. Follow proper form and technique for each exercise.
+
+5. Listen to your body and adjust the intensity as needed.
+
+6. Cool down and stretch after your workout to aid in recovery.
+
+Keep up the amazing work, and let's make today's workout count!
+
+Best regards,
+The Gigachad team
+
+{{end}}
+
+{{define "htmlBody"}}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="en">
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+        <style>
+            @font-face {
+                font-family: "Inter";
+                font-style: normal;
+                font-weight: 400;
+                mso-font-alt: "sans-serif";
+                src: url(https://rsms.me/inter/font-files/Inter-Regular.woff2?v=3.19) format("woff2");
+            }
+
+            * {
+                font-family: "Inter", sans-serif;
+            }
+        </style>
+        <style>
+            blockquote,
+            h1,
+            h2,
+            h3,
+            img,
+            li,
+            ol,
+            p,
+            ul {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+        </style>
+    </head>
+    <body>
+
+        <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 600px; min-width: 300px; width: 100%; margin-left: auto; margin-right: auto; padding: 0.5rem;">
+            <tbody>
+                <tr style="width: 100%;">
+                    <td>
+                        <p
+                            style="
+                                font-size: 15px;
+                                line-height: 24px;
+                                margin: 16px 0;
+                                text-align: start;
+                                margin-bottom: 20px;
+                                margin-top: 0px;
+                                color: rgb(55, 65, 81);
+                                -webkit-font-smoothing: antialiased;
+                                -moz-osx-font-smoothing: grayscale;
+                            "
+                        >
+                            Hi {{.UserName}},
+                        </p>
+                        <p
+                            style="
+                                font-size: 15px;
+                                line-height: 24px;
+                                margin: 16px 0;
+                                text-align: start;
+                                margin-bottom: 20px;
+                                margin-top: 0px;
+                                color: rgb(55, 65, 81);
+                                -webkit-font-smoothing: antialiased;
+                                -moz-osx-font-smoothing: grayscale;
+                            "
+                        >
+                            We hope you&#x27;re ready to tackle another fantastic day of workouts and make progress towards your fitness goals! This email is to remind you about your daily workout scheduled in our fitness tracking app. Get
+                            ready to sweat and push yourself to new heights!
+                        </p>
+                        <p
+                            style="
+                                font-size: 15px;
+                                line-height: 24px;
+                                margin: 16px 0;
+                                text-align: start;
+                                margin-bottom: 20px;
+                                margin-top: 0px;
+                                color: rgb(55, 65, 81);
+                                -webkit-font-smoothing: antialiased;
+                                -moz-osx-font-smoothing: grayscale;
+                            "
+                        >
+                            Workout Details:
+                        </p>
+                        <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%;">
+                            <tbody>
+                                <tr style="width: 100%;">
+                                    <td>
+                                        <ul style="margin-top: 0px; margin-bottom: 20px; padding-left: 26px; list-style-type: disc;">
+                                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%;">
+                                                <tbody>
+                                                    <tr style="width: 100%;">
+                                                        <td>
+                                                            <li style="margin-bottom: 8px; padding-left: 6px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                                <p
+                                                                    style="
+                                                                        font-size: 15px;
+                                                                        line-height: 24px;
+                                                                        margin: 16px 0;
+                                                                        text-align: left;
+                                                                        margin-bottom: 0px;
+                                                                        margin-top: 0px;
+                                                                        color: rgb(55, 65, 81);
+                                                                        -webkit-font-smoothing: antialiased;
+                                                                        -moz-osx-font-smoothing: grayscale;
+                                                                    "
+                                                                >
+                                                                    Workout Name: {{.Routine.Name}}
+                                                                </p>
+                                                            </li>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </ul>
+{{$RoutineExercises := .Routine.Edges.RoutineExercises}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p
+                            style="
+                                font-size: 15px;
+                                line-height: 24px;
+                                margin: 16px 0;
+                                text-align: start;
+                                margin-bottom: 20px;
+                                margin-top: 0px;
+                                color: rgb(55, 65, 81);
+                                -webkit-font-smoothing: antialiased;
+                                -moz-osx-font-smoothing: grayscale;
+                            "
+                        >
+                            Remember, consistency is key to achieving your fitness goals, and your commitment is inspiring. Take this opportunity to challenge yourself, improve your fitness level, and have fun during your workout session.
+                        </p>
+                        <p
+                            style="
+                                font-size: 15px;
+                                line-height: 24px;
+                                margin: 16px 0;
+                                text-align: start;
+                                margin-bottom: 20px;
+                                margin-top: 0px;
+                                color: rgb(55, 65, 81);
+                                -webkit-font-smoothing: antialiased;
+                                -moz-osx-font-smoothing: grayscale;
+                            "
+                        >
+                            To make the most out of your workout, consider the following tips:
+                        </p>
+                        <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 37.5em;">
+                            <tbody>
+                                <tr style="width: 100%;">
+                                    <td>
+                                        <ol style="margin-top: 0px; margin-bottom: 20px; padding-left: 26px; list-style-type: decimal;">
+                                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%;">
+                                                <tbody>
+                                                    <tr style="width: 100%;">
+                                                        <td>
+                                                            <li style="margin-bottom: 8px; padding-left: 6px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                                <p
+                                                                    style="
+                                                                        font-size: 15px;
+                                                                        line-height: 24px;
+                                                                        margin: 16px 0;
+                                                                        text-align: left;
+                                                                        margin-bottom: 0px;
+                                                                        margin-top: 0px;
+                                                                        color: rgb(55, 65, 81);
+                                                                        -webkit-font-smoothing: antialiased;
+                                                                        -moz-osx-font-smoothing: grayscale;
+                                                                    "
+                                                                >
+                                                                    Hydrate well before, during, and after your workout.
+                                                                </p>
+                                                            </li>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%;">
+                                                <tbody>
+                                                    <tr style="width: 100%;">
+                                                        <td>
+                                                            <li style="margin-bottom: 8px; padding-left: 6px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                                <p
+                                                                    style="
+                                                                        font-size: 15px;
+                                                                        line-height: 24px;
+                                                                        margin: 16px 0;
+                                                                        text-align: left;
+                                                                        margin-bottom: 0px;
+                                                                        margin-top: 0px;
+                                                                        color: rgb(55, 65, 81);
+                                                                        -webkit-font-smoothing: antialiased;
+                                                                        -moz-osx-font-smoothing: grayscale;
+                                                                    "
+                                                                >
+                                                                    Wear comfortable workout attire and proper footwear.
+                                                                </p>
+                                                            </li>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%;">
+                                                <tbody>
+                                                    <tr style="width: 100%;">
+                                                        <td>
+                                                            <li style="margin-bottom: 8px; padding-left: 6px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                                <p
+                                                                    style="
+                                                                        font-size: 15px;
+                                                                        line-height: 24px;
+                                                                        margin: 16px 0;
+                                                                        text-align: left;
+                                                                        margin-bottom: 0px;
+                                                                        margin-top: 0px;
+                                                                        color: rgb(55, 65, 81);
+                                                                        -webkit-font-smoothing: antialiased;
+                                                                        -moz-osx-font-smoothing: grayscale;
+                                                                    "
+                                                                >
+                                                                    Warm up adequately before starting your exercise routine.
+                                                                </p>
+                                                            </li>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%;">
+                                                <tbody>
+                                                    <tr style="width: 100%;">
+                                                        <td>
+                                                            <li style="margin-bottom: 8px; padding-left: 6px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                                <p
+                                                                    style="
+                                                                        font-size: 15px;
+                                                                        line-height: 24px;
+                                                                        margin: 16px 0;
+                                                                        text-align: left;
+                                                                        margin-bottom: 0px;
+                                                                        margin-top: 0px;
+                                                                        color: rgb(55, 65, 81);
+                                                                        -webkit-font-smoothing: antialiased;
+                                                                        -moz-osx-font-smoothing: grayscale;
+                                                                    "
+                                                                >
+                                                                    Follow proper form and technique for each exercise.
+                                                                </p>
+                                                            </li>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%;">
+                                                <tbody>
+                                                    <tr style="width: 100%;">
+                                                        <td>
+                                                            <li style="margin-bottom: 8px; padding-left: 6px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                                <p
+                                                                    style="
+                                                                        font-size: 15px;
+                                                                        line-height: 24px;
+                                                                        margin: 16px 0;
+                                                                        text-align: left;
+                                                                        margin-bottom: 0px;
+                                                                        margin-top: 0px;
+                                                                        color: rgb(55, 65, 81);
+                                                                        -webkit-font-smoothing: antialiased;
+                                                                        -moz-osx-font-smoothing: grayscale;
+                                                                    "
+                                                                >
+                                                                    Listen to your body and adjust the intensity as needed.
+                                                                </p>
+                                                            </li>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%;">
+                                                <tbody>
+                                                    <tr style="width: 100%;">
+                                                        <td>
+                                                            <li style="margin-bottom: 8px; padding-left: 6px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+                                                                <p
+                                                                    style="
+                                                                        font-size: 15px;
+                                                                        line-height: 24px;
+                                                                        margin: 16px 0;
+                                                                        text-align: left;
+                                                                        margin-bottom: 0px;
+                                                                        margin-top: 0px;
+                                                                        color: rgb(55, 65, 81);
+                                                                        -webkit-font-smoothing: antialiased;
+                                                                        -moz-osx-font-smoothing: grayscale;
+                                                                    "
+                                                                >
+                                                                    Cool down and stretch after your workout to aid in recovery.
+                                                                </p>
+                                                            </li>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </ol>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p
+                            style="
+                                font-size: 15px;
+                                line-height: 24px;
+                                margin: 16px 0;
+                                text-align: start;
+                                margin-bottom: 20px;
+                                margin-top: 0px;
+                                color: rgb(55, 65, 81);
+                                -webkit-font-smoothing: antialiased;
+                                -moz-osx-font-smoothing: grayscale;
+                            "
+                        >
+                            Keep up the amazing work, and let&#x27;s make today&#x27;s workout count!
+                        </p>
+                        <p
+                            style="
+                                font-size: 15px;
+                                line-height: 24px;
+                                margin: 16px 0;
+                                text-align: start;
+                                margin-bottom: 20px;
+                                margin-top: 0px;
+                                color: rgb(55, 65, 81);
+                                -webkit-font-smoothing: antialiased;
+                                -moz-osx-font-smoothing: grayscale;
+                            "
+                        >
+                            Best regards,<br />
+                            The Gigachad team
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
+{{end}}

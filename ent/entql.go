@@ -98,8 +98,9 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "Routine",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			routine.FieldName:   {Type: field.TypeString, Column: routine.FieldName},
-			routine.FieldUserID: {Type: field.TypeString, Column: routine.FieldUserID},
+			routine.FieldName:       {Type: field.TypeString, Column: routine.FieldName},
+			routine.FieldScheduleID: {Type: field.TypeString, Column: routine.FieldScheduleID},
+			routine.FieldUserID:     {Type: field.TypeString, Column: routine.FieldUserID},
 		},
 	}
 	graph.Nodes[5] = &sqlgraph.Node{
@@ -976,6 +977,11 @@ func (f *RoutineFilter) WhereID(p entql.StringP) {
 // WhereName applies the entql string predicate on the name field.
 func (f *RoutineFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(routine.FieldName))
+}
+
+// WhereScheduleID applies the entql string predicate on the schedule_id field.
+func (f *RoutineFilter) WhereScheduleID(p entql.StringP) {
+	f.Where(p.Field(routine.FieldScheduleID))
 }
 
 // WhereUserID applies the entql string predicate on the user_id field.

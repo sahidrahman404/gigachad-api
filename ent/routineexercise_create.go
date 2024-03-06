@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
@@ -22,6 +24,7 @@ type RoutineExerciseCreate struct {
 	config
 	mutation *RoutineExerciseMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetRestTimer sets the "rest_timer" field.
@@ -204,6 +207,7 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 		_node = &RoutineExercise{config: rec.config}
 		_spec = sqlgraph.NewCreateSpec(routineexercise.Table, sqlgraph.NewFieldSpec(routineexercise.FieldID, field.TypeString))
 	)
+	_spec.OnConflict = rec.conflict
 	if id, ok := rec.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -270,11 +274,290 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.RoutineExercise.Create().
+//		SetRestTimer(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.RoutineExerciseUpsert) {
+//			SetRestTimer(v+v).
+//		}).
+//		Exec(ctx)
+func (rec *RoutineExerciseCreate) OnConflict(opts ...sql.ConflictOption) *RoutineExerciseUpsertOne {
+	rec.conflict = opts
+	return &RoutineExerciseUpsertOne{
+		create: rec,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.RoutineExercise.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (rec *RoutineExerciseCreate) OnConflictColumns(columns ...string) *RoutineExerciseUpsertOne {
+	rec.conflict = append(rec.conflict, sql.ConflictColumns(columns...))
+	return &RoutineExerciseUpsertOne{
+		create: rec,
+	}
+}
+
+type (
+	// RoutineExerciseUpsertOne is the builder for "upsert"-ing
+	//  one RoutineExercise node.
+	RoutineExerciseUpsertOne struct {
+		create *RoutineExerciseCreate
+	}
+
+	// RoutineExerciseUpsert is the "OnConflict" setter.
+	RoutineExerciseUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetRestTimer sets the "rest_timer" field.
+func (u *RoutineExerciseUpsert) SetRestTimer(v string) *RoutineExerciseUpsert {
+	u.Set(routineexercise.FieldRestTimer, v)
+	return u
+}
+
+// UpdateRestTimer sets the "rest_timer" field to the value that was provided on create.
+func (u *RoutineExerciseUpsert) UpdateRestTimer() *RoutineExerciseUpsert {
+	u.SetExcluded(routineexercise.FieldRestTimer)
+	return u
+}
+
+// ClearRestTimer clears the value of the "rest_timer" field.
+func (u *RoutineExerciseUpsert) ClearRestTimer() *RoutineExerciseUpsert {
+	u.SetNull(routineexercise.FieldRestTimer)
+	return u
+}
+
+// SetSets sets the "sets" field.
+func (u *RoutineExerciseUpsert) SetSets(v []*schematype.Set) *RoutineExerciseUpsert {
+	u.Set(routineexercise.FieldSets, v)
+	return u
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *RoutineExerciseUpsert) UpdateSets() *RoutineExerciseUpsert {
+	u.SetExcluded(routineexercise.FieldSets)
+	return u
+}
+
+// SetRoutineID sets the "routine_id" field.
+func (u *RoutineExerciseUpsert) SetRoutineID(v pksuid.ID) *RoutineExerciseUpsert {
+	u.Set(routineexercise.FieldRoutineID, v)
+	return u
+}
+
+// UpdateRoutineID sets the "routine_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsert) UpdateRoutineID() *RoutineExerciseUpsert {
+	u.SetExcluded(routineexercise.FieldRoutineID)
+	return u
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (u *RoutineExerciseUpsert) SetExerciseID(v pksuid.ID) *RoutineExerciseUpsert {
+	u.Set(routineexercise.FieldExerciseID, v)
+	return u
+}
+
+// UpdateExerciseID sets the "exercise_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsert) UpdateExerciseID() *RoutineExerciseUpsert {
+	u.SetExcluded(routineexercise.FieldExerciseID)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *RoutineExerciseUpsert) SetUserID(v pksuid.ID) *RoutineExerciseUpsert {
+	u.Set(routineexercise.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsert) UpdateUserID() *RoutineExerciseUpsert {
+	u.SetExcluded(routineexercise.FieldUserID)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.RoutineExercise.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(routineexercise.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *RoutineExerciseUpsertOne) UpdateNewValues() *RoutineExerciseUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(routineexercise.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.RoutineExercise.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *RoutineExerciseUpsertOne) Ignore() *RoutineExerciseUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *RoutineExerciseUpsertOne) DoNothing() *RoutineExerciseUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the RoutineExerciseCreate.OnConflict
+// documentation for more info.
+func (u *RoutineExerciseUpsertOne) Update(set func(*RoutineExerciseUpsert)) *RoutineExerciseUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&RoutineExerciseUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetRestTimer sets the "rest_timer" field.
+func (u *RoutineExerciseUpsertOne) SetRestTimer(v string) *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetRestTimer(v)
+	})
+}
+
+// UpdateRestTimer sets the "rest_timer" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertOne) UpdateRestTimer() *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateRestTimer()
+	})
+}
+
+// ClearRestTimer clears the value of the "rest_timer" field.
+func (u *RoutineExerciseUpsertOne) ClearRestTimer() *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.ClearRestTimer()
+	})
+}
+
+// SetSets sets the "sets" field.
+func (u *RoutineExerciseUpsertOne) SetSets(v []*schematype.Set) *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetSets(v)
+	})
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertOne) UpdateSets() *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateSets()
+	})
+}
+
+// SetRoutineID sets the "routine_id" field.
+func (u *RoutineExerciseUpsertOne) SetRoutineID(v pksuid.ID) *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetRoutineID(v)
+	})
+}
+
+// UpdateRoutineID sets the "routine_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertOne) UpdateRoutineID() *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateRoutineID()
+	})
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (u *RoutineExerciseUpsertOne) SetExerciseID(v pksuid.ID) *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetExerciseID(v)
+	})
+}
+
+// UpdateExerciseID sets the "exercise_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertOne) UpdateExerciseID() *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateExerciseID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *RoutineExerciseUpsertOne) SetUserID(v pksuid.ID) *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertOne) UpdateUserID() *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *RoutineExerciseUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for RoutineExerciseCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *RoutineExerciseUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *RoutineExerciseUpsertOne) ID(ctx context.Context) (id pksuid.ID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: RoutineExerciseUpsertOne.ID is not supported by MySQL driver. Use RoutineExerciseUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *RoutineExerciseUpsertOne) IDX(ctx context.Context) pksuid.ID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // RoutineExerciseCreateBulk is the builder for creating many RoutineExercise entities in bulk.
 type RoutineExerciseCreateBulk struct {
 	config
 	err      error
 	builders []*RoutineExerciseCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the RoutineExercise entities in the database.
@@ -304,6 +587,7 @@ func (recb *RoutineExerciseCreateBulk) Save(ctx context.Context) ([]*RoutineExer
 					_, err = mutators[i+1].Mutate(root, recb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = recb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, recb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -350,6 +634,197 @@ func (recb *RoutineExerciseCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (recb *RoutineExerciseCreateBulk) ExecX(ctx context.Context) {
 	if err := recb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.RoutineExercise.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.RoutineExerciseUpsert) {
+//			SetRestTimer(v+v).
+//		}).
+//		Exec(ctx)
+func (recb *RoutineExerciseCreateBulk) OnConflict(opts ...sql.ConflictOption) *RoutineExerciseUpsertBulk {
+	recb.conflict = opts
+	return &RoutineExerciseUpsertBulk{
+		create: recb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.RoutineExercise.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (recb *RoutineExerciseCreateBulk) OnConflictColumns(columns ...string) *RoutineExerciseUpsertBulk {
+	recb.conflict = append(recb.conflict, sql.ConflictColumns(columns...))
+	return &RoutineExerciseUpsertBulk{
+		create: recb,
+	}
+}
+
+// RoutineExerciseUpsertBulk is the builder for "upsert"-ing
+// a bulk of RoutineExercise nodes.
+type RoutineExerciseUpsertBulk struct {
+	create *RoutineExerciseCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.RoutineExercise.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(routineexercise.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *RoutineExerciseUpsertBulk) UpdateNewValues() *RoutineExerciseUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(routineexercise.FieldID)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.RoutineExercise.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *RoutineExerciseUpsertBulk) Ignore() *RoutineExerciseUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *RoutineExerciseUpsertBulk) DoNothing() *RoutineExerciseUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the RoutineExerciseCreateBulk.OnConflict
+// documentation for more info.
+func (u *RoutineExerciseUpsertBulk) Update(set func(*RoutineExerciseUpsert)) *RoutineExerciseUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&RoutineExerciseUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetRestTimer sets the "rest_timer" field.
+func (u *RoutineExerciseUpsertBulk) SetRestTimer(v string) *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetRestTimer(v)
+	})
+}
+
+// UpdateRestTimer sets the "rest_timer" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertBulk) UpdateRestTimer() *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateRestTimer()
+	})
+}
+
+// ClearRestTimer clears the value of the "rest_timer" field.
+func (u *RoutineExerciseUpsertBulk) ClearRestTimer() *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.ClearRestTimer()
+	})
+}
+
+// SetSets sets the "sets" field.
+func (u *RoutineExerciseUpsertBulk) SetSets(v []*schematype.Set) *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetSets(v)
+	})
+}
+
+// UpdateSets sets the "sets" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertBulk) UpdateSets() *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateSets()
+	})
+}
+
+// SetRoutineID sets the "routine_id" field.
+func (u *RoutineExerciseUpsertBulk) SetRoutineID(v pksuid.ID) *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetRoutineID(v)
+	})
+}
+
+// UpdateRoutineID sets the "routine_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertBulk) UpdateRoutineID() *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateRoutineID()
+	})
+}
+
+// SetExerciseID sets the "exercise_id" field.
+func (u *RoutineExerciseUpsertBulk) SetExerciseID(v pksuid.ID) *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetExerciseID(v)
+	})
+}
+
+// UpdateExerciseID sets the "exercise_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertBulk) UpdateExerciseID() *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateExerciseID()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *RoutineExerciseUpsertBulk) SetUserID(v pksuid.ID) *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertBulk) UpdateUserID() *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *RoutineExerciseUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the RoutineExerciseCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for RoutineExerciseCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *RoutineExerciseUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

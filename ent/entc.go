@@ -29,6 +29,7 @@ func main() {
 		Features: []gen.Feature{
 			gen.FeaturePrivacy,
 			gen.FeatureEntQL,
+			gen.FeatureUpsert,
 		},
 	}, opts...); err != nil {
 		log.Fatalf("running ent codegen: %v", err)

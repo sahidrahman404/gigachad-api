@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
@@ -27,6 +29,7 @@ type ExerciseCreate struct {
 	config
 	mutation *ExerciseMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetName sets the "name" field.
@@ -290,6 +293,7 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 		_node = &Exercise{config: ec.config}
 		_spec = sqlgraph.NewCreateSpec(exercise.Table, sqlgraph.NewFieldSpec(exercise.FieldID, field.TypeString))
 	)
+	_spec.OnConflict = ec.conflict
 	if id, ok := ec.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -452,11 +456,290 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Exercise.Create().
+//		SetName(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ExerciseUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (ec *ExerciseCreate) OnConflict(opts ...sql.ConflictOption) *ExerciseUpsertOne {
+	ec.conflict = opts
+	return &ExerciseUpsertOne{
+		create: ec,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Exercise.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (ec *ExerciseCreate) OnConflictColumns(columns ...string) *ExerciseUpsertOne {
+	ec.conflict = append(ec.conflict, sql.ConflictColumns(columns...))
+	return &ExerciseUpsertOne{
+		create: ec,
+	}
+}
+
+type (
+	// ExerciseUpsertOne is the builder for "upsert"-ing
+	//  one Exercise node.
+	ExerciseUpsertOne struct {
+		create *ExerciseCreate
+	}
+
+	// ExerciseUpsert is the "OnConflict" setter.
+	ExerciseUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetName sets the "name" field.
+func (u *ExerciseUpsert) SetName(v string) *ExerciseUpsert {
+	u.Set(exercise.FieldName, v)
+	return u
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *ExerciseUpsert) UpdateName() *ExerciseUpsert {
+	u.SetExcluded(exercise.FieldName)
+	return u
+}
+
+// SetImage sets the "image" field.
+func (u *ExerciseUpsert) SetImage(v *schematype.Image) *ExerciseUpsert {
+	u.Set(exercise.FieldImage, v)
+	return u
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *ExerciseUpsert) UpdateImage() *ExerciseUpsert {
+	u.SetExcluded(exercise.FieldImage)
+	return u
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *ExerciseUpsert) ClearImage() *ExerciseUpsert {
+	u.SetNull(exercise.FieldImage)
+	return u
+}
+
+// SetHowTo sets the "how_to" field.
+func (u *ExerciseUpsert) SetHowTo(v string) *ExerciseUpsert {
+	u.Set(exercise.FieldHowTo, v)
+	return u
+}
+
+// UpdateHowTo sets the "how_to" field to the value that was provided on create.
+func (u *ExerciseUpsert) UpdateHowTo() *ExerciseUpsert {
+	u.SetExcluded(exercise.FieldHowTo)
+	return u
+}
+
+// ClearHowTo clears the value of the "how_to" field.
+func (u *ExerciseUpsert) ClearHowTo() *ExerciseUpsert {
+	u.SetNull(exercise.FieldHowTo)
+	return u
+}
+
+// SetUserID sets the "user_id" field.
+func (u *ExerciseUpsert) SetUserID(v pksuid.ID) *ExerciseUpsert {
+	u.Set(exercise.FieldUserID, v)
+	return u
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *ExerciseUpsert) UpdateUserID() *ExerciseUpsert {
+	u.SetExcluded(exercise.FieldUserID)
+	return u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *ExerciseUpsert) ClearUserID() *ExerciseUpsert {
+	u.SetNull(exercise.FieldUserID)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.Exercise.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(exercise.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *ExerciseUpsertOne) UpdateNewValues() *ExerciseUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(exercise.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Exercise.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *ExerciseUpsertOne) Ignore() *ExerciseUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ExerciseUpsertOne) DoNothing() *ExerciseUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ExerciseCreate.OnConflict
+// documentation for more info.
+func (u *ExerciseUpsertOne) Update(set func(*ExerciseUpsert)) *ExerciseUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ExerciseUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *ExerciseUpsertOne) SetName(v string) *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *ExerciseUpsertOne) UpdateName() *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *ExerciseUpsertOne) SetImage(v *schematype.Image) *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *ExerciseUpsertOne) UpdateImage() *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.UpdateImage()
+	})
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *ExerciseUpsertOne) ClearImage() *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.ClearImage()
+	})
+}
+
+// SetHowTo sets the "how_to" field.
+func (u *ExerciseUpsertOne) SetHowTo(v string) *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.SetHowTo(v)
+	})
+}
+
+// UpdateHowTo sets the "how_to" field to the value that was provided on create.
+func (u *ExerciseUpsertOne) UpdateHowTo() *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.UpdateHowTo()
+	})
+}
+
+// ClearHowTo clears the value of the "how_to" field.
+func (u *ExerciseUpsertOne) ClearHowTo() *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.ClearHowTo()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *ExerciseUpsertOne) SetUserID(v pksuid.ID) *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *ExerciseUpsertOne) UpdateUserID() *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *ExerciseUpsertOne) ClearUserID() *ExerciseUpsertOne {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.ClearUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *ExerciseUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for ExerciseCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ExerciseUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *ExerciseUpsertOne) ID(ctx context.Context) (id pksuid.ID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: ExerciseUpsertOne.ID is not supported by MySQL driver. Use ExerciseUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *ExerciseUpsertOne) IDX(ctx context.Context) pksuid.ID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // ExerciseCreateBulk is the builder for creating many Exercise entities in bulk.
 type ExerciseCreateBulk struct {
 	config
 	err      error
 	builders []*ExerciseCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Exercise entities in the database.
@@ -486,6 +769,7 @@ func (ecb *ExerciseCreateBulk) Save(ctx context.Context) ([]*Exercise, error) {
 					_, err = mutators[i+1].Mutate(root, ecb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = ecb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, ecb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -532,6 +816,197 @@ func (ecb *ExerciseCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (ecb *ExerciseCreateBulk) ExecX(ctx context.Context) {
 	if err := ecb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Exercise.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.ExerciseUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (ecb *ExerciseCreateBulk) OnConflict(opts ...sql.ConflictOption) *ExerciseUpsertBulk {
+	ecb.conflict = opts
+	return &ExerciseUpsertBulk{
+		create: ecb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Exercise.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (ecb *ExerciseCreateBulk) OnConflictColumns(columns ...string) *ExerciseUpsertBulk {
+	ecb.conflict = append(ecb.conflict, sql.ConflictColumns(columns...))
+	return &ExerciseUpsertBulk{
+		create: ecb,
+	}
+}
+
+// ExerciseUpsertBulk is the builder for "upsert"-ing
+// a bulk of Exercise nodes.
+type ExerciseUpsertBulk struct {
+	create *ExerciseCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Exercise.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(exercise.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *ExerciseUpsertBulk) UpdateNewValues() *ExerciseUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(exercise.FieldID)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Exercise.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *ExerciseUpsertBulk) Ignore() *ExerciseUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *ExerciseUpsertBulk) DoNothing() *ExerciseUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the ExerciseCreateBulk.OnConflict
+// documentation for more info.
+func (u *ExerciseUpsertBulk) Update(set func(*ExerciseUpsert)) *ExerciseUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&ExerciseUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *ExerciseUpsertBulk) SetName(v string) *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *ExerciseUpsertBulk) UpdateName() *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *ExerciseUpsertBulk) SetImage(v *schematype.Image) *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *ExerciseUpsertBulk) UpdateImage() *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.UpdateImage()
+	})
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *ExerciseUpsertBulk) ClearImage() *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.ClearImage()
+	})
+}
+
+// SetHowTo sets the "how_to" field.
+func (u *ExerciseUpsertBulk) SetHowTo(v string) *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.SetHowTo(v)
+	})
+}
+
+// UpdateHowTo sets the "how_to" field to the value that was provided on create.
+func (u *ExerciseUpsertBulk) UpdateHowTo() *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.UpdateHowTo()
+	})
+}
+
+// ClearHowTo clears the value of the "how_to" field.
+func (u *ExerciseUpsertBulk) ClearHowTo() *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.ClearHowTo()
+	})
+}
+
+// SetUserID sets the "user_id" field.
+func (u *ExerciseUpsertBulk) SetUserID(v pksuid.ID) *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.SetUserID(v)
+	})
+}
+
+// UpdateUserID sets the "user_id" field to the value that was provided on create.
+func (u *ExerciseUpsertBulk) UpdateUserID() *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.UpdateUserID()
+	})
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (u *ExerciseUpsertBulk) ClearUserID() *ExerciseUpsertBulk {
+	return u.Update(func(s *ExerciseUpsert) {
+		s.ClearUserID()
+	})
+}
+
+// Exec executes the query.
+func (u *ExerciseUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the ExerciseCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for ExerciseCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *ExerciseUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

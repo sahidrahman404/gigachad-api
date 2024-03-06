@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
@@ -20,6 +22,7 @@ type MusclesGroupCreate struct {
 	config
 	mutation *MusclesGroupMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // SetName sets the "name" field.
@@ -148,6 +151,7 @@ func (mgc *MusclesGroupCreate) createSpec() (*MusclesGroup, *sqlgraph.CreateSpec
 		_node = &MusclesGroup{config: mgc.config}
 		_spec = sqlgraph.NewCreateSpec(musclesgroup.Table, sqlgraph.NewFieldSpec(musclesgroup.FieldID, field.TypeString))
 	)
+	_spec.OnConflict = mgc.conflict
 	if id, ok := mgc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
@@ -179,11 +183,212 @@ func (mgc *MusclesGroupCreate) createSpec() (*MusclesGroup, *sqlgraph.CreateSpec
 	return _node, _spec
 }
 
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.MusclesGroup.Create().
+//		SetName(v).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.MusclesGroupUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (mgc *MusclesGroupCreate) OnConflict(opts ...sql.ConflictOption) *MusclesGroupUpsertOne {
+	mgc.conflict = opts
+	return &MusclesGroupUpsertOne{
+		create: mgc,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.MusclesGroup.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (mgc *MusclesGroupCreate) OnConflictColumns(columns ...string) *MusclesGroupUpsertOne {
+	mgc.conflict = append(mgc.conflict, sql.ConflictColumns(columns...))
+	return &MusclesGroupUpsertOne{
+		create: mgc,
+	}
+}
+
+type (
+	// MusclesGroupUpsertOne is the builder for "upsert"-ing
+	//  one MusclesGroup node.
+	MusclesGroupUpsertOne struct {
+		create *MusclesGroupCreate
+	}
+
+	// MusclesGroupUpsert is the "OnConflict" setter.
+	MusclesGroupUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// SetName sets the "name" field.
+func (u *MusclesGroupUpsert) SetName(v string) *MusclesGroupUpsert {
+	u.Set(musclesgroup.FieldName, v)
+	return u
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *MusclesGroupUpsert) UpdateName() *MusclesGroupUpsert {
+	u.SetExcluded(musclesgroup.FieldName)
+	return u
+}
+
+// SetImage sets the "image" field.
+func (u *MusclesGroupUpsert) SetImage(v schematype.Image) *MusclesGroupUpsert {
+	u.Set(musclesgroup.FieldImage, v)
+	return u
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *MusclesGroupUpsert) UpdateImage() *MusclesGroupUpsert {
+	u.SetExcluded(musclesgroup.FieldImage)
+	return u
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *MusclesGroupUpsert) ClearImage() *MusclesGroupUpsert {
+	u.SetNull(musclesgroup.FieldImage)
+	return u
+}
+
+// UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
+// Using this option is equivalent to using:
+//
+//	client.MusclesGroup.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(musclesgroup.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *MusclesGroupUpsertOne) UpdateNewValues() *MusclesGroupUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		if _, exists := u.create.mutation.ID(); exists {
+			s.SetIgnore(musclesgroup.FieldID)
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.MusclesGroup.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
+func (u *MusclesGroupUpsertOne) Ignore() *MusclesGroupUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *MusclesGroupUpsertOne) DoNothing() *MusclesGroupUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the MusclesGroupCreate.OnConflict
+// documentation for more info.
+func (u *MusclesGroupUpsertOne) Update(set func(*MusclesGroupUpsert)) *MusclesGroupUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&MusclesGroupUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *MusclesGroupUpsertOne) SetName(v string) *MusclesGroupUpsertOne {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *MusclesGroupUpsertOne) UpdateName() *MusclesGroupUpsertOne {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *MusclesGroupUpsertOne) SetImage(v schematype.Image) *MusclesGroupUpsertOne {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *MusclesGroupUpsertOne) UpdateImage() *MusclesGroupUpsertOne {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.UpdateImage()
+	})
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *MusclesGroupUpsertOne) ClearImage() *MusclesGroupUpsertOne {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.ClearImage()
+	})
+}
+
+// Exec executes the query.
+func (u *MusclesGroupUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for MusclesGroupCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *MusclesGroupUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *MusclesGroupUpsertOne) ID(ctx context.Context) (id pksuid.ID, err error) {
+	if u.create.driver.Dialect() == dialect.MySQL {
+		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
+		// fields from the database since MySQL does not support the RETURNING clause.
+		return id, errors.New("ent: MusclesGroupUpsertOne.ID is not supported by MySQL driver. Use MusclesGroupUpsertOne.Exec instead")
+	}
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *MusclesGroupUpsertOne) IDX(ctx context.Context) pksuid.ID {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
 // MusclesGroupCreateBulk is the builder for creating many MusclesGroup entities in bulk.
 type MusclesGroupCreateBulk struct {
 	config
 	err      error
 	builders []*MusclesGroupCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the MusclesGroup entities in the database.
@@ -213,6 +418,7 @@ func (mgcb *MusclesGroupCreateBulk) Save(ctx context.Context) ([]*MusclesGroup, 
 					_, err = mutators[i+1].Mutate(root, mgcb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = mgcb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, mgcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -259,6 +465,155 @@ func (mgcb *MusclesGroupCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (mgcb *MusclesGroupCreateBulk) ExecX(ctx context.Context) {
 	if err := mgcb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.MusclesGroup.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		// Override some of the fields with custom
+//		// update values.
+//		Update(func(u *ent.MusclesGroupUpsert) {
+//			SetName(v+v).
+//		}).
+//		Exec(ctx)
+func (mgcb *MusclesGroupCreateBulk) OnConflict(opts ...sql.ConflictOption) *MusclesGroupUpsertBulk {
+	mgcb.conflict = opts
+	return &MusclesGroupUpsertBulk{
+		create: mgcb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.MusclesGroup.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+func (mgcb *MusclesGroupCreateBulk) OnConflictColumns(columns ...string) *MusclesGroupUpsertBulk {
+	mgcb.conflict = append(mgcb.conflict, sql.ConflictColumns(columns...))
+	return &MusclesGroupUpsertBulk{
+		create: mgcb,
+	}
+}
+
+// MusclesGroupUpsertBulk is the builder for "upsert"-ing
+// a bulk of MusclesGroup nodes.
+type MusclesGroupUpsertBulk struct {
+	create *MusclesGroupCreateBulk
+}
+
+// UpdateNewValues updates the mutable fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.MusclesGroup.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//			sql.ResolveWith(func(u *sql.UpdateSet) {
+//				u.SetIgnore(musclesgroup.FieldID)
+//			}),
+//		).
+//		Exec(ctx)
+func (u *MusclesGroupUpsertBulk) UpdateNewValues() *MusclesGroupUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
+		for _, b := range u.create.builders {
+			if _, exists := b.mutation.ID(); exists {
+				s.SetIgnore(musclesgroup.FieldID)
+			}
+		}
+	}))
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.MusclesGroup.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+func (u *MusclesGroupUpsertBulk) Ignore() *MusclesGroupUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *MusclesGroupUpsertBulk) DoNothing() *MusclesGroupUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the MusclesGroupCreateBulk.OnConflict
+// documentation for more info.
+func (u *MusclesGroupUpsertBulk) Update(set func(*MusclesGroupUpsert)) *MusclesGroupUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&MusclesGroupUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// SetName sets the "name" field.
+func (u *MusclesGroupUpsertBulk) SetName(v string) *MusclesGroupUpsertBulk {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *MusclesGroupUpsertBulk) UpdateName() *MusclesGroupUpsertBulk {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.UpdateName()
+	})
+}
+
+// SetImage sets the "image" field.
+func (u *MusclesGroupUpsertBulk) SetImage(v schematype.Image) *MusclesGroupUpsertBulk {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.SetImage(v)
+	})
+}
+
+// UpdateImage sets the "image" field to the value that was provided on create.
+func (u *MusclesGroupUpsertBulk) UpdateImage() *MusclesGroupUpsertBulk {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.UpdateImage()
+	})
+}
+
+// ClearImage clears the value of the "image" field.
+func (u *MusclesGroupUpsertBulk) ClearImage() *MusclesGroupUpsertBulk {
+	return u.Update(func(s *MusclesGroupUpsert) {
+		s.ClearImage()
+	})
+}
+
+// Exec executes the query.
+func (u *MusclesGroupUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the MusclesGroupCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for MusclesGroupCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *MusclesGroupUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }
