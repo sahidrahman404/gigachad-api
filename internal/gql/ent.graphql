@@ -44,49 +44,83 @@ type Equipment implements Node {
   name: String!
   image: Image
   exercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Exercises returned from the connection."""
+    """
+    Ordering options for Exercises returned from the connection.
+    """
     orderBy: ExerciseOrder
 
-    """Filtering options for Exercises returned from the connection."""
+    """
+    Filtering options for Exercises returned from the connection.
+    """
     where: ExerciseWhereInput
   ): ExerciseConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type EquipmentConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [EquipmentEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type EquipmentEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: Equipment
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for Equipment connections"""
+"""
+Ordering options for Equipment connections
+"""
 input EquipmentOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order EquipmentSlice."""
+  """
+  The field by which to order EquipmentSlice.
+  """
   field: EquipmentOrderField!
 }
-"""Properties by which Equipment connections can be ordered."""
+"""
+Properties by which Equipment connections can be ordered.
+"""
 enum EquipmentOrderField {
   ID
 }
@@ -98,7 +132,9 @@ input EquipmentWhereInput {
   not: EquipmentWhereInput
   and: [EquipmentWhereInput!]
   or: [EquipmentWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -107,7 +143,9 @@ input EquipmentWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -121,7 +159,9 @@ input EquipmentWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """exercises edge predicates"""
+  """
+  exercises edge predicates
+  """
   hasExercises: Boolean
   hasExercisesWith: [ExerciseWhereInput!]
 }
@@ -133,163 +173,269 @@ type Exercise implements Node {
   userID: ID
   users: User
   equipment(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for EquipmentSlice returned from the connection."""
+    """
+    Ordering options for EquipmentSlice returned from the connection.
+    """
     orderBy: EquipmentOrder
 
-    """Filtering options for EquipmentSlice returned from the connection."""
+    """
+    Filtering options for EquipmentSlice returned from the connection.
+    """
     where: EquipmentWhereInput
   ): EquipmentConnection!
   musclesGroups(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for MusclesGroups returned from the connection."""
+    """
+    Ordering options for MusclesGroups returned from the connection.
+    """
     orderBy: MusclesGroupOrder
 
-    """Filtering options for MusclesGroups returned from the connection."""
+    """
+    Filtering options for MusclesGroups returned from the connection.
+    """
     where: MusclesGroupWhereInput
   ): MusclesGroupConnection!
   exerciseTypes(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for ExerciseTypes returned from the connection."""
+    """
+    Ordering options for ExerciseTypes returned from the connection.
+    """
     orderBy: ExerciseTypeOrder
 
-    """Filtering options for ExerciseTypes returned from the connection."""
+    """
+    Filtering options for ExerciseTypes returned from the connection.
+    """
     where: ExerciseTypeWhereInput
   ): ExerciseTypeConnection!
   routines(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Routines returned from the connection."""
+    """
+    Ordering options for Routines returned from the connection.
+    """
     orderBy: RoutineOrder
 
-    """Filtering options for Routines returned from the connection."""
+    """
+    Filtering options for Routines returned from the connection.
+    """
     where: RoutineWhereInput
   ): RoutineConnection!
   workouts(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Workouts returned from the connection."""
+    """
+    Ordering options for Workouts returned from the connection.
+    """
     orderBy: WorkoutOrder
 
-    """Filtering options for Workouts returned from the connection."""
+    """
+    Filtering options for Workouts returned from the connection.
+    """
     where: WorkoutWhereInput
   ): WorkoutConnection!
   routineExercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for RoutineExercises returned from the connection."""
+    """
+    Ordering options for RoutineExercises returned from the connection.
+    """
     orderBy: RoutineExerciseOrder
 
-    """Filtering options for RoutineExercises returned from the connection."""
+    """
+    Filtering options for RoutineExercises returned from the connection.
+    """
     where: RoutineExerciseWhereInput
   ): RoutineExerciseConnection!
   workoutLogs(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for WorkoutLogs returned from the connection."""
+    """
+    Ordering options for WorkoutLogs returned from the connection.
+    """
     orderBy: WorkoutLogOrder
 
-    """Filtering options for WorkoutLogs returned from the connection."""
+    """
+    Filtering options for WorkoutLogs returned from the connection.
+    """
     where: WorkoutLogWhereInput
   ): WorkoutLogConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type ExerciseConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [ExerciseEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type ExerciseEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: Exercise
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for Exercise connections"""
+"""
+Ordering options for Exercise connections
+"""
 input ExerciseOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order Exercises."""
+  """
+  The field by which to order Exercises.
+  """
   field: ExerciseOrderField!
 }
-"""Properties by which Exercise connections can be ordered."""
+"""
+Properties by which Exercise connections can be ordered.
+"""
 enum ExerciseOrderField {
   ID
 }
@@ -299,49 +445,83 @@ type ExerciseType implements Node {
   properties: [String!]!
   description: String!
   exercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Exercises returned from the connection."""
+    """
+    Ordering options for Exercises returned from the connection.
+    """
     orderBy: ExerciseOrder
 
-    """Filtering options for Exercises returned from the connection."""
+    """
+    Filtering options for Exercises returned from the connection.
+    """
     where: ExerciseWhereInput
   ): ExerciseConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type ExerciseTypeConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [ExerciseTypeEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type ExerciseTypeEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: ExerciseType
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for ExerciseType connections"""
+"""
+Ordering options for ExerciseType connections
+"""
 input ExerciseTypeOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order ExerciseTypes."""
+  """
+  The field by which to order ExerciseTypes.
+  """
   field: ExerciseTypeOrderField!
 }
-"""Properties by which ExerciseType connections can be ordered."""
+"""
+Properties by which ExerciseType connections can be ordered.
+"""
 enum ExerciseTypeOrderField {
   ID
 }
@@ -353,7 +533,9 @@ input ExerciseTypeWhereInput {
   not: ExerciseTypeWhereInput
   and: [ExerciseTypeWhereInput!]
   or: [ExerciseTypeWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -362,7 +544,9 @@ input ExerciseTypeWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -376,7 +560,9 @@ input ExerciseTypeWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """description field predicates"""
+  """
+  description field predicates
+  """
   description: String
   descriptionNEQ: String
   descriptionIn: [String!]
@@ -390,7 +576,9 @@ input ExerciseTypeWhereInput {
   descriptionHasSuffix: String
   descriptionEqualFold: String
   descriptionContainsFold: String
-  """exercises edge predicates"""
+  """
+  exercises edge predicates
+  """
   hasExercises: Boolean
   hasExercisesWith: [ExerciseWhereInput!]
 }
@@ -402,7 +590,9 @@ input ExerciseWhereInput {
   not: ExerciseWhereInput
   and: [ExerciseWhereInput!]
   or: [ExerciseWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -411,7 +601,9 @@ input ExerciseWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -425,7 +617,9 @@ input ExerciseWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """how_to field predicates"""
+  """
+  how_to field predicates
+  """
   howTo: String
   howToNEQ: String
   howToIn: [String!]
@@ -441,7 +635,9 @@ input ExerciseWhereInput {
   howToNotNil: Boolean
   howToEqualFold: String
   howToContainsFold: String
-  """user_id field predicates"""
+  """
+  user_id field predicates
+  """
   userID: ID
   userIDNEQ: ID
   userIDIn: [ID!]
@@ -457,28 +653,44 @@ input ExerciseWhereInput {
   userIDNotNil: Boolean
   userIDEqualFold: ID
   userIDContainsFold: ID
-  """users edge predicates"""
+  """
+  users edge predicates
+  """
   hasUsers: Boolean
   hasUsersWith: [UserWhereInput!]
-  """equipment edge predicates"""
+  """
+  equipment edge predicates
+  """
   hasEquipment: Boolean
   hasEquipmentWith: [EquipmentWhereInput!]
-  """muscles_groups edge predicates"""
+  """
+  muscles_groups edge predicates
+  """
   hasMusclesGroups: Boolean
   hasMusclesGroupsWith: [MusclesGroupWhereInput!]
-  """exercise_types edge predicates"""
+  """
+  exercise_types edge predicates
+  """
   hasExerciseTypes: Boolean
   hasExerciseTypesWith: [ExerciseTypeWhereInput!]
-  """routines edge predicates"""
+  """
+  routines edge predicates
+  """
   hasRoutines: Boolean
   hasRoutinesWith: [RoutineWhereInput!]
-  """workouts edge predicates"""
+  """
+  workouts edge predicates
+  """
   hasWorkouts: Boolean
   hasWorkoutsWith: [WorkoutWhereInput!]
-  """routine_exercises edge predicates"""
+  """
+  routine_exercises edge predicates
+  """
   hasRoutineExercises: Boolean
   hasRoutineExercisesWith: [RoutineExerciseWhereInput!]
-  """workout_logs edge predicates"""
+  """
+  workout_logs edge predicates
+  """
   hasWorkoutLogs: Boolean
   hasWorkoutLogsWith: [WorkoutLogWhereInput!]
 }
@@ -487,49 +699,83 @@ type MusclesGroup implements Node {
   name: String!
   image: Image
   exercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Exercises returned from the connection."""
+    """
+    Ordering options for Exercises returned from the connection.
+    """
     orderBy: ExerciseOrder
 
-    """Filtering options for Exercises returned from the connection."""
+    """
+    Filtering options for Exercises returned from the connection.
+    """
     where: ExerciseWhereInput
   ): ExerciseConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type MusclesGroupConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [MusclesGroupEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type MusclesGroupEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: MusclesGroup
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for MusclesGroup connections"""
+"""
+Ordering options for MusclesGroup connections
+"""
 input MusclesGroupOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order MusclesGroups."""
+  """
+  The field by which to order MusclesGroups.
+  """
   field: MusclesGroupOrderField!
 }
-"""Properties by which MusclesGroup connections can be ordered."""
+"""
+Properties by which MusclesGroup connections can be ordered.
+"""
 enum MusclesGroupOrderField {
   ID
 }
@@ -541,7 +787,9 @@ input MusclesGroupWhereInput {
   not: MusclesGroupWhereInput
   and: [MusclesGroupWhereInput!]
   or: [MusclesGroupWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -550,7 +798,9 @@ input MusclesGroupWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -564,7 +814,9 @@ input MusclesGroupWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """exercises edge predicates"""
+  """
+  exercises edge predicates
+  """
   hasExercises: Boolean
   hasExercisesWith: [ExerciseWhereInput!]
 }
@@ -573,14 +825,22 @@ An object with an ID.
 Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
 interface Node @goModel(model: "github.com/sahidrahman404/gigachad-api/ent.Noder") {
-  """The id of the object."""
+  """
+  The id of the object.
+  """
   id: ID!
 }
-"""Possible directions in which to order a list of items when provided an `orderBy` argument."""
+"""
+Possible directions in which to order a list of items when provided an `orderBy` argument.
+"""
 enum OrderDirection {
-  """Specifies an ascending order for a given `orderBy` argument."""
+  """
+  Specifies an ascending order for a given `orderBy` argument.
+  """
   ASC
-  """Specifies a descending order for a given `orderBy` argument."""
+  """
+  Specifies a descending order for a given `orderBy` argument.
+  """
   DESC
 }
 """
@@ -588,195 +848,319 @@ Information about pagination in a connection.
 https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
 """
 type PageInfo {
-  """When paginating forwards, are there more items?"""
+  """
+  When paginating forwards, are there more items?
+  """
   hasNextPage: Boolean!
-  """When paginating backwards, are there more items?"""
+  """
+  When paginating backwards, are there more items?
+  """
   hasPreviousPage: Boolean!
-  """When paginating backwards, the cursor to continue."""
+  """
+  When paginating backwards, the cursor to continue.
+  """
   startCursor: Cursor
-  """When paginating forwards, the cursor to continue."""
+  """
+  When paginating forwards, the cursor to continue.
+  """
   endCursor: Cursor
 }
 type Query {
-  """Fetches an object given its ID."""
+  """
+  Fetches an object given its ID.
+  """
   node(
-    """ID of the object."""
+    """
+    ID of the object.
+    """
     id: ID!
   ): Node
-  """Lookup nodes by a list of IDs."""
+  """
+  Lookup nodes by a list of IDs.
+  """
   nodes(
-    """The list of node IDs."""
+    """
+    The list of node IDs.
+    """
     ids: [ID!]!
   ): [Node]!
   equipmentSlice(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for EquipmentSlice returned from the connection."""
+    """
+    Ordering options for EquipmentSlice returned from the connection.
+    """
     orderBy: EquipmentOrder
 
-    """Filtering options for EquipmentSlice returned from the connection."""
+    """
+    Filtering options for EquipmentSlice returned from the connection.
+    """
     where: EquipmentWhereInput
   ): EquipmentConnection!
   exercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Exercises returned from the connection."""
+    """
+    Ordering options for Exercises returned from the connection.
+    """
     orderBy: ExerciseOrder
 
-    """Filtering options for Exercises returned from the connection."""
+    """
+    Filtering options for Exercises returned from the connection.
+    """
     where: ExerciseWhereInput
   ): ExerciseConnection!
   exerciseTypes(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for ExerciseTypes returned from the connection."""
+    """
+    Ordering options for ExerciseTypes returned from the connection.
+    """
     orderBy: ExerciseTypeOrder
 
-    """Filtering options for ExerciseTypes returned from the connection."""
+    """
+    Filtering options for ExerciseTypes returned from the connection.
+    """
     where: ExerciseTypeWhereInput
   ): ExerciseTypeConnection!
   musclesGroups(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for MusclesGroups returned from the connection."""
+    """
+    Ordering options for MusclesGroups returned from the connection.
+    """
     orderBy: MusclesGroupOrder
 
-    """Filtering options for MusclesGroups returned from the connection."""
+    """
+    Filtering options for MusclesGroups returned from the connection.
+    """
     where: MusclesGroupWhereInput
   ): MusclesGroupConnection!
   routines(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Routines returned from the connection."""
+    """
+    Ordering options for Routines returned from the connection.
+    """
     orderBy: RoutineOrder
 
-    """Filtering options for Routines returned from the connection."""
+    """
+    Filtering options for Routines returned from the connection.
+    """
     where: RoutineWhereInput
   ): RoutineConnection!
   routineExercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for RoutineExercises returned from the connection."""
+    """
+    Ordering options for RoutineExercises returned from the connection.
+    """
     orderBy: RoutineExerciseOrder
 
-    """Filtering options for RoutineExercises returned from the connection."""
+    """
+    Filtering options for RoutineExercises returned from the connection.
+    """
     where: RoutineExerciseWhereInput
   ): RoutineExerciseConnection!
   users(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Users returned from the connection."""
+    """
+    Ordering options for Users returned from the connection.
+    """
     orderBy: UserOrder
 
-    """Filtering options for Users returned from the connection."""
+    """
+    Filtering options for Users returned from the connection.
+    """
     where: UserWhereInput
   ): UserConnection!
   workouts(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Workouts returned from the connection."""
+    """
+    Ordering options for Workouts returned from the connection.
+    """
     orderBy: WorkoutOrder
 
-    """Filtering options for Workouts returned from the connection."""
+    """
+    Filtering options for Workouts returned from the connection.
+    """
     where: WorkoutWhereInput
   ): WorkoutConnection!
   workoutLogs(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for WorkoutLogs returned from the connection."""
+    """
+    Ordering options for WorkoutLogs returned from the connection.
+    """
     orderBy: WorkoutLogOrder
 
-    """Filtering options for WorkoutLogs returned from the connection."""
+    """
+    Filtering options for WorkoutLogs returned from the connection.
+    """
     where: WorkoutLogWhereInput
   ): WorkoutLogConnection!
 }
@@ -786,64 +1170,102 @@ type Routine implements Node {
   scheduleID: String
   userID: ID!
   exercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Exercises returned from the connection."""
+    """
+    Ordering options for Exercises returned from the connection.
+    """
     orderBy: ExerciseOrder
 
-    """Filtering options for Exercises returned from the connection."""
+    """
+    Filtering options for Exercises returned from the connection.
+    """
     where: ExerciseWhereInput
   ): ExerciseConnection!
   users: User!
   routineExercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for RoutineExercises returned from the connection."""
+    """
+    Ordering options for RoutineExercises returned from the connection.
+    """
     orderBy: RoutineExerciseOrder
 
-    """Filtering options for RoutineExercises returned from the connection."""
+    """
+    Filtering options for RoutineExercises returned from the connection.
+    """
     where: RoutineExerciseWhereInput
   ): RoutineExerciseConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type RoutineConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [RoutineEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type RoutineEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: Routine
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
 type RoutineExercise implements Node {
   id: ID!
-  restTimer: String
+  restTime: String
   sets: [Set!]!
   routineID: ID!
   exerciseID: ID!
@@ -852,30 +1274,52 @@ type RoutineExercise implements Node {
   exercises: Exercise!
   users: User!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type RoutineExerciseConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [RoutineExerciseEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type RoutineExerciseEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: RoutineExercise
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for RoutineExercise connections"""
+"""
+Ordering options for RoutineExercise connections
+"""
 input RoutineExerciseOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order RoutineExercises."""
+  """
+  The field by which to order RoutineExercises.
+  """
   field: RoutineExerciseOrderField!
 }
-"""Properties by which RoutineExercise connections can be ordered."""
+"""
+Properties by which RoutineExercise connections can be ordered.
+"""
 enum RoutineExerciseOrderField {
   ID
 }
@@ -887,7 +1331,9 @@ input RoutineExerciseWhereInput {
   not: RoutineExerciseWhereInput
   and: [RoutineExerciseWhereInput!]
   or: [RoutineExerciseWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -896,31 +1342,41 @@ input RoutineExerciseWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """rest_timer field predicates"""
-  restTimer: String
-  restTimerNEQ: String
-  restTimerIn: [String!]
-  restTimerNotIn: [String!]
-  restTimerGT: String
-  restTimerGTE: String
-  restTimerLT: String
-  restTimerLTE: String
-  restTimerContains: String
-  restTimerHasPrefix: String
-  restTimerHasSuffix: String
-  restTimerIsNil: Boolean
-  restTimerNotNil: Boolean
-  restTimerEqualFold: String
-  restTimerContainsFold: String
+  """
+  rest_time field predicates
+  """
+  restTime: String
+  restTimeNEQ: String
+  restTimeIn: [String!]
+  restTimeNotIn: [String!]
+  restTimeGT: String
+  restTimeGTE: String
+  restTimeLT: String
+  restTimeLTE: String
+  restTimeContains: String
+  restTimeHasPrefix: String
+  restTimeHasSuffix: String
+  restTimeIsNil: Boolean
+  restTimeNotNil: Boolean
+  restTimeEqualFold: String
+  restTimeContainsFold: String
 }
-"""Ordering options for Routine connections"""
+"""
+Ordering options for Routine connections
+"""
 input RoutineOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order Routines."""
+  """
+  The field by which to order Routines.
+  """
   field: RoutineOrderField!
 }
-"""Properties by which Routine connections can be ordered."""
+"""
+Properties by which Routine connections can be ordered.
+"""
 enum RoutineOrderField {
   ID
 }
@@ -932,7 +1388,9 @@ input RoutineWhereInput {
   not: RoutineWhereInput
   and: [RoutineWhereInput!]
   or: [RoutineWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -941,7 +1399,9 @@ input RoutineWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -955,7 +1415,9 @@ input RoutineWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """schedule_id field predicates"""
+  """
+  schedule_id field predicates
+  """
   scheduleID: String
   scheduleIDNEQ: String
   scheduleIDIn: [String!]
@@ -971,7 +1433,9 @@ input RoutineWhereInput {
   scheduleIDNotNil: Boolean
   scheduleIDEqualFold: String
   scheduleIDContainsFold: String
-  """user_id field predicates"""
+  """
+  user_id field predicates
+  """
   userID: ID
   userIDNEQ: ID
   userIDIn: [ID!]
@@ -985,13 +1449,19 @@ input RoutineWhereInput {
   userIDHasSuffix: ID
   userIDEqualFold: ID
   userIDContainsFold: ID
-  """exercises edge predicates"""
+  """
+  exercises edge predicates
+  """
   hasExercises: Boolean
   hasExercisesWith: [ExerciseWhereInput!]
-  """users edge predicates"""
+  """
+  users edge predicates
+  """
   hasUsers: Boolean
   hasUsersWith: [UserWhereInput!]
-  """routine_exercises edge predicates"""
+  """
+  routine_exercises edge predicates
+  """
   hasRoutineExercises: Boolean
   hasRoutineExercisesWith: [RoutineExerciseWhereInput!]
 }
@@ -1002,14 +1472,22 @@ type Token implements Node {
   userID: ID!
   users: User!
 }
-"""Ordering options for Token connections"""
+"""
+Ordering options for Token connections
+"""
 input TokenOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order Tokens."""
+  """
+  The field by which to order Tokens.
+  """
   field: TokenOrderField!
 }
-"""Properties by which Token connections can be ordered."""
+"""
+Properties by which Token connections can be ordered.
+"""
 enum TokenOrderField {
   ID
 }
@@ -1021,7 +1499,9 @@ input TokenWhereInput {
   not: TokenWhereInput
   and: [TokenWhereInput!]
   or: [TokenWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -1030,7 +1510,9 @@ input TokenWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """expiry field predicates"""
+  """
+  expiry field predicates
+  """
   expiry: String
   expiryNEQ: String
   expiryIn: [String!]
@@ -1044,7 +1526,9 @@ input TokenWhereInput {
   expiryHasSuffix: String
   expiryEqualFold: String
   expiryContainsFold: String
-  """scope field predicates"""
+  """
+  scope field predicates
+  """
   scope: String
   scopeNEQ: String
   scopeIn: [String!]
@@ -1058,7 +1542,9 @@ input TokenWhereInput {
   scopeHasSuffix: String
   scopeEqualFold: String
   scopeContainsFold: String
-  """user_id field predicates"""
+  """
+  user_id field predicates
+  """
   userID: ID
   userIDNEQ: ID
   userIDIn: [ID!]
@@ -1072,7 +1558,9 @@ input TokenWhereInput {
   userIDHasSuffix: ID
   userIDEqualFold: ID
   userIDContainsFold: ID
-  """users edge predicates"""
+  """
+  users edge predicates
+  """
   hasUsers: Boolean
   hasUsersWith: [UserWhereInput!]
 }
@@ -1134,125 +1622,207 @@ type User implements Node {
   version: Int!
   tokens: [Token!]
   exercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Exercises returned from the connection."""
+    """
+    Ordering options for Exercises returned from the connection.
+    """
     orderBy: ExerciseOrder
 
-    """Filtering options for Exercises returned from the connection."""
+    """
+    Filtering options for Exercises returned from the connection.
+    """
     where: ExerciseWhereInput
   ): ExerciseConnection!
   routines(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Routines returned from the connection."""
+    """
+    Ordering options for Routines returned from the connection.
+    """
     orderBy: RoutineOrder
 
-    """Filtering options for Routines returned from the connection."""
+    """
+    Filtering options for Routines returned from the connection.
+    """
     where: RoutineWhereInput
   ): RoutineConnection!
   workouts(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Workouts returned from the connection."""
+    """
+    Ordering options for Workouts returned from the connection.
+    """
     orderBy: WorkoutOrder
 
-    """Filtering options for Workouts returned from the connection."""
+    """
+    Filtering options for Workouts returned from the connection.
+    """
     where: WorkoutWhereInput
   ): WorkoutConnection!
   workoutLogs(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for WorkoutLogs returned from the connection."""
+    """
+    Ordering options for WorkoutLogs returned from the connection.
+    """
     orderBy: WorkoutLogOrder
 
-    """Filtering options for WorkoutLogs returned from the connection."""
+    """
+    Filtering options for WorkoutLogs returned from the connection.
+    """
     where: WorkoutLogWhereInput
   ): WorkoutLogConnection!
   routineExercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for RoutineExercises returned from the connection."""
+    """
+    Ordering options for RoutineExercises returned from the connection.
+    """
     orderBy: RoutineExerciseOrder
 
-    """Filtering options for RoutineExercises returned from the connection."""
+    """
+    Filtering options for RoutineExercises returned from the connection.
+    """
     where: RoutineExerciseWhereInput
   ): RoutineExerciseConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type UserConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [UserEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type UserEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: User
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for User connections"""
+"""
+Ordering options for User connections
+"""
 input UserOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order Users."""
+  """
+  The field by which to order Users.
+  """
   field: UserOrderField!
 }
-"""Properties by which User connections can be ordered."""
+"""
+Properties by which User connections can be ordered.
+"""
 enum UserOrderField {
   ID
 }
@@ -1264,7 +1834,9 @@ input UserWhereInput {
   not: UserWhereInput
   and: [UserWhereInput!]
   or: [UserWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -1273,7 +1845,9 @@ input UserWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """email field predicates"""
+  """
+  email field predicates
+  """
   email: String
   emailNEQ: String
   emailIn: [String!]
@@ -1287,7 +1861,9 @@ input UserWhereInput {
   emailHasSuffix: String
   emailEqualFold: String
   emailContainsFold: String
-  """username field predicates"""
+  """
+  username field predicates
+  """
   username: String
   usernameNEQ: String
   usernameIn: [String!]
@@ -1301,7 +1877,9 @@ input UserWhereInput {
   usernameHasSuffix: String
   usernameEqualFold: String
   usernameContainsFold: String
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -1315,7 +1893,9 @@ input UserWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """created_at field predicates"""
+  """
+  created_at field predicates
+  """
   createdAt: String
   createdAtNEQ: String
   createdAtIn: [String!]
@@ -1329,7 +1909,9 @@ input UserWhereInput {
   createdAtHasSuffix: String
   createdAtEqualFold: String
   createdAtContainsFold: String
-  """activated field predicates"""
+  """
+  activated field predicates
+  """
   activated: Int
   activatedNEQ: Int
   activatedIn: [Int!]
@@ -1338,7 +1920,9 @@ input UserWhereInput {
   activatedGTE: Int
   activatedLT: Int
   activatedLTE: Int
-  """version field predicates"""
+  """
+  version field predicates
+  """
   version: Int
   versionNEQ: Int
   versionIn: [Int!]
@@ -1347,22 +1931,34 @@ input UserWhereInput {
   versionGTE: Int
   versionLT: Int
   versionLTE: Int
-  """tokens edge predicates"""
+  """
+  tokens edge predicates
+  """
   hasTokens: Boolean
   hasTokensWith: [TokenWhereInput!]
-  """exercises edge predicates"""
+  """
+  exercises edge predicates
+  """
   hasExercises: Boolean
   hasExercisesWith: [ExerciseWhereInput!]
-  """routines edge predicates"""
+  """
+  routines edge predicates
+  """
   hasRoutines: Boolean
   hasRoutinesWith: [RoutineWhereInput!]
-  """workouts edge predicates"""
+  """
+  workouts edge predicates
+  """
   hasWorkouts: Boolean
   hasWorkoutsWith: [WorkoutWhereInput!]
-  """workout_logs edge predicates"""
+  """
+  workout_logs edge predicates
+  """
   hasWorkoutLogs: Boolean
   hasWorkoutLogsWith: [WorkoutLogWhereInput!]
-  """routine_exercises edge predicates"""
+  """
+  routine_exercises edge predicates
+  """
   hasRoutineExercises: Boolean
   hasRoutineExercisesWith: [RoutineExerciseWhereInput!]
 }
@@ -1377,58 +1973,96 @@ type Workout implements Node {
   userID: ID!
   users: User!
   exercises(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Exercises returned from the connection."""
+    """
+    Ordering options for Exercises returned from the connection.
+    """
     orderBy: ExerciseOrder
 
-    """Filtering options for Exercises returned from the connection."""
+    """
+    Filtering options for Exercises returned from the connection.
+    """
     where: ExerciseWhereInput
   ): ExerciseConnection!
   workoutLogs(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for WorkoutLogs returned from the connection."""
+    """
+    Ordering options for WorkoutLogs returned from the connection.
+    """
     orderBy: WorkoutLogOrder
 
-    """Filtering options for WorkoutLogs returned from the connection."""
+    """
+    Filtering options for WorkoutLogs returned from the connection.
+    """
     where: WorkoutLogWhereInput
   ): WorkoutLogConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type WorkoutConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [WorkoutEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type WorkoutEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: Workout
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
 type WorkoutLog implements Node {
@@ -1442,30 +2076,52 @@ type WorkoutLog implements Node {
   workouts: Workout!
   exercises: Exercise!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type WorkoutLogConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [WorkoutLogEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type WorkoutLogEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: WorkoutLog
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for WorkoutLog connections"""
+"""
+Ordering options for WorkoutLog connections
+"""
 input WorkoutLogOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order WorkoutLogs."""
+  """
+  The field by which to order WorkoutLogs.
+  """
   field: WorkoutLogOrderField!
 }
-"""Properties by which WorkoutLog connections can be ordered."""
+"""
+Properties by which WorkoutLog connections can be ordered.
+"""
 enum WorkoutLogOrderField {
   ID
 }
@@ -1477,7 +2133,9 @@ input WorkoutLogWhereInput {
   not: WorkoutLogWhereInput
   and: [WorkoutLogWhereInput!]
   or: [WorkoutLogWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -1486,7 +2144,9 @@ input WorkoutLogWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """created_at field predicates"""
+  """
+  created_at field predicates
+  """
   createdAt: String
   createdAtNEQ: String
   createdAtIn: [String!]
@@ -1501,14 +2161,22 @@ input WorkoutLogWhereInput {
   createdAtEqualFold: String
   createdAtContainsFold: String
 }
-"""Ordering options for Workout connections"""
+"""
+Ordering options for Workout connections
+"""
 input WorkoutOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order Workouts."""
+  """
+  The field by which to order Workouts.
+  """
   field: WorkoutOrderField!
 }
-"""Properties by which Workout connections can be ordered."""
+"""
+Properties by which Workout connections can be ordered.
+"""
 enum WorkoutOrderField {
   ID
 }
@@ -1520,7 +2188,9 @@ input WorkoutWhereInput {
   not: WorkoutWhereInput
   and: [WorkoutWhereInput!]
   or: [WorkoutWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -1529,7 +2199,9 @@ input WorkoutWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """volume field predicates"""
+  """
+  volume field predicates
+  """
   volume: Int
   volumeNEQ: Int
   volumeIn: [Int!]
@@ -1538,7 +2210,9 @@ input WorkoutWhereInput {
   volumeGTE: Int
   volumeLT: Int
   volumeLTE: Int
-  """duration field predicates"""
+  """
+  duration field predicates
+  """
   duration: String
   durationNEQ: String
   durationIn: [String!]
@@ -1552,7 +2226,9 @@ input WorkoutWhereInput {
   durationHasSuffix: String
   durationEqualFold: String
   durationContainsFold: String
-  """sets field predicates"""
+  """
+  sets field predicates
+  """
   sets: Int
   setsNEQ: Int
   setsIn: [Int!]
@@ -1561,7 +2237,9 @@ input WorkoutWhereInput {
   setsGTE: Int
   setsLT: Int
   setsLTE: Int
-  """created_at field predicates"""
+  """
+  created_at field predicates
+  """
   createdAt: String
   createdAtNEQ: String
   createdAtIn: [String!]
@@ -1575,7 +2253,9 @@ input WorkoutWhereInput {
   createdAtHasSuffix: String
   createdAtEqualFold: String
   createdAtContainsFold: String
-  """description field predicates"""
+  """
+  description field predicates
+  """
   description: String
   descriptionNEQ: String
   descriptionIn: [String!]
@@ -1591,7 +2271,9 @@ input WorkoutWhereInput {
   descriptionNotNil: Boolean
   descriptionEqualFold: String
   descriptionContainsFold: String
-  """user_id field predicates"""
+  """
+  user_id field predicates
+  """
   userID: ID
   userIDNEQ: ID
   userIDIn: [ID!]
@@ -1605,13 +2287,19 @@ input WorkoutWhereInput {
   userIDHasSuffix: ID
   userIDEqualFold: ID
   userIDContainsFold: ID
-  """users edge predicates"""
+  """
+  users edge predicates
+  """
   hasUsers: Boolean
   hasUsersWith: [UserWhereInput!]
-  """exercises edge predicates"""
+  """
+  exercises edge predicates
+  """
   hasExercises: Boolean
   hasExercisesWith: [ExerciseWhereInput!]
-  """workout_logs edge predicates"""
+  """
+  workout_logs edge predicates
+  """
   hasWorkoutLogs: Boolean
   hasWorkoutLogsWith: [WorkoutLogWhereInput!]
 }

@@ -26,7 +26,7 @@ func (RoutineExercise) Mixin() []ent.Mixin {
 // Fields of the RoutineExercise.
 func (RoutineExercise) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("rest_timer").Optional().Nillable(),
+		field.String("rest_time").Optional().Nillable(),
 		field.JSON("sets", []*schematype.Set{}).Annotations(entgql.Type("[Set!]")),
 		field.String("routine_id").GoType(pksuid.ID("")),
 		field.String("exercise_id").GoType(pksuid.ID("")),

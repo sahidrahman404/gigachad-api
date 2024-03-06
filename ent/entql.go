@@ -114,7 +114,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		Type: "RoutineExercise",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			routineexercise.FieldRestTimer:  {Type: field.TypeString, Column: routineexercise.FieldRestTimer},
+			routineexercise.FieldRestTime:   {Type: field.TypeString, Column: routineexercise.FieldRestTime},
 			routineexercise.FieldSets:       {Type: field.TypeJSON, Column: routineexercise.FieldSets},
 			routineexercise.FieldRoutineID:  {Type: field.TypeString, Column: routineexercise.FieldRoutineID},
 			routineexercise.FieldExerciseID: {Type: field.TypeString, Column: routineexercise.FieldExerciseID},
@@ -1071,9 +1071,9 @@ func (f *RoutineExerciseFilter) WhereID(p entql.StringP) {
 	f.Where(p.Field(routineexercise.FieldID))
 }
 
-// WhereRestTimer applies the entql string predicate on the rest_timer field.
-func (f *RoutineExerciseFilter) WhereRestTimer(p entql.StringP) {
-	f.Where(p.Field(routineexercise.FieldRestTimer))
+// WhereRestTime applies the entql string predicate on the rest_time field.
+func (f *RoutineExerciseFilter) WhereRestTime(p entql.StringP) {
+	f.Where(p.Field(routineexercise.FieldRestTime))
 }
 
 // WhereSets applies the entql json.RawMessage predicate on the sets field.

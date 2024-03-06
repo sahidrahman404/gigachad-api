@@ -13,14 +13,14 @@ input SetInput {
 }
 
 input CreateRoutineExerciseInput {
-  restTimer: String
+  restTime: String
   sets: [SetInput!]
   exerciseID: ID!
 }
 
 input UpdateRoutineExerciseInput {
   id: ID
-  restTimer: String
+  restTime: String
   sets: [SetInput!]
   exerciseID: ID!
 }

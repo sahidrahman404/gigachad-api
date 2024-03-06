@@ -372,12 +372,12 @@ func (req *RoutineExerciseQuery) WithUsers(opts ...func(*UserQuery)) *RoutineExe
 // Example:
 //
 //	var v []struct {
-//		RestTimer string `json:"rest_timer,omitempty"`
+//		RestTime string `json:"rest_time,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.RoutineExercise.Query().
-//		GroupBy(routineexercise.FieldRestTimer).
+//		GroupBy(routineexercise.FieldRestTime).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (req *RoutineExerciseQuery) GroupBy(field string, fields ...string) *RoutineExerciseGroupBy {
@@ -395,11 +395,11 @@ func (req *RoutineExerciseQuery) GroupBy(field string, fields ...string) *Routin
 // Example:
 //
 //	var v []struct {
-//		RestTimer string `json:"rest_timer,omitempty"`
+//		RestTime string `json:"rest_time,omitempty"`
 //	}
 //
 //	client.RoutineExercise.Query().
-//		Select(routineexercise.FieldRestTimer).
+//		Select(routineexercise.FieldRestTime).
 //		Scan(ctx, &v)
 func (req *RoutineExerciseQuery) Select(fields ...string) *RoutineExerciseSelect {
 	req.ctx.Fields = append(req.ctx.Fields, fields...)

@@ -1529,22 +1529,22 @@ type RoutineExerciseWhereInput struct {
 	IDLT    *pksuid.ID  `json:"idLT,omitempty"`
 	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
-	// "rest_timer" field predicates.
-	RestTimer             *string  `json:"restTimer,omitempty"`
-	RestTimerNEQ          *string  `json:"restTimerNEQ,omitempty"`
-	RestTimerIn           []string `json:"restTimerIn,omitempty"`
-	RestTimerNotIn        []string `json:"restTimerNotIn,omitempty"`
-	RestTimerGT           *string  `json:"restTimerGT,omitempty"`
-	RestTimerGTE          *string  `json:"restTimerGTE,omitempty"`
-	RestTimerLT           *string  `json:"restTimerLT,omitempty"`
-	RestTimerLTE          *string  `json:"restTimerLTE,omitempty"`
-	RestTimerContains     *string  `json:"restTimerContains,omitempty"`
-	RestTimerHasPrefix    *string  `json:"restTimerHasPrefix,omitempty"`
-	RestTimerHasSuffix    *string  `json:"restTimerHasSuffix,omitempty"`
-	RestTimerIsNil        bool     `json:"restTimerIsNil,omitempty"`
-	RestTimerNotNil       bool     `json:"restTimerNotNil,omitempty"`
-	RestTimerEqualFold    *string  `json:"restTimerEqualFold,omitempty"`
-	RestTimerContainsFold *string  `json:"restTimerContainsFold,omitempty"`
+	// "rest_time" field predicates.
+	RestTime             *string  `json:"restTime,omitempty"`
+	RestTimeNEQ          *string  `json:"restTimeNEQ,omitempty"`
+	RestTimeIn           []string `json:"restTimeIn,omitempty"`
+	RestTimeNotIn        []string `json:"restTimeNotIn,omitempty"`
+	RestTimeGT           *string  `json:"restTimeGT,omitempty"`
+	RestTimeGTE          *string  `json:"restTimeGTE,omitempty"`
+	RestTimeLT           *string  `json:"restTimeLT,omitempty"`
+	RestTimeLTE          *string  `json:"restTimeLTE,omitempty"`
+	RestTimeContains     *string  `json:"restTimeContains,omitempty"`
+	RestTimeHasPrefix    *string  `json:"restTimeHasPrefix,omitempty"`
+	RestTimeHasSuffix    *string  `json:"restTimeHasSuffix,omitempty"`
+	RestTimeIsNil        bool     `json:"restTimeIsNil,omitempty"`
+	RestTimeNotNil       bool     `json:"restTimeNotNil,omitempty"`
+	RestTimeEqualFold    *string  `json:"restTimeEqualFold,omitempty"`
+	RestTimeContainsFold *string  `json:"restTimeContainsFold,omitempty"`
 
 	// "routine_id" field predicates.
 	RoutineID             *pksuid.ID  `json:"routineID,omitempty"`
@@ -1699,50 +1699,50 @@ func (i *RoutineExerciseWhereInput) P() (predicate.RoutineExercise, error) {
 	if i.IDLTE != nil {
 		predicates = append(predicates, routineexercise.IDLTE(*i.IDLTE))
 	}
-	if i.RestTimer != nil {
-		predicates = append(predicates, routineexercise.RestTimerEQ(*i.RestTimer))
+	if i.RestTime != nil {
+		predicates = append(predicates, routineexercise.RestTimeEQ(*i.RestTime))
 	}
-	if i.RestTimerNEQ != nil {
-		predicates = append(predicates, routineexercise.RestTimerNEQ(*i.RestTimerNEQ))
+	if i.RestTimeNEQ != nil {
+		predicates = append(predicates, routineexercise.RestTimeNEQ(*i.RestTimeNEQ))
 	}
-	if len(i.RestTimerIn) > 0 {
-		predicates = append(predicates, routineexercise.RestTimerIn(i.RestTimerIn...))
+	if len(i.RestTimeIn) > 0 {
+		predicates = append(predicates, routineexercise.RestTimeIn(i.RestTimeIn...))
 	}
-	if len(i.RestTimerNotIn) > 0 {
-		predicates = append(predicates, routineexercise.RestTimerNotIn(i.RestTimerNotIn...))
+	if len(i.RestTimeNotIn) > 0 {
+		predicates = append(predicates, routineexercise.RestTimeNotIn(i.RestTimeNotIn...))
 	}
-	if i.RestTimerGT != nil {
-		predicates = append(predicates, routineexercise.RestTimerGT(*i.RestTimerGT))
+	if i.RestTimeGT != nil {
+		predicates = append(predicates, routineexercise.RestTimeGT(*i.RestTimeGT))
 	}
-	if i.RestTimerGTE != nil {
-		predicates = append(predicates, routineexercise.RestTimerGTE(*i.RestTimerGTE))
+	if i.RestTimeGTE != nil {
+		predicates = append(predicates, routineexercise.RestTimeGTE(*i.RestTimeGTE))
 	}
-	if i.RestTimerLT != nil {
-		predicates = append(predicates, routineexercise.RestTimerLT(*i.RestTimerLT))
+	if i.RestTimeLT != nil {
+		predicates = append(predicates, routineexercise.RestTimeLT(*i.RestTimeLT))
 	}
-	if i.RestTimerLTE != nil {
-		predicates = append(predicates, routineexercise.RestTimerLTE(*i.RestTimerLTE))
+	if i.RestTimeLTE != nil {
+		predicates = append(predicates, routineexercise.RestTimeLTE(*i.RestTimeLTE))
 	}
-	if i.RestTimerContains != nil {
-		predicates = append(predicates, routineexercise.RestTimerContains(*i.RestTimerContains))
+	if i.RestTimeContains != nil {
+		predicates = append(predicates, routineexercise.RestTimeContains(*i.RestTimeContains))
 	}
-	if i.RestTimerHasPrefix != nil {
-		predicates = append(predicates, routineexercise.RestTimerHasPrefix(*i.RestTimerHasPrefix))
+	if i.RestTimeHasPrefix != nil {
+		predicates = append(predicates, routineexercise.RestTimeHasPrefix(*i.RestTimeHasPrefix))
 	}
-	if i.RestTimerHasSuffix != nil {
-		predicates = append(predicates, routineexercise.RestTimerHasSuffix(*i.RestTimerHasSuffix))
+	if i.RestTimeHasSuffix != nil {
+		predicates = append(predicates, routineexercise.RestTimeHasSuffix(*i.RestTimeHasSuffix))
 	}
-	if i.RestTimerIsNil {
-		predicates = append(predicates, routineexercise.RestTimerIsNil())
+	if i.RestTimeIsNil {
+		predicates = append(predicates, routineexercise.RestTimeIsNil())
 	}
-	if i.RestTimerNotNil {
-		predicates = append(predicates, routineexercise.RestTimerNotNil())
+	if i.RestTimeNotNil {
+		predicates = append(predicates, routineexercise.RestTimeNotNil())
 	}
-	if i.RestTimerEqualFold != nil {
-		predicates = append(predicates, routineexercise.RestTimerEqualFold(*i.RestTimerEqualFold))
+	if i.RestTimeEqualFold != nil {
+		predicates = append(predicates, routineexercise.RestTimeEqualFold(*i.RestTimeEqualFold))
 	}
-	if i.RestTimerContainsFold != nil {
-		predicates = append(predicates, routineexercise.RestTimerContainsFold(*i.RestTimerContainsFold))
+	if i.RestTimeContainsFold != nil {
+		predicates = append(predicates, routineexercise.RestTimeContainsFold(*i.RestTimeContainsFold))
 	}
 	if i.RoutineID != nil {
 		predicates = append(predicates, routineexercise.RoutineIDEQ(*i.RoutineID))

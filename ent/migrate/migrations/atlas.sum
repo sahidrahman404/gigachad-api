@@ -1,4 +1,4 @@
-h1:0Y6SNrabuzRkeJSStEa9wjCP8Wydtlqujwv6UTdixW8=
+h1:Btx42hKdWTHd9cMVS1MC7DpJ8o/EmXceMg5CHOZHOVk=
 20230628141405_add-users-tokens-tables.sql h1:fuOJ2sHOMEP/24Ni9DT6j31fuudcRRBHP9FR3B+iabk=
 20230628144036_change-activated-column-type-to-int.sql h1:iGspKnS3bD1Of/VsA9jPiu/F0UQnIZkaVlhfop++diY=
 20230629131540_add-unique-constraint-to-users-table.sql h1:RTfWHMm4IFP3xoYPiVdY6LaLopPZcPiDXV9fCMojdUo=
@@ -24,3 +24,4 @@ h1:0Y6SNrabuzRkeJSStEa9wjCP8Wydtlqujwv6UTdixW8=
 20231207142010_remove-name-column-from-workout-table.sql h1:rq7zG0nJRapPoJpKCfFrp7JaAIhO5TlkllB2c4pP04Y=
 20240103104720_add-schedule-id-field-to-routine-table.sql h1:w/hejHg9l/R589oQqB7bPZlVujym7z+ljfDprJRWdVI=
 20240103120055_change-scedule-id-cloumn-type-to-string.sql h1:IrO3lLYv4fHv85gi4vxFNllTgK5aJpTdoDSjpxZKfLo=
+20240306122330_change-restTimer-column-name-to-restTime.sql h1:Egjjvqz36pEBMljjT59asODxIMW9IpVwuJIdRhg/Kl8=

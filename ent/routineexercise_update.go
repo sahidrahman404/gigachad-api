@@ -33,23 +33,23 @@ func (reu *RoutineExerciseUpdate) Where(ps ...predicate.RoutineExercise) *Routin
 	return reu
 }
 
-// SetRestTimer sets the "rest_timer" field.
-func (reu *RoutineExerciseUpdate) SetRestTimer(s string) *RoutineExerciseUpdate {
-	reu.mutation.SetRestTimer(s)
+// SetRestTime sets the "rest_time" field.
+func (reu *RoutineExerciseUpdate) SetRestTime(s string) *RoutineExerciseUpdate {
+	reu.mutation.SetRestTime(s)
 	return reu
 }
 
-// SetNillableRestTimer sets the "rest_timer" field if the given value is not nil.
-func (reu *RoutineExerciseUpdate) SetNillableRestTimer(s *string) *RoutineExerciseUpdate {
+// SetNillableRestTime sets the "rest_time" field if the given value is not nil.
+func (reu *RoutineExerciseUpdate) SetNillableRestTime(s *string) *RoutineExerciseUpdate {
 	if s != nil {
-		reu.SetRestTimer(*s)
+		reu.SetRestTime(*s)
 	}
 	return reu
 }
 
-// ClearRestTimer clears the value of the "rest_timer" field.
-func (reu *RoutineExerciseUpdate) ClearRestTimer() *RoutineExerciseUpdate {
-	reu.mutation.ClearRestTimer()
+// ClearRestTime clears the value of the "rest_time" field.
+func (reu *RoutineExerciseUpdate) ClearRestTime() *RoutineExerciseUpdate {
+	reu.mutation.ClearRestTime()
 	return reu
 }
 
@@ -216,11 +216,11 @@ func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error
 			}
 		}
 	}
-	if value, ok := reu.mutation.RestTimer(); ok {
-		_spec.SetField(routineexercise.FieldRestTimer, field.TypeString, value)
+	if value, ok := reu.mutation.RestTime(); ok {
+		_spec.SetField(routineexercise.FieldRestTime, field.TypeString, value)
 	}
-	if reu.mutation.RestTimerCleared() {
-		_spec.ClearField(routineexercise.FieldRestTimer, field.TypeString)
+	if reu.mutation.RestTimeCleared() {
+		_spec.ClearField(routineexercise.FieldRestTime, field.TypeString)
 	}
 	if value, ok := reu.mutation.Sets(); ok {
 		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)
@@ -337,23 +337,23 @@ type RoutineExerciseUpdateOne struct {
 	mutation *RoutineExerciseMutation
 }
 
-// SetRestTimer sets the "rest_timer" field.
-func (reuo *RoutineExerciseUpdateOne) SetRestTimer(s string) *RoutineExerciseUpdateOne {
-	reuo.mutation.SetRestTimer(s)
+// SetRestTime sets the "rest_time" field.
+func (reuo *RoutineExerciseUpdateOne) SetRestTime(s string) *RoutineExerciseUpdateOne {
+	reuo.mutation.SetRestTime(s)
 	return reuo
 }
 
-// SetNillableRestTimer sets the "rest_timer" field if the given value is not nil.
-func (reuo *RoutineExerciseUpdateOne) SetNillableRestTimer(s *string) *RoutineExerciseUpdateOne {
+// SetNillableRestTime sets the "rest_time" field if the given value is not nil.
+func (reuo *RoutineExerciseUpdateOne) SetNillableRestTime(s *string) *RoutineExerciseUpdateOne {
 	if s != nil {
-		reuo.SetRestTimer(*s)
+		reuo.SetRestTime(*s)
 	}
 	return reuo
 }
 
-// ClearRestTimer clears the value of the "rest_timer" field.
-func (reuo *RoutineExerciseUpdateOne) ClearRestTimer() *RoutineExerciseUpdateOne {
-	reuo.mutation.ClearRestTimer()
+// ClearRestTime clears the value of the "rest_time" field.
+func (reuo *RoutineExerciseUpdateOne) ClearRestTime() *RoutineExerciseUpdateOne {
+	reuo.mutation.ClearRestTime()
 	return reuo
 }
 
@@ -550,11 +550,11 @@ func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Routi
 			}
 		}
 	}
-	if value, ok := reuo.mutation.RestTimer(); ok {
-		_spec.SetField(routineexercise.FieldRestTimer, field.TypeString, value)
+	if value, ok := reuo.mutation.RestTime(); ok {
+		_spec.SetField(routineexercise.FieldRestTime, field.TypeString, value)
 	}
-	if reuo.mutation.RestTimerCleared() {
-		_spec.ClearField(routineexercise.FieldRestTimer, field.TypeString)
+	if reuo.mutation.RestTimeCleared() {
+		_spec.ClearField(routineexercise.FieldRestTime, field.TypeString)
 	}
 	if value, ok := reuo.mutation.Sets(); ok {
 		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)

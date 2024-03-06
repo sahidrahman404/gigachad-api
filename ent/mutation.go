@@ -3504,7 +3504,7 @@ type RoutineExerciseMutation struct {
 	op               Op
 	typ              string
 	id               *pksuid.ID
-	rest_timer       *string
+	rest_time        *string
 	sets             *[]*schematype.Set
 	appendsets       []*schematype.Set
 	clearedFields    map[string]struct{}
@@ -3623,53 +3623,53 @@ func (m *RoutineExerciseMutation) IDs(ctx context.Context) ([]pksuid.ID, error) 
 	}
 }
 
-// SetRestTimer sets the "rest_timer" field.
-func (m *RoutineExerciseMutation) SetRestTimer(s string) {
-	m.rest_timer = &s
+// SetRestTime sets the "rest_time" field.
+func (m *RoutineExerciseMutation) SetRestTime(s string) {
+	m.rest_time = &s
 }
 
-// RestTimer returns the value of the "rest_timer" field in the mutation.
-func (m *RoutineExerciseMutation) RestTimer() (r string, exists bool) {
-	v := m.rest_timer
+// RestTime returns the value of the "rest_time" field in the mutation.
+func (m *RoutineExerciseMutation) RestTime() (r string, exists bool) {
+	v := m.rest_time
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldRestTimer returns the old "rest_timer" field's value of the RoutineExercise entity.
+// OldRestTime returns the old "rest_time" field's value of the RoutineExercise entity.
 // If the RoutineExercise object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoutineExerciseMutation) OldRestTimer(ctx context.Context) (v *string, err error) {
+func (m *RoutineExerciseMutation) OldRestTime(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldRestTimer is only allowed on UpdateOne operations")
+		return v, errors.New("OldRestTime is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldRestTimer requires an ID field in the mutation")
+		return v, errors.New("OldRestTime requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldRestTimer: %w", err)
+		return v, fmt.Errorf("querying old value for OldRestTime: %w", err)
 	}
-	return oldValue.RestTimer, nil
+	return oldValue.RestTime, nil
 }
 
-// ClearRestTimer clears the value of the "rest_timer" field.
-func (m *RoutineExerciseMutation) ClearRestTimer() {
-	m.rest_timer = nil
-	m.clearedFields[routineexercise.FieldRestTimer] = struct{}{}
+// ClearRestTime clears the value of the "rest_time" field.
+func (m *RoutineExerciseMutation) ClearRestTime() {
+	m.rest_time = nil
+	m.clearedFields[routineexercise.FieldRestTime] = struct{}{}
 }
 
-// RestTimerCleared returns if the "rest_timer" field was cleared in this mutation.
-func (m *RoutineExerciseMutation) RestTimerCleared() bool {
-	_, ok := m.clearedFields[routineexercise.FieldRestTimer]
+// RestTimeCleared returns if the "rest_time" field was cleared in this mutation.
+func (m *RoutineExerciseMutation) RestTimeCleared() bool {
+	_, ok := m.clearedFields[routineexercise.FieldRestTime]
 	return ok
 }
 
-// ResetRestTimer resets all changes to the "rest_timer" field.
-func (m *RoutineExerciseMutation) ResetRestTimer() {
-	m.rest_timer = nil
-	delete(m.clearedFields, routineexercise.FieldRestTimer)
+// ResetRestTime resets all changes to the "rest_time" field.
+func (m *RoutineExerciseMutation) ResetRestTime() {
+	m.rest_time = nil
+	delete(m.clearedFields, routineexercise.FieldRestTime)
 }
 
 // SetSets sets the "sets" field.
@@ -3986,8 +3986,8 @@ func (m *RoutineExerciseMutation) Type() string {
 // AddedFields().
 func (m *RoutineExerciseMutation) Fields() []string {
 	fields := make([]string, 0, 5)
-	if m.rest_timer != nil {
-		fields = append(fields, routineexercise.FieldRestTimer)
+	if m.rest_time != nil {
+		fields = append(fields, routineexercise.FieldRestTime)
 	}
 	if m.sets != nil {
 		fields = append(fields, routineexercise.FieldSets)
@@ -4009,8 +4009,8 @@ func (m *RoutineExerciseMutation) Fields() []string {
 // schema.
 func (m *RoutineExerciseMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case routineexercise.FieldRestTimer:
-		return m.RestTimer()
+	case routineexercise.FieldRestTime:
+		return m.RestTime()
 	case routineexercise.FieldSets:
 		return m.Sets()
 	case routineexercise.FieldRoutineID:
@@ -4028,8 +4028,8 @@ func (m *RoutineExerciseMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *RoutineExerciseMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case routineexercise.FieldRestTimer:
-		return m.OldRestTimer(ctx)
+	case routineexercise.FieldRestTime:
+		return m.OldRestTime(ctx)
 	case routineexercise.FieldSets:
 		return m.OldSets(ctx)
 	case routineexercise.FieldRoutineID:
@@ -4047,12 +4047,12 @@ func (m *RoutineExerciseMutation) OldField(ctx context.Context, name string) (en
 // type.
 func (m *RoutineExerciseMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case routineexercise.FieldRestTimer:
+	case routineexercise.FieldRestTime:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetRestTimer(v)
+		m.SetRestTime(v)
 		return nil
 	case routineexercise.FieldSets:
 		v, ok := value.([]*schematype.Set)
@@ -4112,8 +4112,8 @@ func (m *RoutineExerciseMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *RoutineExerciseMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(routineexercise.FieldRestTimer) {
-		fields = append(fields, routineexercise.FieldRestTimer)
+	if m.FieldCleared(routineexercise.FieldRestTime) {
+		fields = append(fields, routineexercise.FieldRestTime)
 	}
 	return fields
 }
@@ -4129,8 +4129,8 @@ func (m *RoutineExerciseMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *RoutineExerciseMutation) ClearField(name string) error {
 	switch name {
-	case routineexercise.FieldRestTimer:
-		m.ClearRestTimer()
+	case routineexercise.FieldRestTime:
+		m.ClearRestTime()
 		return nil
 	}
 	return fmt.Errorf("unknown RoutineExercise nullable field %s", name)
@@ -4140,8 +4140,8 @@ func (m *RoutineExerciseMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *RoutineExerciseMutation) ResetField(name string) error {
 	switch name {
-	case routineexercise.FieldRestTimer:
-		m.ResetRestTimer()
+	case routineexercise.FieldRestTime:
+		m.ResetRestTime()
 		return nil
 	case routineexercise.FieldSets:
 		m.ResetSets()

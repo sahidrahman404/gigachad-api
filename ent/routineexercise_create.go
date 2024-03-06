@@ -27,16 +27,16 @@ type RoutineExerciseCreate struct {
 	conflict []sql.ConflictOption
 }
 
-// SetRestTimer sets the "rest_timer" field.
-func (rec *RoutineExerciseCreate) SetRestTimer(s string) *RoutineExerciseCreate {
-	rec.mutation.SetRestTimer(s)
+// SetRestTime sets the "rest_time" field.
+func (rec *RoutineExerciseCreate) SetRestTime(s string) *RoutineExerciseCreate {
+	rec.mutation.SetRestTime(s)
 	return rec
 }
 
-// SetNillableRestTimer sets the "rest_timer" field if the given value is not nil.
-func (rec *RoutineExerciseCreate) SetNillableRestTimer(s *string) *RoutineExerciseCreate {
+// SetNillableRestTime sets the "rest_time" field if the given value is not nil.
+func (rec *RoutineExerciseCreate) SetNillableRestTime(s *string) *RoutineExerciseCreate {
 	if s != nil {
-		rec.SetRestTimer(*s)
+		rec.SetRestTime(*s)
 	}
 	return rec
 }
@@ -212,9 +212,9 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := rec.mutation.RestTimer(); ok {
-		_spec.SetField(routineexercise.FieldRestTimer, field.TypeString, value)
-		_node.RestTimer = &value
+	if value, ok := rec.mutation.RestTime(); ok {
+		_spec.SetField(routineexercise.FieldRestTime, field.TypeString, value)
+		_node.RestTime = &value
 	}
 	if value, ok := rec.mutation.Sets(); ok {
 		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)
@@ -278,7 +278,7 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 // of the `INSERT` statement. For example:
 //
 //	client.RoutineExercise.Create().
-//		SetRestTimer(v).
+//		SetRestTime(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -287,7 +287,7 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.RoutineExerciseUpsert) {
-//			SetRestTimer(v+v).
+//			SetRestTime(v+v).
 //		}).
 //		Exec(ctx)
 func (rec *RoutineExerciseCreate) OnConflict(opts ...sql.ConflictOption) *RoutineExerciseUpsertOne {
@@ -323,21 +323,21 @@ type (
 	}
 )
 
-// SetRestTimer sets the "rest_timer" field.
-func (u *RoutineExerciseUpsert) SetRestTimer(v string) *RoutineExerciseUpsert {
-	u.Set(routineexercise.FieldRestTimer, v)
+// SetRestTime sets the "rest_time" field.
+func (u *RoutineExerciseUpsert) SetRestTime(v string) *RoutineExerciseUpsert {
+	u.Set(routineexercise.FieldRestTime, v)
 	return u
 }
 
-// UpdateRestTimer sets the "rest_timer" field to the value that was provided on create.
-func (u *RoutineExerciseUpsert) UpdateRestTimer() *RoutineExerciseUpsert {
-	u.SetExcluded(routineexercise.FieldRestTimer)
+// UpdateRestTime sets the "rest_time" field to the value that was provided on create.
+func (u *RoutineExerciseUpsert) UpdateRestTime() *RoutineExerciseUpsert {
+	u.SetExcluded(routineexercise.FieldRestTime)
 	return u
 }
 
-// ClearRestTimer clears the value of the "rest_timer" field.
-func (u *RoutineExerciseUpsert) ClearRestTimer() *RoutineExerciseUpsert {
-	u.SetNull(routineexercise.FieldRestTimer)
+// ClearRestTime clears the value of the "rest_time" field.
+func (u *RoutineExerciseUpsert) ClearRestTime() *RoutineExerciseUpsert {
+	u.SetNull(routineexercise.FieldRestTime)
 	return u
 }
 
@@ -437,24 +437,24 @@ func (u *RoutineExerciseUpsertOne) Update(set func(*RoutineExerciseUpsert)) *Rou
 	return u
 }
 
-// SetRestTimer sets the "rest_timer" field.
-func (u *RoutineExerciseUpsertOne) SetRestTimer(v string) *RoutineExerciseUpsertOne {
+// SetRestTime sets the "rest_time" field.
+func (u *RoutineExerciseUpsertOne) SetRestTime(v string) *RoutineExerciseUpsertOne {
 	return u.Update(func(s *RoutineExerciseUpsert) {
-		s.SetRestTimer(v)
+		s.SetRestTime(v)
 	})
 }
 
-// UpdateRestTimer sets the "rest_timer" field to the value that was provided on create.
-func (u *RoutineExerciseUpsertOne) UpdateRestTimer() *RoutineExerciseUpsertOne {
+// UpdateRestTime sets the "rest_time" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertOne) UpdateRestTime() *RoutineExerciseUpsertOne {
 	return u.Update(func(s *RoutineExerciseUpsert) {
-		s.UpdateRestTimer()
+		s.UpdateRestTime()
 	})
 }
 
-// ClearRestTimer clears the value of the "rest_timer" field.
-func (u *RoutineExerciseUpsertOne) ClearRestTimer() *RoutineExerciseUpsertOne {
+// ClearRestTime clears the value of the "rest_time" field.
+func (u *RoutineExerciseUpsertOne) ClearRestTime() *RoutineExerciseUpsertOne {
 	return u.Update(func(s *RoutineExerciseUpsert) {
-		s.ClearRestTimer()
+		s.ClearRestTime()
 	})
 }
 
@@ -650,7 +650,7 @@ func (recb *RoutineExerciseCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.RoutineExerciseUpsert) {
-//			SetRestTimer(v+v).
+//			SetRestTime(v+v).
 //		}).
 //		Exec(ctx)
 func (recb *RoutineExerciseCreateBulk) OnConflict(opts ...sql.ConflictOption) *RoutineExerciseUpsertBulk {
@@ -729,24 +729,24 @@ func (u *RoutineExerciseUpsertBulk) Update(set func(*RoutineExerciseUpsert)) *Ro
 	return u
 }
 
-// SetRestTimer sets the "rest_timer" field.
-func (u *RoutineExerciseUpsertBulk) SetRestTimer(v string) *RoutineExerciseUpsertBulk {
+// SetRestTime sets the "rest_time" field.
+func (u *RoutineExerciseUpsertBulk) SetRestTime(v string) *RoutineExerciseUpsertBulk {
 	return u.Update(func(s *RoutineExerciseUpsert) {
-		s.SetRestTimer(v)
+		s.SetRestTime(v)
 	})
 }
 
-// UpdateRestTimer sets the "rest_timer" field to the value that was provided on create.
-func (u *RoutineExerciseUpsertBulk) UpdateRestTimer() *RoutineExerciseUpsertBulk {
+// UpdateRestTime sets the "rest_time" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertBulk) UpdateRestTime() *RoutineExerciseUpsertBulk {
 	return u.Update(func(s *RoutineExerciseUpsert) {
-		s.UpdateRestTimer()
+		s.UpdateRestTime()
 	})
 }
 
-// ClearRestTimer clears the value of the "rest_timer" field.
-func (u *RoutineExerciseUpsertBulk) ClearRestTimer() *RoutineExerciseUpsertBulk {
+// ClearRestTime clears the value of the "rest_time" field.
+func (u *RoutineExerciseUpsertBulk) ClearRestTime() *RoutineExerciseUpsertBulk {
 	return u.Update(func(s *RoutineExerciseUpsert) {
-		s.ClearRestTimer()
+		s.ClearRestTime()
 	})
 }
 

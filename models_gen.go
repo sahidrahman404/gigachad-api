@@ -40,7 +40,7 @@ type CreateMusclesGroupInput struct {
 }
 
 type CreateRoutineExerciseInput struct {
-	RestTimer  *string           `json:"restTimer,omitempty"`
+	RestTime   *string           `json:"restTime,omitempty"`
 	Sets       []*schematype.Set `json:"sets,omitempty"`
 	ExerciseID pksuid.ID         `json:"exerciseID"`
 }
@@ -109,7 +109,7 @@ type Style struct {
 
 type UpdateRoutineExerciseInput struct {
 	ID         *pksuid.ID        `json:"id,omitempty"`
-	RestTimer  *string           `json:"restTimer,omitempty"`
+	RestTime   *string           `json:"restTime,omitempty"`
 	Sets       []*schematype.Set `json:"sets,omitempty"`
 	ExerciseID pksuid.ID         `json:"exerciseID"`
 }

@@ -22,8 +22,8 @@ type RoutineExercise struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID pksuid.ID `json:"id,omitempty"`
-	// RestTimer holds the value of the "rest_timer" field.
-	RestTimer *string `json:"rest_timer,omitempty"`
+	// RestTime holds the value of the "rest_time" field.
+	RestTime *string `json:"rest_time,omitempty"`
 	// Sets holds the value of the "sets" field.
 	Sets []*schematype.Set `json:"sets,omitempty"`
 	// RoutineID holds the value of the "routine_id" field.
@@ -56,12 +56,10 @@ type RoutineExerciseEdges struct {
 // RoutinesOrErr returns the Routines value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e RoutineExerciseEdges) RoutinesOrErr() (*Routine, error) {
-	if e.loadedTypes[0] {
-		if e.Routines == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: routine.Label}
-		}
+	if e.Routines != nil {
 		return e.Routines, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: routine.Label}
 	}
 	return nil, &NotLoadedError{edge: "routines"}
 }
@@ -69,12 +67,10 @@ func (e RoutineExerciseEdges) RoutinesOrErr() (*Routine, error) {
 // ExercisesOrErr returns the Exercises value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e RoutineExerciseEdges) ExercisesOrErr() (*Exercise, error) {
-	if e.loadedTypes[1] {
-		if e.Exercises == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: exercise.Label}
-		}
+	if e.Exercises != nil {
 		return e.Exercises, nil
+	} else if e.loadedTypes[1] {
+		return nil, &NotFoundError{label: exercise.Label}
 	}
 	return nil, &NotLoadedError{edge: "exercises"}
 }
@@ -82,12 +78,10 @@ func (e RoutineExerciseEdges) ExercisesOrErr() (*Exercise, error) {
 // UsersOrErr returns the Users value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e RoutineExerciseEdges) UsersOrErr() (*User, error) {
-	if e.loadedTypes[2] {
-		if e.Users == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: user.Label}
-		}
+	if e.Users != nil {
 		return e.Users, nil
+	} else if e.loadedTypes[2] {
+		return nil, &NotFoundError{label: user.Label}
 	}
 	return nil, &NotLoadedError{edge: "users"}
 }
@@ -101,7 +95,7 @@ func (*RoutineExercise) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case routineexercise.FieldID, routineexercise.FieldRoutineID, routineexercise.FieldExerciseID, routineexercise.FieldUserID:
 			values[i] = new(pksuid.ID)
-		case routineexercise.FieldRestTimer:
+		case routineexercise.FieldRestTime:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -124,12 +118,12 @@ func (re *RoutineExercise) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				re.ID = *value
 			}
-		case routineexercise.FieldRestTimer:
+		case routineexercise.FieldRestTime:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field rest_timer", values[i])
+				return fmt.Errorf("unexpected type %T for field rest_time", values[i])
 			} else if value.Valid {
-				re.RestTimer = new(string)
-				*re.RestTimer = value.String
+				re.RestTime = new(string)
+				*re.RestTime = value.String
 			}
 		case routineexercise.FieldSets:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -208,8 +202,8 @@ func (re *RoutineExercise) String() string {
 	var builder strings.Builder
 	builder.WriteString("RoutineExercise(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", re.ID))
-	if v := re.RestTimer; v != nil {
-		builder.WriteString("rest_timer=")
+	if v := re.RestTime; v != nil {
+		builder.WriteString("rest_time=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")

@@ -231,7 +231,7 @@ type ComplexityRoot struct {
 		ExerciseID func(childComplexity int) int
 		Exercises  func(childComplexity int) int
 		ID         func(childComplexity int) int
-		RestTimer  func(childComplexity int) int
+		RestTime   func(childComplexity int) int
 		RoutineID  func(childComplexity int) int
 		Routines   func(childComplexity int) int
 		Sets       func(childComplexity int) int
@@ -1384,12 +1384,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RoutineExercise.ID(childComplexity), true
 
-	case "RoutineExercise.restTimer":
-		if e.complexity.RoutineExercise.RestTimer == nil {
+	case "RoutineExercise.restTime":
+		if e.complexity.RoutineExercise.RestTime == nil {
 			break
 		}
 
-		return e.complexity.RoutineExercise.RestTimer(childComplexity), true
+		return e.complexity.RoutineExercise.RestTime(childComplexity), true
 
 	case "RoutineExercise.routineID":
 		if e.complexity.RoutineExercise.RoutineID == nil {
@@ -10244,8 +10244,8 @@ func (ec *executionContext) fieldContext_RoutineExercise_id(ctx context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _RoutineExercise_restTimer(ctx context.Context, field graphql.CollectedField, obj *ent.RoutineExercise) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_RoutineExercise_restTimer(ctx, field)
+func (ec *executionContext) _RoutineExercise_restTime(ctx context.Context, field graphql.CollectedField, obj *ent.RoutineExercise) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RoutineExercise_restTime(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10258,7 +10258,7 @@ func (ec *executionContext) _RoutineExercise_restTimer(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.RestTimer, nil
+		return obj.RestTime, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10272,7 +10272,7 @@ func (ec *executionContext) _RoutineExercise_restTimer(ctx context.Context, fiel
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_RoutineExercise_restTimer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_RoutineExercise_restTime(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "RoutineExercise",
 		Field:      field,
@@ -10858,8 +10858,8 @@ func (ec *executionContext) fieldContext_RoutineExerciseEdge_node(ctx context.Co
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_RoutineExercise_id(ctx, field)
-			case "restTimer":
-				return ec.fieldContext_RoutineExercise_restTimer(ctx, field)
+			case "restTime":
+				return ec.fieldContext_RoutineExercise_restTime(ctx, field)
 			case "sets":
 				return ec.fieldContext_RoutineExercise_sets(ctx, field)
 			case "routineID":
@@ -16022,20 +16022,20 @@ func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"restTimer", "sets", "exerciseID"}
+	fieldsInOrder := [...]string{"restTime", "sets", "exerciseID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "restTimer":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimer"))
+		case "restTime":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTime"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimer = data
+			it.RestTime = data
 		case "sets":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
 			data, err := ec.unmarshalOSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
@@ -17994,7 +17994,7 @@ func (ec *executionContext) unmarshalInputRoutineExerciseWhereInput(ctx context.
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "restTimer", "restTimerNEQ", "restTimerIn", "restTimerNotIn", "restTimerGT", "restTimerGTE", "restTimerLT", "restTimerLTE", "restTimerContains", "restTimerHasPrefix", "restTimerHasSuffix", "restTimerIsNil", "restTimerNotNil", "restTimerEqualFold", "restTimerContainsFold"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "restTime", "restTimeNEQ", "restTimeIn", "restTimeNotIn", "restTimeGT", "restTimeGTE", "restTimeLT", "restTimeLTE", "restTimeContains", "restTimeHasPrefix", "restTimeHasSuffix", "restTimeIsNil", "restTimeNotNil", "restTimeEqualFold", "restTimeContainsFold"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -18078,111 +18078,111 @@ func (ec *executionContext) unmarshalInputRoutineExerciseWhereInput(ctx context.
 				return it, err
 			}
 			it.IDLTE = data
-		case "restTimer":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimer"))
+		case "restTime":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTime"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimer = data
-		case "restTimerNEQ":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerNEQ"))
+			it.RestTime = data
+		case "restTimeNEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeNEQ"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerNEQ = data
-		case "restTimerIn":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerIn"))
+			it.RestTimeNEQ = data
+		case "restTimeIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeIn"))
 			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerIn = data
-		case "restTimerNotIn":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerNotIn"))
+			it.RestTimeIn = data
+		case "restTimeNotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeNotIn"))
 			data, err := ec.unmarshalOString2ᚕstringᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerNotIn = data
-		case "restTimerGT":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerGT"))
+			it.RestTimeNotIn = data
+		case "restTimeGT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeGT"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerGT = data
-		case "restTimerGTE":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerGTE"))
+			it.RestTimeGT = data
+		case "restTimeGTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeGTE"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerGTE = data
-		case "restTimerLT":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerLT"))
+			it.RestTimeGTE = data
+		case "restTimeLT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeLT"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerLT = data
-		case "restTimerLTE":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerLTE"))
+			it.RestTimeLT = data
+		case "restTimeLTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeLTE"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerLTE = data
-		case "restTimerContains":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerContains"))
+			it.RestTimeLTE = data
+		case "restTimeContains":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeContains"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerContains = data
-		case "restTimerHasPrefix":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerHasPrefix"))
+			it.RestTimeContains = data
+		case "restTimeHasPrefix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeHasPrefix"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerHasPrefix = data
-		case "restTimerHasSuffix":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerHasSuffix"))
+			it.RestTimeHasPrefix = data
+		case "restTimeHasSuffix":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeHasSuffix"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerHasSuffix = data
-		case "restTimerIsNil":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerIsNil"))
+			it.RestTimeHasSuffix = data
+		case "restTimeIsNil":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeIsNil"))
 			data, err := ec.unmarshalOBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerIsNil = data
-		case "restTimerNotNil":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerNotNil"))
+			it.RestTimeIsNil = data
+		case "restTimeNotNil":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeNotNil"))
 			data, err := ec.unmarshalOBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerNotNil = data
-		case "restTimerEqualFold":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerEqualFold"))
+			it.RestTimeNotNil = data
+		case "restTimeEqualFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeEqualFold"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerEqualFold = data
-		case "restTimerContainsFold":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimerContainsFold"))
+			it.RestTimeEqualFold = data
+		case "restTimeContainsFold":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimeContainsFold"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimerContainsFold = data
+			it.RestTimeContainsFold = data
 		}
 	}
 
@@ -19199,7 +19199,7 @@ func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "restTimer", "sets", "exerciseID"}
+	fieldsInOrder := [...]string{"id", "restTime", "sets", "exerciseID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -19213,13 +19213,13 @@ func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context
 				return it, err
 			}
 			it.ID = data
-		case "restTimer":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTimer"))
+		case "restTime":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTime"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.RestTimer = data
+			it.RestTime = data
 		case "sets":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
 			data, err := ec.unmarshalOSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
@@ -23116,8 +23116,8 @@ func (ec *executionContext) _RoutineExercise(ctx context.Context, sel ast.Select
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "restTimer":
-			out.Values[i] = ec._RoutineExercise_restTimer(ctx, field, obj)
+		case "restTime":
+			out.Values[i] = ec._RoutineExercise_restTime(ctx, field, obj)
 		case "sets":
 			out.Values[i] = ec._RoutineExercise_sets(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

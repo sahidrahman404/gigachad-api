@@ -13,8 +13,8 @@ const (
 	Label = "routine_exercise"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldRestTimer holds the string denoting the rest_timer field in the database.
-	FieldRestTimer = "rest_timer"
+	// FieldRestTime holds the string denoting the rest_time field in the database.
+	FieldRestTime = "rest_time"
 	// FieldSets holds the string denoting the sets field in the database.
 	FieldSets = "sets"
 	// FieldRoutineID holds the string denoting the routine_id field in the database.
@@ -57,7 +57,7 @@ const (
 // Columns holds all SQL columns for routineexercise fields.
 var Columns = []string{
 	FieldID,
-	FieldRestTimer,
+	FieldRestTime,
 	FieldSets,
 	FieldRoutineID,
 	FieldExerciseID,
@@ -87,9 +87,9 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByRestTimer orders the results by the rest_timer field.
-func ByRestTimer(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRestTimer, opts...).ToFunc()
+// ByRestTime orders the results by the rest_time field.
+func ByRestTime(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRestTime, opts...).ToFunc()
 }
 
 // ByRoutineID orders the results by the routine_id field.
