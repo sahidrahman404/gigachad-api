@@ -27,13 +27,9 @@ func (r *mutationResolver) DeleteRoutine(ctx context.Context, input gigachad.Del
 		return nil, r.serverError(err)
 	}
 
-	scheduleID := routine.ScheduleID
+	_ = routine.ScheduleID
 
-	if scheduleID != nil {
-		tc := *r.temporalClient
-		scheduleHandle := tc.ScheduleClient().GetHandle(ctx, *scheduleID)
-		scheduleHandle.Delete(ctx)
-	}
+	// delete schedule
 
 	err = r.client.Routine.DeleteOneID(input.ID).Exec(ctx)
 	if err != nil {

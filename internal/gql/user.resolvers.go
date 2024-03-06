@@ -9,9 +9,7 @@ import (
 	"crypto/sha256"
 	"time"
 
-	"github.com/cschleiden/go-workflows/client"
 	gigachad "github.com/sahidrahman404/gigachad-api"
-	"github.com/sahidrahman404/gigachad-api/activity"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/token"
 	userPredicate "github.com/sahidrahman404/gigachad-api/ent/user"

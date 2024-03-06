@@ -19,7 +19,6 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.18
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/pborman/uuid v1.2.1
-	github.com/redis/go-redis/v9 v9.0.2
 	github.com/segmentio/ksuid v1.0.4
 	github.com/tursodatabase/libsql-client-go v0.0.0-20231216154754-8383a53d618f
 	github.com/vektah/gqlparser/v2 v2.5.10
@@ -51,10 +50,7 @@ require (
 	github.com/aws/smithy-go v1.19.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
-	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
-	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
 	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect

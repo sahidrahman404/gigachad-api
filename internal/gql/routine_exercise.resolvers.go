@@ -8,15 +8,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/pborman/uuid"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
-	"github.com/sahidrahman404/gigachad-api/internal/shared"
-	"github.com/sahidrahman404/gigachad-api/internal/smtp"
-	"github.com/sahidrahman404/gigachad-api/internal/workoutreminder"
-	"go.temporal.io/sdk/client"
 )
 
 // CreateRoutineWithChildren is the resolver for the CreateRoutineWithChildren field.
@@ -63,31 +58,13 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		return r.client.Routine.Get(ctx, routineID)
 	}
 
-	routine, err := r.client.Routine.Query().Where(routine.ID(routineID)).WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
+	_, err = r.client.Routine.Query().Where(routine.ID(routineID)).WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
 		req.WithExercises()
 	}).Only(ctx)
+
 	if err != nil {
 		return r.client.Routine.Get(ctx, routineID)
 	}
-	tc := *r.temporalClient
-
-	options := client.StartWorkflowOptions{
-		ID:        "create-daily-workout-reminder-schedule" + uuid.New(),
-		TaskQueue: shared.DailyWorkoutReminderTaskQueueName,
-	}
-
-	cdwsi := workoutreminder.CreateDailyWorkoutScheduleInput{
-		User: user,
-		RoutineData: smtp.RoutineData{
-			UserName: user.Name,
-			Routine:  *routine,
-		},
-		Reminders:  input.Reminder,
-		ScheduleID: scheduleID,
-	}
-
-	_, err = tc.ExecuteWorkflow(ctx, options, workoutreminder.CreateDailyWorkoutScheduleWorkflow, cdwsi)
-
 	return r.client.Routine.Get(ctx, routineID)
 }
 
@@ -132,23 +109,6 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 	if input.Reminder == nil {
 		return r.client.Routine.Get(ctx, input.ID)
 	}
-
-	r.backgroundTask(func() error {
-		tc := *r.temporalClient
-
-		options := client.StartWorkflowOptions{
-			ID:        "update-daily-workout-reminder-schedule" + uuid.New(),
-			TaskQueue: shared.DailyWorkoutReminderTaskQueueName,
-		}
-
-		udwsi := workoutreminder.UpdateDailyWorkoutScheduleInput{
-			ScheduleID: *input.Reminder.ID,
-			Schedules:  input.Reminder.Schedules,
-		}
-
-		_, err := tc.ExecuteWorkflow(ctx, options, workoutreminder.UpdateDailyWorkoutScheduleWorkflow, udwsi)
-		return err
-	})
 
 	return r.client.Routine.Get(ctx, input.ID)
 }

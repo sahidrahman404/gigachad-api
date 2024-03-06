@@ -7,17 +7,13 @@ package gql
 import (
 	"context"
 	"errors"
-	"strings"
 	"time"
 
-	"github.com/cschleiden/go-workflows/client"
 	gigachad "github.com/sahidrahman404/gigachad-api"
-	"github.com/sahidrahman404/gigachad-api/activity"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
-	"github.com/sahidrahman404/gigachad-api/workflow"
 )
 
 // CreateAuthenticationToken is the resolver for the createAuthenticationToken field.
@@ -88,23 +84,13 @@ func (r *mutationResolver) CreateActivationToken(ctx context.Context, input giga
 		return nil, r.serverError(err)
 	}
 
-	data := map[string]interface{}{
-		"activationToken": token.Plaintext,
-		"name":            strings.Split(user.Ent.Name, " ")[0],
-	}
+	r.backgroundTask(func() error {
+		data := map[string]interface{}{
+			"activationToken": token.Plaintext,
+		}
 
-	m := activity.MailDetails{
-		Recipient: user.Ent.Email,
-		Data:      data,
-		Patterns:  []string{"token_activation.tmpl"},
-	}
-
-	options := client.WorkflowInstanceOptions{
-		InstanceID: string(user.Ent.ID),
-	}
-
-	c := client.New(r.workflowBackend)
-	_, _ = c.CreateWorkflowInstance(context.Background(), options, workflow.SendEmail, m)
+		return r.mailer.Send(user.Ent.Email, data, "token_activation.tmpl")
+	})
 
 	return user.Ent, nil
 }
