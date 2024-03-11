@@ -1,5 +1,5 @@
 # flyctl launch added from .gitignore
 **/file.db
-**/.envrc
+**/.env
 **/tmp
 fly.toml

@@ -4,7 +4,7 @@
 # STEP 1 build executable binary
 ############################
 
-FROM golang:1.21.5-alpine3.18 as builder
+FROM golang:1.22-alpine as builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN go build -o=/usr/local/bin/api ./cmd/api
 ############################
 # STEP 2 build a small image
 ############################
-FROM alpine:3.18
+FROM alpine:3.19
 
 COPY --from=builder /usr/local/bin/api /usr/local/bin/api
 
