@@ -64,18 +64,14 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 			SetScope(t.Ent.Scope).
 			SetUserID(t.Ent.UserID).
 			Exec(ctx)
-
 		if err != nil {
 			return err
 		}
 
-		caser := cases.Title(language.Indonesian)
-		name := caser.String(user.Ent.Name)
-
 		r.backgroundTask(func() error {
 			data := map[string]interface{}{
 				"activationToken": t.Plaintext,
-				"name":            name,
+				"name":            u.Name,
 			}
 
 			return r.mailer.Send(user.Ent.Email, data, "user_welcome.tmpl")
@@ -83,7 +79,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 
 		return nil
 	})
-
 	if err != nil {
 		switch {
 		case ent.IsConstraintError(err):
@@ -139,7 +134,6 @@ func (r *mutationResolver) ActivateUser(ctx context.Context, input gigachad.Acti
 		_, err = txClient.Token.Delete().
 			Where(token.Scope(database.ScopeActivation), token.HasUsersWith(userPredicate.ID(u.ID))).
 			Exec(ctx)
-
 		if err != nil {
 			return err
 		}
@@ -205,7 +199,6 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 			SetName(user.Ent.Name).
 			SetVersion(user.Ent.Version + 1).
 			Save(ctx)
-
 		if err != nil {
 			return err
 		}
@@ -213,7 +206,6 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 		_, err = txClient.Token.Delete().
 			Where(token.Scope(database.ScopePasswordReset), token.HasUsersWith(userPredicate.ID(user.Ent.ID))).
 			Exec(ctx)
-
 		if err != nil {
 			return err
 		}
@@ -221,7 +213,6 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 		_, err = txClient.Token.Delete().
 			Where(token.Scope(database.SocpeAuthentication), token.HasUsersWith(userPredicate.ID(user.Ent.ID))).
 			Exec(ctx)
-
 		if err != nil {
 			return err
 		}
