@@ -4,8 +4,12 @@ buf.build/gen/go/restatedev/proto/protocolbuffers/go v1.33.0-20231213083047-6ea2
 buf.build/gen/go/restatedev/proto/protocolbuffers/go v1.33.0-20231213083047-6ea2d15aed8f.1/go.mod h1:Rt7G6X8PB/VcW7y8exvkF9qJRMp3haLrIzTKRW+r3ks=
 buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go v1.15.0-20240306070614-ef45a1a33d56.1 h1:zAxVILjiepufftvuSH+mWH5jFH4352lg/BsQ3+8OSnU=
 buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go v1.15.0-20240306070614-ef45a1a33d56.1/go.mod h1:wgEsIaKTPxOtLewELTGGL61Vwq7RzqJ9Y6Zjyx6TvGc=
+buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go v1.15.0-20240309063618-1b5968acf50c.1 h1:jQ8KcnSDqyLfnSnC7lP1kRvJT5Y95PjKzsgW/KKbjsg=
+buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go v1.15.0-20240309063618-1b5968acf50c.1/go.mod h1:5u7a+fM3XrqJDv/nyFhCPK6xawu29SGC0I78paBV5Zs=
 buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go v1.33.0-20240306070614-ef45a1a33d56.1 h1:3bZvom58eXk/uEqwb6Lt86lkuPe2hcOSZ4YlDQ30EGM=
 buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go v1.33.0-20240306070614-ef45a1a33d56.1/go.mod h1:5FTw/hVNbcPtDr6uoGA8/OyQzwwTbjSawYTWbBKV0r0=
+buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go v1.33.0-20240309063618-1b5968acf50c.1 h1:1LvBrTaewbyTMzLYAe0HR1c2Q7N0szshJn07D2tNnhk=
+buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go v1.33.0-20240309063618-1b5968acf50c.1/go.mod h1:5FTw/hVNbcPtDr6uoGA8/OyQzwwTbjSawYTWbBKV0r0=
 connectrpc.com/connect v1.15.0 h1:lFdeCbZrVVDydAqwr4xGV2y+ULn+0Z73s5JBj2LikWo=
 connectrpc.com/connect v1.15.0/go.mod h1:bQmjpDY8xItMnttnurVgOkHUBMRT9cpsNi2O4AjKhmA=
 entgo.io/contrib v0.4.6-0.20230615102013-704944fdc0f6 h1:SfCS4+uhbcjcERajnuPWsxsdpVoziczxhNMOhPhgVUM=

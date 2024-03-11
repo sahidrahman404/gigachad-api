@@ -5,8 +5,8 @@ go 1.22
 toolchain go1.22.0
 
 require (
-	buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go v1.15.0-20240306070614-ef45a1a33d56.1
-	buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go v1.33.0-20240306070614-ef45a1a33d56.1
+	buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go v1.15.0-20240309063618-1b5968acf50c.1
+	buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go v1.33.0-20240309063618-1b5968acf50c.1
 	connectrpc.com/connect v1.15.0
 	entgo.io/contrib v0.4.6-0.20230615102013-704944fdc0f6
 	entgo.io/ent v0.13.1
