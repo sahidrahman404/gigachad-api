@@ -98,14 +98,14 @@ atlas/migrate/diff:
   --dev-url "sqlite://file?mode=memory&_fk=1"
 
 
-## atlas/apply name=$1
+## atlas/migrate/apply name=$1
 .PHONY: atlas/migrate/apply
 atlas/migrate/apply:
 		atlas migrate apply \
   --dir "file://ent/migrate/migrations" \
   --url "sqlite://file.db?_fk=1"
 
-## atlas/inspect
+## atlas/migrate/inspect
 .PHONY: atlas/migrate/inspect
 atlas/migrate/inspect:
 		atlas schema inspect --url "sqlite://file.db?_fk=1" > schema.hcl

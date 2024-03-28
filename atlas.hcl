@@ -4,6 +4,6 @@ variable "token" {
 }
 
 env "local" {
-  url     = "libsql+wss://gigachad-sahidrahman404.turso.io?authToken=${var.token}"
+  url     = "libsql://gigachad-sahidrahman404.turso.io?authToken=${var.token}"
   exclude = ["_litestream*", "stories_fts*"]
 }
