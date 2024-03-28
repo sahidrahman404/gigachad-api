@@ -36,7 +36,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		routine, err := txClient.Routine.Create().
 			SetID(routineID).
 			SetName(input.Name).
-			SetScheduleID(reminderID).
+			SetNillableReminderID(&reminderID).
 			SetUserID(user.ID).
 			Save(ctx)
 		if err != nil {
@@ -156,7 +156,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		txClient := tx.Client()
 		routine, err := txClient.Routine.UpdateOneID(input.ID).
 			SetName(input.Name).
-			SetNillableScheduleID(input.Reminder.ID).
+			SetNillableReminderID(input.Reminder.ID).
 			Save(ctx)
 		if err != nil {
 			return err

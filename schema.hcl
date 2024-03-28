@@ -399,34 +399,6 @@ table "workouts" {
     on_delete   = CASCADE
   }
 }
-table "routines" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "name" {
-    null = false
-    type = text
-  }
-  column "schedule_id" {
-    null = true
-    type = text
-  }
-  column "user_id" {
-    null = false
-    type = text
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "routines_users_routines" {
-    columns     = [column.user_id]
-    ref_columns = [table.users.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-}
 table "routine_exercises" {
   schema = schema.main
   column "id" {
@@ -480,6 +452,34 @@ table "routine_exercises" {
   index "routineexercise_routine_id_exercise_id" {
     unique  = true
     columns = [column.routine_id, column.exercise_id]
+  }
+}
+table "routines" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "name" {
+    null = false
+    type = text
+  }
+  column "reminder_id" {
+    null = true
+    type = text
+  }
+  column "user_id" {
+    null = false
+    type = text
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "routines_users_routines" {
+    columns     = [column.user_id]
+    ref_columns = [table.users.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
   }
 }
 schema "main" {

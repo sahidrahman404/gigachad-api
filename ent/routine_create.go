@@ -32,16 +32,16 @@ func (rc *RoutineCreate) SetName(s string) *RoutineCreate {
 	return rc
 }
 
-// SetScheduleID sets the "schedule_id" field.
-func (rc *RoutineCreate) SetScheduleID(s string) *RoutineCreate {
-	rc.mutation.SetScheduleID(s)
+// SetReminderID sets the "reminder_id" field.
+func (rc *RoutineCreate) SetReminderID(s string) *RoutineCreate {
+	rc.mutation.SetReminderID(s)
 	return rc
 }
 
-// SetNillableScheduleID sets the "schedule_id" field if the given value is not nil.
-func (rc *RoutineCreate) SetNillableScheduleID(s *string) *RoutineCreate {
+// SetNillableReminderID sets the "reminder_id" field if the given value is not nil.
+func (rc *RoutineCreate) SetNillableReminderID(s *string) *RoutineCreate {
 	if s != nil {
-		rc.SetScheduleID(*s)
+		rc.SetReminderID(*s)
 	}
 	return rc
 }
@@ -205,9 +205,9 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := rc.mutation.ScheduleID(); ok {
-		_spec.SetField(routine.FieldScheduleID, field.TypeString, value)
-		_node.ScheduleID = &value
+	if value, ok := rc.mutation.ReminderID(); ok {
+		_spec.SetField(routine.FieldReminderID, field.TypeString, value)
+		_node.ReminderID = &value
 	}
 	if nodes := rc.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -329,21 +329,21 @@ func (u *RoutineUpsert) UpdateName() *RoutineUpsert {
 	return u
 }
 
-// SetScheduleID sets the "schedule_id" field.
-func (u *RoutineUpsert) SetScheduleID(v string) *RoutineUpsert {
-	u.Set(routine.FieldScheduleID, v)
+// SetReminderID sets the "reminder_id" field.
+func (u *RoutineUpsert) SetReminderID(v string) *RoutineUpsert {
+	u.Set(routine.FieldReminderID, v)
 	return u
 }
 
-// UpdateScheduleID sets the "schedule_id" field to the value that was provided on create.
-func (u *RoutineUpsert) UpdateScheduleID() *RoutineUpsert {
-	u.SetExcluded(routine.FieldScheduleID)
+// UpdateReminderID sets the "reminder_id" field to the value that was provided on create.
+func (u *RoutineUpsert) UpdateReminderID() *RoutineUpsert {
+	u.SetExcluded(routine.FieldReminderID)
 	return u
 }
 
-// ClearScheduleID clears the value of the "schedule_id" field.
-func (u *RoutineUpsert) ClearScheduleID() *RoutineUpsert {
-	u.SetNull(routine.FieldScheduleID)
+// ClearReminderID clears the value of the "reminder_id" field.
+func (u *RoutineUpsert) ClearReminderID() *RoutineUpsert {
+	u.SetNull(routine.FieldReminderID)
 	return u
 }
 
@@ -421,24 +421,24 @@ func (u *RoutineUpsertOne) UpdateName() *RoutineUpsertOne {
 	})
 }
 
-// SetScheduleID sets the "schedule_id" field.
-func (u *RoutineUpsertOne) SetScheduleID(v string) *RoutineUpsertOne {
+// SetReminderID sets the "reminder_id" field.
+func (u *RoutineUpsertOne) SetReminderID(v string) *RoutineUpsertOne {
 	return u.Update(func(s *RoutineUpsert) {
-		s.SetScheduleID(v)
+		s.SetReminderID(v)
 	})
 }
 
-// UpdateScheduleID sets the "schedule_id" field to the value that was provided on create.
-func (u *RoutineUpsertOne) UpdateScheduleID() *RoutineUpsertOne {
+// UpdateReminderID sets the "reminder_id" field to the value that was provided on create.
+func (u *RoutineUpsertOne) UpdateReminderID() *RoutineUpsertOne {
 	return u.Update(func(s *RoutineUpsert) {
-		s.UpdateScheduleID()
+		s.UpdateReminderID()
 	})
 }
 
-// ClearScheduleID clears the value of the "schedule_id" field.
-func (u *RoutineUpsertOne) ClearScheduleID() *RoutineUpsertOne {
+// ClearReminderID clears the value of the "reminder_id" field.
+func (u *RoutineUpsertOne) ClearReminderID() *RoutineUpsertOne {
 	return u.Update(func(s *RoutineUpsert) {
-		s.ClearScheduleID()
+		s.ClearReminderID()
 	})
 }
 
@@ -685,24 +685,24 @@ func (u *RoutineUpsertBulk) UpdateName() *RoutineUpsertBulk {
 	})
 }
 
-// SetScheduleID sets the "schedule_id" field.
-func (u *RoutineUpsertBulk) SetScheduleID(v string) *RoutineUpsertBulk {
+// SetReminderID sets the "reminder_id" field.
+func (u *RoutineUpsertBulk) SetReminderID(v string) *RoutineUpsertBulk {
 	return u.Update(func(s *RoutineUpsert) {
-		s.SetScheduleID(v)
+		s.SetReminderID(v)
 	})
 }
 
-// UpdateScheduleID sets the "schedule_id" field to the value that was provided on create.
-func (u *RoutineUpsertBulk) UpdateScheduleID() *RoutineUpsertBulk {
+// UpdateReminderID sets the "reminder_id" field to the value that was provided on create.
+func (u *RoutineUpsertBulk) UpdateReminderID() *RoutineUpsertBulk {
 	return u.Update(func(s *RoutineUpsert) {
-		s.UpdateScheduleID()
+		s.UpdateReminderID()
 	})
 }
 
-// ClearScheduleID clears the value of the "schedule_id" field.
-func (u *RoutineUpsertBulk) ClearScheduleID() *RoutineUpsertBulk {
+// ClearReminderID clears the value of the "reminder_id" field.
+func (u *RoutineUpsertBulk) ClearReminderID() *RoutineUpsertBulk {
 	return u.Update(func(s *RoutineUpsert) {
-		s.ClearScheduleID()
+		s.ClearReminderID()
 	})
 }
 

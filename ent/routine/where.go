@@ -59,9 +59,9 @@ func Name(v string) predicate.Routine {
 	return predicate.Routine(sql.FieldEQ(FieldName, v))
 }
 
-// ScheduleID applies equality check predicate on the "schedule_id" field. It's identical to ScheduleIDEQ.
-func ScheduleID(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldEQ(FieldScheduleID, v))
+// ReminderID applies equality check predicate on the "reminder_id" field. It's identical to ReminderIDEQ.
+func ReminderID(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldEQ(FieldReminderID, v))
 }
 
 // UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
@@ -134,79 +134,79 @@ func NameContainsFold(v string) predicate.Routine {
 	return predicate.Routine(sql.FieldContainsFold(FieldName, v))
 }
 
-// ScheduleIDEQ applies the EQ predicate on the "schedule_id" field.
-func ScheduleIDEQ(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldEQ(FieldScheduleID, v))
+// ReminderIDEQ applies the EQ predicate on the "reminder_id" field.
+func ReminderIDEQ(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldEQ(FieldReminderID, v))
 }
 
-// ScheduleIDNEQ applies the NEQ predicate on the "schedule_id" field.
-func ScheduleIDNEQ(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldNEQ(FieldScheduleID, v))
+// ReminderIDNEQ applies the NEQ predicate on the "reminder_id" field.
+func ReminderIDNEQ(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldNEQ(FieldReminderID, v))
 }
 
-// ScheduleIDIn applies the In predicate on the "schedule_id" field.
-func ScheduleIDIn(vs ...string) predicate.Routine {
-	return predicate.Routine(sql.FieldIn(FieldScheduleID, vs...))
+// ReminderIDIn applies the In predicate on the "reminder_id" field.
+func ReminderIDIn(vs ...string) predicate.Routine {
+	return predicate.Routine(sql.FieldIn(FieldReminderID, vs...))
 }
 
-// ScheduleIDNotIn applies the NotIn predicate on the "schedule_id" field.
-func ScheduleIDNotIn(vs ...string) predicate.Routine {
-	return predicate.Routine(sql.FieldNotIn(FieldScheduleID, vs...))
+// ReminderIDNotIn applies the NotIn predicate on the "reminder_id" field.
+func ReminderIDNotIn(vs ...string) predicate.Routine {
+	return predicate.Routine(sql.FieldNotIn(FieldReminderID, vs...))
 }
 
-// ScheduleIDGT applies the GT predicate on the "schedule_id" field.
-func ScheduleIDGT(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldGT(FieldScheduleID, v))
+// ReminderIDGT applies the GT predicate on the "reminder_id" field.
+func ReminderIDGT(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldGT(FieldReminderID, v))
 }
 
-// ScheduleIDGTE applies the GTE predicate on the "schedule_id" field.
-func ScheduleIDGTE(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldGTE(FieldScheduleID, v))
+// ReminderIDGTE applies the GTE predicate on the "reminder_id" field.
+func ReminderIDGTE(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldGTE(FieldReminderID, v))
 }
 
-// ScheduleIDLT applies the LT predicate on the "schedule_id" field.
-func ScheduleIDLT(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldLT(FieldScheduleID, v))
+// ReminderIDLT applies the LT predicate on the "reminder_id" field.
+func ReminderIDLT(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldLT(FieldReminderID, v))
 }
 
-// ScheduleIDLTE applies the LTE predicate on the "schedule_id" field.
-func ScheduleIDLTE(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldLTE(FieldScheduleID, v))
+// ReminderIDLTE applies the LTE predicate on the "reminder_id" field.
+func ReminderIDLTE(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldLTE(FieldReminderID, v))
 }
 
-// ScheduleIDContains applies the Contains predicate on the "schedule_id" field.
-func ScheduleIDContains(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldContains(FieldScheduleID, v))
+// ReminderIDContains applies the Contains predicate on the "reminder_id" field.
+func ReminderIDContains(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldContains(FieldReminderID, v))
 }
 
-// ScheduleIDHasPrefix applies the HasPrefix predicate on the "schedule_id" field.
-func ScheduleIDHasPrefix(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldHasPrefix(FieldScheduleID, v))
+// ReminderIDHasPrefix applies the HasPrefix predicate on the "reminder_id" field.
+func ReminderIDHasPrefix(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldHasPrefix(FieldReminderID, v))
 }
 
-// ScheduleIDHasSuffix applies the HasSuffix predicate on the "schedule_id" field.
-func ScheduleIDHasSuffix(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldHasSuffix(FieldScheduleID, v))
+// ReminderIDHasSuffix applies the HasSuffix predicate on the "reminder_id" field.
+func ReminderIDHasSuffix(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldHasSuffix(FieldReminderID, v))
 }
 
-// ScheduleIDIsNil applies the IsNil predicate on the "schedule_id" field.
-func ScheduleIDIsNil() predicate.Routine {
-	return predicate.Routine(sql.FieldIsNull(FieldScheduleID))
+// ReminderIDIsNil applies the IsNil predicate on the "reminder_id" field.
+func ReminderIDIsNil() predicate.Routine {
+	return predicate.Routine(sql.FieldIsNull(FieldReminderID))
 }
 
-// ScheduleIDNotNil applies the NotNil predicate on the "schedule_id" field.
-func ScheduleIDNotNil() predicate.Routine {
-	return predicate.Routine(sql.FieldNotNull(FieldScheduleID))
+// ReminderIDNotNil applies the NotNil predicate on the "reminder_id" field.
+func ReminderIDNotNil() predicate.Routine {
+	return predicate.Routine(sql.FieldNotNull(FieldReminderID))
 }
 
-// ScheduleIDEqualFold applies the EqualFold predicate on the "schedule_id" field.
-func ScheduleIDEqualFold(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldEqualFold(FieldScheduleID, v))
+// ReminderIDEqualFold applies the EqualFold predicate on the "reminder_id" field.
+func ReminderIDEqualFold(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldEqualFold(FieldReminderID, v))
 }
 
-// ScheduleIDContainsFold applies the ContainsFold predicate on the "schedule_id" field.
-func ScheduleIDContainsFold(v string) predicate.Routine {
-	return predicate.Routine(sql.FieldContainsFold(FieldScheduleID, v))
+// ReminderIDContainsFold applies the ContainsFold predicate on the "reminder_id" field.
+func ReminderIDContainsFold(v string) predicate.Routine {
+	return predicate.Routine(sql.FieldContainsFold(FieldReminderID, v))
 }
 
 // UserIDEQ applies the EQ predicate on the "user_id" field.

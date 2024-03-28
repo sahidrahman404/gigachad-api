@@ -45,23 +45,23 @@ func (ru *RoutineUpdate) SetNillableName(s *string) *RoutineUpdate {
 	return ru
 }
 
-// SetScheduleID sets the "schedule_id" field.
-func (ru *RoutineUpdate) SetScheduleID(s string) *RoutineUpdate {
-	ru.mutation.SetScheduleID(s)
+// SetReminderID sets the "reminder_id" field.
+func (ru *RoutineUpdate) SetReminderID(s string) *RoutineUpdate {
+	ru.mutation.SetReminderID(s)
 	return ru
 }
 
-// SetNillableScheduleID sets the "schedule_id" field if the given value is not nil.
-func (ru *RoutineUpdate) SetNillableScheduleID(s *string) *RoutineUpdate {
+// SetNillableReminderID sets the "reminder_id" field if the given value is not nil.
+func (ru *RoutineUpdate) SetNillableReminderID(s *string) *RoutineUpdate {
 	if s != nil {
-		ru.SetScheduleID(*s)
+		ru.SetReminderID(*s)
 	}
 	return ru
 }
 
-// ClearScheduleID clears the value of the "schedule_id" field.
-func (ru *RoutineUpdate) ClearScheduleID() *RoutineUpdate {
-	ru.mutation.ClearScheduleID()
+// ClearReminderID clears the value of the "reminder_id" field.
+func (ru *RoutineUpdate) ClearReminderID() *RoutineUpdate {
+	ru.mutation.ClearReminderID()
 	return ru
 }
 
@@ -223,11 +223,11 @@ func (ru *RoutineUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := ru.mutation.Name(); ok {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
 	}
-	if value, ok := ru.mutation.ScheduleID(); ok {
-		_spec.SetField(routine.FieldScheduleID, field.TypeString, value)
+	if value, ok := ru.mutation.ReminderID(); ok {
+		_spec.SetField(routine.FieldReminderID, field.TypeString, value)
 	}
-	if ru.mutation.ScheduleIDCleared() {
-		_spec.ClearField(routine.FieldScheduleID, field.TypeString)
+	if ru.mutation.ReminderIDCleared() {
+		_spec.ClearField(routine.FieldReminderID, field.TypeString)
 	}
 	if ru.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -403,23 +403,23 @@ func (ruo *RoutineUpdateOne) SetNillableName(s *string) *RoutineUpdateOne {
 	return ruo
 }
 
-// SetScheduleID sets the "schedule_id" field.
-func (ruo *RoutineUpdateOne) SetScheduleID(s string) *RoutineUpdateOne {
-	ruo.mutation.SetScheduleID(s)
+// SetReminderID sets the "reminder_id" field.
+func (ruo *RoutineUpdateOne) SetReminderID(s string) *RoutineUpdateOne {
+	ruo.mutation.SetReminderID(s)
 	return ruo
 }
 
-// SetNillableScheduleID sets the "schedule_id" field if the given value is not nil.
-func (ruo *RoutineUpdateOne) SetNillableScheduleID(s *string) *RoutineUpdateOne {
+// SetNillableReminderID sets the "reminder_id" field if the given value is not nil.
+func (ruo *RoutineUpdateOne) SetNillableReminderID(s *string) *RoutineUpdateOne {
 	if s != nil {
-		ruo.SetScheduleID(*s)
+		ruo.SetReminderID(*s)
 	}
 	return ruo
 }
 
-// ClearScheduleID clears the value of the "schedule_id" field.
-func (ruo *RoutineUpdateOne) ClearScheduleID() *RoutineUpdateOne {
-	ruo.mutation.ClearScheduleID()
+// ClearReminderID clears the value of the "reminder_id" field.
+func (ruo *RoutineUpdateOne) ClearReminderID() *RoutineUpdateOne {
+	ruo.mutation.ClearReminderID()
 	return ruo
 }
 
@@ -611,11 +611,11 @@ func (ruo *RoutineUpdateOne) sqlSave(ctx context.Context) (_node *Routine, err e
 	if value, ok := ruo.mutation.Name(); ok {
 		_spec.SetField(routine.FieldName, field.TypeString, value)
 	}
-	if value, ok := ruo.mutation.ScheduleID(); ok {
-		_spec.SetField(routine.FieldScheduleID, field.TypeString, value)
+	if value, ok := ruo.mutation.ReminderID(); ok {
+		_spec.SetField(routine.FieldReminderID, field.TypeString, value)
 	}
-	if ruo.mutation.ScheduleIDCleared() {
-		_spec.ClearField(routine.FieldScheduleID, field.TypeString)
+	if ruo.mutation.ReminderIDCleared() {
+		_spec.ClearField(routine.FieldReminderID, field.TypeString)
 	}
 	if ruo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{

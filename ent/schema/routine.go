@@ -39,7 +39,7 @@ func (Routine) Mixin() []ent.Mixin {
 func (Routine) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
-		field.String("schedule_id").Optional().Nillable(),
+		field.String("reminder_id").Optional().Nillable(),
 		field.String("user_id").GoType(pksuid.ID("")),
 	}
 }

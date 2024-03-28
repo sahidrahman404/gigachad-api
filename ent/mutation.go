@@ -2808,7 +2808,7 @@ type RoutineMutation struct {
 	typ                      string
 	id                       *pksuid.ID
 	name                     *string
-	schedule_id              *string
+	reminder_id              *string
 	clearedFields            map[string]struct{}
 	exercises                map[pksuid.ID]struct{}
 	removedexercises         map[pksuid.ID]struct{}
@@ -2963,53 +2963,53 @@ func (m *RoutineMutation) ResetName() {
 	m.name = nil
 }
 
-// SetScheduleID sets the "schedule_id" field.
-func (m *RoutineMutation) SetScheduleID(s string) {
-	m.schedule_id = &s
+// SetReminderID sets the "reminder_id" field.
+func (m *RoutineMutation) SetReminderID(s string) {
+	m.reminder_id = &s
 }
 
-// ScheduleID returns the value of the "schedule_id" field in the mutation.
-func (m *RoutineMutation) ScheduleID() (r string, exists bool) {
-	v := m.schedule_id
+// ReminderID returns the value of the "reminder_id" field in the mutation.
+func (m *RoutineMutation) ReminderID() (r string, exists bool) {
+	v := m.reminder_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldScheduleID returns the old "schedule_id" field's value of the Routine entity.
+// OldReminderID returns the old "reminder_id" field's value of the Routine entity.
 // If the Routine object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RoutineMutation) OldScheduleID(ctx context.Context) (v *string, err error) {
+func (m *RoutineMutation) OldReminderID(ctx context.Context) (v *string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldScheduleID is only allowed on UpdateOne operations")
+		return v, errors.New("OldReminderID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldScheduleID requires an ID field in the mutation")
+		return v, errors.New("OldReminderID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldScheduleID: %w", err)
+		return v, fmt.Errorf("querying old value for OldReminderID: %w", err)
 	}
-	return oldValue.ScheduleID, nil
+	return oldValue.ReminderID, nil
 }
 
-// ClearScheduleID clears the value of the "schedule_id" field.
-func (m *RoutineMutation) ClearScheduleID() {
-	m.schedule_id = nil
-	m.clearedFields[routine.FieldScheduleID] = struct{}{}
+// ClearReminderID clears the value of the "reminder_id" field.
+func (m *RoutineMutation) ClearReminderID() {
+	m.reminder_id = nil
+	m.clearedFields[routine.FieldReminderID] = struct{}{}
 }
 
-// ScheduleIDCleared returns if the "schedule_id" field was cleared in this mutation.
-func (m *RoutineMutation) ScheduleIDCleared() bool {
-	_, ok := m.clearedFields[routine.FieldScheduleID]
+// ReminderIDCleared returns if the "reminder_id" field was cleared in this mutation.
+func (m *RoutineMutation) ReminderIDCleared() bool {
+	_, ok := m.clearedFields[routine.FieldReminderID]
 	return ok
 }
 
-// ResetScheduleID resets all changes to the "schedule_id" field.
-func (m *RoutineMutation) ResetScheduleID() {
-	m.schedule_id = nil
-	delete(m.clearedFields, routine.FieldScheduleID)
+// ResetReminderID resets all changes to the "reminder_id" field.
+func (m *RoutineMutation) ResetReminderID() {
+	m.reminder_id = nil
+	delete(m.clearedFields, routine.FieldReminderID)
 }
 
 // SetUserID sets the "user_id" field.
@@ -3234,8 +3234,8 @@ func (m *RoutineMutation) Fields() []string {
 	if m.name != nil {
 		fields = append(fields, routine.FieldName)
 	}
-	if m.schedule_id != nil {
-		fields = append(fields, routine.FieldScheduleID)
+	if m.reminder_id != nil {
+		fields = append(fields, routine.FieldReminderID)
 	}
 	if m.users != nil {
 		fields = append(fields, routine.FieldUserID)
@@ -3250,8 +3250,8 @@ func (m *RoutineMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case routine.FieldName:
 		return m.Name()
-	case routine.FieldScheduleID:
-		return m.ScheduleID()
+	case routine.FieldReminderID:
+		return m.ReminderID()
 	case routine.FieldUserID:
 		return m.UserID()
 	}
@@ -3265,8 +3265,8 @@ func (m *RoutineMutation) OldField(ctx context.Context, name string) (ent.Value,
 	switch name {
 	case routine.FieldName:
 		return m.OldName(ctx)
-	case routine.FieldScheduleID:
-		return m.OldScheduleID(ctx)
+	case routine.FieldReminderID:
+		return m.OldReminderID(ctx)
 	case routine.FieldUserID:
 		return m.OldUserID(ctx)
 	}
@@ -3285,12 +3285,12 @@ func (m *RoutineMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
-	case routine.FieldScheduleID:
+	case routine.FieldReminderID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetScheduleID(v)
+		m.SetReminderID(v)
 		return nil
 	case routine.FieldUserID:
 		v, ok := value.(pksuid.ID)
@@ -3329,8 +3329,8 @@ func (m *RoutineMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *RoutineMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(routine.FieldScheduleID) {
-		fields = append(fields, routine.FieldScheduleID)
+	if m.FieldCleared(routine.FieldReminderID) {
+		fields = append(fields, routine.FieldReminderID)
 	}
 	return fields
 }
@@ -3346,8 +3346,8 @@ func (m *RoutineMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *RoutineMutation) ClearField(name string) error {
 	switch name {
-	case routine.FieldScheduleID:
-		m.ClearScheduleID()
+	case routine.FieldReminderID:
+		m.ClearReminderID()
 		return nil
 	}
 	return fmt.Errorf("unknown Routine nullable field %s", name)
@@ -3360,8 +3360,8 @@ func (m *RoutineMutation) ResetField(name string) error {
 	case routine.FieldName:
 		m.ResetName()
 		return nil
-	case routine.FieldScheduleID:
-		m.ResetScheduleID()
+	case routine.FieldReminderID:
+		m.ResetReminderID()
 		return nil
 	case routine.FieldUserID:
 		m.ResetUserID()

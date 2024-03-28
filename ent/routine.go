@@ -20,8 +20,8 @@ type Routine struct {
 	ID pksuid.ID `json:"id,omitempty"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
-	// ScheduleID holds the value of the "schedule_id" field.
-	ScheduleID *string `json:"schedule_id,omitempty"`
+	// ReminderID holds the value of the "reminder_id" field.
+	ReminderID *string `json:"reminder_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -84,7 +84,7 @@ func (*Routine) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case routine.FieldID, routine.FieldUserID:
 			values[i] = new(pksuid.ID)
-		case routine.FieldName, routine.FieldScheduleID:
+		case routine.FieldName, routine.FieldReminderID:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -113,12 +113,12 @@ func (r *Routine) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.Name = value.String
 			}
-		case routine.FieldScheduleID:
+		case routine.FieldReminderID:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field schedule_id", values[i])
+				return fmt.Errorf("unexpected type %T for field reminder_id", values[i])
 			} else if value.Valid {
-				r.ScheduleID = new(string)
-				*r.ScheduleID = value.String
+				r.ReminderID = new(string)
+				*r.ReminderID = value.String
 			}
 		case routine.FieldUserID:
 			if value, ok := values[i].(*pksuid.ID); !ok {
@@ -180,8 +180,8 @@ func (r *Routine) String() string {
 	builder.WriteString("name=")
 	builder.WriteString(r.Name)
 	builder.WriteString(", ")
-	if v := r.ScheduleID; v != nil {
-		builder.WriteString("schedule_id=")
+	if v := r.ReminderID; v != nil {
+		builder.WriteString("reminder_id=")
 		builder.WriteString(*v)
 	}
 	builder.WriteString(", ")

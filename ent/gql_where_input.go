@@ -1184,22 +1184,22 @@ type RoutineWhereInput struct {
 	NameEqualFold    *string  `json:"nameEqualFold,omitempty"`
 	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
 
-	// "schedule_id" field predicates.
-	ScheduleID             *string  `json:"scheduleID,omitempty"`
-	ScheduleIDNEQ          *string  `json:"scheduleIDNEQ,omitempty"`
-	ScheduleIDIn           []string `json:"scheduleIDIn,omitempty"`
-	ScheduleIDNotIn        []string `json:"scheduleIDNotIn,omitempty"`
-	ScheduleIDGT           *string  `json:"scheduleIDGT,omitempty"`
-	ScheduleIDGTE          *string  `json:"scheduleIDGTE,omitempty"`
-	ScheduleIDLT           *string  `json:"scheduleIDLT,omitempty"`
-	ScheduleIDLTE          *string  `json:"scheduleIDLTE,omitempty"`
-	ScheduleIDContains     *string  `json:"scheduleIDContains,omitempty"`
-	ScheduleIDHasPrefix    *string  `json:"scheduleIDHasPrefix,omitempty"`
-	ScheduleIDHasSuffix    *string  `json:"scheduleIDHasSuffix,omitempty"`
-	ScheduleIDIsNil        bool     `json:"scheduleIDIsNil,omitempty"`
-	ScheduleIDNotNil       bool     `json:"scheduleIDNotNil,omitempty"`
-	ScheduleIDEqualFold    *string  `json:"scheduleIDEqualFold,omitempty"`
-	ScheduleIDContainsFold *string  `json:"scheduleIDContainsFold,omitempty"`
+	// "reminder_id" field predicates.
+	ReminderID             *string  `json:"reminderID,omitempty"`
+	ReminderIDNEQ          *string  `json:"reminderIDNEQ,omitempty"`
+	ReminderIDIn           []string `json:"reminderIDIn,omitempty"`
+	ReminderIDNotIn        []string `json:"reminderIDNotIn,omitempty"`
+	ReminderIDGT           *string  `json:"reminderIDGT,omitempty"`
+	ReminderIDGTE          *string  `json:"reminderIDGTE,omitempty"`
+	ReminderIDLT           *string  `json:"reminderIDLT,omitempty"`
+	ReminderIDLTE          *string  `json:"reminderIDLTE,omitempty"`
+	ReminderIDContains     *string  `json:"reminderIDContains,omitempty"`
+	ReminderIDHasPrefix    *string  `json:"reminderIDHasPrefix,omitempty"`
+	ReminderIDHasSuffix    *string  `json:"reminderIDHasSuffix,omitempty"`
+	ReminderIDIsNil        bool     `json:"reminderIDIsNil,omitempty"`
+	ReminderIDNotNil       bool     `json:"reminderIDNotNil,omitempty"`
+	ReminderIDEqualFold    *string  `json:"reminderIDEqualFold,omitempty"`
+	ReminderIDContainsFold *string  `json:"reminderIDContainsFold,omitempty"`
 
 	// "user_id" field predicates.
 	UserID             *pksuid.ID  `json:"userID,omitempty"`
@@ -1363,50 +1363,50 @@ func (i *RoutineWhereInput) P() (predicate.Routine, error) {
 	if i.NameContainsFold != nil {
 		predicates = append(predicates, routine.NameContainsFold(*i.NameContainsFold))
 	}
-	if i.ScheduleID != nil {
-		predicates = append(predicates, routine.ScheduleIDEQ(*i.ScheduleID))
+	if i.ReminderID != nil {
+		predicates = append(predicates, routine.ReminderIDEQ(*i.ReminderID))
 	}
-	if i.ScheduleIDNEQ != nil {
-		predicates = append(predicates, routine.ScheduleIDNEQ(*i.ScheduleIDNEQ))
+	if i.ReminderIDNEQ != nil {
+		predicates = append(predicates, routine.ReminderIDNEQ(*i.ReminderIDNEQ))
 	}
-	if len(i.ScheduleIDIn) > 0 {
-		predicates = append(predicates, routine.ScheduleIDIn(i.ScheduleIDIn...))
+	if len(i.ReminderIDIn) > 0 {
+		predicates = append(predicates, routine.ReminderIDIn(i.ReminderIDIn...))
 	}
-	if len(i.ScheduleIDNotIn) > 0 {
-		predicates = append(predicates, routine.ScheduleIDNotIn(i.ScheduleIDNotIn...))
+	if len(i.ReminderIDNotIn) > 0 {
+		predicates = append(predicates, routine.ReminderIDNotIn(i.ReminderIDNotIn...))
 	}
-	if i.ScheduleIDGT != nil {
-		predicates = append(predicates, routine.ScheduleIDGT(*i.ScheduleIDGT))
+	if i.ReminderIDGT != nil {
+		predicates = append(predicates, routine.ReminderIDGT(*i.ReminderIDGT))
 	}
-	if i.ScheduleIDGTE != nil {
-		predicates = append(predicates, routine.ScheduleIDGTE(*i.ScheduleIDGTE))
+	if i.ReminderIDGTE != nil {
+		predicates = append(predicates, routine.ReminderIDGTE(*i.ReminderIDGTE))
 	}
-	if i.ScheduleIDLT != nil {
-		predicates = append(predicates, routine.ScheduleIDLT(*i.ScheduleIDLT))
+	if i.ReminderIDLT != nil {
+		predicates = append(predicates, routine.ReminderIDLT(*i.ReminderIDLT))
 	}
-	if i.ScheduleIDLTE != nil {
-		predicates = append(predicates, routine.ScheduleIDLTE(*i.ScheduleIDLTE))
+	if i.ReminderIDLTE != nil {
+		predicates = append(predicates, routine.ReminderIDLTE(*i.ReminderIDLTE))
 	}
-	if i.ScheduleIDContains != nil {
-		predicates = append(predicates, routine.ScheduleIDContains(*i.ScheduleIDContains))
+	if i.ReminderIDContains != nil {
+		predicates = append(predicates, routine.ReminderIDContains(*i.ReminderIDContains))
 	}
-	if i.ScheduleIDHasPrefix != nil {
-		predicates = append(predicates, routine.ScheduleIDHasPrefix(*i.ScheduleIDHasPrefix))
+	if i.ReminderIDHasPrefix != nil {
+		predicates = append(predicates, routine.ReminderIDHasPrefix(*i.ReminderIDHasPrefix))
 	}
-	if i.ScheduleIDHasSuffix != nil {
-		predicates = append(predicates, routine.ScheduleIDHasSuffix(*i.ScheduleIDHasSuffix))
+	if i.ReminderIDHasSuffix != nil {
+		predicates = append(predicates, routine.ReminderIDHasSuffix(*i.ReminderIDHasSuffix))
 	}
-	if i.ScheduleIDIsNil {
-		predicates = append(predicates, routine.ScheduleIDIsNil())
+	if i.ReminderIDIsNil {
+		predicates = append(predicates, routine.ReminderIDIsNil())
 	}
-	if i.ScheduleIDNotNil {
-		predicates = append(predicates, routine.ScheduleIDNotNil())
+	if i.ReminderIDNotNil {
+		predicates = append(predicates, routine.ReminderIDNotNil())
 	}
-	if i.ScheduleIDEqualFold != nil {
-		predicates = append(predicates, routine.ScheduleIDEqualFold(*i.ScheduleIDEqualFold))
+	if i.ReminderIDEqualFold != nil {
+		predicates = append(predicates, routine.ReminderIDEqualFold(*i.ReminderIDEqualFold))
 	}
-	if i.ScheduleIDContainsFold != nil {
-		predicates = append(predicates, routine.ScheduleIDContainsFold(*i.ScheduleIDContainsFold))
+	if i.ReminderIDContainsFold != nil {
+		predicates = append(predicates, routine.ReminderIDContainsFold(*i.ReminderIDContainsFold))
 	}
 	if i.UserID != nil {
 		predicates = append(predicates, routine.UserIDEQ(*i.UserID))

@@ -72,7 +72,7 @@ var (
 	RoutinesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "schedule_id", Type: field.TypeString, Nullable: true},
+		{Name: "reminder_id", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString},
 	}
 	// RoutinesTable holds the schema information for the "routines" table.
