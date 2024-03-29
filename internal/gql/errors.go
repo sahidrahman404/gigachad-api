@@ -1,9 +1,12 @@
 package gql
 
 import (
+	"errors"
 	"runtime/debug"
 
+	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
+	"github.com/sahidrahman404/gigachad-api/rule"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
@@ -62,4 +65,17 @@ func (r *Resolver) notPremittedError() *gqlerror.Error {
 func (r *Resolver) invalidEmail() *gqlerror.Error {
 	message := "no matching email address found"
 	return gqlerror.Errorf(message)
+}
+
+func (r *Resolver) defaultError(err error) *gqlerror.Error {
+	switch {
+	case errors.Is(err, rule.AuthenticationRequired):
+		return r.authenticationRequired()
+	case errors.Is(err, rule.InactiveAccountErr):
+		return r.inactiveAccount()
+	case ent.IsNotFound(err):
+		return r.notFound()
+	default:
+		return r.serverError(err)
+	}
 }
