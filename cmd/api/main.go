@@ -62,6 +62,7 @@ type application struct {
 	ent           *ent.Client
 	presignClient *s3.PresignClient
 	purifier      *bluemonday.Policy
+	s3Client      *s3.Client
 }
 
 func run(logger *leveledlog.Logger) error {
@@ -125,6 +126,7 @@ func run(logger *leveledlog.Logger) error {
 		ent:           db.Ent,
 		presignClient: aws.NewPresignClient(awsConfig),
 		purifier:      p,
+		s3Client:      aws.NewS3Client(awsConfig),
 	}
 
 	return app.serveHTTP()

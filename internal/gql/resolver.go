@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
@@ -27,6 +28,7 @@ type Resolver struct {
 	imgproxy *img.Imgproxy
 	awsCfg   *aws.AWSConfig
 	purifier *bluemonday.Policy
+	s3Client *s3.Client
 }
 
 // NewSchema creates a graphql executable schema.
@@ -39,6 +41,7 @@ func NewSchema(
 	i *img.Imgproxy,
 	a *aws.AWSConfig,
 	h *bluemonday.Policy,
+	s3 *s3.Client,
 ) graphql.ExecutableSchema {
 	return gigachad.NewExecutableSchema(gigachad.Config{
 		Resolvers: &Resolver{
@@ -50,6 +53,7 @@ func NewSchema(
 			imgproxy: i,
 			awsCfg:   a,
 			purifier: h,
+			s3Client: s3,
 		},
 	})
 }

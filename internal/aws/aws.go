@@ -35,6 +35,11 @@ func NewPresignClient(cfg aws.Config) *s3.PresignClient {
 	return s3.NewPresignClient(client)
 }
 
+func NewS3Client(cfg aws.Config) *s3.Client {
+	client := s3.NewFromConfig(cfg)
+	return client
+}
+
 func UploadURL(client *s3.PresignClient, fileKey string, cfg AWSConfig) (string, error) {
 	expiration := time.Minute * 2
 	putObjectArgs := s3.PutObjectInput{
