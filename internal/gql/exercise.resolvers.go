@@ -7,6 +7,7 @@ package gql
 import (
 	"context"
 
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/internal/img"
@@ -33,9 +34,17 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 
 // DeleteExercise is the resolver for the deleteExercise field.
 func (r *mutationResolver) DeleteExercise(ctx context.Context, input gigachad.DeleteExerciseInput) (*ent.Exercise, error) {
-	err := r.client.Exercise.DeleteOneID(input.ID).Exec(ctx)
+	exercise, err := r.client.Exercise.Get(ctx, input.ID)
 	if err != nil {
-		return nil, r.serverError(err)
+		return nil, r.defaultError(err)
 	}
+
+	err = r.client.Exercise.DeleteOneID(input.ID).Exec(ctx)
+	if err != nil {
+		return nil, r.defaultError(err)
+	}
+
+	r.s3Client.DeleteObject(ctx, &s3.DeleteObjectInput{Bucket: &r.awsCfg.AWSBucket, Key: &exercise.Image.Filename})
+
 	return &ent.Exercise{ID: input.ID}, nil
 }
