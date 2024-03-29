@@ -9,6 +9,11 @@ import (
 	"github.com/sahidrahman404/gigachad-api/viewer"
 )
 
+var (
+	InactiveAccountErr     = privacy.Denyf("your user account must be activated to access this resource")
+	AuthenticationRequired = privacy.Denyf("you must be authenticated to access this resource")
+)
+
 // DenyIfNoViewer is a rule that returns deny decision if the viewer is missing in the context.
 func DenyIfNoViewer() privacy.QueryMutationRule {
 	return privacy.ContextQueryMutationRule(func(ctx context.Context) error {
@@ -38,18 +43,17 @@ func FilterRoutineRule() privacy.QueryMutationRule {
 		WhereUserID(p entql.StringP)
 	}
 	return privacy.FilterFunc(func(ctx context.Context, f privacy.Filter) error {
-		uCtx, ok := ctx.Value(types.UserContextKey).(*types.User)
-		if !ok {
-			return privacy.Denyf("missing user information in viewer")
+		userCtx, ok := ctx.Value(types.UserContextKey).(*types.User)
+		if !ok || userCtx.IsAnonymous() {
+			return AuthenticationRequired
 		}
-		if uCtx.Ent == nil {
-			return privacy.Denyf("missing user information in viewer")
-		}
+
 		uf, ok := f.(UsersFilter)
 		if !ok {
 			return privacy.Denyf("unexpected filter type %T", f)
 		}
-		uf.WhereUserID(entql.StringEQ(string(uCtx.Ent.ID)))
+
+		uf.WhereUserID(entql.StringEQ(string(userCtx.Ent.ID)))
 		return privacy.Skip
 	})
 }
@@ -59,9 +63,13 @@ func FilterExerciseRule() privacy.QueryMutationRule {
 		WhereUserID(p entql.StringP)
 	}
 	return privacy.FilterFunc(func(ctx context.Context, f privacy.Filter) error {
-		uCtx, ok := ctx.Value(types.UserContextKey).(*types.User)
-		if !ok {
-			return privacy.Denyf("missing user information in viewer")
+		userCtx, ok := ctx.Value(types.UserContextKey).(*types.User)
+		if !ok || userCtx.IsAnonymous() {
+			return AuthenticationRequired
+		}
+
+		if userCtx.Ent.Activated == 0 {
+			return InactiveAccountErr
 		}
 
 		uf, ok := f.(UsersFilter)
@@ -69,12 +77,37 @@ func FilterExerciseRule() privacy.QueryMutationRule {
 			return privacy.Denyf("unexpected filter type %T", f)
 		}
 
-		if uCtx.Ent != nil {
-			uf.WhereUserID(entql.StringOr(entql.StringEQ(string(uCtx.Ent.ID)), entql.StringNil()))
+		if userCtx.Ent != nil {
+			uf.WhereUserID(entql.StringOr(entql.StringEQ(string(userCtx.Ent.ID)), entql.StringNil()))
 			return privacy.Skip
 		}
 
 		uf.WhereUserID(entql.StringNil())
+		return privacy.Skip
+	})
+}
+
+func AllowEditExerciseIfOwner() privacy.MutationRule {
+	type UsersFilter interface {
+		WhereUserID(p entql.StringP)
+	}
+	return privacy.FilterFunc(func(ctx context.Context, f privacy.Filter) error {
+		userCtx, ok := ctx.Value(types.UserContextKey).(*types.User)
+		if !ok || userCtx.IsAnonymous() {
+			return AuthenticationRequired
+		}
+
+		if userCtx.Ent.Activated == 0 {
+			return InactiveAccountErr
+		}
+
+		uf, ok := f.(UsersFilter)
+		if !ok {
+			return privacy.Denyf("unexpected filter type %T", f)
+		}
+
+		uf.WhereUserID(entql.StringEQ(string(userCtx.Ent.ID)))
+
 		return privacy.Skip
 	})
 }

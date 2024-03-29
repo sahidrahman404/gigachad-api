@@ -19,10 +19,9 @@ type Exercise struct {
 
 func (Exercise) Policy() ent.Policy {
 	return privacy.Policy{
-		// Mutation: privacy.MutationPolicy{
-		//     // Deny if not set otherwise.
-		//     privacy.AlwaysDenyRule(),
-		// },
+		Mutation: privacy.MutationPolicy{
+			rule.AllowEditExerciseIfOwner(),
+		},
 		Query: privacy.QueryPolicy{
 			rule.FilterExerciseRule(),
 		},
