@@ -27,7 +27,7 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 		AddExerciseTypeIDs(input.ExerciseTypeIDs...).
 		Save(ctx)
 	if err != nil {
-		return nil, r.serverError(err)
+		return nil, r.defaultError(err)
 	}
 	return ex, nil
 }
