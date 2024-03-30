@@ -2,7 +2,6 @@ input CreateExerciseInput {
   name: String!
   image: ImageInput
   howTo: String
-  userID: ID
   musclesGroupIDs: [ID!]
   exerciseTypeIDs: [ID!]
 }
@@ -16,7 +15,6 @@ input UpdateExerciseInput {
   name: String!
   image: ImageInput
   howTo: String
-  userID: ID
   musclesGroupIDs: [ID!]
   exerciseTypeIDs: [ID!]
 }

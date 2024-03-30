@@ -6,7 +6,6 @@ package gql
 
 import (
 	"context"
-	"fmt"
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
@@ -34,7 +33,25 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 
 // UpdateExercise is the resolver for the updateExercise field.
 func (r *mutationResolver) UpdateExercise(ctx context.Context, input gigachad.UpdateExerciseInput) (*ent.Exercise, error) {
-	panic(fmt.Errorf("not implemented: UpdateExercise - updateExercise"))
+	userCtx := r.getUserFromCtx(ctx)
+	err := r.client.Exercise.Create().
+		SetID(input.ID).
+		SetName(input.Name).
+		SetImage(img.SetNillableImageField(input.Image, *r.awsCfg, r.imgproxy)).
+		SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
+		SetNillableUserID(userCtx.GetUserID()).AddMusclesGroupIDs(input.MusclesGroupIDs...).
+		AddExerciseTypeIDs(input.ExerciseTypeIDs...).
+		OnConflict().
+		UpdateNewValues().
+		Exec(ctx)
+	if err != nil {
+		return nil, r.defaultError(err)
+	}
+	exercise, err := r.client.Exercise.Get(ctx, input.ID)
+	if err != nil {
+		return nil, r.defaultError(err)
+	}
+	return exercise, nil
 }
 
 // DeleteExercise is the resolver for the deleteExercise field.

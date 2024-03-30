@@ -29,7 +29,6 @@ type CreateExerciseInput struct {
 	Name            string            `json:"name"`
 	Image           *schematype.Image `json:"image,omitempty"`
 	HowTo           *string           `json:"howTo,omitempty"`
-	UserID          *pksuid.ID        `json:"userID,omitempty"`
 	MusclesGroupIDs []pksuid.ID       `json:"musclesGroupIDs,omitempty"`
 	ExerciseTypeIDs []pksuid.ID       `json:"exerciseTypeIDs,omitempty"`
 }
@@ -112,7 +111,6 @@ type UpdateExerciseInput struct {
 	Name            string            `json:"name"`
 	Image           *schematype.Image `json:"image,omitempty"`
 	HowTo           *string           `json:"howTo,omitempty"`
-	UserID          *pksuid.ID        `json:"userID,omitempty"`
 	MusclesGroupIDs []pksuid.ID       `json:"musclesGroupIDs,omitempty"`
 	ExerciseTypeIDs []pksuid.ID       `json:"exerciseTypeIDs,omitempty"`
 }

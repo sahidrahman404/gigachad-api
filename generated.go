@@ -15991,7 +15991,7 @@ func (ec *executionContext) unmarshalInputCreateExerciseInput(ctx context.Contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "image", "howTo", "userID", "musclesGroupIDs", "exerciseTypeIDs"}
+	fieldsInOrder := [...]string{"name", "image", "howTo", "musclesGroupIDs", "exerciseTypeIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -16019,13 +16019,6 @@ func (ec *executionContext) unmarshalInputCreateExerciseInput(ctx context.Contex
 				return it, err
 			}
 			it.HowTo = data
-		case "userID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.UserID = data
 		case "musclesGroupIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("musclesGroupIDs"))
 			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐIDᚄ(ctx, v)
@@ -19243,7 +19236,7 @@ func (ec *executionContext) unmarshalInputUpdateExerciseInput(ctx context.Contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "name", "image", "howTo", "userID", "musclesGroupIDs", "exerciseTypeIDs"}
+	fieldsInOrder := [...]string{"id", "name", "image", "howTo", "musclesGroupIDs", "exerciseTypeIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -19278,13 +19271,6 @@ func (ec *executionContext) unmarshalInputUpdateExerciseInput(ctx context.Contex
 				return it, err
 			}
 			it.HowTo = data
-		case "userID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
-			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.UserID = data
 		case "musclesGroupIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("musclesGroupIDs"))
 			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐIDᚄ(ctx, v)
