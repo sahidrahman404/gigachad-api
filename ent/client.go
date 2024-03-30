@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/exercisetype"
@@ -88,7 +89,9 @@ type (
 		// hooks to execute on mutations.
 		hooks *hooks
 		// interceptors to execute on queries.
-		inters *inters
+		inters            *inters
+		DeleteObjectInput *s3.DeleteObjectInput
+		S3Client          *s3.Client
 	}
 	// Option function to configure the client.
 	Option func(*config)
@@ -129,6 +132,20 @@ func Log(fn func(...any)) Option {
 func Driver(driver dialect.Driver) Option {
 	return func(c *config) {
 		c.driver = driver
+	}
+}
+
+// DeleteObjectInput configures the DeleteObjectInput.
+func DeleteObjectInput(v *s3.DeleteObjectInput) Option {
+	return func(c *config) {
+		c.DeleteObjectInput = v
+	}
+}
+
+// S3Client configures the S3Client.
+func S3Client(v *s3.Client) Option {
+	return func(c *config) {
+		c.S3Client = v
 	}
 }
 

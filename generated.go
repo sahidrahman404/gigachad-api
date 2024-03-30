@@ -175,6 +175,7 @@ type ComplexityRoot struct {
 		CreateWorkoutWithChildren func(childComplexity int, input CreateWorkoutWithChildrenInput) int
 		DeleteExercise            func(childComplexity int, input DeleteExerciseInput) int
 		DeleteRoutine             func(childComplexity int, input DeleteRoutineInput) int
+		UpdateExercise            func(childComplexity int, input UpdateExerciseInput) int
 		UpdateRoutineWithChildren func(childComplexity int, input UpdateRoutineWithChildrenInput) int
 		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordInput) int
 	}
@@ -365,6 +366,7 @@ type MutationResolver interface {
 	DeleteRoutine(ctx context.Context, input DeleteRoutineInput) (*ent.Routine, error)
 	CreateMusclesGroup(ctx context.Context, input CreateMusclesGroupInput) (*ent.MusclesGroup, error)
 	CreateExercise(ctx context.Context, input CreateExerciseInput) (*ent.Exercise, error)
+	UpdateExercise(ctx context.Context, input UpdateExerciseInput) (*ent.Exercise, error)
 	DeleteExercise(ctx context.Context, input DeleteExerciseInput) (*ent.Exercise, error)
 	CreateExerciseType(ctx context.Context, input ent.CreateExerciseTypeInput) (*ent.ExerciseType, error)
 	CreateWorkoutWithChildren(ctx context.Context, input CreateWorkoutWithChildrenInput) (*ent.Workout, error)
@@ -1063,6 +1065,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteRoutine(childComplexity, args["input"].(DeleteRoutineInput)), true
+
+	case "Mutation.updateExercise":
+		if e.complexity.Mutation.UpdateExercise == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateExercise_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateExercise(childComplexity, args["input"].(UpdateExerciseInput)), true
 
 	case "Mutation.updateRoutineWithChildren":
 		if e.complexity.Mutation.UpdateRoutineWithChildren == nil {
@@ -1971,6 +1985,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSetInput,
 		ec.unmarshalInputTokenOrder,
 		ec.unmarshalInputTokenWhereInput,
+		ec.unmarshalInputUpdateExerciseInput,
 		ec.unmarshalInputUpdateExerciseTypeInput,
 		ec.unmarshalInputUpdateRoutineExerciseInput,
 		ec.unmarshalInputUpdateRoutineInput,
@@ -2895,6 +2910,21 @@ func (ec *executionContext) field_Mutation_deleteRoutine_args(ctx context.Contex
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNDeleteRoutineInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐDeleteRoutineInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateExercise_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 UpdateExerciseInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateExerciseInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -8218,6 +8248,89 @@ func (ec *executionContext) fieldContext_Mutation_createExercise(ctx context.Con
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createExercise_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateExercise(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateExercise(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateExercise(rctx, fc.Args["input"].(UpdateExerciseInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.Exercise)
+	fc.Result = res
+	return ec.marshalNExercise2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐExercise(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateExercise(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Exercise_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Exercise_name(ctx, field)
+			case "image":
+				return ec.fieldContext_Exercise_image(ctx, field)
+			case "howTo":
+				return ec.fieldContext_Exercise_howTo(ctx, field)
+			case "userID":
+				return ec.fieldContext_Exercise_userID(ctx, field)
+			case "users":
+				return ec.fieldContext_Exercise_users(ctx, field)
+			case "equipment":
+				return ec.fieldContext_Exercise_equipment(ctx, field)
+			case "musclesGroups":
+				return ec.fieldContext_Exercise_musclesGroups(ctx, field)
+			case "exerciseTypes":
+				return ec.fieldContext_Exercise_exerciseTypes(ctx, field)
+			case "routines":
+				return ec.fieldContext_Exercise_routines(ctx, field)
+			case "workouts":
+				return ec.fieldContext_Exercise_workouts(ctx, field)
+			case "routineExercises":
+				return ec.fieldContext_Exercise_routineExercises(ctx, field)
+			case "workoutLogs":
+				return ec.fieldContext_Exercise_workoutLogs(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Exercise", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateExercise_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -19123,6 +19236,75 @@ func (ec *executionContext) unmarshalInputTokenWhereInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateExerciseInput(ctx context.Context, obj interface{}) (UpdateExerciseInput, error) {
+	var it UpdateExerciseInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "name", "image", "howTo", "userID", "musclesGroupIDs", "exerciseTypeIDs"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ID = data
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "image":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("image"))
+			data, err := ec.unmarshalOImageInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐImage(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Image = data
+		case "howTo":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("howTo"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.HowTo = data
+		case "userID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userID"))
+			data, err := ec.unmarshalOID2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UserID = data
+		case "musclesGroupIDs":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("musclesGroupIDs"))
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MusclesGroupIDs = data
+		case "exerciseTypeIDs":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exerciseTypeIDs"))
+			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ExerciseTypeIDs = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateExerciseTypeInput(ctx context.Context, obj interface{}) (ent.UpdateExerciseTypeInput, error) {
 	var it ent.UpdateExerciseTypeInput
 	asMap := map[string]interface{}{}
@@ -22410,6 +22592,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "updateExercise":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateExercise(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "deleteExercise":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteExercise(ctx, field)
@@ -25447,6 +25636,11 @@ func (ec *executionContext) marshalNTokenOrderField2ᚖgithubᚗcomᚋsahidrahma
 func (ec *executionContext) unmarshalNTokenWhereInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐTokenWhereInput(ctx context.Context, v interface{}) (*ent.TokenWhereInput, error) {
 	res, err := ec.unmarshalInputTokenWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateExerciseInput(ctx context.Context, v interface{}) (UpdateExerciseInput, error) {
+	res, err := ec.unmarshalInputUpdateExerciseInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpdateRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInput(ctx context.Context, v interface{}) (*UpdateRoutineExerciseInput, error) {

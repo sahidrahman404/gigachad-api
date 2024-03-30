@@ -45,6 +45,9 @@ func init() {
 			return next.Mutate(ctx, m)
 		})
 	}
+	exerciseHooks := schema.Exercise{}.Hooks()
+
+	exercise.Hooks[1] = exerciseHooks[0]
 	exerciseMixinFields0 := exerciseMixin[0].Fields()
 	_ = exerciseMixinFields0
 	exerciseFields := schema.Exercise{}.Fields()

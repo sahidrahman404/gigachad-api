@@ -107,6 +107,16 @@ type Style struct {
 	AspectRatio *string `json:"aspectRatio,omitempty"`
 }
 
+type UpdateExerciseInput struct {
+	ID              pksuid.ID         `json:"id"`
+	Name            string            `json:"name"`
+	Image           *schematype.Image `json:"image,omitempty"`
+	HowTo           *string           `json:"howTo,omitempty"`
+	UserID          *pksuid.ID        `json:"userID,omitempty"`
+	MusclesGroupIDs []pksuid.ID       `json:"musclesGroupIDs,omitempty"`
+	ExerciseTypeIDs []pksuid.ID       `json:"exerciseTypeIDs,omitempty"`
+}
+
 type UpdateRoutineExerciseInput struct {
 	ID         *pksuid.ID        `json:"id,omitempty"`
 	RestTime   *string           `json:"restTime,omitempty"`
