@@ -24,13 +24,12 @@ func DeleteExerciseImage() ent.Hook {
 			}
 			ex, err := em.Client().Exercise.Get(ctx, id)
 			if err != nil {
-				switch {
-				case ent.IsNotFound(err):
-					return nil, ErrExerciseNotFound
-				default:
-					return nil, ErrExercise
-				}
+				return next.Mutate(ctx, em)
 			}
+			if ex.Image == nil {
+				return next.Mutate(ctx, em)
+			}
+
 			em.DeleteObjectInput.Key = &ex.Image.Filename
 			_, err = em.S3Client.DeleteObject(ctx, em.DeleteObjectInput)
 			if err != nil {
@@ -39,5 +38,5 @@ func DeleteExerciseImage() ent.Hook {
 			return next.Mutate(ctx, em)
 		})
 	}
-	return hook.On(hk, ent.OpDeleteOne)
+	return hook.On(hk, ent.OpDeleteOne|ent.OpCreate)
 }
