@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
@@ -25,7 +26,7 @@ type DB struct {
 	Ent *ent.Client
 }
 
-func New(dsn string) (*DB, error) {
+func New(dsn string, bucket string, s3Client *s3.Client) (*DB, error) {
 	db, err := sql.Open("libsql", dsn)
 	if err != nil {
 		return nil, err
@@ -45,7 +46,7 @@ func New(dsn string) (*DB, error) {
 	}
 
 	drv := entsql.OpenDB(dialect.SQLite, db)
-	entClient := ent.NewClient(ent.Driver(drv))
+	entClient := ent.NewClient(ent.Driver(drv), ent.DeleteObjectInput(&s3.DeleteObjectInput{Bucket: &bucket}), ent.S3Client(s3Client))
 	return &DB{Db: db, Ent: entClient}, nil
 }
 

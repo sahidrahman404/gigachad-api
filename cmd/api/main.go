@@ -97,16 +97,18 @@ func run(logger *leveledlog.Logger) error {
 		return nil
 	}
 
-	db, err := database.New(cfg.db.dsn)
-	if err != nil {
-		return err
-	}
-	defer db.Db.Close()
-
 	awsConfig, err := aws.NewAWSConfig(cfg.AWSConfig)
 	if err != nil {
 		return err
 	}
+
+	s3Client := aws.NewS3Client(awsConfig)
+
+	db, err := database.New(cfg.db.dsn, cfg.AWSBucket, s3Client)
+	if err != nil {
+		return err
+	}
+	defer db.Db.Close()
 
 	mailer := smtp.NewMailer(
 		cfg.smtp.host,
@@ -126,7 +128,7 @@ func run(logger *leveledlog.Logger) error {
 		ent:           db.Ent,
 		presignClient: aws.NewPresignClient(awsConfig),
 		purifier:      p,
-		s3Client:      aws.NewS3Client(awsConfig),
+		s3Client:      s3Client,
 	}
 
 	return app.serveHTTP()

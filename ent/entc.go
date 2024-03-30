@@ -8,6 +8,7 @@ import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 func main() {
@@ -23,6 +24,14 @@ func main() {
 		log.Fatalf("creating entgql extension: %v", err)
 	}
 	opts := []entc.Option{
+		entc.Dependency(
+			entc.DependencyName("DeleteObjectInput"),
+			entc.DependencyType(&s3.DeleteObjectInput{}),
+		),
+		entc.Dependency(
+			entc.DependencyName("S3Client"),
+			entc.DependencyType(&s3.Client{}),
+		),
 		entc.Extensions(ex),
 	}
 	if err := entc.Generate("./ent/schema", &gen.Config{

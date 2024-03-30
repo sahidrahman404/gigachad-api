@@ -74,3 +74,9 @@ func (Exercise) Annotations() []schema.Annotation {
 		entgql.QueryField(),
 	}
 }
+
+func (Exercise) Hooks() []ent.Hook {
+	return []ent.Hook{
+		DeleteExerciseImage(),
+	}
+}
