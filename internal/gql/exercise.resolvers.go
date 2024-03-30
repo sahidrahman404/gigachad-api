@@ -34,19 +34,39 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 // UpdateExercise is the resolver for the updateExercise field.
 func (r *mutationResolver) UpdateExercise(ctx context.Context, input gigachad.UpdateExerciseInput) (*ent.Exercise, error) {
 	userCtx := r.getUserFromCtx(ctx)
-	err := r.client.Exercise.Create().
-		SetID(input.ID).
-		SetName(input.Name).
-		SetImage(img.SetNillableImageField(input.Image, *r.awsCfg, r.imgproxy)).
-		SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
-		SetNillableUserID(userCtx.GetUserID()).AddMusclesGroupIDs(input.MusclesGroupIDs...).
-		AddExerciseTypeIDs(input.ExerciseTypeIDs...).
-		OnConflict().
-		UpdateNewValues().
-		Exec(ctx)
-	if err != nil {
-		return nil, r.defaultError(err)
+
+	switch input.Image {
+	case nil:
+		err := r.client.Exercise.Create().
+			SetID(input.ID).
+			SetName(input.Name).
+			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
+			SetNillableUserID(userCtx.GetUserID()).
+			AddMusclesGroupIDs(input.MusclesGroupIDs...).
+			AddExerciseTypeIDs(input.ExerciseTypeIDs...).
+			OnConflict().
+			UpdateNewValues().
+			Exec(ctx)
+		if err != nil {
+			return nil, r.defaultError(err)
+		}
+	default:
+		err := r.client.Exercise.Create().
+			SetID(input.ID).
+			SetName(input.Name).
+			SetImage(img.SetNillableImageField(input.Image, *r.awsCfg, r.imgproxy)).
+			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
+			SetNillableUserID(userCtx.GetUserID()).
+			AddMusclesGroupIDs(input.MusclesGroupIDs...).
+			AddExerciseTypeIDs(input.ExerciseTypeIDs...).
+			OnConflict().
+			UpdateNewValues().
+			Exec(ctx)
+		if err != nil {
+			return nil, r.defaultError(err)
+		}
 	}
+
 	exercise, err := r.client.Exercise.Get(ctx, input.ID)
 	if err != nil {
 		return nil, r.defaultError(err)
