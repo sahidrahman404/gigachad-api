@@ -11,7 +11,18 @@ input DeleteExerciseInput {
   id: ID!
 }
 
+input UpdateExerciseInput {
+  id: ID!
+  name: String!
+  image: ImageInput
+  howTo: String
+  userID: ID
+  musclesGroupIDs: [ID!]
+  exerciseTypeIDs: [ID!]
+}
+
 extend type Mutation {
   createExercise(input: CreateExerciseInput!): Exercise!
+  updateExercise(input: UpdateExerciseInput!): Exercise!
   deleteExercise(input: DeleteExerciseInput!): Exercise!
 }
