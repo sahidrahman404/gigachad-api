@@ -39,14 +39,14 @@ input UpdateRoutineSchedulesInput {
 
 input CreateRoutineWithChildrenInput {
   name: String!
-  reminder: [CreateRoutineReminderInput!]
+  reminders: [CreateRoutineReminderInput!]
   routineExercises: [CreateRoutineExerciseInput!]
 }
 
 input UpdateRoutineWithChildrenInput {
   id: ID!
   name: String!
-  reminder: UpdateRoutineSchedulesInput
+  reminders: UpdateRoutineSchedulesInput
   routineExercises: [UpdateRoutineExerciseInput!]
 }
 

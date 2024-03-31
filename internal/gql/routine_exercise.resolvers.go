@@ -59,7 +59,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		return nil, r.serverError(err)
 	}
 
-	if input.Reminder == nil {
+	if input.Reminders == nil {
 		return r.client.Routine.Get(ctx, routineID)
 	}
 
@@ -116,7 +116,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 
 	schedules := []*gigachadv1.Schedule{}
 
-	for _, v := range input.Reminder {
+	for _, v := range input.Reminders {
 		schedules = append(schedules, &gigachadv1.Schedule{
 			Day:    int32(v.Day),
 			Hour:   int32(v.Hour),
@@ -156,7 +156,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		txClient := tx.Client()
 		routine, err := txClient.Routine.UpdateOneID(input.ID).
 			SetName(input.Name).
-			SetNillableReminderID(input.Reminder.ID).
+			SetNillableReminderID(input.Reminders.ID).
 			Save(ctx)
 		if err != nil {
 			return err
@@ -182,7 +182,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		return nil, r.serverError(err)
 	}
 
-	if input.Reminder == nil {
+	if input.Reminders == nil {
 		return r.client.Routine.Get(ctx, input.ID)
 	}
 

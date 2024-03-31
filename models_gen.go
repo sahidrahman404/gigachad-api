@@ -53,7 +53,7 @@ type CreateRoutineReminderInput struct {
 
 type CreateRoutineWithChildrenInput struct {
 	Name             string                        `json:"name"`
-	Reminder         []*CreateRoutineReminderInput `json:"reminder,omitempty"`
+	Reminders        []*CreateRoutineReminderInput `json:"reminders,omitempty"`
 	RoutineExercises []*CreateRoutineExerciseInput `json:"routineExercises,omitempty"`
 }
 
@@ -130,6 +130,6 @@ type UpdateRoutineSchedulesInput struct {
 type UpdateRoutineWithChildrenInput struct {
 	ID               pksuid.ID                     `json:"id"`
 	Name             string                        `json:"name"`
-	Reminder         *UpdateRoutineSchedulesInput  `json:"reminder,omitempty"`
+	Reminders        *UpdateRoutineSchedulesInput  `json:"reminders,omitempty"`
 	RoutineExercises []*UpdateRoutineExerciseInput `json:"routineExercises,omitempty"`
 }

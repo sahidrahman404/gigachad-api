@@ -16265,7 +16265,7 @@ func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "reminder", "routineExercises"}
+	fieldsInOrder := [...]string{"name", "reminders", "routineExercises"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -16279,13 +16279,13 @@ func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx con
 				return it, err
 			}
 			it.Name = data
-		case "reminder":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reminder"))
+		case "reminders":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reminders"))
 			data, err := ec.unmarshalOCreateRoutineReminderInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineReminderInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Reminder = data
+			it.Reminders = data
 		case "routineExercises":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("routineExercises"))
 			data, err := ec.unmarshalOCreateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInputᚄ(ctx, v)
@@ -19518,7 +19518,7 @@ func (ec *executionContext) unmarshalInputUpdateRoutineWithChildrenInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "name", "reminder", "routineExercises"}
+	fieldsInOrder := [...]string{"id", "name", "reminders", "routineExercises"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -19539,13 +19539,13 @@ func (ec *executionContext) unmarshalInputUpdateRoutineWithChildrenInput(ctx con
 				return it, err
 			}
 			it.Name = data
-		case "reminder":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reminder"))
+		case "reminders":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reminders"))
 			data, err := ec.unmarshalOUpdateRoutineSchedulesInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineSchedulesInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Reminder = data
+			it.Reminders = data
 		case "routineExercises":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("routineExercises"))
 			data, err := ec.unmarshalOUpdateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInputᚄ(ctx, v)
