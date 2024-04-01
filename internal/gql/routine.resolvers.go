@@ -6,17 +6,16 @@ package gql
 
 import (
 	"context"
+	"net/http"
 
+	"buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go/gigachad/v1/gigachadv1connect"
+	gigachadv1 "buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go/gigachad/v1"
+	"connectrpc.com/connect"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
-
-// CreateRoutine is the resolver for the createRoutine field.
-func (r *mutationResolver) CreateRoutine(ctx context.Context, input ent.CreateRoutineInput) (*ent.Routine, error) {
-	return r.client.Routine.Create().SetInput(input).Save(ctx)
-}
 
 // DeleteRoutine is the resolver for the deleteRoutine field.
 func (r *mutationResolver) DeleteRoutine(ctx context.Context, input gigachad.DeleteRoutineInput) (*ent.Routine, error) {
@@ -27,7 +26,14 @@ func (r *mutationResolver) DeleteRoutine(ctx context.Context, input gigachad.Del
 		return nil, r.serverError(err)
 	}
 
-	// delete schedule
+	if routine.ReminderID != nil {
+		client := gigachadv1connect.NewReminderServiceClient(http.DefaultClient, "http://localhost:8080")
+		client.RemoveReminder(ctx, &connect.Request[gigachadv1.RemoveReminderRequest]{
+			Msg: &gigachadv1.RemoveReminderRequest{
+				ReminderId: *routine.ReminderID,
+			},
+		})
+	}
 
 	err = r.client.Routine.DeleteOneID(input.ID).Exec(ctx)
 	if err != nil {

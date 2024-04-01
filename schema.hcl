@@ -472,6 +472,10 @@ table "routines" {
     null = false
     type = text
   }
+  column "reminders" {
+    null = true
+    type = json
+  }
   primary_key {
     columns = [column.id]
   }

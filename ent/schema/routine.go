@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/privacy"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/rule"
 )
 
@@ -20,8 +21,7 @@ type Routine struct {
 func (Routine) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			// Deny if not set otherwise.
-			// privacy.AlwaysDenyRule(),
+			rule.FilterRoutineRule(),
 		},
 		Query: privacy.QueryPolicy{
 			rule.FilterRoutineRule(),
@@ -40,6 +40,9 @@ func (Routine) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name"),
 		field.String("reminder_id").Optional().Nillable(),
+		field.JSON("reminders", []*schematype.Reminder{}).
+			Optional().
+			Annotations(entgql.Type("[Reminder!]")),
 		field.String("user_id").GoType(pksuid.ID("")),
 	}
 }
@@ -65,6 +68,5 @@ func (Routine) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
 		entgql.QueryField(),
-		entgql.Mutations(entgql.MutationCreate(), entgql.MutationUpdate()),
 	}
 }

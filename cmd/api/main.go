@@ -3,10 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"runtime/debug"
 	"sync"
 
+	"buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go/gigachad/v1/gigachadv1connect"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/sahidrahman404/gigachad-api/ent"
@@ -50,19 +52,21 @@ type config struct {
 	}
 	img.Imgproxy
 	aws.AWSConfig
-	env string
+	env                 string
+	reminderServiceHost string
 }
 
 type application struct {
-	config        config
-	logger        *leveledlog.Logger
-	mailer        *smtp.Mailer
-	wg            sync.WaitGroup
-	storage       *database.Storage
-	ent           *ent.Client
-	presignClient *s3.PresignClient
-	purifier      *bluemonday.Policy
-	s3Client      *s3.Client
+	config                config
+	logger                *leveledlog.Logger
+	mailer                *smtp.Mailer
+	wg                    sync.WaitGroup
+	storage               *database.Storage
+	ent                   *ent.Client
+	presignClient         *s3.PresignClient
+	purifier              *bluemonday.Policy
+	s3Client              *s3.Client
+	reminderServiceClient *gigachadv1connect.ReminderServiceClient
 }
 
 func run(logger *leveledlog.Logger) error {
@@ -70,12 +74,12 @@ func run(logger *leveledlog.Logger) error {
 
 	cfg.baseURL = env.GetString("BASE_URL", "http://localhost:4444")
 	cfg.httpPort = env.GetInt("HTTP_PORT", 4444)
-	cfg.db.dsn = env.GetString("DB_DSN", "db.sqlite")
-	cfg.smtp.host = env.GetString("SMTP_HOST", "example.smtp.host")
-	cfg.smtp.port = env.GetInt("SMTP_PORT", 25)
-	cfg.smtp.username = env.GetString("SMTP_USERNAME", "example_username")
+	cfg.db.dsn = env.GetString("DB_DSN", "file:local.db")
+	cfg.smtp.host = env.GetString("SMTP_HOST", "localhost")
+	cfg.smtp.port = env.GetInt("SMTP_PORT", 1025)
+	cfg.smtp.username = env.GetString("SMTP_USERNAME", "gigachad")
 	cfg.smtp.password = env.GetString("SMTP_PASSWORD", "pa55word")
-	cfg.smtp.from = env.GetString("SMTP_FROM", "Example Name <no_reply@example.org>")
+	cfg.smtp.from = env.GetString("SMTP_FROM", "Gigachad <hello@gigachad.buzz>")
 	cfg.Key = env.GetString("KEY", "")
 	cfg.Salt = env.GetString("SALT", "")
 	cfg.ImgproxyHost = env.GetString("IMGPROXY_HOST", "")
@@ -87,6 +91,7 @@ func run(logger *leveledlog.Logger) error {
 	cfg.env = env.GetString("ENV", "DEV")
 	cfg.redis.address = env.GetString("REDIS_ADDRESS", "localhost:6379")
 	cfg.redis.password = env.GetString("REDIS_PASSWORD", "")
+	cfg.reminderServiceHost = env.GetString("REMINDER_SERVICE_ADDRESS", "http://localhost:8080")
 
 	showVersion := flag.Bool("version", false, "display version and exit")
 
@@ -120,15 +125,18 @@ func run(logger *leveledlog.Logger) error {
 
 	p := purifier.NewPurifierPolicy()
 
+	r := gigachadv1connect.NewReminderServiceClient(http.DefaultClient, cfg.reminderServiceHost)
+
 	app := &application{
-		config:        cfg,
-		logger:        logger,
-		mailer:        mailer,
-		storage:       database.NewStorage(db.Ent),
-		ent:           db.Ent,
-		presignClient: aws.NewPresignClient(awsConfig),
-		purifier:      p,
-		s3Client:      s3Client,
+		config:                cfg,
+		logger:                logger,
+		mailer:                mailer,
+		storage:               database.NewStorage(db.Ent),
+		ent:                   db.Ent,
+		presignClient:         aws.NewPresignClient(awsConfig),
+		purifier:              p,
+		s3Client:              s3Client,
+		reminderServiceClient: &r,
 	}
 
 	return app.serveHTTP()

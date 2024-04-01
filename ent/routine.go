@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -10,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -22,6 +24,8 @@ type Routine struct {
 	Name string `json:"name,omitempty"`
 	// ReminderID holds the value of the "reminder_id" field.
 	ReminderID *string `json:"reminder_id,omitempty"`
+	// Reminders holds the value of the "reminders" field.
+	Reminders []*schematype.Reminder `json:"reminders,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID pksuid.ID `json:"user_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -82,6 +86,8 @@ func (*Routine) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case routine.FieldReminders:
+			values[i] = new([]byte)
 		case routine.FieldID, routine.FieldUserID:
 			values[i] = new(pksuid.ID)
 		case routine.FieldName, routine.FieldReminderID:
@@ -119,6 +125,14 @@ func (r *Routine) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				r.ReminderID = new(string)
 				*r.ReminderID = value.String
+			}
+		case routine.FieldReminders:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field reminders", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &r.Reminders); err != nil {
+					return fmt.Errorf("unmarshal field reminders: %w", err)
+				}
 			}
 		case routine.FieldUserID:
 			if value, ok := values[i].(*pksuid.ID); !ok {
@@ -184,6 +198,9 @@ func (r *Routine) String() string {
 		builder.WriteString("reminder_id=")
 		builder.WriteString(*v)
 	}
+	builder.WriteString(", ")
+	builder.WriteString("reminders=")
+	builder.WriteString(fmt.Sprintf("%v", r.Reminders))
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", r.UserID))

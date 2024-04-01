@@ -6,17 +6,17 @@ package gql
 
 import (
 	"context"
-	"fmt"
-	"net/http"
 	"strings"
 
-	"buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go/gigachad/v1/gigachadv1connect"
 	gigachadv1 "buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go/gigachad/v1"
 	"connectrpc.com/connect"
+	"entgo.io/ent/dialect/sql"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
+	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
 // CreateRoutineWithChildren is the resolver for the CreateRoutineWithChildren field.
@@ -29,14 +29,16 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 
 	userID := user.ID
 	routineID := pksuid.MustNew("RO")
-	reminderID := fmt.Sprintf("%s-%s", "weekly-workout-reminder", routineID)
+	reminderID := types.GetReminderID(input.Reminders)
+	reminders := types.GetReminders(input.Reminders)
 
 	if err := r.WithTx(ctx, func(tx *ent.Tx) error {
 		txClient := tx.Client()
 		routine, err := txClient.Routine.Create().
 			SetID(routineID).
 			SetName(input.Name).
-			SetNillableReminderID(&reminderID).
+			SetNillableReminderID(reminderID).
+			SetReminders(reminders).
 			SetUserID(user.ID).
 			Save(ctx)
 		if err != nil {
@@ -56,21 +58,23 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		}
 		return nil
 	}); err != nil {
-		return nil, r.serverError(err)
+		return nil, r.defaultError(err)
 	}
 
 	if input.Reminders == nil {
 		return r.client.Routine.Get(ctx, routineID)
 	}
 
-	routine, err := r.client.Routine.Query().Where(routine.ID(routineID)).WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
-		req.WithExercises()
-	}).Only(ctx)
+	routine, err := r.client.Routine.Query().
+		Where(routine.ID(routineID)).
+		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
+			req.WithExercises()
+			req.Order(routineexercise.ByID(sql.OrderAsc()))
+		}).
+		Only(ctx)
 	if err != nil {
 		return r.client.Routine.Get(ctx, routineID)
 	}
-
-	client := gigachadv1connect.NewReminderServiceClient(http.DefaultClient, "http://localhost:8080")
 
 	exercises := []*gigachadv1.Exercise{}
 
@@ -109,7 +113,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 
 		exercises = append(exercises, &gigachadv1.Exercise{
 			Name:     v.Edges.Exercises.Name,
-			RestTime: *v.RestTime,
+			RestTime: types.RestTimeMap[*v.RestTime],
 			Sets:     sets,
 		})
 	}
@@ -128,10 +132,11 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 	userName := strings.Split(user.Name, " ")
 	userLastName := userName[len(userName)-1]
 
+	client := *r.reminderServiceClient
 	client.CreateReminders(ctx, &connect.Request[gigachadv1.CreateRemindersRequest]{
 		Msg: &gigachadv1.CreateRemindersRequest{
 			AddReminderRequest: &gigachadv1.AddReminderRequest{
-				ReminderId:   reminderID,
+				ReminderId:   *reminderID,
 				UserLastName: userLastName,
 				WorkoutName:  input.Name,
 				Email:        user.Email,
@@ -152,11 +157,26 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		return nil, err
 	}
 
+	routine, err := r.client.Routine.Query().
+		Where().
+		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
+			req.WithExercises()
+			req.Order(routineexercise.ByID(sql.OrderAsc()))
+		}).
+		Only(ctx)
+	if err != nil {
+		return nil, r.defaultError(err)
+	}
+
+	reminders := types.UpdateReminders(input.Reminders.Reminders, routine.Reminders, routine.ReminderID)
+
 	if err := r.WithTx(ctx, func(tx *ent.Tx) error {
 		txClient := tx.Client()
-		routine, err := txClient.Routine.UpdateOneID(input.ID).
+		routine, err := txClient.Routine.
+			UpdateOneID(input.ID).
 			SetName(input.Name).
-			SetNillableReminderID(input.Reminders.ID).
+			SetNillableReminderID(reminders.ID).
+			SetReminders(reminders.Reminders).
 			Save(ctx)
 		if err != nil {
 			return err
@@ -182,9 +202,84 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		return nil, r.serverError(err)
 	}
 
-	if input.Reminders == nil {
+	if !reminders.Update {
 		return r.client.Routine.Get(ctx, input.ID)
 	}
+
+	exercises := []*gigachadv1.Exercise{}
+
+	for _, v := range routine.Edges.RoutineExercises {
+		zero := 0
+		emptyStr := ""
+		sets := []*gigachadv1.Set{}
+
+		for _, v := range v.Sets {
+			if v.Reps == nil {
+				v.Reps = &zero
+			}
+
+			if v.Kg == nil {
+				v.Kg = &zero
+			}
+
+			if v.Duration == nil {
+				v.Duration = &emptyStr
+			}
+
+			if v.Km == nil {
+				v.Km = &zero
+			}
+			sets = append(sets, &gigachadv1.Set{
+				Reps:     int32(*v.Reps),
+				Kg:       int32(*v.Kg),
+				Duration: *v.Duration,
+				Km:       int32(*v.Km),
+			})
+		}
+
+		if v.RestTime == nil {
+			v.RestTime = &emptyStr
+		}
+
+		exercises = append(exercises, &gigachadv1.Exercise{
+			Name:     v.Edges.Exercises.Name,
+			RestTime: types.RestTimeMap[*v.RestTime],
+			Sets:     sets,
+		})
+	}
+
+	schedules := []*gigachadv1.Schedule{}
+
+	for _, v := range input.Reminders.Reminders {
+		schedules = append(schedules, &gigachadv1.Schedule{
+			Day:    int32(v.Day),
+			Hour:   int32(v.Hour),
+			Minute: int32(v.Minute),
+			Second: int32(v.Second),
+		})
+	}
+
+	userName := strings.Split(user.Name, " ")
+	userLastName := userName[len(userName)-1]
+
+	client := *r.reminderServiceClient
+
+	client.UpdateReminders(ctx, &connect.Request[gigachadv1.UpdateRemindersRequest]{
+		Msg: &gigachadv1.UpdateRemindersRequest{
+			OldReminderId: *routine.ReminderID,
+			CreateRemindersRequest: &gigachadv1.CreateRemindersRequest{
+				ReminderId: *reminders.ID,
+				Schedules:  schedules,
+				AddReminderRequest: &gigachadv1.AddReminderRequest{
+					ReminderId:   *reminders.ID,
+					UserLastName: userLastName,
+					WorkoutName:  input.Name,
+					Email:        user.Email,
+					Exercises:    exercises,
+				},
+			},
+		},
+	})
 
 	return r.client.Routine.Get(ctx, input.ID)
 }

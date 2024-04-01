@@ -209,6 +209,16 @@ func ReminderIDContainsFold(v string) predicate.Routine {
 	return predicate.Routine(sql.FieldContainsFold(FieldReminderID, v))
 }
 
+// RemindersIsNil applies the IsNil predicate on the "reminders" field.
+func RemindersIsNil() predicate.Routine {
+	return predicate.Routine(sql.FieldIsNull(FieldReminders))
+}
+
+// RemindersNotNil applies the NotNil predicate on the "reminders" field.
+func RemindersNotNil() predicate.Routine {
+	return predicate.Routine(sql.FieldNotNull(FieldReminders))
+}
+
 // UserIDEQ applies the EQ predicate on the "user_id" field.
 func UserIDEQ(v pksuid.ID) predicate.Routine {
 	return predicate.Routine(sql.FieldEQ(FieldUserID, v))

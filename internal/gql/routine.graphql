@@ -3,6 +3,5 @@ input DeleteRoutineInput {
 }
 
 extend type Mutation {
-  createRoutine(input: CreateRoutineInput!): Routine
   deleteRoutine(input: DeleteRoutineInput!): Routine
 }

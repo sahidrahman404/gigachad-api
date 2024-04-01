@@ -25,28 +25,35 @@ input UpdateRoutineExerciseInput {
   exerciseID: ID!
 }
 
-input CreateRoutineReminderInput {
+type Reminder {
   day: Int!
   second: Int!
   minute: Int!
   hour: Int!
 }
 
-input UpdateRoutineSchedulesInput {
+input ReminderInput {
+  day: Int!
+  second: Int!
+  minute: Int!
+  hour: Int!
+}
+
+input UpdateRoutineReminderInput {
   id: String
-  schedules: [CreateRoutineReminderInput!]
+  reminders: [ReminderInput!]
 }
 
 input CreateRoutineWithChildrenInput {
   name: String!
-  reminders: [CreateRoutineReminderInput!]
+  reminders: [ReminderInput!]
   routineExercises: [CreateRoutineExerciseInput!]
 }
 
 input UpdateRoutineWithChildrenInput {
   id: ID!
   name: String!
-  reminders: UpdateRoutineSchedulesInput
+  reminders: UpdateRoutineReminderInput
   routineExercises: [UpdateRoutineExerciseInput!]
 }
 

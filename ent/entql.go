@@ -100,6 +100,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 		Fields: map[string]*sqlgraph.FieldSpec{
 			routine.FieldName:       {Type: field.TypeString, Column: routine.FieldName},
 			routine.FieldReminderID: {Type: field.TypeString, Column: routine.FieldReminderID},
+			routine.FieldReminders:  {Type: field.TypeJSON, Column: routine.FieldReminders},
 			routine.FieldUserID:     {Type: field.TypeString, Column: routine.FieldUserID},
 		},
 	}
@@ -982,6 +983,11 @@ func (f *RoutineFilter) WhereName(p entql.StringP) {
 // WhereReminderID applies the entql string predicate on the reminder_id field.
 func (f *RoutineFilter) WhereReminderID(p entql.StringP) {
 	f.Where(p.Field(routine.FieldReminderID))
+}
+
+// WhereReminders applies the entql json.RawMessage predicate on the reminders field.
+func (f *RoutineFilter) WhereReminders(p entql.BytesP) {
+	f.Where(p.Field(routine.FieldReminders))
 }
 
 // WhereUserID applies the entql string predicate on the user_id field.

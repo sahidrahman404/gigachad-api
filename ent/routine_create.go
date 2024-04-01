@@ -15,6 +15,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -43,6 +44,12 @@ func (rc *RoutineCreate) SetNillableReminderID(s *string) *RoutineCreate {
 	if s != nil {
 		rc.SetReminderID(*s)
 	}
+	return rc
+}
+
+// SetReminders sets the "reminders" field.
+func (rc *RoutineCreate) SetReminders(s []*schematype.Reminder) *RoutineCreate {
+	rc.mutation.SetReminders(s)
 	return rc
 }
 
@@ -209,6 +216,10 @@ func (rc *RoutineCreate) createSpec() (*Routine, *sqlgraph.CreateSpec) {
 		_spec.SetField(routine.FieldReminderID, field.TypeString, value)
 		_node.ReminderID = &value
 	}
+	if value, ok := rc.mutation.Reminders(); ok {
+		_spec.SetField(routine.FieldReminders, field.TypeJSON, value)
+		_node.Reminders = value
+	}
 	if nodes := rc.mutation.ExercisesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -347,6 +358,24 @@ func (u *RoutineUpsert) ClearReminderID() *RoutineUpsert {
 	return u
 }
 
+// SetReminders sets the "reminders" field.
+func (u *RoutineUpsert) SetReminders(v []*schematype.Reminder) *RoutineUpsert {
+	u.Set(routine.FieldReminders, v)
+	return u
+}
+
+// UpdateReminders sets the "reminders" field to the value that was provided on create.
+func (u *RoutineUpsert) UpdateReminders() *RoutineUpsert {
+	u.SetExcluded(routine.FieldReminders)
+	return u
+}
+
+// ClearReminders clears the value of the "reminders" field.
+func (u *RoutineUpsert) ClearReminders() *RoutineUpsert {
+	u.SetNull(routine.FieldReminders)
+	return u
+}
+
 // SetUserID sets the "user_id" field.
 func (u *RoutineUpsert) SetUserID(v pksuid.ID) *RoutineUpsert {
 	u.Set(routine.FieldUserID, v)
@@ -439,6 +468,27 @@ func (u *RoutineUpsertOne) UpdateReminderID() *RoutineUpsertOne {
 func (u *RoutineUpsertOne) ClearReminderID() *RoutineUpsertOne {
 	return u.Update(func(s *RoutineUpsert) {
 		s.ClearReminderID()
+	})
+}
+
+// SetReminders sets the "reminders" field.
+func (u *RoutineUpsertOne) SetReminders(v []*schematype.Reminder) *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.SetReminders(v)
+	})
+}
+
+// UpdateReminders sets the "reminders" field to the value that was provided on create.
+func (u *RoutineUpsertOne) UpdateReminders() *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.UpdateReminders()
+	})
+}
+
+// ClearReminders clears the value of the "reminders" field.
+func (u *RoutineUpsertOne) ClearReminders() *RoutineUpsertOne {
+	return u.Update(func(s *RoutineUpsert) {
+		s.ClearReminders()
 	})
 }
 
@@ -703,6 +753,27 @@ func (u *RoutineUpsertBulk) UpdateReminderID() *RoutineUpsertBulk {
 func (u *RoutineUpsertBulk) ClearReminderID() *RoutineUpsertBulk {
 	return u.Update(func(s *RoutineUpsert) {
 		s.ClearReminderID()
+	})
+}
+
+// SetReminders sets the "reminders" field.
+func (u *RoutineUpsertBulk) SetReminders(v []*schematype.Reminder) *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.SetReminders(v)
+	})
+}
+
+// UpdateReminders sets the "reminders" field to the value that was provided on create.
+func (u *RoutineUpsertBulk) UpdateReminders() *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.UpdateReminders()
+	})
+}
+
+// ClearReminders clears the value of the "reminders" field.
+func (u *RoutineUpsertBulk) ClearReminders() *RoutineUpsertBulk {
+	return u.Update(func(s *RoutineUpsert) {
+		s.ClearReminders()
 	})
 }
 

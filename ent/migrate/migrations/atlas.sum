@@ -1,4 +1,4 @@
-h1:WmoEobOSEm4IjxKh9+/+lq0Fao3sMEULtAhMZg84OCE=
+h1:90FSPIlskmF/uxsqgiRUYDVnJyEAh0n6QaVgS+P17Jg=
 20230628141405_add-users-tokens-tables.sql h1:fuOJ2sHOMEP/24Ni9DT6j31fuudcRRBHP9FR3B+iabk=
 20230628144036_change-activated-column-type-to-int.sql h1:iGspKnS3bD1Of/VsA9jPiu/F0UQnIZkaVlhfop++diY=
 20230629131540_add-unique-constraint-to-users-table.sql h1:RTfWHMm4IFP3xoYPiVdY6LaLopPZcPiDXV9fCMojdUo=
@@ -26,3 +26,4 @@ h1:WmoEobOSEm4IjxKh9+/+lq0Fao3sMEULtAhMZg84OCE=
 20240103120055_change-scedule-id-cloumn-type-to-string.sql h1:IrO3lLYv4fHv85gi4vxFNllTgK5aJpTdoDSjpxZKfLo=
 20240306122330_change-restTimer-column-name-to-restTime.sql h1:Egjjvqz36pEBMljjT59asODxIMW9IpVwuJIdRhg/Kl8=
 20240327070334_change-scheduleID-column-name-to-reminderID.sql h1:gqZLIpx7ykCVl+S+XjJ/HscbUifkJ/KZg6Vo67nms54=
+20240401141348_add-reminders-column.sql h1:YowYBRNeoTs1XLr3RxENsKSvwgUAEbFxZFshDD8tMlg=

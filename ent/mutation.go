@@ -2809,6 +2809,8 @@ type RoutineMutation struct {
 	id                       *pksuid.ID
 	name                     *string
 	reminder_id              *string
+	reminders                *[]*schematype.Reminder
+	appendreminders          []*schematype.Reminder
 	clearedFields            map[string]struct{}
 	exercises                map[pksuid.ID]struct{}
 	removedexercises         map[pksuid.ID]struct{}
@@ -3010,6 +3012,71 @@ func (m *RoutineMutation) ReminderIDCleared() bool {
 func (m *RoutineMutation) ResetReminderID() {
 	m.reminder_id = nil
 	delete(m.clearedFields, routine.FieldReminderID)
+}
+
+// SetReminders sets the "reminders" field.
+func (m *RoutineMutation) SetReminders(s []*schematype.Reminder) {
+	m.reminders = &s
+	m.appendreminders = nil
+}
+
+// Reminders returns the value of the "reminders" field in the mutation.
+func (m *RoutineMutation) Reminders() (r []*schematype.Reminder, exists bool) {
+	v := m.reminders
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReminders returns the old "reminders" field's value of the Routine entity.
+// If the Routine object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoutineMutation) OldReminders(ctx context.Context) (v []*schematype.Reminder, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReminders is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReminders requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReminders: %w", err)
+	}
+	return oldValue.Reminders, nil
+}
+
+// AppendReminders adds s to the "reminders" field.
+func (m *RoutineMutation) AppendReminders(s []*schematype.Reminder) {
+	m.appendreminders = append(m.appendreminders, s...)
+}
+
+// AppendedReminders returns the list of values that were appended to the "reminders" field in this mutation.
+func (m *RoutineMutation) AppendedReminders() ([]*schematype.Reminder, bool) {
+	if len(m.appendreminders) == 0 {
+		return nil, false
+	}
+	return m.appendreminders, true
+}
+
+// ClearReminders clears the value of the "reminders" field.
+func (m *RoutineMutation) ClearReminders() {
+	m.reminders = nil
+	m.appendreminders = nil
+	m.clearedFields[routine.FieldReminders] = struct{}{}
+}
+
+// RemindersCleared returns if the "reminders" field was cleared in this mutation.
+func (m *RoutineMutation) RemindersCleared() bool {
+	_, ok := m.clearedFields[routine.FieldReminders]
+	return ok
+}
+
+// ResetReminders resets all changes to the "reminders" field.
+func (m *RoutineMutation) ResetReminders() {
+	m.reminders = nil
+	m.appendreminders = nil
+	delete(m.clearedFields, routine.FieldReminders)
 }
 
 // SetUserID sets the "user_id" field.
@@ -3230,12 +3297,15 @@ func (m *RoutineMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoutineMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 4)
 	if m.name != nil {
 		fields = append(fields, routine.FieldName)
 	}
 	if m.reminder_id != nil {
 		fields = append(fields, routine.FieldReminderID)
+	}
+	if m.reminders != nil {
+		fields = append(fields, routine.FieldReminders)
 	}
 	if m.users != nil {
 		fields = append(fields, routine.FieldUserID)
@@ -3252,6 +3322,8 @@ func (m *RoutineMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case routine.FieldReminderID:
 		return m.ReminderID()
+	case routine.FieldReminders:
+		return m.Reminders()
 	case routine.FieldUserID:
 		return m.UserID()
 	}
@@ -3267,6 +3339,8 @@ func (m *RoutineMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldName(ctx)
 	case routine.FieldReminderID:
 		return m.OldReminderID(ctx)
+	case routine.FieldReminders:
+		return m.OldReminders(ctx)
 	case routine.FieldUserID:
 		return m.OldUserID(ctx)
 	}
@@ -3291,6 +3365,13 @@ func (m *RoutineMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetReminderID(v)
+		return nil
+	case routine.FieldReminders:
+		v, ok := value.([]*schematype.Reminder)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReminders(v)
 		return nil
 	case routine.FieldUserID:
 		v, ok := value.(pksuid.ID)
@@ -3332,6 +3413,9 @@ func (m *RoutineMutation) ClearedFields() []string {
 	if m.FieldCleared(routine.FieldReminderID) {
 		fields = append(fields, routine.FieldReminderID)
 	}
+	if m.FieldCleared(routine.FieldReminders) {
+		fields = append(fields, routine.FieldReminders)
+	}
 	return fields
 }
 
@@ -3349,6 +3433,9 @@ func (m *RoutineMutation) ClearField(name string) error {
 	case routine.FieldReminderID:
 		m.ClearReminderID()
 		return nil
+	case routine.FieldReminders:
+		m.ClearReminders()
+		return nil
 	}
 	return fmt.Errorf("unknown Routine nullable field %s", name)
 }
@@ -3362,6 +3449,9 @@ func (m *RoutineMutation) ResetField(name string) error {
 		return nil
 	case routine.FieldReminderID:
 		m.ResetReminderID()
+		return nil
+	case routine.FieldReminders:
+		m.ResetReminders()
 		return nil
 	case routine.FieldUserID:
 		m.ResetUserID()

@@ -73,6 +73,7 @@ var (
 		{Name: "id", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
 		{Name: "reminder_id", Type: field.TypeString, Nullable: true},
+		{Name: "reminders", Type: field.TypeJSON, Nullable: true},
 		{Name: "user_id", Type: field.TypeString},
 	}
 	// RoutinesTable holds the schema information for the "routines" table.
@@ -83,7 +84,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "routines_users_routines",
-				Columns:    []*schema.Column{RoutinesColumns[3]},
+				Columns:    []*schema.Column{RoutinesColumns[4]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},

@@ -9,12 +9,14 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
@@ -62,6 +64,24 @@ func (ru *RoutineUpdate) SetNillableReminderID(s *string) *RoutineUpdate {
 // ClearReminderID clears the value of the "reminder_id" field.
 func (ru *RoutineUpdate) ClearReminderID() *RoutineUpdate {
 	ru.mutation.ClearReminderID()
+	return ru
+}
+
+// SetReminders sets the "reminders" field.
+func (ru *RoutineUpdate) SetReminders(s []*schematype.Reminder) *RoutineUpdate {
+	ru.mutation.SetReminders(s)
+	return ru
+}
+
+// AppendReminders appends s to the "reminders" field.
+func (ru *RoutineUpdate) AppendReminders(s []*schematype.Reminder) *RoutineUpdate {
+	ru.mutation.AppendReminders(s)
+	return ru
+}
+
+// ClearReminders clears the value of the "reminders" field.
+func (ru *RoutineUpdate) ClearReminders() *RoutineUpdate {
+	ru.mutation.ClearReminders()
 	return ru
 }
 
@@ -228,6 +248,17 @@ func (ru *RoutineUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if ru.mutation.ReminderIDCleared() {
 		_spec.ClearField(routine.FieldReminderID, field.TypeString)
+	}
+	if value, ok := ru.mutation.Reminders(); ok {
+		_spec.SetField(routine.FieldReminders, field.TypeJSON, value)
+	}
+	if value, ok := ru.mutation.AppendedReminders(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, routine.FieldReminders, value)
+		})
+	}
+	if ru.mutation.RemindersCleared() {
+		_spec.ClearField(routine.FieldReminders, field.TypeJSON)
 	}
 	if ru.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -420,6 +451,24 @@ func (ruo *RoutineUpdateOne) SetNillableReminderID(s *string) *RoutineUpdateOne 
 // ClearReminderID clears the value of the "reminder_id" field.
 func (ruo *RoutineUpdateOne) ClearReminderID() *RoutineUpdateOne {
 	ruo.mutation.ClearReminderID()
+	return ruo
+}
+
+// SetReminders sets the "reminders" field.
+func (ruo *RoutineUpdateOne) SetReminders(s []*schematype.Reminder) *RoutineUpdateOne {
+	ruo.mutation.SetReminders(s)
+	return ruo
+}
+
+// AppendReminders appends s to the "reminders" field.
+func (ruo *RoutineUpdateOne) AppendReminders(s []*schematype.Reminder) *RoutineUpdateOne {
+	ruo.mutation.AppendReminders(s)
+	return ruo
+}
+
+// ClearReminders clears the value of the "reminders" field.
+func (ruo *RoutineUpdateOne) ClearReminders() *RoutineUpdateOne {
+	ruo.mutation.ClearReminders()
 	return ruo
 }
 
@@ -616,6 +665,17 @@ func (ruo *RoutineUpdateOne) sqlSave(ctx context.Context) (_node *Routine, err e
 	}
 	if ruo.mutation.ReminderIDCleared() {
 		_spec.ClearField(routine.FieldReminderID, field.TypeString)
+	}
+	if value, ok := ruo.mutation.Reminders(); ok {
+		_spec.SetField(routine.FieldReminders, field.TypeJSON, value)
+	}
+	if value, ok := ruo.mutation.AppendedReminders(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, routine.FieldReminders, value)
+		})
+	}
+	if ruo.mutation.RemindersCleared() {
+		_spec.ClearField(routine.FieldReminders, field.TypeJSON)
 	}
 	if ruo.mutation.ExercisesCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -74,3 +74,10 @@ type Image struct {
 	BreakPoints   []int    `json:"breakpoints"`
 	Priority      bool     `json:"priority"`
 }
+
+type Reminder struct {
+	Day    int
+	Hour   int
+	Minute int
+	Second int
+}

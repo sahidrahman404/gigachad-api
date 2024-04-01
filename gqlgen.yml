@@ -44,3 +44,9 @@ models:
   ImageInput:
     model:
       - github.com/sahidrahman404/gigachad-api/ent/schema/schematype.Image
+  Reminder:
+    model:
+      - github.com/sahidrahman404/gigachad-api/ent/schema/schematype.Reminder
+  ReminderInput:
+    model:
+      - github.com/sahidrahman404/gigachad-api/ent/schema/schematype.Reminder

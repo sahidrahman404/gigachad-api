@@ -44,16 +44,9 @@ type CreateRoutineExerciseInput struct {
 	ExerciseID pksuid.ID         `json:"exerciseID"`
 }
 
-type CreateRoutineReminderInput struct {
-	Day    int `json:"day"`
-	Second int `json:"second"`
-	Minute int `json:"minute"`
-	Hour   int `json:"hour"`
-}
-
 type CreateRoutineWithChildrenInput struct {
 	Name             string                        `json:"name"`
-	Reminders        []*CreateRoutineReminderInput `json:"reminders,omitempty"`
+	Reminders        []*schematype.Reminder        `json:"reminders,omitempty"`
 	RoutineExercises []*CreateRoutineExerciseInput `json:"routineExercises,omitempty"`
 }
 
@@ -122,14 +115,14 @@ type UpdateRoutineExerciseInput struct {
 	ExerciseID pksuid.ID         `json:"exerciseID"`
 }
 
-type UpdateRoutineSchedulesInput struct {
-	ID        *string                       `json:"id,omitempty"`
-	Schedules []*CreateRoutineReminderInput `json:"schedules,omitempty"`
+type UpdateRoutineReminderInput struct {
+	ID        *string                `json:"id,omitempty"`
+	Reminders []*schematype.Reminder `json:"reminders,omitempty"`
 }
 
 type UpdateRoutineWithChildrenInput struct {
 	ID               pksuid.ID                     `json:"id"`
 	Name             string                        `json:"name"`
-	Reminders        *UpdateRoutineSchedulesInput  `json:"reminders,omitempty"`
+	Reminders        *UpdateRoutineReminderInput   `json:"reminders,omitempty"`
 	RoutineExercises []*UpdateRoutineExerciseInput `json:"routineExercises,omitempty"`
 }

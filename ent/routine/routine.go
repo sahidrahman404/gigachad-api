@@ -18,6 +18,8 @@ const (
 	FieldName = "name"
 	// FieldReminderID holds the string denoting the reminder_id field in the database.
 	FieldReminderID = "reminder_id"
+	// FieldReminders holds the string denoting the reminders field in the database.
+	FieldReminders = "reminders"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
 	// EdgeExercises holds the string denoting the exercises edge name in mutations.
@@ -54,6 +56,7 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldReminderID,
+	FieldReminders,
 	FieldUserID,
 }
 
