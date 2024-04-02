@@ -60,7 +60,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		return nil, r.defaultError(err)
 	}
 
-	if input.Reminders == nil {
+	if reminders == nil {
 		return r.client.Routine.Get(ctx, routineID)
 	}
 

@@ -50,7 +50,7 @@ func (r *queryResolver) Routines(ctx context.Context, after *entgql.Cursor[pksui
 
 // RoutineExercises is the resolver for the routineExercises field.
 func (r *queryResolver) RoutineExercises(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineExerciseOrder, where *ent.RoutineExerciseWhereInput) (*ent.RoutineExerciseConnection, error) {
-	return r.client.RoutineExercise.Query().Paginate(ctx, after, first, before, last, ent.WithRoutineExerciseFilter(where.Filter))
+	return r.client.RoutineExercise.Query().Paginate(ctx, after, first, before, last, ent.WithRoutineExerciseFilter(where.Filter), ent.WithRoutineExerciseOrder(orderBy))
 }
 
 // Users is the resolver for the users field.
