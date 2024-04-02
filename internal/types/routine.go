@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 
+	gigachadv1 "buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go/gigachad/v1"
 	"github.com/google/uuid"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
@@ -10,7 +11,11 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 )
 
-var EntRoutineNotFound = `ent: routine not found`
+var (
+	EntRoutineNotFound = `ent: routine not found`
+	zero               = 0
+	emptyString        = ""
+)
 
 type CreateRoutineParams struct {
 	Name string `json:"name"`
@@ -93,7 +98,65 @@ func UpdateReminders(
 	}
 }
 
-var RestTimeMap = map[string]string{
+func GetExercises(r *ent.Routine) []*gigachadv1.Exercise {
+	exercises := []*gigachadv1.Exercise{}
+
+	for _, routine := range r.Edges.RoutineExercises {
+		sets := []*gigachadv1.Set{}
+
+		for _, set := range routine.Sets {
+			setNilToEmptyValue(set)
+			sets = append(sets, &gigachadv1.Set{
+				Reps:     int32(*set.Reps),
+				Kg:       int32(*set.Kg),
+				Duration: *set.Duration,
+				Km:       int32(*set.Km),
+			})
+		}
+
+		exercises = append(exercises, &gigachadv1.Exercise{
+			Name:     routine.Edges.Exercises.Name,
+			RestTime: restTimeMap[*routine.RestTime],
+			Sets:     sets,
+		})
+	}
+	return exercises
+}
+
+func GetSchedules(reminders []*schematype.Reminder) []*gigachadv1.Schedule {
+	schedules := []*gigachadv1.Schedule{}
+
+	for _, v := range reminders {
+		schedules = append(schedules, &gigachadv1.Schedule{
+			Day:    int32(v.Day),
+			Hour:   int32(v.Hour),
+			Minute: int32(v.Minute),
+			Second: int32(v.Second),
+		})
+	}
+
+	return schedules
+}
+
+func setNilToEmptyValue(s *schematype.Set) {
+	if s.Reps == nil {
+		s.Reps = &zero
+	}
+
+	if s.Kg == nil {
+		s.Kg = &zero
+	}
+
+	if s.Duration == nil {
+		s.Duration = &emptyString
+	}
+
+	if s.Km == nil {
+		s.Km = &zero
+	}
+}
+
+var restTimeMap = map[string]string{
 	"0":   "0",
 	"50":  "50s",
 	"60":  "1min",
