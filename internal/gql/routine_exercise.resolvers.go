@@ -6,11 +6,9 @@ package gql
 
 import (
 	"context"
-	"strings"
 
 	gigachadv1 "buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go/gigachad/v1"
 	"connectrpc.com/connect"
-	"entgo.io/ent/dialect/sql"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
@@ -51,7 +49,8 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 					SetSets(input.RoutineExercises[i].Sets).
 					SetRoutineID(routine.ID).
 					SetExerciseID(input.RoutineExercises[i].ExerciseID).
-					SetUserID(userID)
+					SetUserID(userID).
+					SetOrder(i)
 			}).Save(ctx)
 		if err != nil {
 			return err
@@ -69,75 +68,23 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		Where(routine.ID(routineID)).
 		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
 			req.WithExercises()
-			req.Order(routineexercise.ByID(sql.OrderAsc()))
+			req.Order(ent.Asc(routineexercise.FieldOrder))
 		}).
 		Only(ctx)
 	if err != nil {
 		return r.client.Routine.Get(ctx, routineID)
 	}
 
-	exercises := []*gigachadv1.Exercise{}
+	exercises := types.GetExercises(routine)
 
-	for _, v := range routine.Edges.RoutineExercises {
-		zero := 0
-		emptyStr := ""
-		sets := []*gigachadv1.Set{}
-
-		for _, v := range v.Sets {
-			if v.Reps == nil {
-				v.Reps = &zero
-			}
-
-			if v.Kg == nil {
-				v.Kg = &zero
-			}
-
-			if v.Duration == nil {
-				v.Duration = &emptyStr
-			}
-
-			if v.Km == nil {
-				v.Km = &zero
-			}
-			sets = append(sets, &gigachadv1.Set{
-				Reps:     int32(*v.Reps),
-				Kg:       int32(*v.Kg),
-				Duration: *v.Duration,
-				Km:       int32(*v.Km),
-			})
-		}
-
-		if v.RestTime == nil {
-			v.RestTime = &emptyStr
-		}
-
-		exercises = append(exercises, &gigachadv1.Exercise{
-			Name:     v.Edges.Exercises.Name,
-			RestTime: types.RestTimeMap[*v.RestTime],
-			Sets:     sets,
-		})
-	}
-
-	schedules := []*gigachadv1.Schedule{}
-
-	for _, v := range input.Reminders {
-		schedules = append(schedules, &gigachadv1.Schedule{
-			Day:    int32(v.Day),
-			Hour:   int32(v.Hour),
-			Minute: int32(v.Minute),
-			Second: int32(v.Second),
-		})
-	}
-
-	userName := strings.Split(user.Name, " ")
-	userLastName := userName[len(userName)-1]
+	schedules := types.GetSchedules(input.Reminders)
 
 	client := *r.reminderServiceClient
 	client.CreateReminders(ctx, &connect.Request[gigachadv1.CreateRemindersRequest]{
 		Msg: &gigachadv1.CreateRemindersRequest{
 			AddReminderRequest: &gigachadv1.AddReminderRequest{
 				ReminderId:   *reminderID,
-				UserLastName: userLastName,
+				UserLastName: userCtx.GetUserLastName(),
 				WorkoutName:  input.Name,
 				Email:        user.Email,
 				Exercises:    exercises,
@@ -161,14 +108,18 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		Where().
 		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
 			req.WithExercises()
-			req.Order(routineexercise.ByID(sql.OrderAsc()))
+			req.Order(ent.Asc(routineexercise.FieldOrder))
 		}).
 		Only(ctx)
 	if err != nil {
 		return nil, r.defaultError(err)
 	}
 
-	reminders := types.UpdateReminders(input.Reminders.Reminders, routine.Reminders, routine.ReminderID)
+	reminders := types.UpdateReminders(
+		input.Reminders.Reminders,
+		routine.Reminders,
+		routine.ReminderID,
+	)
 
 	if err := r.WithTx(ctx, func(tx *ent.Tx) error {
 		txClient := tx.Client()
@@ -177,6 +128,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 			SetName(input.Name).
 			SetNillableReminderID(reminders.ID).
 			SetReminders(reminders.Reminders).
+			SetUserID(user.ID).
 			Save(ctx)
 		if err != nil {
 			return err
@@ -189,7 +141,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 					SetRoutineID(routine.ID).
 					SetExerciseID(input.RoutineExercises[i].ExerciseID).
 					SetUserID(user.ID).
-					SetNillableID(input.RoutineExercises[i].ID)
+					SetID(input.RoutineExercises[i].ID)
 			}).
 			OnConflict().
 			UpdateNewValues().
@@ -206,61 +158,9 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		return r.client.Routine.Get(ctx, input.ID)
 	}
 
-	exercises := []*gigachadv1.Exercise{}
+	exercises := types.GetExercises(routine)
 
-	for _, v := range routine.Edges.RoutineExercises {
-		zero := 0
-		emptyStr := ""
-		sets := []*gigachadv1.Set{}
-
-		for _, v := range v.Sets {
-			if v.Reps == nil {
-				v.Reps = &zero
-			}
-
-			if v.Kg == nil {
-				v.Kg = &zero
-			}
-
-			if v.Duration == nil {
-				v.Duration = &emptyStr
-			}
-
-			if v.Km == nil {
-				v.Km = &zero
-			}
-			sets = append(sets, &gigachadv1.Set{
-				Reps:     int32(*v.Reps),
-				Kg:       int32(*v.Kg),
-				Duration: *v.Duration,
-				Km:       int32(*v.Km),
-			})
-		}
-
-		if v.RestTime == nil {
-			v.RestTime = &emptyStr
-		}
-
-		exercises = append(exercises, &gigachadv1.Exercise{
-			Name:     v.Edges.Exercises.Name,
-			RestTime: types.RestTimeMap[*v.RestTime],
-			Sets:     sets,
-		})
-	}
-
-	schedules := []*gigachadv1.Schedule{}
-
-	for _, v := range input.Reminders.Reminders {
-		schedules = append(schedules, &gigachadv1.Schedule{
-			Day:    int32(v.Day),
-			Hour:   int32(v.Hour),
-			Minute: int32(v.Minute),
-			Second: int32(v.Second),
-		})
-	}
-
-	userName := strings.Split(user.Name, " ")
-	userLastName := userName[len(userName)-1]
+	schedules := types.GetSchedules(input.Reminders.Reminders)
 
 	client := *r.reminderServiceClient
 
@@ -272,7 +172,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 				Schedules:  schedules,
 				AddReminderRequest: &gigachadv1.AddReminderRequest{
 					ReminderId:   *reminders.ID,
-					UserLastName: userLastName,
+					UserLastName: userCtx.GetUserLastName(),
 					WorkoutName:  input.Name,
 					Email:        user.Email,
 					Exercises:    exercises,
