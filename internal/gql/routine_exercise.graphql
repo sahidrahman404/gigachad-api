@@ -19,7 +19,7 @@ input CreateRoutineExerciseInput {
 }
 
 input UpdateRoutineExerciseInput {
-  id: ID
+  id: ID!
   restTime: String
   sets: [SetInput!]
   exerciseID: ID!

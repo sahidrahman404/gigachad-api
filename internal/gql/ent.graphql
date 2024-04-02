@@ -1261,6 +1261,7 @@ type RoutineExercise implements Node {
   routineID: ID!
   exerciseID: ID!
   userID: ID!
+  order: Int!
   routines: Routine!
   exercises: Exercise!
   users: User!
@@ -1313,6 +1314,7 @@ Properties by which RoutineExercise connections can be ordered.
 """
 enum RoutineExerciseOrderField {
   ID
+  Order
 }
 """
 RoutineExerciseWhereInput is used for filtering RoutineExercise objects.
@@ -1351,6 +1353,17 @@ input RoutineExerciseWhereInput {
   restTimeNotNil: Boolean
   restTimeEqualFold: String
   restTimeContainsFold: String
+  """
+  order field predicates
+  """
+  order: Int
+  orderNEQ: Int
+  orderIn: [Int!]
+  orderNotIn: [Int!]
+  orderGT: Int
+  orderGTE: Int
+  orderLT: Int
+  orderLTE: Int
 }
 """
 Ordering options for Routine connections
