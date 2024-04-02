@@ -74,6 +74,11 @@ func UserID(v pksuid.ID) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldUserID, v))
 }
 
+// Order applies equality check predicate on the "order" field. It's identical to OrderEQ.
+func Order(v int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldEQ(FieldOrder, v))
+}
+
 // RestTimeEQ applies the EQ predicate on the "rest_time" field.
 func RestTimeEQ(v string) predicate.RoutineExercise {
 	return predicate.RoutineExercise(sql.FieldEQ(FieldRestTime, v))
@@ -357,6 +362,46 @@ func UserIDEqualFold(v pksuid.ID) predicate.RoutineExercise {
 func UserIDContainsFold(v pksuid.ID) predicate.RoutineExercise {
 	vc := string(v)
 	return predicate.RoutineExercise(sql.FieldContainsFold(FieldUserID, vc))
+}
+
+// OrderEQ applies the EQ predicate on the "order" field.
+func OrderEQ(v int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldEQ(FieldOrder, v))
+}
+
+// OrderNEQ applies the NEQ predicate on the "order" field.
+func OrderNEQ(v int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldNEQ(FieldOrder, v))
+}
+
+// OrderIn applies the In predicate on the "order" field.
+func OrderIn(vs ...int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldIn(FieldOrder, vs...))
+}
+
+// OrderNotIn applies the NotIn predicate on the "order" field.
+func OrderNotIn(vs ...int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldNotIn(FieldOrder, vs...))
+}
+
+// OrderGT applies the GT predicate on the "order" field.
+func OrderGT(v int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldGT(FieldOrder, v))
+}
+
+// OrderGTE applies the GTE predicate on the "order" field.
+func OrderGTE(v int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldGTE(FieldOrder, v))
+}
+
+// OrderLT applies the LT predicate on the "order" field.
+func OrderLT(v int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldLT(FieldOrder, v))
+}
+
+// OrderLTE applies the LTE predicate on the "order" field.
+func OrderLTE(v int) predicate.RoutineExercise {
+	return predicate.RoutineExercise(sql.FieldLTE(FieldOrder, v))
 }
 
 // HasRoutines applies the HasEdge predicate on the "routines" edge.

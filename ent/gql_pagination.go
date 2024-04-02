@@ -1805,6 +1805,20 @@ var (
 			}
 		},
 	}
+	// RoutineExerciseOrderFieldOrder orders RoutineExercise by order.
+	RoutineExerciseOrderFieldOrder = &RoutineExerciseOrderField{
+		Value: func(re *RoutineExercise) (ent.Value, error) {
+			return re.Order, nil
+		},
+		column: routineexercise.FieldOrder,
+		toTerm: routineexercise.ByOrder,
+		toCursor: func(re *RoutineExercise) Cursor {
+			return Cursor{
+				ID:    re.ID,
+				Value: re.Order,
+			}
+		},
+	}
 )
 
 // String implement fmt.Stringer interface.
@@ -1813,6 +1827,8 @@ func (f RoutineExerciseOrderField) String() string {
 	switch f.column {
 	case RoutineExerciseOrderFieldID.column:
 		str = "ID"
+	case RoutineExerciseOrderFieldOrder.column:
+		str = "Order"
 	}
 	return str
 }
@@ -1831,6 +1847,8 @@ func (f *RoutineExerciseOrderField) UnmarshalGQL(v interface{}) error {
 	switch str {
 	case "ID":
 		*f = *RoutineExerciseOrderFieldID
+	case "Order":
+		*f = *RoutineExerciseOrderFieldOrder
 	default:
 		return fmt.Errorf("%s is not a valid RoutineExerciseOrderField", str)
 	}

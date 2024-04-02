@@ -120,6 +120,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			routineexercise.FieldRoutineID:  {Type: field.TypeString, Column: routineexercise.FieldRoutineID},
 			routineexercise.FieldExerciseID: {Type: field.TypeString, Column: routineexercise.FieldExerciseID},
 			routineexercise.FieldUserID:     {Type: field.TypeString, Column: routineexercise.FieldUserID},
+			routineexercise.FieldOrder:      {Type: field.TypeInt, Column: routineexercise.FieldOrder},
 		},
 	}
 	graph.Nodes[6] = &sqlgraph.Node{
@@ -1100,6 +1101,11 @@ func (f *RoutineExerciseFilter) WhereExerciseID(p entql.StringP) {
 // WhereUserID applies the entql string predicate on the user_id field.
 func (f *RoutineExerciseFilter) WhereUserID(p entql.StringP) {
 	f.Where(p.Field(routineexercise.FieldUserID))
+}
+
+// WhereOrder applies the entql int predicate on the order field.
+func (f *RoutineExerciseFilter) WhereOrder(p entql.IntP) {
+	f.Where(p.Field(routineexercise.FieldOrder))
 }
 
 // WhereHasRoutines applies a predicate to check if query has an edge routines.

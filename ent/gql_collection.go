@@ -1678,6 +1678,11 @@ func (re *RoutineExerciseQuery) collectField(ctx context.Context, opCtx *graphql
 				selectedFields = append(selectedFields, routineexercise.FieldUserID)
 				fieldSeen[routineexercise.FieldUserID] = struct{}{}
 			}
+		case "order":
+			if _, ok := fieldSeen[routineexercise.FieldOrder]; !ok {
+				selectedFields = append(selectedFields, routineexercise.FieldOrder)
+				fieldSeen[routineexercise.FieldOrder] = struct{}{}
+			}
 		case "id":
 		case "__typename":
 		default:

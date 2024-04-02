@@ -65,6 +65,12 @@ func (rec *RoutineExerciseCreate) SetUserID(pk pksuid.ID) *RoutineExerciseCreate
 	return rec
 }
 
+// SetOrder sets the "order" field.
+func (rec *RoutineExerciseCreate) SetOrder(i int) *RoutineExerciseCreate {
+	rec.mutation.SetOrder(i)
+	return rec
+}
+
 // SetID sets the "id" field.
 func (rec *RoutineExerciseCreate) SetID(pk pksuid.ID) *RoutineExerciseCreate {
 	rec.mutation.SetID(pk)
@@ -167,6 +173,9 @@ func (rec *RoutineExerciseCreate) check() error {
 	if _, ok := rec.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "RoutineExercise.user_id"`)}
 	}
+	if _, ok := rec.mutation.Order(); !ok {
+		return &ValidationError{Name: "order", err: errors.New(`ent: missing required field "RoutineExercise.order"`)}
+	}
 	if _, ok := rec.mutation.RoutinesID(); !ok {
 		return &ValidationError{Name: "routines", err: errors.New(`ent: missing required edge "RoutineExercise.routines"`)}
 	}
@@ -219,6 +228,10 @@ func (rec *RoutineExerciseCreate) createSpec() (*RoutineExercise, *sqlgraph.Crea
 	if value, ok := rec.mutation.Sets(); ok {
 		_spec.SetField(routineexercise.FieldSets, field.TypeJSON, value)
 		_node.Sets = value
+	}
+	if value, ok := rec.mutation.Order(); ok {
+		_spec.SetField(routineexercise.FieldOrder, field.TypeInt, value)
+		_node.Order = value
 	}
 	if nodes := rec.mutation.RoutinesIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -389,6 +402,24 @@ func (u *RoutineExerciseUpsert) UpdateUserID() *RoutineExerciseUpsert {
 	return u
 }
 
+// SetOrder sets the "order" field.
+func (u *RoutineExerciseUpsert) SetOrder(v int) *RoutineExerciseUpsert {
+	u.Set(routineexercise.FieldOrder, v)
+	return u
+}
+
+// UpdateOrder sets the "order" field to the value that was provided on create.
+func (u *RoutineExerciseUpsert) UpdateOrder() *RoutineExerciseUpsert {
+	u.SetExcluded(routineexercise.FieldOrder)
+	return u
+}
+
+// AddOrder adds v to the "order" field.
+func (u *RoutineExerciseUpsert) AddOrder(v int) *RoutineExerciseUpsert {
+	u.Add(routineexercise.FieldOrder, v)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -511,6 +542,27 @@ func (u *RoutineExerciseUpsertOne) SetUserID(v pksuid.ID) *RoutineExerciseUpsert
 func (u *RoutineExerciseUpsertOne) UpdateUserID() *RoutineExerciseUpsertOne {
 	return u.Update(func(s *RoutineExerciseUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetOrder sets the "order" field.
+func (u *RoutineExerciseUpsertOne) SetOrder(v int) *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetOrder(v)
+	})
+}
+
+// AddOrder adds v to the "order" field.
+func (u *RoutineExerciseUpsertOne) AddOrder(v int) *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.AddOrder(v)
+	})
+}
+
+// UpdateOrder sets the "order" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertOne) UpdateOrder() *RoutineExerciseUpsertOne {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateOrder()
 	})
 }
 
@@ -803,6 +855,27 @@ func (u *RoutineExerciseUpsertBulk) SetUserID(v pksuid.ID) *RoutineExerciseUpser
 func (u *RoutineExerciseUpsertBulk) UpdateUserID() *RoutineExerciseUpsertBulk {
 	return u.Update(func(s *RoutineExerciseUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetOrder sets the "order" field.
+func (u *RoutineExerciseUpsertBulk) SetOrder(v int) *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.SetOrder(v)
+	})
+}
+
+// AddOrder adds v to the "order" field.
+func (u *RoutineExerciseUpsertBulk) AddOrder(v int) *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.AddOrder(v)
+	})
+}
+
+// UpdateOrder sets the "order" field to the value that was provided on create.
+func (u *RoutineExerciseUpsertBulk) UpdateOrder() *RoutineExerciseUpsertBulk {
+	return u.Update(func(s *RoutineExerciseUpsert) {
+		s.UpdateOrder()
 	})
 }
 

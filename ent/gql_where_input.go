@@ -1591,6 +1591,16 @@ type RoutineExerciseWhereInput struct {
 	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
 	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
+	// "order" field predicates.
+	Order      *int  `json:"order,omitempty"`
+	OrderNEQ   *int  `json:"orderNEQ,omitempty"`
+	OrderIn    []int `json:"orderIn,omitempty"`
+	OrderNotIn []int `json:"orderNotIn,omitempty"`
+	OrderGT    *int  `json:"orderGT,omitempty"`
+	OrderGTE   *int  `json:"orderGTE,omitempty"`
+	OrderLT    *int  `json:"orderLT,omitempty"`
+	OrderLTE   *int  `json:"orderLTE,omitempty"`
+
 	// "routines" edge predicates.
 	HasRoutines     *bool                `json:"hasRoutines,omitempty"`
 	HasRoutinesWith []*RoutineWhereInput `json:"hasRoutinesWith,omitempty"`
@@ -1860,6 +1870,30 @@ func (i *RoutineExerciseWhereInput) P() (predicate.RoutineExercise, error) {
 	}
 	if i.UserIDContainsFold != nil {
 		predicates = append(predicates, routineexercise.UserIDContainsFold(*i.UserIDContainsFold))
+	}
+	if i.Order != nil {
+		predicates = append(predicates, routineexercise.OrderEQ(*i.Order))
+	}
+	if i.OrderNEQ != nil {
+		predicates = append(predicates, routineexercise.OrderNEQ(*i.OrderNEQ))
+	}
+	if len(i.OrderIn) > 0 {
+		predicates = append(predicates, routineexercise.OrderIn(i.OrderIn...))
+	}
+	if len(i.OrderNotIn) > 0 {
+		predicates = append(predicates, routineexercise.OrderNotIn(i.OrderNotIn...))
+	}
+	if i.OrderGT != nil {
+		predicates = append(predicates, routineexercise.OrderGT(*i.OrderGT))
+	}
+	if i.OrderGTE != nil {
+		predicates = append(predicates, routineexercise.OrderGTE(*i.OrderGTE))
+	}
+	if i.OrderLT != nil {
+		predicates = append(predicates, routineexercise.OrderLT(*i.OrderLT))
+	}
+	if i.OrderLTE != nil {
+		predicates = append(predicates, routineexercise.OrderLTE(*i.OrderLTE))
 	}
 
 	if i.HasRoutines != nil {

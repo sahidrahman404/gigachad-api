@@ -5,11 +5,14 @@ package main
 import (
 	"log"
 
+	"buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go/gigachad/v1/gigachadv1connect"
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
+
+var ReminderServiceClient gigachadv1connect.ReminderServiceClient
 
 func main() {
 	ex, err := entgql.NewExtension(

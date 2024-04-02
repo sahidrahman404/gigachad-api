@@ -23,6 +23,8 @@ const (
 	FieldExerciseID = "exercise_id"
 	// FieldUserID holds the string denoting the user_id field in the database.
 	FieldUserID = "user_id"
+	// FieldOrder holds the string denoting the order field in the database.
+	FieldOrder = "order"
 	// EdgeRoutines holds the string denoting the routines edge name in mutations.
 	EdgeRoutines = "routines"
 	// EdgeExercises holds the string denoting the exercises edge name in mutations.
@@ -62,6 +64,7 @@ var Columns = []string{
 	FieldRoutineID,
 	FieldExerciseID,
 	FieldUserID,
+	FieldOrder,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -105,6 +108,11 @@ func ByExerciseID(opts ...sql.OrderTermOption) OrderOption {
 // ByUserID orders the results by the user_id field.
 func ByUserID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUserID, opts...).ToFunc()
+}
+
+// ByOrder orders the results by the order field.
+func ByOrder(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOrder, opts...).ToFunc()
 }
 
 // ByRoutinesField orders the results by routines field.

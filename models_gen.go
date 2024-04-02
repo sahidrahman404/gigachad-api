@@ -109,7 +109,7 @@ type UpdateExerciseInput struct {
 }
 
 type UpdateRoutineExerciseInput struct {
-	ID         *pksuid.ID        `json:"id,omitempty"`
+	ID         pksuid.ID         `json:"id"`
 	RestTime   *string           `json:"restTime,omitempty"`
 	Sets       []*schematype.Set `json:"sets,omitempty"`
 	ExerciseID pksuid.ID         `json:"exerciseID"`

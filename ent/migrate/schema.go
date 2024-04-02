@@ -95,6 +95,7 @@ var (
 		{Name: "id", Type: field.TypeString},
 		{Name: "rest_time", Type: field.TypeString, Nullable: true},
 		{Name: "sets", Type: field.TypeJSON},
+		{Name: "order", Type: field.TypeInt},
 		{Name: "routine_id", Type: field.TypeString},
 		{Name: "exercise_id", Type: field.TypeString},
 		{Name: "user_id", Type: field.TypeString},
@@ -107,19 +108,19 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "routine_exercises_routines_routines",
-				Columns:    []*schema.Column{RoutineExercisesColumns[3]},
+				Columns:    []*schema.Column{RoutineExercisesColumns[4]},
 				RefColumns: []*schema.Column{RoutinesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "routine_exercises_exercises_exercises",
-				Columns:    []*schema.Column{RoutineExercisesColumns[4]},
+				Columns:    []*schema.Column{RoutineExercisesColumns[5]},
 				RefColumns: []*schema.Column{ExercisesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "routine_exercises_users_routine_exercises",
-				Columns:    []*schema.Column{RoutineExercisesColumns[5]},
+				Columns:    []*schema.Column{RoutineExercisesColumns[6]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -128,12 +129,12 @@ var (
 			{
 				Name:    "routineexercise_routine_id",
 				Unique:  false,
-				Columns: []*schema.Column{RoutineExercisesColumns[3]},
+				Columns: []*schema.Column{RoutineExercisesColumns[4]},
 			},
 			{
 				Name:    "routineexercise_routine_id_exercise_id",
 				Unique:  true,
-				Columns: []*schema.Column{RoutineExercisesColumns[3], RoutineExercisesColumns[4]},
+				Columns: []*schema.Column{RoutineExercisesColumns[4], RoutineExercisesColumns[5]},
 			},
 		},
 	}

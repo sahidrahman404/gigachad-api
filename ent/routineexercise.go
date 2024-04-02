@@ -32,6 +32,8 @@ type RoutineExercise struct {
 	ExerciseID pksuid.ID `json:"exercise_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID pksuid.ID `json:"user_id,omitempty"`
+	// Order holds the value of the "order" field.
+	Order int `json:"order,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoutineExerciseQuery when eager-loading is set.
 	Edges        RoutineExerciseEdges `json:"edges"`
@@ -95,6 +97,8 @@ func (*RoutineExercise) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case routineexercise.FieldID, routineexercise.FieldRoutineID, routineexercise.FieldExerciseID, routineexercise.FieldUserID:
 			values[i] = new(pksuid.ID)
+		case routineexercise.FieldOrder:
+			values[i] = new(sql.NullInt64)
 		case routineexercise.FieldRestTime:
 			values[i] = new(sql.NullString)
 		default:
@@ -150,6 +154,12 @@ func (re *RoutineExercise) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
 				re.UserID = *value
+			}
+		case routineexercise.FieldOrder:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field order", values[i])
+			} else if value.Valid {
+				re.Order = int(value.Int64)
 			}
 		default:
 			re.selectValues.Set(columns[i], values[i])
@@ -218,6 +228,9 @@ func (re *RoutineExercise) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", re.UserID))
+	builder.WriteString(", ")
+	builder.WriteString("order=")
+	builder.WriteString(fmt.Sprintf("%v", re.Order))
 	builder.WriteByte(')')
 	return builder.String()
 }

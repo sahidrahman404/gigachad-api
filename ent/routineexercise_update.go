@@ -107,6 +107,27 @@ func (reu *RoutineExerciseUpdate) SetNillableUserID(pk *pksuid.ID) *RoutineExerc
 	return reu
 }
 
+// SetOrder sets the "order" field.
+func (reu *RoutineExerciseUpdate) SetOrder(i int) *RoutineExerciseUpdate {
+	reu.mutation.ResetOrder()
+	reu.mutation.SetOrder(i)
+	return reu
+}
+
+// SetNillableOrder sets the "order" field if the given value is not nil.
+func (reu *RoutineExerciseUpdate) SetNillableOrder(i *int) *RoutineExerciseUpdate {
+	if i != nil {
+		reu.SetOrder(*i)
+	}
+	return reu
+}
+
+// AddOrder adds i to the "order" field.
+func (reu *RoutineExerciseUpdate) AddOrder(i int) *RoutineExerciseUpdate {
+	reu.mutation.AddOrder(i)
+	return reu
+}
+
 // SetRoutinesID sets the "routines" edge to the Routine entity by ID.
 func (reu *RoutineExerciseUpdate) SetRoutinesID(id pksuid.ID) *RoutineExerciseUpdate {
 	reu.mutation.SetRoutinesID(id)
@@ -229,6 +250,12 @@ func (reu *RoutineExerciseUpdate) sqlSave(ctx context.Context) (n int, err error
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, routineexercise.FieldSets, value)
 		})
+	}
+	if value, ok := reu.mutation.Order(); ok {
+		_spec.SetField(routineexercise.FieldOrder, field.TypeInt, value)
+	}
+	if value, ok := reu.mutation.AddedOrder(); ok {
+		_spec.AddField(routineexercise.FieldOrder, field.TypeInt, value)
 	}
 	if reu.mutation.RoutinesCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -411,6 +438,27 @@ func (reuo *RoutineExerciseUpdateOne) SetNillableUserID(pk *pksuid.ID) *RoutineE
 	return reuo
 }
 
+// SetOrder sets the "order" field.
+func (reuo *RoutineExerciseUpdateOne) SetOrder(i int) *RoutineExerciseUpdateOne {
+	reuo.mutation.ResetOrder()
+	reuo.mutation.SetOrder(i)
+	return reuo
+}
+
+// SetNillableOrder sets the "order" field if the given value is not nil.
+func (reuo *RoutineExerciseUpdateOne) SetNillableOrder(i *int) *RoutineExerciseUpdateOne {
+	if i != nil {
+		reuo.SetOrder(*i)
+	}
+	return reuo
+}
+
+// AddOrder adds i to the "order" field.
+func (reuo *RoutineExerciseUpdateOne) AddOrder(i int) *RoutineExerciseUpdateOne {
+	reuo.mutation.AddOrder(i)
+	return reuo
+}
+
 // SetRoutinesID sets the "routines" edge to the Routine entity by ID.
 func (reuo *RoutineExerciseUpdateOne) SetRoutinesID(id pksuid.ID) *RoutineExerciseUpdateOne {
 	reuo.mutation.SetRoutinesID(id)
@@ -563,6 +611,12 @@ func (reuo *RoutineExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Routi
 		_spec.AddModifier(func(u *sql.UpdateBuilder) {
 			sqljson.Append(u, routineexercise.FieldSets, value)
 		})
+	}
+	if value, ok := reuo.mutation.Order(); ok {
+		_spec.SetField(routineexercise.FieldOrder, field.TypeInt, value)
+	}
+	if value, ok := reuo.mutation.AddedOrder(); ok {
+		_spec.AddField(routineexercise.FieldOrder, field.TypeInt, value)
 	}
 	if reuo.mutation.RoutinesCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -3597,6 +3597,8 @@ type RoutineExerciseMutation struct {
 	rest_time        *string
 	sets             *[]*schematype.Set
 	appendsets       []*schematype.Set
+	_order           *int
+	add_order        *int
 	clearedFields    map[string]struct{}
 	routines         *pksuid.ID
 	clearedroutines  bool
@@ -3921,6 +3923,62 @@ func (m *RoutineExerciseMutation) ResetUserID() {
 	m.users = nil
 }
 
+// SetOrder sets the "order" field.
+func (m *RoutineExerciseMutation) SetOrder(i int) {
+	m._order = &i
+	m.add_order = nil
+}
+
+// Order returns the value of the "order" field in the mutation.
+func (m *RoutineExerciseMutation) Order() (r int, exists bool) {
+	v := m._order
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOrder returns the old "order" field's value of the RoutineExercise entity.
+// If the RoutineExercise object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RoutineExerciseMutation) OldOrder(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOrder is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOrder requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOrder: %w", err)
+	}
+	return oldValue.Order, nil
+}
+
+// AddOrder adds i to the "order" field.
+func (m *RoutineExerciseMutation) AddOrder(i int) {
+	if m.add_order != nil {
+		*m.add_order += i
+	} else {
+		m.add_order = &i
+	}
+}
+
+// AddedOrder returns the value that was added to the "order" field in this mutation.
+func (m *RoutineExerciseMutation) AddedOrder() (r int, exists bool) {
+	v := m.add_order
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetOrder resets all changes to the "order" field.
+func (m *RoutineExerciseMutation) ResetOrder() {
+	m._order = nil
+	m.add_order = nil
+}
+
 // SetRoutinesID sets the "routines" edge to the Routine entity by id.
 func (m *RoutineExerciseMutation) SetRoutinesID(id pksuid.ID) {
 	m.routines = &id
@@ -4075,7 +4133,7 @@ func (m *RoutineExerciseMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RoutineExerciseMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.rest_time != nil {
 		fields = append(fields, routineexercise.FieldRestTime)
 	}
@@ -4090,6 +4148,9 @@ func (m *RoutineExerciseMutation) Fields() []string {
 	}
 	if m.users != nil {
 		fields = append(fields, routineexercise.FieldUserID)
+	}
+	if m._order != nil {
+		fields = append(fields, routineexercise.FieldOrder)
 	}
 	return fields
 }
@@ -4109,6 +4170,8 @@ func (m *RoutineExerciseMutation) Field(name string) (ent.Value, bool) {
 		return m.ExerciseID()
 	case routineexercise.FieldUserID:
 		return m.UserID()
+	case routineexercise.FieldOrder:
+		return m.Order()
 	}
 	return nil, false
 }
@@ -4128,6 +4191,8 @@ func (m *RoutineExerciseMutation) OldField(ctx context.Context, name string) (en
 		return m.OldExerciseID(ctx)
 	case routineexercise.FieldUserID:
 		return m.OldUserID(ctx)
+	case routineexercise.FieldOrder:
+		return m.OldOrder(ctx)
 	}
 	return nil, fmt.Errorf("unknown RoutineExercise field %s", name)
 }
@@ -4172,6 +4237,13 @@ func (m *RoutineExerciseMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUserID(v)
 		return nil
+	case routineexercise.FieldOrder:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOrder(v)
+		return nil
 	}
 	return fmt.Errorf("unknown RoutineExercise field %s", name)
 }
@@ -4179,13 +4251,21 @@ func (m *RoutineExerciseMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *RoutineExerciseMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.add_order != nil {
+		fields = append(fields, routineexercise.FieldOrder)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *RoutineExerciseMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case routineexercise.FieldOrder:
+		return m.AddedOrder()
+	}
 	return nil, false
 }
 
@@ -4194,6 +4274,13 @@ func (m *RoutineExerciseMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *RoutineExerciseMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case routineexercise.FieldOrder:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddOrder(v)
+		return nil
 	}
 	return fmt.Errorf("unknown RoutineExercise numeric field %s", name)
 }
@@ -4244,6 +4331,9 @@ func (m *RoutineExerciseMutation) ResetField(name string) error {
 		return nil
 	case routineexercise.FieldUserID:
 		m.ResetUserID()
+		return nil
+	case routineexercise.FieldOrder:
+		m.ResetOrder()
 		return nil
 	}
 	return fmt.Errorf("unknown RoutineExercise field %s", name)
