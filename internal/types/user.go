@@ -8,6 +8,8 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 	"golang.org/x/crypto/bcrypt"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type contextKey string
@@ -105,4 +107,11 @@ func (u *User) GetUserID() *pksuid.ID {
 		return nil
 	}
 	return &user.ID
+}
+
+func (u *User) GetUserLastName() string {
+	name := u.Ent.Name
+	names := strings.Split(name, " ")
+	caser := cases.Title(language.AmericanEnglish)
+	return caser.String(names[len(names)-1])
 }
