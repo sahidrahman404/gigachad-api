@@ -141,7 +141,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 					SetRoutineID(routine.ID).
 					SetExerciseID(input.RoutineExercises[i].ExerciseID).
 					SetUserID(user.ID).
-					SetID(input.RoutineExercises[i].ID)
+					SetOrder(i)
 			}).
 			OnConflict().
 			UpdateNewValues().

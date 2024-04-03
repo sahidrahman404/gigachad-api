@@ -19610,20 +19610,13 @@ func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "restTime", "sets", "exerciseID"}
+	fieldsInOrder := [...]string{"restTime", "sets", "exerciseID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "id":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ID = data
 		case "restTime":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTime"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
