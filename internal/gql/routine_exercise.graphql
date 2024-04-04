@@ -1,15 +1,15 @@
 type Set {
   reps: Int
-  kg: Int
+  weight: Int
   duration: String
-  km: Int
+  length: Int
 }
 
 input SetInput {
   reps: Int
-  kg: Int
+  weight: Int
   duration: String
-  km: Int
+  length: Int
 }
 
 input CreateRoutineExerciseInput {

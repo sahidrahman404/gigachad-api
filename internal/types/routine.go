@@ -108,9 +108,9 @@ func GetExercises(r *ent.Routine) []*gigachadv1.Exercise {
 			setNilToEmptyValue(set)
 			sets = append(sets, &gigachadv1.Set{
 				Reps:     int32(*set.Reps),
-				Kg:       int32(*set.Kg),
+				Kg:       int32(*set.Weight),
 				Duration: *set.Duration,
-				Km:       int32(*set.Km),
+				Km:       int32(*set.Length),
 			})
 		}
 
@@ -143,16 +143,16 @@ func setNilToEmptyValue(s *schematype.Set) {
 		s.Reps = &zero
 	}
 
-	if s.Kg == nil {
-		s.Kg = &zero
+	if s.Weight == nil {
+		s.Weight = &zero
 	}
 
 	if s.Duration == nil {
 		s.Duration = &emptyString
 	}
 
-	if s.Km == nil {
-		s.Km = &zero
+	if s.Length == nil {
+		s.Length = &zero
 	}
 }
 
