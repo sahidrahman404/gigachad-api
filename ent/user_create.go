@@ -54,6 +54,20 @@ func (uc *UserCreate) SetName(s string) *UserCreate {
 	return uc
 }
 
+// SetUserPreference sets the "user_preference" field.
+func (uc *UserCreate) SetUserPreference(up user.UserPreference) *UserCreate {
+	uc.mutation.SetUserPreference(up)
+	return uc
+}
+
+// SetNillableUserPreference sets the "user_preference" field if the given value is not nil.
+func (uc *UserCreate) SetNillableUserPreference(up *user.UserPreference) *UserCreate {
+	if up != nil {
+		uc.SetUserPreference(*up)
+	}
+	return uc
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (uc *UserCreate) SetCreatedAt(t time.Time) *UserCreate {
 	uc.mutation.SetCreatedAt(t)
@@ -235,6 +249,10 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
+	if _, ok := uc.mutation.UserPreference(); !ok {
+		v := user.DefaultUserPreference
+		uc.mutation.SetUserPreference(v)
+	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		v := user.DefaultCreatedAt
 		uc.mutation.SetCreatedAt(v)
@@ -266,6 +284,14 @@ func (uc *UserCreate) check() error {
 	}
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
+	}
+	if _, ok := uc.mutation.UserPreference(); !ok {
+		return &ValidationError{Name: "user_preference", err: errors.New(`ent: missing required field "User.user_preference"`)}
+	}
+	if v, ok := uc.mutation.UserPreference(); ok {
+		if err := user.UserPreferenceValidator(v); err != nil {
+			return &ValidationError{Name: "user_preference", err: fmt.Errorf(`ent: validator failed for field "User.user_preference": %w`, err)}
+		}
 	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "User.created_at"`)}
@@ -327,6 +353,10 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := uc.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 		_node.Name = value
+	}
+	if value, ok := uc.mutation.UserPreference(); ok {
+		_spec.SetField(user.FieldUserPreference, field.TypeEnum, value)
+		_node.UserPreference = value
 	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
@@ -536,6 +566,18 @@ func (u *UserUpsert) UpdateName() *UserUpsert {
 	return u
 }
 
+// SetUserPreference sets the "user_preference" field.
+func (u *UserUpsert) SetUserPreference(v user.UserPreference) *UserUpsert {
+	u.Set(user.FieldUserPreference, v)
+	return u
+}
+
+// UpdateUserPreference sets the "user_preference" field to the value that was provided on create.
+func (u *UserUpsert) UpdateUserPreference() *UserUpsert {
+	u.SetExcluded(user.FieldUserPreference)
+	return u
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (u *UserUpsert) SetCreatedAt(v time.Time) *UserUpsert {
 	u.Set(user.FieldCreatedAt, v)
@@ -685,6 +727,20 @@ func (u *UserUpsertOne) SetName(v string) *UserUpsertOne {
 func (u *UserUpsertOne) UpdateName() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateName()
+	})
+}
+
+// SetUserPreference sets the "user_preference" field.
+func (u *UserUpsertOne) SetUserPreference(v user.UserPreference) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetUserPreference(v)
+	})
+}
+
+// UpdateUserPreference sets the "user_preference" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateUserPreference() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateUserPreference()
 	})
 }
 
@@ -1012,6 +1068,20 @@ func (u *UserUpsertBulk) SetName(v string) *UserUpsertBulk {
 func (u *UserUpsertBulk) UpdateName() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateName()
+	})
+}
+
+// SetUserPreference sets the "user_preference" field.
+func (u *UserUpsertBulk) SetUserPreference(v user.UserPreference) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetUserPreference(v)
+	})
+}
+
+// UpdateUserPreference sets the "user_preference" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateUserPreference() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateUserPreference()
 	})
 }
 

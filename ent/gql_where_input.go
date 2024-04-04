@@ -2346,6 +2346,12 @@ type UserWhereInput struct {
 	NameEqualFold    *string  `json:"nameEqualFold,omitempty"`
 	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
 
+	// "user_preference" field predicates.
+	UserPreference      *user.UserPreference  `json:"userPreference,omitempty"`
+	UserPreferenceNEQ   *user.UserPreference  `json:"userPreferenceNEQ,omitempty"`
+	UserPreferenceIn    []user.UserPreference `json:"userPreferenceIn,omitempty"`
+	UserPreferenceNotIn []user.UserPreference `json:"userPreferenceNotIn,omitempty"`
+
 	// "created_at" field predicates.
 	CreatedAt      *time.Time  `json:"createdAt,omitempty"`
 	CreatedAtNEQ   *time.Time  `json:"createdAtNEQ,omitempty"`
@@ -2651,6 +2657,18 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 	}
 	if i.NameContainsFold != nil {
 		predicates = append(predicates, user.NameContainsFold(*i.NameContainsFold))
+	}
+	if i.UserPreference != nil {
+		predicates = append(predicates, user.UserPreferenceEQ(*i.UserPreference))
+	}
+	if i.UserPreferenceNEQ != nil {
+		predicates = append(predicates, user.UserPreferenceNEQ(*i.UserPreferenceNEQ))
+	}
+	if len(i.UserPreferenceIn) > 0 {
+		predicates = append(predicates, user.UserPreferenceIn(i.UserPreferenceIn...))
+	}
+	if len(i.UserPreferenceNotIn) > 0 {
+		predicates = append(predicates, user.UserPreferenceNotIn(i.UserPreferenceNotIn...))
 	}
 	if i.CreatedAt != nil {
 		predicates = append(predicates, user.CreatedAtEQ(*i.CreatedAt))

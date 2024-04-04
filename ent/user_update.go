@@ -91,6 +91,20 @@ func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
 	return uu
 }
 
+// SetUserPreference sets the "user_preference" field.
+func (uu *UserUpdate) SetUserPreference(up user.UserPreference) *UserUpdate {
+	uu.mutation.SetUserPreference(up)
+	return uu
+}
+
+// SetNillableUserPreference sets the "user_preference" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableUserPreference(up *user.UserPreference) *UserUpdate {
+	if up != nil {
+		uu.SetUserPreference(*up)
+	}
+	return uu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (uu *UserUpdate) SetCreatedAt(t time.Time) *UserUpdate {
 	uu.mutation.SetCreatedAt(t)
@@ -395,7 +409,20 @@ func (uu *UserUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (uu *UserUpdate) check() error {
+	if v, ok := uu.mutation.UserPreference(); ok {
+		if err := user.UserPreferenceValidator(v); err != nil {
+			return &ValidationError{Name: "user_preference", err: fmt.Errorf(`ent: validator failed for field "User.user_preference": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
+	if err := uu.check(); err != nil {
+		return n, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
 	if ps := uu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -415,6 +442,9 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
+	}
+	if value, ok := uu.mutation.UserPreference(); ok {
+		_spec.SetField(user.FieldUserPreference, field.TypeEnum, value)
 	}
 	if value, ok := uu.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
@@ -777,6 +807,20 @@ func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
 	return uuo
 }
 
+// SetUserPreference sets the "user_preference" field.
+func (uuo *UserUpdateOne) SetUserPreference(up user.UserPreference) *UserUpdateOne {
+	uuo.mutation.SetUserPreference(up)
+	return uuo
+}
+
+// SetNillableUserPreference sets the "user_preference" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableUserPreference(up *user.UserPreference) *UserUpdateOne {
+	if up != nil {
+		uuo.SetUserPreference(*up)
+	}
+	return uuo
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (uuo *UserUpdateOne) SetCreatedAt(t time.Time) *UserUpdateOne {
 	uuo.mutation.SetCreatedAt(t)
@@ -1094,7 +1138,20 @@ func (uuo *UserUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (uuo *UserUpdateOne) check() error {
+	if v, ok := uuo.mutation.UserPreference(); ok {
+		if err := user.UserPreferenceValidator(v); err != nil {
+			return &ValidationError{Name: "user_preference", err: fmt.Errorf(`ent: validator failed for field "User.user_preference": %w`, err)}
+		}
+	}
+	return nil
+}
+
 func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
+	if err := uuo.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(user.Table, user.Columns, sqlgraph.NewFieldSpec(user.FieldID, field.TypeString))
 	id, ok := uuo.mutation.ID()
 	if !ok {
@@ -1131,6 +1188,9 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	}
 	if value, ok := uuo.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
+	}
+	if value, ok := uuo.mutation.UserPreference(); ok {
+		_spec.SetField(user.FieldUserPreference, field.TypeEnum, value)
 	}
 	if value, ok := uuo.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)

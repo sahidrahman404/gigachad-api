@@ -29,8 +29,12 @@ func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("email"),
 		field.String("username"),
-		field.String("hashed_password").Sensitive(),
+		field.String("hashed_password").
+			Sensitive(),
 		field.String("name"),
+		field.Enum("user_preference").
+			Values("METRIC", "IMPERIAL").
+			Default("METRIC"),
 		field.Time("created_at").Default(time.Now().UTC()).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.Int("activated").

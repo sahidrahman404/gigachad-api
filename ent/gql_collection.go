@@ -2327,6 +2327,11 @@ func (u *UserQuery) collectField(ctx context.Context, opCtx *graphql.OperationCo
 				selectedFields = append(selectedFields, user.FieldName)
 				fieldSeen[user.FieldName] = struct{}{}
 			}
+		case "userPreference":
+			if _, ok := fieldSeen[user.FieldUserPreference]; !ok {
+				selectedFields = append(selectedFields, user.FieldUserPreference)
+				fieldSeen[user.FieldUserPreference] = struct{}{}
+			}
 		case "createdAt":
 			if _, ok := fieldSeen[user.FieldCreatedAt]; !ok {
 				selectedFields = append(selectedFields, user.FieldCreatedAt)

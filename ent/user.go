@@ -26,6 +26,8 @@ type User struct {
 	HashedPassword string `json:"-"`
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
+	// UserPreference holds the value of the "user_preference" field.
+	UserPreference user.UserPreference `json:"user_preference,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Activated holds the value of the "activated" field.
@@ -129,7 +131,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 			values[i] = new(pksuid.ID)
 		case user.FieldActivated, user.FieldVersion:
 			values[i] = new(sql.NullInt64)
-		case user.FieldEmail, user.FieldUsername, user.FieldHashedPassword, user.FieldName:
+		case user.FieldEmail, user.FieldUsername, user.FieldHashedPassword, user.FieldName, user.FieldUserPreference:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
@@ -177,6 +179,12 @@ func (u *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				u.Name = value.String
+			}
+		case user.FieldUserPreference:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field user_preference", values[i])
+			} else if value.Valid {
+				u.UserPreference = user.UserPreference(value.String)
 			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -272,6 +280,9 @@ func (u *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("name=")
 	builder.WriteString(u.Name)
+	builder.WriteString(", ")
+	builder.WriteString("user_preference=")
+	builder.WriteString(fmt.Sprintf("%v", u.UserPreference))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(u.CreatedAt.Format(time.ANSIC))

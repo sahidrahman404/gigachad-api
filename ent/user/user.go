@@ -3,6 +3,9 @@
 package user
 
 import (
+	"fmt"
+	"io"
+	"strconv"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -23,6 +26,8 @@ const (
 	FieldHashedPassword = "hashed_password"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
+	// FieldUserPreference holds the string denoting the user_preference field in the database.
+	FieldUserPreference = "user_preference"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldActivated holds the string denoting the activated field in the database.
@@ -94,6 +99,7 @@ var Columns = []string{
 	FieldUsername,
 	FieldHashedPassword,
 	FieldName,
+	FieldUserPreference,
 	FieldCreatedAt,
 	FieldActivated,
 	FieldVersion,
@@ -119,6 +125,32 @@ var (
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() pksuid.ID
 )
+
+// UserPreference defines the type for the "user_preference" enum field.
+type UserPreference string
+
+// UserPreferenceMETRIC is the default value of the UserPreference enum.
+const DefaultUserPreference = UserPreferenceMETRIC
+
+// UserPreference values.
+const (
+	UserPreferenceMETRIC   UserPreference = "METRIC"
+	UserPreferenceIMPERIAL UserPreference = "IMPERIAL"
+)
+
+func (up UserPreference) String() string {
+	return string(up)
+}
+
+// UserPreferenceValidator is a validator for the "user_preference" field enum values. It is called by the builders before save.
+func UserPreferenceValidator(up UserPreference) error {
+	switch up {
+	case UserPreferenceMETRIC, UserPreferenceIMPERIAL:
+		return nil
+	default:
+		return fmt.Errorf("user: invalid enum value for user_preference field: %q", up)
+	}
+}
 
 // OrderOption defines the ordering options for the User queries.
 type OrderOption func(*sql.Selector)
@@ -146,6 +178,11 @@ func ByHashedPassword(opts ...sql.OrderTermOption) OrderOption {
 // ByName orders the results by the name field.
 func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByUserPreference orders the results by the user_preference field.
+func ByUserPreference(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserPreference, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
@@ -287,4 +324,22 @@ func newRoutineExercisesStep() *sqlgraph.Step {
 		sqlgraph.To(RoutineExercisesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, RoutineExercisesTable, RoutineExercisesColumn),
 	)
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (e UserPreference) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(e.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (e *UserPreference) UnmarshalGQL(val interface{}) error {
+	str, ok := val.(string)
+	if !ok {
+		return fmt.Errorf("enum %T must be a string", val)
+	}
+	*e = UserPreference(str)
+	if err := UserPreferenceValidator(*e); err != nil {
+		return fmt.Errorf("%s is not a valid UserPreference", str)
+	}
+	return nil
 }

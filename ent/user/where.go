@@ -351,6 +351,26 @@ func NameContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldName, v))
 }
 
+// UserPreferenceEQ applies the EQ predicate on the "user_preference" field.
+func UserPreferenceEQ(v UserPreference) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldUserPreference, v))
+}
+
+// UserPreferenceNEQ applies the NEQ predicate on the "user_preference" field.
+func UserPreferenceNEQ(v UserPreference) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldUserPreference, v))
+}
+
+// UserPreferenceIn applies the In predicate on the "user_preference" field.
+func UserPreferenceIn(vs ...UserPreference) predicate.User {
+	return predicate.User(sql.FieldIn(FieldUserPreference, vs...))
+}
+
+// UserPreferenceNotIn applies the NotIn predicate on the "user_preference" field.
+func UserPreferenceNotIn(vs ...UserPreference) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldUserPreference, vs...))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldCreatedAt, v))

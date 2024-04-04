@@ -4,6 +4,7 @@ package ent
 
 import (
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
 // CreateExerciseTypeInput represents a mutation input for creating exercisetypes.
@@ -86,6 +87,7 @@ type CreateUserInput struct {
 	Username       string
 	HashedPassword string
 	Name           string
+	UserPreference *user.UserPreference
 	TokenIDs       []pksuid.ID
 	ExerciseIDs    []pksuid.ID
 	RoutineIDs     []pksuid.ID
@@ -98,6 +100,9 @@ func (i *CreateUserInput) Mutate(m *UserMutation) {
 	m.SetUsername(i.Username)
 	m.SetHashedPassword(i.HashedPassword)
 	m.SetName(i.Name)
+	if v := i.UserPreference; v != nil {
+		m.SetUserPreference(*v)
+	}
 	if v := i.TokenIDs; len(v) > 0 {
 		m.AddTokenIDs(v...)
 	}
@@ -124,6 +129,7 @@ type UpdateUserInput struct {
 	Username          *string
 	HashedPassword    *string
 	Name              *string
+	UserPreference    *user.UserPreference
 	ClearTokens       bool
 	AddTokenIDs       []pksuid.ID
 	RemoveTokenIDs    []pksuid.ID
@@ -151,6 +157,9 @@ func (i *UpdateUserInput) Mutate(m *UserMutation) {
 	}
 	if v := i.Name; v != nil {
 		m.SetName(*v)
+	}
+	if v := i.UserPreference; v != nil {
+		m.SetUserPreference(*v)
 	}
 	if i.ClearTokens {
 		m.ClearTokens()
