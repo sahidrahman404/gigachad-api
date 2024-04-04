@@ -84,6 +84,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 	client := *r.reminderServiceClient
 	client.CreateReminders(ctx, &connect.Request[gigachadv1.CreateRemindersRequest]{
 		Msg: &gigachadv1.CreateRemindersRequest{
+			UserId: string(user.ID),
 			AddReminderRequest: &gigachadv1.AddReminderRequest{
 				ReminderId:   *reminderID,
 				UserLastName: userCtx.GetUserLastName(),
@@ -176,8 +177,8 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		Msg: &gigachadv1.UpdateRemindersRequest{
 			OldReminderId: oldReminderID,
 			CreateRemindersRequest: &gigachadv1.CreateRemindersRequest{
-				ReminderId: newReminderID,
-				Schedules:  schedules,
+				UserId:    string(user.ID),
+				Schedules: schedules,
 				AddReminderRequest: &gigachadv1.AddReminderRequest{
 					ReminderId:   newReminderID,
 					UserLastName: userCtx.GetUserLastName(),
