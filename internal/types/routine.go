@@ -156,6 +156,13 @@ func setNilToEmptyValue(s *schematype.Set) {
 	}
 }
 
+func GetOldReminderID(r *ent.Routine) string {
+	if r.ReminderID == nil {
+		return ""
+	}
+	return *r.ReminderID
+}
+
 var restTimeMap = map[string]string{
 	"0":   "0",
 	"50":  "50s",
