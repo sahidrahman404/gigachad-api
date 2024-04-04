@@ -346,54 +346,6 @@ table "routine_exercises" {
     columns = [column.routine_id, column.exercise_id]
   }
 }
-table "users" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "email" {
-    null = false
-    type = text
-  }
-  column "username" {
-    null = false
-    type = text
-  }
-  column "hashed_password" {
-    null = false
-    type = text
-  }
-  column "name" {
-    null = false
-    type = text
-  }
-  column "created_at" {
-    null = false
-    type = datetime
-  }
-  column "activated" {
-    null    = false
-    type    = integer
-    default = 0
-  }
-  column "version" {
-    null    = false
-    type    = integer
-    default = 1
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  index "user_username" {
-    unique  = true
-    columns = [column.username]
-  }
-  index "user_email" {
-    unique  = true
-    columns = [column.email]
-  }
-}
 table "workout_logs" {
   schema = schema.main
   column "id" {
@@ -488,6 +440,59 @@ table "workouts" {
     ref_columns = [table.users.column.id]
     on_update   = NO_ACTION
     on_delete   = CASCADE
+  }
+}
+table "users" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "email" {
+    null = false
+    type = text
+  }
+  column "username" {
+    null = false
+    type = text
+  }
+  column "hashed_password" {
+    null = false
+    type = text
+  }
+  column "name" {
+    null = false
+    type = text
+  }
+  column "user_preference" {
+    null    = false
+    type    = text
+    default = "METRIC"
+  }
+  column "created_at" {
+    null = false
+    type = datetime
+  }
+  column "activated" {
+    null    = false
+    type    = integer
+    default = 0
+  }
+  column "version" {
+    null    = false
+    type    = integer
+    default = 1
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  index "user_username" {
+    unique  = true
+    columns = [column.username]
+  }
+  index "user_email" {
+    unique  = true
+    columns = [column.email]
   }
 }
 schema "main" {

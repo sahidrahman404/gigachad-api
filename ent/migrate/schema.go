@@ -167,6 +167,7 @@ var (
 		{Name: "username", Type: field.TypeString},
 		{Name: "hashed_password", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
+		{Name: "user_preference", Type: field.TypeEnum, Enums: []string{"METRIC", "IMPERIAL"}, Default: "METRIC"},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "activated", Type: field.TypeInt, Default: 0},
 		{Name: "version", Type: field.TypeInt, Default: 1},
