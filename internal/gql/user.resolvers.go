@@ -16,18 +16,16 @@ import (
 	"github.com/sahidrahman404/gigachad-api/internal/database"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error) {
-	caser := cases.Title(language.AmericanEnglish)
 	params := types.CreateUserParams{
-		Username: input.Username,
-		Email:    input.Email,
-		Password: input.HashedPassword,
-		Name:     caser.String(input.Name),
+		Username:       input.Username,
+		Email:          input.Email,
+		Password:       input.HashedPassword,
+		Name:           input.Name,
+		UserPreference: input.UserPreference,
 	}
 
 	v := validator.NewValidator()
@@ -48,6 +46,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 			SetEmail(user.Ent.Email).
 			SetHashedPassword(user.Ent.HashedPassword).
 			SetName(user.Ent.Name).
+			SetUserPreference(user.Ent.UserPreference).
 			Save(ctx)
 		if err != nil {
 			return err

@@ -6,6 +6,7 @@ import (
 
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/user"
 	"github.com/sahidrahman404/gigachad-api/internal/validator"
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/text/cases"
@@ -23,10 +24,11 @@ const (
 var AnonymousUser = &User{}
 
 type CreateUserParams struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
+	UserPreference *user.UserPreference `json:"userPreference"`
+	Username       string               `json:"username"`
+	Email          string               `json:"email"`
+	Password       string               `json:"password"`
+	Name           string               `json:"name"`
 }
 
 type User struct {
@@ -34,18 +36,44 @@ type User struct {
 }
 
 func NewUserFromParams(params CreateUserParams) (*User, error) {
-	encpw, err := bcrypt.GenerateFromPassword([]byte(params.Password), bcryptCost)
+	encpw, err := params.HashPassword()
 	if err != nil {
 		return nil, err
 	}
+
 	return &User{
 		Ent: &ent.User{
 			Username:       strings.ToLower(params.Username),
 			Email:          strings.ToLower(params.Email),
-			HashedPassword: string(encpw),
-			Name:           params.Name,
+			HashedPassword: *encpw,
+			Name:           params.NameCaser(),
+			UserPreference: params.GetUserPreference(),
 		},
 	}, nil
+}
+
+func (p CreateUserParams) HashPassword() (*string, error) {
+	encpw, err := bcrypt.GenerateFromPassword([]byte(p.Password), bcryptCost)
+	if err != nil {
+		return nil, err
+	}
+	result := string(encpw)
+	return &result, nil
+}
+
+func (p CreateUserParams) NameCaser() string {
+	caser := cases.Title(language.AmericanEnglish)
+	return caser.String(p.Name)
+}
+
+func (p CreateUserParams) GetUserPreference() user.UserPreference {
+	userPreference := user.DefaultUserPreference
+
+	if p.UserPreference != nil {
+		userPreference = *p.UserPreference
+	}
+
+	return userPreference
 }
 
 func ValidateEmail(v *validator.Validator, email string) {
@@ -112,6 +140,5 @@ func (u *User) GetUserID() *pksuid.ID {
 func (u *User) GetUserLastName() string {
 	name := u.Ent.Name
 	names := strings.Split(name, " ")
-	caser := cases.Title(language.AmericanEnglish)
-	return caser.String(names[len(names)-1])
+	return names[len(names)-1]
 }
