@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -46,15 +47,15 @@ func (wlu *WorkoutLogUpdate) AppendSets(s []*schematype.Set) *WorkoutLogUpdate {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (wlu *WorkoutLogUpdate) SetCreatedAt(s string) *WorkoutLogUpdate {
-	wlu.mutation.SetCreatedAt(s)
+func (wlu *WorkoutLogUpdate) SetCreatedAt(t time.Time) *WorkoutLogUpdate {
+	wlu.mutation.SetCreatedAt(t)
 	return wlu
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (wlu *WorkoutLogUpdate) SetNillableCreatedAt(s *string) *WorkoutLogUpdate {
-	if s != nil {
-		wlu.SetCreatedAt(*s)
+func (wlu *WorkoutLogUpdate) SetNillableCreatedAt(t *time.Time) *WorkoutLogUpdate {
+	if t != nil {
+		wlu.SetCreatedAt(*t)
 	}
 	return wlu
 }
@@ -219,7 +220,7 @@ func (wlu *WorkoutLogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		})
 	}
 	if value, ok := wlu.mutation.CreatedAt(); ok {
-		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeString, value)
+		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeTime, value)
 	}
 	if wlu.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -341,15 +342,15 @@ func (wluo *WorkoutLogUpdateOne) AppendSets(s []*schematype.Set) *WorkoutLogUpda
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (wluo *WorkoutLogUpdateOne) SetCreatedAt(s string) *WorkoutLogUpdateOne {
-	wluo.mutation.SetCreatedAt(s)
+func (wluo *WorkoutLogUpdateOne) SetCreatedAt(t time.Time) *WorkoutLogUpdateOne {
+	wluo.mutation.SetCreatedAt(t)
 	return wluo
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (wluo *WorkoutLogUpdateOne) SetNillableCreatedAt(s *string) *WorkoutLogUpdateOne {
-	if s != nil {
-		wluo.SetCreatedAt(*s)
+func (wluo *WorkoutLogUpdateOne) SetNillableCreatedAt(t *time.Time) *WorkoutLogUpdateOne {
+	if t != nil {
+		wluo.SetCreatedAt(*t)
 	}
 	return wluo
 }
@@ -544,7 +545,7 @@ func (wluo *WorkoutLogUpdateOne) sqlSave(ctx context.Context) (_node *WorkoutLog
 		})
 	}
 	if value, ok := wluo.mutation.CreatedAt(); ok {
-		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeString, value)
+		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeTime, value)
 	}
 	if wluo.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{

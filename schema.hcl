@@ -55,54 +55,6 @@ table "atlas_schema_revisions" {
     columns = [column.version]
   }
 }
-table "users" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "email" {
-    null = false
-    type = text
-  }
-  column "username" {
-    null = false
-    type = text
-  }
-  column "hashed_password" {
-    null = false
-    type = text
-  }
-  column "name" {
-    null = false
-    type = text
-  }
-  column "created_at" {
-    null = false
-    type = text
-  }
-  column "activated" {
-    null    = false
-    type    = integer
-    default = 0
-  }
-  column "version" {
-    null    = false
-    type    = integer
-    default = 1
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  index "user_username" {
-    unique  = true
-    columns = [column.username]
-  }
-  index "user_email" {
-    unique  = true
-    columns = [column.email]
-  }
-}
 table "exercise_types" {
   schema = schema.main
   column "id" {
@@ -303,102 +255,6 @@ table "exercises" {
     on_delete   = CASCADE
   }
 }
-table "workout_logs" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "sets" {
-    null = false
-    type = json
-  }
-  column "created_at" {
-    null = false
-    type = text
-  }
-  column "user_id" {
-    null = false
-    type = text
-  }
-  column "workout_id" {
-    null = false
-    type = text
-  }
-  column "exercise_id" {
-    null = false
-    type = text
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "workout_logs_exercises_exercises" {
-    columns     = [column.exercise_id]
-    ref_columns = [table.exercises.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "workout_logs_workouts_workouts" {
-    columns     = [column.workout_id]
-    ref_columns = [table.workouts.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  foreign_key "workout_logs_users_workout_logs" {
-    columns     = [column.user_id]
-    ref_columns = [table.users.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-  index "workoutlog_workout_id_exercise_id" {
-    unique  = true
-    columns = [column.workout_id, column.exercise_id]
-  }
-}
-table "workouts" {
-  schema = schema.main
-  column "id" {
-    null = false
-    type = text
-  }
-  column "volume" {
-    null = false
-    type = integer
-  }
-  column "duration" {
-    null = false
-    type = text
-  }
-  column "sets" {
-    null = false
-    type = integer
-  }
-  column "created_at" {
-    null = false
-    type = text
-  }
-  column "image" {
-    null = true
-    type = json
-  }
-  column "description" {
-    null = true
-    type = text
-  }
-  column "user_id" {
-    null = false
-    type = text
-  }
-  primary_key {
-    columns = [column.id]
-  }
-  foreign_key "workouts_users_workouts" {
-    columns     = [column.user_id]
-    ref_columns = [table.users.column.id]
-    on_update   = NO_ACTION
-    on_delete   = CASCADE
-  }
-}
 table "routines" {
   schema = schema.main
   column "id" {
@@ -488,6 +344,150 @@ table "routine_exercises" {
   index "routineexercise_routine_id_exercise_id" {
     unique  = true
     columns = [column.routine_id, column.exercise_id]
+  }
+}
+table "users" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "email" {
+    null = false
+    type = text
+  }
+  column "username" {
+    null = false
+    type = text
+  }
+  column "hashed_password" {
+    null = false
+    type = text
+  }
+  column "name" {
+    null = false
+    type = text
+  }
+  column "created_at" {
+    null = false
+    type = datetime
+  }
+  column "activated" {
+    null    = false
+    type    = integer
+    default = 0
+  }
+  column "version" {
+    null    = false
+    type    = integer
+    default = 1
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  index "user_username" {
+    unique  = true
+    columns = [column.username]
+  }
+  index "user_email" {
+    unique  = true
+    columns = [column.email]
+  }
+}
+table "workout_logs" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "sets" {
+    null = false
+    type = json
+  }
+  column "created_at" {
+    null = false
+    type = datetime
+  }
+  column "user_id" {
+    null = false
+    type = text
+  }
+  column "workout_id" {
+    null = false
+    type = text
+  }
+  column "exercise_id" {
+    null = false
+    type = text
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "workout_logs_exercises_exercises" {
+    columns     = [column.exercise_id]
+    ref_columns = [table.exercises.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "workout_logs_workouts_workouts" {
+    columns     = [column.workout_id]
+    ref_columns = [table.workouts.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  foreign_key "workout_logs_users_workout_logs" {
+    columns     = [column.user_id]
+    ref_columns = [table.users.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
+  }
+  index "workoutlog_workout_id_exercise_id" {
+    unique  = true
+    columns = [column.workout_id, column.exercise_id]
+  }
+}
+table "workouts" {
+  schema = schema.main
+  column "id" {
+    null = false
+    type = text
+  }
+  column "volume" {
+    null = false
+    type = integer
+  }
+  column "duration" {
+    null = false
+    type = text
+  }
+  column "sets" {
+    null = false
+    type = integer
+  }
+  column "created_at" {
+    null = false
+    type = datetime
+  }
+  column "image" {
+    null = true
+    type = json
+  }
+  column "description" {
+    null = true
+    type = text
+  }
+  column "user_id" {
+    null = false
+    type = text
+  }
+  primary_key {
+    columns = [column.id]
+  }
+  foreign_key "workouts_users_workouts" {
+    columns     = [column.user_id]
+    ref_columns = [table.users.column.id]
+    on_update   = NO_ACTION
+    on_delete   = CASCADE
   }
 }
 schema "main" {

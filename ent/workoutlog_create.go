@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -34,15 +35,15 @@ func (wlc *WorkoutLogCreate) SetSets(s []*schematype.Set) *WorkoutLogCreate {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (wlc *WorkoutLogCreate) SetCreatedAt(s string) *WorkoutLogCreate {
-	wlc.mutation.SetCreatedAt(s)
+func (wlc *WorkoutLogCreate) SetCreatedAt(t time.Time) *WorkoutLogCreate {
+	wlc.mutation.SetCreatedAt(t)
 	return wlc
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (wlc *WorkoutLogCreate) SetNillableCreatedAt(s *string) *WorkoutLogCreate {
-	if s != nil {
-		wlc.SetCreatedAt(*s)
+func (wlc *WorkoutLogCreate) SetNillableCreatedAt(t *time.Time) *WorkoutLogCreate {
+	if t != nil {
+		wlc.SetCreatedAt(*t)
 	}
 	return wlc
 }
@@ -148,7 +149,7 @@ func (wlc *WorkoutLogCreate) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (wlc *WorkoutLogCreate) defaults() {
 	if _, ok := wlc.mutation.CreatedAt(); !ok {
-		v := workoutlog.DefaultCreatedAt()
+		v := workoutlog.DefaultCreatedAt
 		wlc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := wlc.mutation.ID(); !ok {
@@ -224,7 +225,7 @@ func (wlc *WorkoutLogCreate) createSpec() (*WorkoutLog, *sqlgraph.CreateSpec) {
 		_node.Sets = value
 	}
 	if value, ok := wlc.mutation.CreatedAt(); ok {
-		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeString, value)
+		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if nodes := wlc.mutation.UsersIDs(); len(nodes) > 0 {
@@ -343,7 +344,7 @@ func (u *WorkoutLogUpsert) UpdateSets() *WorkoutLogUpsert {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *WorkoutLogUpsert) SetCreatedAt(v string) *WorkoutLogUpsert {
+func (u *WorkoutLogUpsert) SetCreatedAt(v time.Time) *WorkoutLogUpsert {
 	u.Set(workoutlog.FieldCreatedAt, v)
 	return u
 }
@@ -453,7 +454,7 @@ func (u *WorkoutLogUpsertOne) UpdateSets() *WorkoutLogUpsertOne {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *WorkoutLogUpsertOne) SetCreatedAt(v string) *WorkoutLogUpsertOne {
+func (u *WorkoutLogUpsertOne) SetCreatedAt(v time.Time) *WorkoutLogUpsertOne {
 	return u.Update(func(s *WorkoutLogUpsert) {
 		s.SetCreatedAt(v)
 	})
@@ -738,7 +739,7 @@ func (u *WorkoutLogUpsertBulk) UpdateSets() *WorkoutLogUpsertBulk {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *WorkoutLogUpsertBulk) SetCreatedAt(v string) *WorkoutLogUpsertBulk {
+func (u *WorkoutLogUpsertBulk) SetCreatedAt(v time.Time) *WorkoutLogUpsertBulk {
 	return u.Update(func(s *WorkoutLogUpsert) {
 		s.SetCreatedAt(v)
 	})

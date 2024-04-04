@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -5020,7 +5021,7 @@ type UserMutation struct {
 	username                 *string
 	hashed_password          *string
 	name                     *string
-	created_at               *string
+	created_at               *time.Time
 	activated                *int
 	addactivated             *int
 	version                  *int
@@ -5298,12 +5299,12 @@ func (m *UserMutation) ResetName() {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (m *UserMutation) SetCreatedAt(s string) {
-	m.created_at = &s
+func (m *UserMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
 }
 
 // CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *UserMutation) CreatedAt() (r string, exists bool) {
+func (m *UserMutation) CreatedAt() (r time.Time, exists bool) {
 	v := m.created_at
 	if v == nil {
 		return
@@ -5314,7 +5315,7 @@ func (m *UserMutation) CreatedAt() (r string, exists bool) {
 // OldCreatedAt returns the old "created_at" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldCreatedAt(ctx context.Context) (v string, err error) {
+func (m *UserMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
 	}
@@ -5908,7 +5909,7 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	case user.FieldCreatedAt:
-		v, ok := value.(string)
+		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -6254,7 +6255,7 @@ type WorkoutMutation struct {
 	duration            *string
 	sets                *int
 	addsets             *int
-	created_at          *string
+	created_at          *time.Time
 	image               **schematype.Image
 	description         *string
 	clearedFields       map[string]struct{}
@@ -6524,12 +6525,12 @@ func (m *WorkoutMutation) ResetSets() {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (m *WorkoutMutation) SetCreatedAt(s string) {
-	m.created_at = &s
+func (m *WorkoutMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
 }
 
 // CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *WorkoutMutation) CreatedAt() (r string, exists bool) {
+func (m *WorkoutMutation) CreatedAt() (r time.Time, exists bool) {
 	v := m.created_at
 	if v == nil {
 		return
@@ -6540,7 +6541,7 @@ func (m *WorkoutMutation) CreatedAt() (r string, exists bool) {
 // OldCreatedAt returns the old "created_at" field's value of the Workout entity.
 // If the Workout object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutMutation) OldCreatedAt(ctx context.Context) (v string, err error) {
+func (m *WorkoutMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
 	}
@@ -6973,7 +6974,7 @@ func (m *WorkoutMutation) SetField(name string, value ent.Value) error {
 		m.SetSets(v)
 		return nil
 	case workout.FieldCreatedAt:
-		v, ok := value.(string)
+		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -7252,7 +7253,7 @@ type WorkoutLogMutation struct {
 	id               *pksuid.ID
 	sets             *[]*schematype.Set
 	appendsets       []*schematype.Set
-	created_at       *string
+	created_at       *time.Time
 	clearedFields    map[string]struct{}
 	users            *pksuid.ID
 	clearedusers     bool
@@ -7421,12 +7422,12 @@ func (m *WorkoutLogMutation) ResetSets() {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (m *WorkoutLogMutation) SetCreatedAt(s string) {
-	m.created_at = &s
+func (m *WorkoutLogMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
 }
 
 // CreatedAt returns the value of the "created_at" field in the mutation.
-func (m *WorkoutLogMutation) CreatedAt() (r string, exists bool) {
+func (m *WorkoutLogMutation) CreatedAt() (r time.Time, exists bool) {
 	v := m.created_at
 	if v == nil {
 		return
@@ -7437,7 +7438,7 @@ func (m *WorkoutLogMutation) CreatedAt() (r string, exists bool) {
 // OldCreatedAt returns the old "created_at" field's value of the WorkoutLog entity.
 // If the WorkoutLog object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutLogMutation) OldCreatedAt(ctx context.Context) (v string, err error) {
+func (m *WorkoutLogMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
 	}
@@ -7788,7 +7789,7 @@ func (m *WorkoutLogMutation) SetField(name string, value ent.Value) error {
 		m.SetSets(v)
 		return nil
 	case workoutlog.FieldCreatedAt:
-		v, ok := value.(string)
+		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

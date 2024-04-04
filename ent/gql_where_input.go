@@ -5,6 +5,7 @@ package ent
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
@@ -2346,19 +2347,14 @@ type UserWhereInput struct {
 	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
 
 	// "created_at" field predicates.
-	CreatedAt             *string  `json:"createdAt,omitempty"`
-	CreatedAtNEQ          *string  `json:"createdAtNEQ,omitempty"`
-	CreatedAtIn           []string `json:"createdAtIn,omitempty"`
-	CreatedAtNotIn        []string `json:"createdAtNotIn,omitempty"`
-	CreatedAtGT           *string  `json:"createdAtGT,omitempty"`
-	CreatedAtGTE          *string  `json:"createdAtGTE,omitempty"`
-	CreatedAtLT           *string  `json:"createdAtLT,omitempty"`
-	CreatedAtLTE          *string  `json:"createdAtLTE,omitempty"`
-	CreatedAtContains     *string  `json:"createdAtContains,omitempty"`
-	CreatedAtHasPrefix    *string  `json:"createdAtHasPrefix,omitempty"`
-	CreatedAtHasSuffix    *string  `json:"createdAtHasSuffix,omitempty"`
-	CreatedAtEqualFold    *string  `json:"createdAtEqualFold,omitempty"`
-	CreatedAtContainsFold *string  `json:"createdAtContainsFold,omitempty"`
+	CreatedAt      *time.Time  `json:"createdAt,omitempty"`
+	CreatedAtNEQ   *time.Time  `json:"createdAtNEQ,omitempty"`
+	CreatedAtIn    []time.Time `json:"createdAtIn,omitempty"`
+	CreatedAtNotIn []time.Time `json:"createdAtNotIn,omitempty"`
+	CreatedAtGT    *time.Time  `json:"createdAtGT,omitempty"`
+	CreatedAtGTE   *time.Time  `json:"createdAtGTE,omitempty"`
+	CreatedAtLT    *time.Time  `json:"createdAtLT,omitempty"`
+	CreatedAtLTE   *time.Time  `json:"createdAtLTE,omitempty"`
 
 	// "activated" field predicates.
 	Activated      *int  `json:"activated,omitempty"`
@@ -2680,21 +2676,6 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 	if i.CreatedAtLTE != nil {
 		predicates = append(predicates, user.CreatedAtLTE(*i.CreatedAtLTE))
 	}
-	if i.CreatedAtContains != nil {
-		predicates = append(predicates, user.CreatedAtContains(*i.CreatedAtContains))
-	}
-	if i.CreatedAtHasPrefix != nil {
-		predicates = append(predicates, user.CreatedAtHasPrefix(*i.CreatedAtHasPrefix))
-	}
-	if i.CreatedAtHasSuffix != nil {
-		predicates = append(predicates, user.CreatedAtHasSuffix(*i.CreatedAtHasSuffix))
-	}
-	if i.CreatedAtEqualFold != nil {
-		predicates = append(predicates, user.CreatedAtEqualFold(*i.CreatedAtEqualFold))
-	}
-	if i.CreatedAtContainsFold != nil {
-		predicates = append(predicates, user.CreatedAtContainsFold(*i.CreatedAtContainsFold))
-	}
 	if i.Activated != nil {
 		predicates = append(predicates, user.ActivatedEQ(*i.Activated))
 	}
@@ -2915,19 +2896,14 @@ type WorkoutWhereInput struct {
 	SetsLTE   *int  `json:"setsLTE,omitempty"`
 
 	// "created_at" field predicates.
-	CreatedAt             *string  `json:"createdAt,omitempty"`
-	CreatedAtNEQ          *string  `json:"createdAtNEQ,omitempty"`
-	CreatedAtIn           []string `json:"createdAtIn,omitempty"`
-	CreatedAtNotIn        []string `json:"createdAtNotIn,omitempty"`
-	CreatedAtGT           *string  `json:"createdAtGT,omitempty"`
-	CreatedAtGTE          *string  `json:"createdAtGTE,omitempty"`
-	CreatedAtLT           *string  `json:"createdAtLT,omitempty"`
-	CreatedAtLTE          *string  `json:"createdAtLTE,omitempty"`
-	CreatedAtContains     *string  `json:"createdAtContains,omitempty"`
-	CreatedAtHasPrefix    *string  `json:"createdAtHasPrefix,omitempty"`
-	CreatedAtHasSuffix    *string  `json:"createdAtHasSuffix,omitempty"`
-	CreatedAtEqualFold    *string  `json:"createdAtEqualFold,omitempty"`
-	CreatedAtContainsFold *string  `json:"createdAtContainsFold,omitempty"`
+	CreatedAt      *time.Time  `json:"createdAt,omitempty"`
+	CreatedAtNEQ   *time.Time  `json:"createdAtNEQ,omitempty"`
+	CreatedAtIn    []time.Time `json:"createdAtIn,omitempty"`
+	CreatedAtNotIn []time.Time `json:"createdAtNotIn,omitempty"`
+	CreatedAtGT    *time.Time  `json:"createdAtGT,omitempty"`
+	CreatedAtGTE   *time.Time  `json:"createdAtGTE,omitempty"`
+	CreatedAtLT    *time.Time  `json:"createdAtLT,omitempty"`
+	CreatedAtLTE   *time.Time  `json:"createdAtLTE,omitempty"`
 
 	// "description" field predicates.
 	Description             *string  `json:"description,omitempty"`
@@ -3180,21 +3156,6 @@ func (i *WorkoutWhereInput) P() (predicate.Workout, error) {
 	if i.CreatedAtLTE != nil {
 		predicates = append(predicates, workout.CreatedAtLTE(*i.CreatedAtLTE))
 	}
-	if i.CreatedAtContains != nil {
-		predicates = append(predicates, workout.CreatedAtContains(*i.CreatedAtContains))
-	}
-	if i.CreatedAtHasPrefix != nil {
-		predicates = append(predicates, workout.CreatedAtHasPrefix(*i.CreatedAtHasPrefix))
-	}
-	if i.CreatedAtHasSuffix != nil {
-		predicates = append(predicates, workout.CreatedAtHasSuffix(*i.CreatedAtHasSuffix))
-	}
-	if i.CreatedAtEqualFold != nil {
-		predicates = append(predicates, workout.CreatedAtEqualFold(*i.CreatedAtEqualFold))
-	}
-	if i.CreatedAtContainsFold != nil {
-		predicates = append(predicates, workout.CreatedAtContainsFold(*i.CreatedAtContainsFold))
-	}
 	if i.Description != nil {
 		predicates = append(predicates, workout.DescriptionEQ(*i.Description))
 	}
@@ -3362,19 +3323,14 @@ type WorkoutLogWhereInput struct {
 	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "created_at" field predicates.
-	CreatedAt             *string  `json:"createdAt,omitempty"`
-	CreatedAtNEQ          *string  `json:"createdAtNEQ,omitempty"`
-	CreatedAtIn           []string `json:"createdAtIn,omitempty"`
-	CreatedAtNotIn        []string `json:"createdAtNotIn,omitempty"`
-	CreatedAtGT           *string  `json:"createdAtGT,omitempty"`
-	CreatedAtGTE          *string  `json:"createdAtGTE,omitempty"`
-	CreatedAtLT           *string  `json:"createdAtLT,omitempty"`
-	CreatedAtLTE          *string  `json:"createdAtLTE,omitempty"`
-	CreatedAtContains     *string  `json:"createdAtContains,omitempty"`
-	CreatedAtHasPrefix    *string  `json:"createdAtHasPrefix,omitempty"`
-	CreatedAtHasSuffix    *string  `json:"createdAtHasSuffix,omitempty"`
-	CreatedAtEqualFold    *string  `json:"createdAtEqualFold,omitempty"`
-	CreatedAtContainsFold *string  `json:"createdAtContainsFold,omitempty"`
+	CreatedAt      *time.Time  `json:"createdAt,omitempty"`
+	CreatedAtNEQ   *time.Time  `json:"createdAtNEQ,omitempty"`
+	CreatedAtIn    []time.Time `json:"createdAtIn,omitempty"`
+	CreatedAtNotIn []time.Time `json:"createdAtNotIn,omitempty"`
+	CreatedAtGT    *time.Time  `json:"createdAtGT,omitempty"`
+	CreatedAtGTE   *time.Time  `json:"createdAtGTE,omitempty"`
+	CreatedAtLT    *time.Time  `json:"createdAtLT,omitempty"`
+	CreatedAtLTE   *time.Time  `json:"createdAtLTE,omitempty"`
 
 	// "workout_id" field predicates.
 	WorkoutID             *pksuid.ID  `json:"workoutID,omitempty"`
@@ -3552,21 +3508,6 @@ func (i *WorkoutLogWhereInput) P() (predicate.WorkoutLog, error) {
 	}
 	if i.CreatedAtLTE != nil {
 		predicates = append(predicates, workoutlog.CreatedAtLTE(*i.CreatedAtLTE))
-	}
-	if i.CreatedAtContains != nil {
-		predicates = append(predicates, workoutlog.CreatedAtContains(*i.CreatedAtContains))
-	}
-	if i.CreatedAtHasPrefix != nil {
-		predicates = append(predicates, workoutlog.CreatedAtHasPrefix(*i.CreatedAtHasPrefix))
-	}
-	if i.CreatedAtHasSuffix != nil {
-		predicates = append(predicates, workoutlog.CreatedAtHasSuffix(*i.CreatedAtHasSuffix))
-	}
-	if i.CreatedAtEqualFold != nil {
-		predicates = append(predicates, workoutlog.CreatedAtEqualFold(*i.CreatedAtEqualFold))
-	}
-	if i.CreatedAtContainsFold != nil {
-		predicates = append(predicates, workoutlog.CreatedAtContainsFold(*i.CreatedAtContainsFold))
 	}
 	if i.WorkoutID != nil {
 		predicates = append(predicates, workoutlog.WorkoutIDEQ(*i.WorkoutID))

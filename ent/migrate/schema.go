@@ -167,7 +167,7 @@ var (
 		{Name: "username", Type: field.TypeString},
 		{Name: "hashed_password", Type: field.TypeString},
 		{Name: "name", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "activated", Type: field.TypeInt, Default: 0},
 		{Name: "version", Type: field.TypeInt, Default: 1},
 	}
@@ -195,7 +195,7 @@ var (
 		{Name: "volume", Type: field.TypeInt},
 		{Name: "duration", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeInt},
-		{Name: "created_at", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "image", Type: field.TypeJSON, Nullable: true},
 		{Name: "description", Type: field.TypeString, Nullable: true},
 		{Name: "user_id", Type: field.TypeString},
@@ -218,7 +218,7 @@ var (
 	WorkoutLogsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeJSON},
-		{Name: "created_at", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "user_id", Type: field.TypeString},
 		{Name: "workout_id", Type: field.TypeString},
 		{Name: "exercise_id", Type: field.TypeString},

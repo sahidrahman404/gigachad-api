@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
@@ -29,8 +31,7 @@ func (User) Fields() []ent.Field {
 		field.String("username"),
 		field.String("hashed_password").Sensitive(),
 		field.String("name"),
-		field.String("created_at").
-			DefaultFunc(generateTime).
+		field.Time("created_at").Default(time.Now().UTC()).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.Int("activated").
 			Default(0).

@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -54,15 +55,15 @@ func (uc *UserCreate) SetName(s string) *UserCreate {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (uc *UserCreate) SetCreatedAt(s string) *UserCreate {
-	uc.mutation.SetCreatedAt(s)
+func (uc *UserCreate) SetCreatedAt(t time.Time) *UserCreate {
+	uc.mutation.SetCreatedAt(t)
 	return uc
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (uc *UserCreate) SetNillableCreatedAt(s *string) *UserCreate {
-	if s != nil {
-		uc.SetCreatedAt(*s)
+func (uc *UserCreate) SetNillableCreatedAt(t *time.Time) *UserCreate {
+	if t != nil {
+		uc.SetCreatedAt(*t)
 	}
 	return uc
 }
@@ -235,7 +236,7 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
 	if _, ok := uc.mutation.CreatedAt(); !ok {
-		v := user.DefaultCreatedAt()
+		v := user.DefaultCreatedAt
 		uc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := uc.mutation.Activated(); !ok {
@@ -328,7 +329,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_node.Name = value
 	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
-		_spec.SetField(user.FieldCreatedAt, field.TypeString, value)
+		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := uc.mutation.Activated(); ok {
@@ -536,7 +537,7 @@ func (u *UserUpsert) UpdateName() *UserUpsert {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *UserUpsert) SetCreatedAt(v string) *UserUpsert {
+func (u *UserUpsert) SetCreatedAt(v time.Time) *UserUpsert {
 	u.Set(user.FieldCreatedAt, v)
 	return u
 }
@@ -688,7 +689,7 @@ func (u *UserUpsertOne) UpdateName() *UserUpsertOne {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *UserUpsertOne) SetCreatedAt(v string) *UserUpsertOne {
+func (u *UserUpsertOne) SetCreatedAt(v time.Time) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.SetCreatedAt(v)
 	})
@@ -1015,7 +1016,7 @@ func (u *UserUpsertBulk) UpdateName() *UserUpsertBulk {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (u *UserUpsertBulk) SetCreatedAt(v string) *UserUpsertBulk {
+func (u *UserUpsertBulk) SetCreatedAt(v time.Time) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.SetCreatedAt(v)
 	})

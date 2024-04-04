@@ -3,6 +3,8 @@
 package workout
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/sahidrahman404/gigachad-api/ent/predicate"
@@ -70,7 +72,7 @@ func Sets(v int) predicate.Workout {
 }
 
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
-func CreatedAt(v string) predicate.Workout {
+func CreatedAt(v time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldEQ(FieldCreatedAt, v))
 }
 
@@ -230,68 +232,43 @@ func SetsLTE(v int) predicate.Workout {
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
-func CreatedAtEQ(v string) predicate.Workout {
+func CreatedAtEQ(v time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldEQ(FieldCreatedAt, v))
 }
 
 // CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
-func CreatedAtNEQ(v string) predicate.Workout {
+func CreatedAtNEQ(v time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldNEQ(FieldCreatedAt, v))
 }
 
 // CreatedAtIn applies the In predicate on the "created_at" field.
-func CreatedAtIn(vs ...string) predicate.Workout {
+func CreatedAtIn(vs ...time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldIn(FieldCreatedAt, vs...))
 }
 
 // CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
-func CreatedAtNotIn(vs ...string) predicate.Workout {
+func CreatedAtNotIn(vs ...time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldNotIn(FieldCreatedAt, vs...))
 }
 
 // CreatedAtGT applies the GT predicate on the "created_at" field.
-func CreatedAtGT(v string) predicate.Workout {
+func CreatedAtGT(v time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldGT(FieldCreatedAt, v))
 }
 
 // CreatedAtGTE applies the GTE predicate on the "created_at" field.
-func CreatedAtGTE(v string) predicate.Workout {
+func CreatedAtGTE(v time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldGTE(FieldCreatedAt, v))
 }
 
 // CreatedAtLT applies the LT predicate on the "created_at" field.
-func CreatedAtLT(v string) predicate.Workout {
+func CreatedAtLT(v time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldLT(FieldCreatedAt, v))
 }
 
 // CreatedAtLTE applies the LTE predicate on the "created_at" field.
-func CreatedAtLTE(v string) predicate.Workout {
+func CreatedAtLTE(v time.Time) predicate.Workout {
 	return predicate.Workout(sql.FieldLTE(FieldCreatedAt, v))
-}
-
-// CreatedAtContains applies the Contains predicate on the "created_at" field.
-func CreatedAtContains(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldContains(FieldCreatedAt, v))
-}
-
-// CreatedAtHasPrefix applies the HasPrefix predicate on the "created_at" field.
-func CreatedAtHasPrefix(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldHasPrefix(FieldCreatedAt, v))
-}
-
-// CreatedAtHasSuffix applies the HasSuffix predicate on the "created_at" field.
-func CreatedAtHasSuffix(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldHasSuffix(FieldCreatedAt, v))
-}
-
-// CreatedAtEqualFold applies the EqualFold predicate on the "created_at" field.
-func CreatedAtEqualFold(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldEqualFold(FieldCreatedAt, v))
-}
-
-// CreatedAtContainsFold applies the ContainsFold predicate on the "created_at" field.
-func CreatedAtContainsFold(v string) predicate.Workout {
-	return predicate.Workout(sql.FieldContainsFold(FieldCreatedAt, v))
 }
 
 // ImageIsNil applies the IsNil predicate on the "image" field.

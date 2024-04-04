@@ -4,6 +4,7 @@ package runtime
 
 import (
 	"context"
+	"time"
 
 	"github.com/sahidrahman404/gigachad-api/ent/equipment"
 	"github.com/sahidrahman404/gigachad-api/ent/exercise"
@@ -118,7 +119,7 @@ func init() {
 	// userDescCreatedAt is the schema descriptor for created_at field.
 	userDescCreatedAt := userFields[4].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
-	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() string)
+	user.DefaultCreatedAt = userDescCreatedAt.Default.(time.Time)
 	// userDescActivated is the schema descriptor for activated field.
 	userDescActivated := userFields[5].Descriptor()
 	// user.DefaultActivated holds the default value on creation for the activated field.
@@ -139,7 +140,7 @@ func init() {
 	// workoutDescCreatedAt is the schema descriptor for created_at field.
 	workoutDescCreatedAt := workoutFields[3].Descriptor()
 	// workout.DefaultCreatedAt holds the default value on creation for the created_at field.
-	workout.DefaultCreatedAt = workoutDescCreatedAt.Default.(func() string)
+	workout.DefaultCreatedAt = workoutDescCreatedAt.Default.(time.Time)
 	// workoutDescID is the schema descriptor for id field.
 	workoutDescID := workoutMixinFields0[0].Descriptor()
 	// workout.DefaultID holds the default value on creation for the id field.
@@ -152,7 +153,7 @@ func init() {
 	// workoutlogDescCreatedAt is the schema descriptor for created_at field.
 	workoutlogDescCreatedAt := workoutlogFields[1].Descriptor()
 	// workoutlog.DefaultCreatedAt holds the default value on creation for the created_at field.
-	workoutlog.DefaultCreatedAt = workoutlogDescCreatedAt.Default.(func() string)
+	workoutlog.DefaultCreatedAt = workoutlogDescCreatedAt.Default.(time.Time)
 	// workoutlogDescID is the schema descriptor for id field.
 	workoutlogDescID := workoutlogMixinFields0[0].Descriptor()
 	// workoutlog.DefaultID holds the default value on creation for the id field.

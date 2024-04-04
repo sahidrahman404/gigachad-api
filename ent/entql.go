@@ -155,7 +155,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			user.FieldUsername:       {Type: field.TypeString, Column: user.FieldUsername},
 			user.FieldHashedPassword: {Type: field.TypeString, Column: user.FieldHashedPassword},
 			user.FieldName:           {Type: field.TypeString, Column: user.FieldName},
-			user.FieldCreatedAt:      {Type: field.TypeString, Column: user.FieldCreatedAt},
+			user.FieldCreatedAt:      {Type: field.TypeTime, Column: user.FieldCreatedAt},
 			user.FieldActivated:      {Type: field.TypeInt, Column: user.FieldActivated},
 			user.FieldVersion:        {Type: field.TypeInt, Column: user.FieldVersion},
 		},
@@ -174,7 +174,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			workout.FieldVolume:      {Type: field.TypeInt, Column: workout.FieldVolume},
 			workout.FieldDuration:    {Type: field.TypeString, Column: workout.FieldDuration},
 			workout.FieldSets:        {Type: field.TypeInt, Column: workout.FieldSets},
-			workout.FieldCreatedAt:   {Type: field.TypeString, Column: workout.FieldCreatedAt},
+			workout.FieldCreatedAt:   {Type: field.TypeTime, Column: workout.FieldCreatedAt},
 			workout.FieldImage:       {Type: field.TypeJSON, Column: workout.FieldImage},
 			workout.FieldDescription: {Type: field.TypeString, Column: workout.FieldDescription},
 			workout.FieldUserID:      {Type: field.TypeString, Column: workout.FieldUserID},
@@ -192,7 +192,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 		Type: "WorkoutLog",
 		Fields: map[string]*sqlgraph.FieldSpec{
 			workoutlog.FieldSets:       {Type: field.TypeJSON, Column: workoutlog.FieldSets},
-			workoutlog.FieldCreatedAt:  {Type: field.TypeString, Column: workoutlog.FieldCreatedAt},
+			workoutlog.FieldCreatedAt:  {Type: field.TypeTime, Column: workoutlog.FieldCreatedAt},
 			workoutlog.FieldWorkoutID:  {Type: field.TypeString, Column: workoutlog.FieldWorkoutID},
 			workoutlog.FieldExerciseID: {Type: field.TypeString, Column: workoutlog.FieldExerciseID},
 			workoutlog.FieldUserID:     {Type: field.TypeString, Column: workoutlog.FieldUserID},
@@ -1284,8 +1284,8 @@ func (f *UserFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(user.FieldName))
 }
 
-// WhereCreatedAt applies the entql string predicate on the created_at field.
-func (f *UserFilter) WhereCreatedAt(p entql.StringP) {
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *UserFilter) WhereCreatedAt(p entql.TimeP) {
 	f.Where(p.Field(user.FieldCreatedAt))
 }
 
@@ -1438,8 +1438,8 @@ func (f *WorkoutFilter) WhereSets(p entql.IntP) {
 	f.Where(p.Field(workout.FieldSets))
 }
 
-// WhereCreatedAt applies the entql string predicate on the created_at field.
-func (f *WorkoutFilter) WhereCreatedAt(p entql.StringP) {
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *WorkoutFilter) WhereCreatedAt(p entql.TimeP) {
 	f.Where(p.Field(workout.FieldCreatedAt))
 }
 
@@ -1545,8 +1545,8 @@ func (f *WorkoutLogFilter) WhereSets(p entql.BytesP) {
 	f.Where(p.Field(workoutlog.FieldSets))
 }
 
-// WhereCreatedAt applies the entql string predicate on the created_at field.
-func (f *WorkoutLogFilter) WhereCreatedAt(p entql.StringP) {
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *WorkoutLogFilter) WhereCreatedAt(p entql.TimeP) {
 	f.Where(p.Field(workoutlog.FieldCreatedAt))
 }
 

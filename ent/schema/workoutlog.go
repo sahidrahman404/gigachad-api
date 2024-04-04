@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
@@ -26,7 +28,7 @@ func (WorkoutLog) Mixin() []ent.Mixin {
 func (WorkoutLog) Fields() []ent.Field {
 	return []ent.Field{
 		field.JSON("sets", []*schematype.Set{}).Annotations(entgql.Type("[Set!]")),
-		field.String("created_at").DefaultFunc(generateTime).
+		field.Time("created_at").Default(time.Now().UTC()).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.String("workout_id").GoType(pksuid.ID("")),
 		field.String("exercise_id").GoType(pksuid.ID("")),

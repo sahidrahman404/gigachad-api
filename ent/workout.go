@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -27,7 +28,7 @@ type Workout struct {
 	// Sets holds the value of the "sets" field.
 	Sets int `json:"sets,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt string `json:"created_at,omitempty"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Image holds the value of the "image" field.
 	Image *schematype.Image `json:"image,omitempty"`
 	// Description holds the value of the "description" field.
@@ -98,8 +99,10 @@ func (*Workout) scanValues(columns []string) ([]any, error) {
 			values[i] = new(pksuid.ID)
 		case workout.FieldVolume, workout.FieldSets:
 			values[i] = new(sql.NullInt64)
-		case workout.FieldDuration, workout.FieldCreatedAt, workout.FieldDescription:
+		case workout.FieldDuration, workout.FieldDescription:
 			values[i] = new(sql.NullString)
+		case workout.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -140,10 +143,10 @@ func (w *Workout) assignValues(columns []string, values []any) error {
 				w.Sets = int(value.Int64)
 			}
 		case workout.FieldCreatedAt:
-			if value, ok := values[i].(*sql.NullString); !ok {
+			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
-				w.CreatedAt = value.String
+				w.CreatedAt = value.Time
 			}
 		case workout.FieldImage:
 			if value, ok := values[i].(*[]byte); !ok {
@@ -227,7 +230,7 @@ func (w *Workout) String() string {
 	builder.WriteString(fmt.Sprintf("%v", w.Sets))
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
-	builder.WriteString(w.CreatedAt)
+	builder.WriteString(w.CreatedAt.Format(time.ANSIC))
 	builder.WriteString(", ")
 	builder.WriteString("image=")
 	builder.WriteString(fmt.Sprintf("%v", w.Image))

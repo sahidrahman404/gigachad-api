@@ -3,6 +3,8 @@
 package user
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
@@ -109,7 +111,7 @@ func ValidColumn(column string) bool {
 
 var (
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
-	DefaultCreatedAt func() string
+	DefaultCreatedAt time.Time
 	// DefaultActivated holds the default value on creation for the "activated" field.
 	DefaultActivated int
 	// DefaultVersion holds the default value on creation for the "version" field.

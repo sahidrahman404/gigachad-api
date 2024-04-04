@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -89,15 +90,15 @@ func (wu *WorkoutUpdate) AddSets(i int) *WorkoutUpdate {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (wu *WorkoutUpdate) SetCreatedAt(s string) *WorkoutUpdate {
-	wu.mutation.SetCreatedAt(s)
+func (wu *WorkoutUpdate) SetCreatedAt(t time.Time) *WorkoutUpdate {
+	wu.mutation.SetCreatedAt(t)
 	return wu
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (wu *WorkoutUpdate) SetNillableCreatedAt(s *string) *WorkoutUpdate {
-	if s != nil {
-		wu.SetCreatedAt(*s)
+func (wu *WorkoutUpdate) SetNillableCreatedAt(t *time.Time) *WorkoutUpdate {
+	if t != nil {
+		wu.SetCreatedAt(*t)
 	}
 	return wu
 }
@@ -305,7 +306,7 @@ func (wu *WorkoutUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.AddField(workout.FieldSets, field.TypeInt, value)
 	}
 	if value, ok := wu.mutation.CreatedAt(); ok {
-		_spec.SetField(workout.FieldCreatedAt, field.TypeString, value)
+		_spec.SetField(workout.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := wu.mutation.Image(); ok {
 		_spec.SetField(workout.FieldImage, field.TypeJSON, value)
@@ -536,15 +537,15 @@ func (wuo *WorkoutUpdateOne) AddSets(i int) *WorkoutUpdateOne {
 }
 
 // SetCreatedAt sets the "created_at" field.
-func (wuo *WorkoutUpdateOne) SetCreatedAt(s string) *WorkoutUpdateOne {
-	wuo.mutation.SetCreatedAt(s)
+func (wuo *WorkoutUpdateOne) SetCreatedAt(t time.Time) *WorkoutUpdateOne {
+	wuo.mutation.SetCreatedAt(t)
 	return wuo
 }
 
 // SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
-func (wuo *WorkoutUpdateOne) SetNillableCreatedAt(s *string) *WorkoutUpdateOne {
-	if s != nil {
-		wuo.SetCreatedAt(*s)
+func (wuo *WorkoutUpdateOne) SetNillableCreatedAt(t *time.Time) *WorkoutUpdateOne {
+	if t != nil {
+		wuo.SetCreatedAt(*t)
 	}
 	return wuo
 }
@@ -782,7 +783,7 @@ func (wuo *WorkoutUpdateOne) sqlSave(ctx context.Context) (_node *Workout, err e
 		_spec.AddField(workout.FieldSets, field.TypeInt, value)
 	}
 	if value, ok := wuo.mutation.CreatedAt(); ok {
-		_spec.SetField(workout.FieldCreatedAt, field.TypeString, value)
+		_spec.SetField(workout.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := wuo.mutation.Image(); ok {
 		_spec.SetField(workout.FieldImage, field.TypeJSON, value)

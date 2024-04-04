@@ -1469,6 +1469,10 @@ input RoutineWhereInput {
   hasRoutineExercises: Boolean
   hasRoutineExercisesWith: [RoutineExerciseWhereInput!]
 }
+"""
+The builtin Time type
+"""
+scalar Time
 type Token implements Node {
   id: ID!
   expiry: String!
@@ -1608,7 +1612,7 @@ type User implements Node {
   email: String!
   username: String!
   name: String!
-  createdAt: String!
+  createdAt: Time!
   activated: Int!
   version: Int!
   tokens: [Token!]
@@ -1887,19 +1891,14 @@ input UserWhereInput {
   """
   created_at field predicates
   """
-  createdAt: String
-  createdAtNEQ: String
-  createdAtIn: [String!]
-  createdAtNotIn: [String!]
-  createdAtGT: String
-  createdAtGTE: String
-  createdAtLT: String
-  createdAtLTE: String
-  createdAtContains: String
-  createdAtHasPrefix: String
-  createdAtHasSuffix: String
-  createdAtEqualFold: String
-  createdAtContainsFold: String
+  createdAt: Time
+  createdAtNEQ: Time
+  createdAtIn: [Time!]
+  createdAtNotIn: [Time!]
+  createdAtGT: Time
+  createdAtGTE: Time
+  createdAtLT: Time
+  createdAtLTE: Time
   """
   activated field predicates
   """
@@ -1958,7 +1957,7 @@ type Workout implements Node {
   volume: Int!
   duration: String!
   sets: Int!
-  createdAt: String!
+  createdAt: Time!
   image: Image
   description: String
   userID: ID!
@@ -2059,7 +2058,7 @@ type WorkoutEdge {
 type WorkoutLog implements Node {
   id: ID!
   sets: [Set!]!
-  createdAt: String!
+  createdAt: Time!
   workoutID: ID!
   exerciseID: ID!
   userID: ID!
@@ -2138,19 +2137,14 @@ input WorkoutLogWhereInput {
   """
   created_at field predicates
   """
-  createdAt: String
-  createdAtNEQ: String
-  createdAtIn: [String!]
-  createdAtNotIn: [String!]
-  createdAtGT: String
-  createdAtGTE: String
-  createdAtLT: String
-  createdAtLTE: String
-  createdAtContains: String
-  createdAtHasPrefix: String
-  createdAtHasSuffix: String
-  createdAtEqualFold: String
-  createdAtContainsFold: String
+  createdAt: Time
+  createdAtNEQ: Time
+  createdAtIn: [Time!]
+  createdAtNotIn: [Time!]
+  createdAtGT: Time
+  createdAtGTE: Time
+  createdAtLT: Time
+  createdAtLTE: Time
 }
 """
 Ordering options for Workout connections
@@ -2231,19 +2225,14 @@ input WorkoutWhereInput {
   """
   created_at field predicates
   """
-  createdAt: String
-  createdAtNEQ: String
-  createdAtIn: [String!]
-  createdAtNotIn: [String!]
-  createdAtGT: String
-  createdAtGTE: String
-  createdAtLT: String
-  createdAtLTE: String
-  createdAtContains: String
-  createdAtHasPrefix: String
-  createdAtHasSuffix: String
-  createdAtEqualFold: String
-  createdAtContainsFold: String
+  createdAt: Time
+  createdAtNEQ: Time
+  createdAtIn: [Time!]
+  createdAtNotIn: [Time!]
+  createdAtGT: Time
+  createdAtGTE: Time
+  createdAtLT: Time
+  createdAtLTE: Time
   """
   description field predicates
   """
