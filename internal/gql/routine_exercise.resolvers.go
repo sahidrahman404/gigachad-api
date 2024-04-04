@@ -6,9 +6,11 @@ package gql
 
 import (
 	"context"
+	"fmt"
 
 	gigachadv1 "buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go/gigachad/v1"
 	"connectrpc.com/connect"
+	"github.com/google/uuid"
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
@@ -104,8 +106,8 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		return nil, err
 	}
 
-	routine, err := r.client.Routine.Query().
-		Where().
+	ro, err := r.client.Routine.Query().
+		Where(routine.ID(input.ID)).
 		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
 			req.WithExercises()
 			req.Order(ent.Asc(routineexercise.FieldOrder))
@@ -115,19 +117,18 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		return nil, r.defaultError(err)
 	}
 
-	reminders := types.UpdateReminders(
-		input.Reminders.Reminders,
-		routine.Reminders,
-		routine.ReminderID,
-	)
+	oldReminderID := types.GetOldReminderID(ro)
+
+	uuid := uuid.New()
+	newReminderID := fmt.Sprintf("%s-%s", "weekly-workout-reminder", uuid.String())
 
 	if err := r.WithTx(ctx, func(tx *ent.Tx) error {
 		txClient := tx.Client()
 		routine, err := txClient.Routine.
 			UpdateOneID(input.ID).
 			SetName(input.Name).
-			SetNillableReminderID(reminders.ID).
-			SetReminders(reminders.Reminders).
+			SetNillableReminderID(&newReminderID).
+			SetReminders(input.Reminders.Reminders).
 			SetUserID(user.ID).
 			Save(ctx)
 		if err != nil {
@@ -154,11 +155,18 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		return nil, r.serverError(err)
 	}
 
-	if !reminders.Update {
-		return r.client.Routine.Get(ctx, input.ID)
+	ro, err = r.client.Routine.Query().
+		Where(routine.ID(input.ID)).
+		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
+			req.WithExercises()
+			req.Order(ent.Asc(routineexercise.FieldOrder))
+		}).
+		Only(ctx)
+	if err != nil {
+		return nil, r.defaultError(err)
 	}
 
-	exercises := types.GetExercises(routine)
+	exercises := types.GetExercises(ro)
 
 	schedules := types.GetSchedules(input.Reminders.Reminders)
 
@@ -166,12 +174,12 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 
 	client.UpdateReminders(ctx, &connect.Request[gigachadv1.UpdateRemindersRequest]{
 		Msg: &gigachadv1.UpdateRemindersRequest{
-			OldReminderId: *routine.ReminderID,
+			OldReminderId: oldReminderID,
 			CreateRemindersRequest: &gigachadv1.CreateRemindersRequest{
-				ReminderId: *reminders.ID,
+				ReminderId: newReminderID,
 				Schedules:  schedules,
 				AddReminderRequest: &gigachadv1.AddReminderRequest{
-					ReminderId:   *reminders.ID,
+					ReminderId:   newReminderID,
 					UserLastName: userCtx.GetUserLastName(),
 					WorkoutName:  input.Name,
 					Email:        user.Email,
