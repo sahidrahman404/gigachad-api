@@ -351,24 +351,24 @@ func NameContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldName, v))
 }
 
-// UserPreferenceEQ applies the EQ predicate on the "user_preference" field.
-func UserPreferenceEQ(v UserPreference) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldUserPreference, v))
+// UnitEQ applies the EQ predicate on the "unit" field.
+func UnitEQ(v Unit) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldUnit, v))
 }
 
-// UserPreferenceNEQ applies the NEQ predicate on the "user_preference" field.
-func UserPreferenceNEQ(v UserPreference) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldUserPreference, v))
+// UnitNEQ applies the NEQ predicate on the "unit" field.
+func UnitNEQ(v Unit) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldUnit, v))
 }
 
-// UserPreferenceIn applies the In predicate on the "user_preference" field.
-func UserPreferenceIn(vs ...UserPreference) predicate.User {
-	return predicate.User(sql.FieldIn(FieldUserPreference, vs...))
+// UnitIn applies the In predicate on the "unit" field.
+func UnitIn(vs ...Unit) predicate.User {
+	return predicate.User(sql.FieldIn(FieldUnit, vs...))
 }
 
-// UserPreferenceNotIn applies the NotIn predicate on the "user_preference" field.
-func UserPreferenceNotIn(vs ...UserPreference) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldUserPreference, vs...))
+// UnitNotIn applies the NotIn predicate on the "unit" field.
+func UnitNotIn(vs ...Unit) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldUnit, vs...))
 }
 
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.

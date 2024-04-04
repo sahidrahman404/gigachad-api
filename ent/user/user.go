@@ -26,8 +26,8 @@ const (
 	FieldHashedPassword = "hashed_password"
 	// FieldName holds the string denoting the name field in the database.
 	FieldName = "name"
-	// FieldUserPreference holds the string denoting the user_preference field in the database.
-	FieldUserPreference = "user_preference"
+	// FieldUnit holds the string denoting the unit field in the database.
+	FieldUnit = "unit"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldActivated holds the string denoting the activated field in the database.
@@ -99,7 +99,7 @@ var Columns = []string{
 	FieldUsername,
 	FieldHashedPassword,
 	FieldName,
-	FieldUserPreference,
+	FieldUnit,
 	FieldCreatedAt,
 	FieldActivated,
 	FieldVersion,
@@ -126,29 +126,29 @@ var (
 	DefaultID func() pksuid.ID
 )
 
-// UserPreference defines the type for the "user_preference" enum field.
-type UserPreference string
+// Unit defines the type for the "unit" enum field.
+type Unit string
 
-// UserPreferenceMETRIC is the default value of the UserPreference enum.
-const DefaultUserPreference = UserPreferenceMETRIC
+// UnitMETRIC is the default value of the Unit enum.
+const DefaultUnit = UnitMETRIC
 
-// UserPreference values.
+// Unit values.
 const (
-	UserPreferenceMETRIC   UserPreference = "METRIC"
-	UserPreferenceIMPERIAL UserPreference = "IMPERIAL"
+	UnitMETRIC   Unit = "METRIC"
+	UnitIMPERIAL Unit = "IMPERIAL"
 )
 
-func (up UserPreference) String() string {
-	return string(up)
+func (u Unit) String() string {
+	return string(u)
 }
 
-// UserPreferenceValidator is a validator for the "user_preference" field enum values. It is called by the builders before save.
-func UserPreferenceValidator(up UserPreference) error {
-	switch up {
-	case UserPreferenceMETRIC, UserPreferenceIMPERIAL:
+// UnitValidator is a validator for the "unit" field enum values. It is called by the builders before save.
+func UnitValidator(u Unit) error {
+	switch u {
+	case UnitMETRIC, UnitIMPERIAL:
 		return nil
 	default:
-		return fmt.Errorf("user: invalid enum value for user_preference field: %q", up)
+		return fmt.Errorf("user: invalid enum value for unit field: %q", u)
 	}
 }
 
@@ -180,9 +180,9 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldName, opts...).ToFunc()
 }
 
-// ByUserPreference orders the results by the user_preference field.
-func ByUserPreference(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUserPreference, opts...).ToFunc()
+// ByUnit orders the results by the unit field.
+func ByUnit(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUnit, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
@@ -327,19 +327,19 @@ func newRoutineExercisesStep() *sqlgraph.Step {
 }
 
 // MarshalGQL implements graphql.Marshaler interface.
-func (e UserPreference) MarshalGQL(w io.Writer) {
+func (e Unit) MarshalGQL(w io.Writer) {
 	io.WriteString(w, strconv.Quote(e.String()))
 }
 
 // UnmarshalGQL implements graphql.Unmarshaler interface.
-func (e *UserPreference) UnmarshalGQL(val interface{}) error {
+func (e *Unit) UnmarshalGQL(val interface{}) error {
 	str, ok := val.(string)
 	if !ok {
 		return fmt.Errorf("enum %T must be a string", val)
 	}
-	*e = UserPreference(str)
-	if err := UserPreferenceValidator(*e); err != nil {
-		return fmt.Errorf("%s is not a valid UserPreference", str)
+	*e = Unit(str)
+	if err := UnitValidator(*e); err != nil {
+		return fmt.Errorf("%s is not a valid Unit", str)
 	}
 	return nil
 }

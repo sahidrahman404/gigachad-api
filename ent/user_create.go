@@ -54,16 +54,16 @@ func (uc *UserCreate) SetName(s string) *UserCreate {
 	return uc
 }
 
-// SetUserPreference sets the "user_preference" field.
-func (uc *UserCreate) SetUserPreference(up user.UserPreference) *UserCreate {
-	uc.mutation.SetUserPreference(up)
+// SetUnit sets the "unit" field.
+func (uc *UserCreate) SetUnit(u user.Unit) *UserCreate {
+	uc.mutation.SetUnit(u)
 	return uc
 }
 
-// SetNillableUserPreference sets the "user_preference" field if the given value is not nil.
-func (uc *UserCreate) SetNillableUserPreference(up *user.UserPreference) *UserCreate {
-	if up != nil {
-		uc.SetUserPreference(*up)
+// SetNillableUnit sets the "unit" field if the given value is not nil.
+func (uc *UserCreate) SetNillableUnit(u *user.Unit) *UserCreate {
+	if u != nil {
+		uc.SetUnit(*u)
 	}
 	return uc
 }
@@ -249,9 +249,9 @@ func (uc *UserCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (uc *UserCreate) defaults() {
-	if _, ok := uc.mutation.UserPreference(); !ok {
-		v := user.DefaultUserPreference
-		uc.mutation.SetUserPreference(v)
+	if _, ok := uc.mutation.Unit(); !ok {
+		v := user.DefaultUnit
+		uc.mutation.SetUnit(v)
 	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
 		v := user.DefaultCreatedAt
@@ -285,12 +285,12 @@ func (uc *UserCreate) check() error {
 	if _, ok := uc.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "User.name"`)}
 	}
-	if _, ok := uc.mutation.UserPreference(); !ok {
-		return &ValidationError{Name: "user_preference", err: errors.New(`ent: missing required field "User.user_preference"`)}
+	if _, ok := uc.mutation.Unit(); !ok {
+		return &ValidationError{Name: "unit", err: errors.New(`ent: missing required field "User.unit"`)}
 	}
-	if v, ok := uc.mutation.UserPreference(); ok {
-		if err := user.UserPreferenceValidator(v); err != nil {
-			return &ValidationError{Name: "user_preference", err: fmt.Errorf(`ent: validator failed for field "User.user_preference": %w`, err)}
+	if v, ok := uc.mutation.Unit(); ok {
+		if err := user.UnitValidator(v); err != nil {
+			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "User.unit": %w`, err)}
 		}
 	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
@@ -354,9 +354,9 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
-	if value, ok := uc.mutation.UserPreference(); ok {
-		_spec.SetField(user.FieldUserPreference, field.TypeEnum, value)
-		_node.UserPreference = value
+	if value, ok := uc.mutation.Unit(); ok {
+		_spec.SetField(user.FieldUnit, field.TypeEnum, value)
+		_node.Unit = value
 	}
 	if value, ok := uc.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
@@ -566,15 +566,15 @@ func (u *UserUpsert) UpdateName() *UserUpsert {
 	return u
 }
 
-// SetUserPreference sets the "user_preference" field.
-func (u *UserUpsert) SetUserPreference(v user.UserPreference) *UserUpsert {
-	u.Set(user.FieldUserPreference, v)
+// SetUnit sets the "unit" field.
+func (u *UserUpsert) SetUnit(v user.Unit) *UserUpsert {
+	u.Set(user.FieldUnit, v)
 	return u
 }
 
-// UpdateUserPreference sets the "user_preference" field to the value that was provided on create.
-func (u *UserUpsert) UpdateUserPreference() *UserUpsert {
-	u.SetExcluded(user.FieldUserPreference)
+// UpdateUnit sets the "unit" field to the value that was provided on create.
+func (u *UserUpsert) UpdateUnit() *UserUpsert {
+	u.SetExcluded(user.FieldUnit)
 	return u
 }
 
@@ -730,17 +730,17 @@ func (u *UserUpsertOne) UpdateName() *UserUpsertOne {
 	})
 }
 
-// SetUserPreference sets the "user_preference" field.
-func (u *UserUpsertOne) SetUserPreference(v user.UserPreference) *UserUpsertOne {
+// SetUnit sets the "unit" field.
+func (u *UserUpsertOne) SetUnit(v user.Unit) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.SetUserPreference(v)
+		s.SetUnit(v)
 	})
 }
 
-// UpdateUserPreference sets the "user_preference" field to the value that was provided on create.
-func (u *UserUpsertOne) UpdateUserPreference() *UserUpsertOne {
+// UpdateUnit sets the "unit" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateUnit() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
-		s.UpdateUserPreference()
+		s.UpdateUnit()
 	})
 }
 
@@ -1071,17 +1071,17 @@ func (u *UserUpsertBulk) UpdateName() *UserUpsertBulk {
 	})
 }
 
-// SetUserPreference sets the "user_preference" field.
-func (u *UserUpsertBulk) SetUserPreference(v user.UserPreference) *UserUpsertBulk {
+// SetUnit sets the "unit" field.
+func (u *UserUpsertBulk) SetUnit(v user.Unit) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.SetUserPreference(v)
+		s.SetUnit(v)
 	})
 }
 
-// UpdateUserPreference sets the "user_preference" field to the value that was provided on create.
-func (u *UserUpsertBulk) UpdateUserPreference() *UserUpsertBulk {
+// UpdateUnit sets the "unit" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateUnit() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
-		s.UpdateUserPreference()
+		s.UpdateUnit()
 	})
 }
 

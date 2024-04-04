@@ -21,11 +21,11 @@ import (
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error) {
 	params := types.CreateUserParams{
-		Username:       input.Username,
-		Email:          input.Email,
-		Password:       input.HashedPassword,
-		Name:           input.Name,
-		UserPreference: input.UserPreference,
+		Username: input.Username,
+		Email:    input.Email,
+		Password: input.HashedPassword,
+		Name:     input.Name,
+		Unit:     input.Unit,
 	}
 
 	v := validator.NewValidator()
@@ -46,7 +46,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input ent.CreateUserI
 			SetEmail(user.Ent.Email).
 			SetHashedPassword(user.Ent.HashedPassword).
 			SetName(user.Ent.Name).
-			SetUserPreference(user.Ent.UserPreference).
+			SetUnit(user.Ent.Unit).
 			Save(ctx)
 		if err != nil {
 			return err

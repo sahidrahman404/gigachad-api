@@ -155,7 +155,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			user.FieldUsername:       {Type: field.TypeString, Column: user.FieldUsername},
 			user.FieldHashedPassword: {Type: field.TypeString, Column: user.FieldHashedPassword},
 			user.FieldName:           {Type: field.TypeString, Column: user.FieldName},
-			user.FieldUserPreference: {Type: field.TypeEnum, Column: user.FieldUserPreference},
+			user.FieldUnit:           {Type: field.TypeEnum, Column: user.FieldUnit},
 			user.FieldCreatedAt:      {Type: field.TypeTime, Column: user.FieldCreatedAt},
 			user.FieldActivated:      {Type: field.TypeInt, Column: user.FieldActivated},
 			user.FieldVersion:        {Type: field.TypeInt, Column: user.FieldVersion},
@@ -1285,9 +1285,9 @@ func (f *UserFilter) WhereName(p entql.StringP) {
 	f.Where(p.Field(user.FieldName))
 }
 
-// WhereUserPreference applies the entql string predicate on the user_preference field.
-func (f *UserFilter) WhereUserPreference(p entql.StringP) {
-	f.Where(p.Field(user.FieldUserPreference))
+// WhereUnit applies the entql string predicate on the unit field.
+func (f *UserFilter) WhereUnit(p entql.StringP) {
+	f.Where(p.Field(user.FieldUnit))
 }
 
 // WhereCreatedAt applies the entql time.Time predicate on the created_at field.

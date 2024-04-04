@@ -5021,7 +5021,7 @@ type UserMutation struct {
 	username                 *string
 	hashed_password          *string
 	name                     *string
-	user_preference          *user.UserPreference
+	unit                     *user.Unit
 	created_at               *time.Time
 	activated                *int
 	addactivated             *int
@@ -5299,40 +5299,40 @@ func (m *UserMutation) ResetName() {
 	m.name = nil
 }
 
-// SetUserPreference sets the "user_preference" field.
-func (m *UserMutation) SetUserPreference(up user.UserPreference) {
-	m.user_preference = &up
+// SetUnit sets the "unit" field.
+func (m *UserMutation) SetUnit(u user.Unit) {
+	m.unit = &u
 }
 
-// UserPreference returns the value of the "user_preference" field in the mutation.
-func (m *UserMutation) UserPreference() (r user.UserPreference, exists bool) {
-	v := m.user_preference
+// Unit returns the value of the "unit" field in the mutation.
+func (m *UserMutation) Unit() (r user.Unit, exists bool) {
+	v := m.unit
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldUserPreference returns the old "user_preference" field's value of the User entity.
+// OldUnit returns the old "unit" field's value of the User entity.
 // If the User object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *UserMutation) OldUserPreference(ctx context.Context) (v user.UserPreference, err error) {
+func (m *UserMutation) OldUnit(ctx context.Context) (v user.Unit, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUserPreference is only allowed on UpdateOne operations")
+		return v, errors.New("OldUnit is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUserPreference requires an ID field in the mutation")
+		return v, errors.New("OldUnit requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUserPreference: %w", err)
+		return v, fmt.Errorf("querying old value for OldUnit: %w", err)
 	}
-	return oldValue.UserPreference, nil
+	return oldValue.Unit, nil
 }
 
-// ResetUserPreference resets all changes to the "user_preference" field.
-func (m *UserMutation) ResetUserPreference() {
-	m.user_preference = nil
+// ResetUnit resets all changes to the "unit" field.
+func (m *UserMutation) ResetUnit() {
+	m.unit = nil
 }
 
 // SetCreatedAt sets the "created_at" field.
@@ -5854,8 +5854,8 @@ func (m *UserMutation) Fields() []string {
 	if m.name != nil {
 		fields = append(fields, user.FieldName)
 	}
-	if m.user_preference != nil {
-		fields = append(fields, user.FieldUserPreference)
+	if m.unit != nil {
+		fields = append(fields, user.FieldUnit)
 	}
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
@@ -5882,8 +5882,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.HashedPassword()
 	case user.FieldName:
 		return m.Name()
-	case user.FieldUserPreference:
-		return m.UserPreference()
+	case user.FieldUnit:
+		return m.Unit()
 	case user.FieldCreatedAt:
 		return m.CreatedAt()
 	case user.FieldActivated:
@@ -5907,8 +5907,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldHashedPassword(ctx)
 	case user.FieldName:
 		return m.OldName(ctx)
-	case user.FieldUserPreference:
-		return m.OldUserPreference(ctx)
+	case user.FieldUnit:
+		return m.OldUnit(ctx)
 	case user.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case user.FieldActivated:
@@ -5952,12 +5952,12 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetName(v)
 		return nil
-	case user.FieldUserPreference:
-		v, ok := value.(user.UserPreference)
+	case user.FieldUnit:
+		v, ok := value.(user.Unit)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetUserPreference(v)
+		m.SetUnit(v)
 		return nil
 	case user.FieldCreatedAt:
 		v, ok := value.(time.Time)
@@ -6068,8 +6068,8 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldName:
 		m.ResetName()
 		return nil
-	case user.FieldUserPreference:
-		m.ResetUserPreference()
+	case user.FieldUnit:
+		m.ResetUnit()
 		return nil
 	case user.FieldCreatedAt:
 		m.ResetCreatedAt()

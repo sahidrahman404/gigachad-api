@@ -464,7 +464,7 @@ table "users" {
     null = false
     type = text
   }
-  column "user_preference" {
+  column "unit" {
     null    = false
     type    = text
     default = "METRIC"

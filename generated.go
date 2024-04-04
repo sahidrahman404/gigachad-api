@@ -294,7 +294,7 @@ type ComplexityRoot struct {
 		RoutineExercises func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineExerciseOrder, where *ent.RoutineExerciseWhereInput) int
 		Routines         func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.RoutineOrder, where *ent.RoutineWhereInput) int
 		Tokens           func(childComplexity int) int
-		UserPreference   func(childComplexity int) int
+		Unit             func(childComplexity int) int
 		Username         func(childComplexity int) int
 		Version          func(childComplexity int) int
 		WorkoutLogs      func(childComplexity int, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) int
@@ -1691,12 +1691,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.User.Tokens(childComplexity), true
 
-	case "User.userPreference":
-		if e.complexity.User.UserPreference == nil {
+	case "User.unit":
+		if e.complexity.User.Unit == nil {
 			break
 		}
 
-		return e.complexity.User.UserPreference(childComplexity), true
+		return e.complexity.User.Unit(childComplexity), true
 
 	case "User.username":
 		if e.complexity.User.Username == nil {
@@ -4247,8 +4247,8 @@ func (ec *executionContext) fieldContext_AuthenticationToken_user(ctx context.Co
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -5073,8 +5073,8 @@ func (ec *executionContext) fieldContext_Exercise_users(ctx context.Context, fie
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -7479,8 +7479,8 @@ func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -7745,8 +7745,8 @@ func (ec *executionContext) fieldContext_Mutation_createActivationToken(ctx cont
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -7830,8 +7830,8 @@ func (ec *executionContext) fieldContext_Mutation_createPasswordResetToken(ctx c
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -9432,8 +9432,8 @@ func (ec *executionContext) fieldContext_Query_viewer(ctx context.Context, field
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -10186,8 +10186,8 @@ func (ec *executionContext) fieldContext_Routine_users(ctx context.Context, fiel
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -11020,8 +11020,8 @@ func (ec *executionContext) fieldContext_RoutineExercise_users(ctx context.Conte
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -11891,8 +11891,8 @@ func (ec *executionContext) fieldContext_Token_users(ctx context.Context, field 
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -12094,8 +12094,8 @@ func (ec *executionContext) fieldContext_User_name(ctx context.Context, field gr
 	return fc, nil
 }
 
-func (ec *executionContext) _User_userPreference(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_userPreference(ctx, field)
+func (ec *executionContext) _User_unit(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_unit(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -12108,7 +12108,7 @@ func (ec *executionContext) _User_userPreference(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.UserPreference, nil
+		return obj.Unit, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12120,19 +12120,19 @@ func (ec *executionContext) _User_userPreference(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(user.UserPreference)
+	res := resTmp.(user.Unit)
 	fc.Result = res
-	return ec.marshalNUserUserPreference2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx, field.Selections, res)
+	return ec.marshalNUserUnit2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_User_userPreference(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_User_unit(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UserUserPreference does not have child fields")
+			return nil, errors.New("field of type UserUnit does not have child fields")
 		},
 	}
 	return fc, nil
@@ -12827,8 +12827,8 @@ func (ec *executionContext) fieldContext_UserEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -13325,8 +13325,8 @@ func (ec *executionContext) fieldContext_Workout_users(ctx context.Context, fiel
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -14053,8 +14053,8 @@ func (ec *executionContext) fieldContext_WorkoutLog_users(ctx context.Context, f
 				return ec.fieldContext_User_username(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "userPreference":
-				return ec.fieldContext_User_userPreference(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_User_createdAt(ctx, field)
 			case "activated":
@@ -16523,7 +16523,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"email", "username", "hashedPassword", "name", "userPreference", "tokenIDs", "exerciseIDs", "routineIDs", "workoutIDs"}
+	fieldsInOrder := [...]string{"email", "username", "hashedPassword", "name", "unit", "tokenIDs", "exerciseIDs", "routineIDs", "workoutIDs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -16558,13 +16558,13 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Name = data
-		case "userPreference":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userPreference"))
-			data, err := ec.unmarshalOUserUserPreference2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx, v)
+		case "unit":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unit"))
+			data, err := ec.unmarshalOUserUnit2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.UserPreference = data
+			it.Unit = data
 		case "tokenIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tokenIDs"))
 			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐIDᚄ(ctx, v)
@@ -19818,7 +19818,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"email", "username", "hashedPassword", "name", "userPreference", "addTokenIDs", "removeTokenIDs", "clearTokens", "addExerciseIDs", "removeExerciseIDs", "clearExercises", "addRoutineIDs", "removeRoutineIDs", "clearRoutines", "addWorkoutIDs", "removeWorkoutIDs", "clearWorkouts"}
+	fieldsInOrder := [...]string{"email", "username", "hashedPassword", "name", "unit", "addTokenIDs", "removeTokenIDs", "clearTokens", "addExerciseIDs", "removeExerciseIDs", "clearExercises", "addRoutineIDs", "removeRoutineIDs", "clearRoutines", "addWorkoutIDs", "removeWorkoutIDs", "clearWorkouts"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -19853,13 +19853,13 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Name = data
-		case "userPreference":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userPreference"))
-			data, err := ec.unmarshalOUserUserPreference2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx, v)
+		case "unit":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unit"))
+			data, err := ec.unmarshalOUserUnit2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.UserPreference = data
+			it.Unit = data
 		case "addTokenIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("addTokenIDs"))
 			data, err := ec.unmarshalOID2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐIDᚄ(ctx, v)
@@ -19995,7 +19995,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "email", "emailNEQ", "emailIn", "emailNotIn", "emailGT", "emailGTE", "emailLT", "emailLTE", "emailContains", "emailHasPrefix", "emailHasSuffix", "emailEqualFold", "emailContainsFold", "username", "usernameNEQ", "usernameIn", "usernameNotIn", "usernameGT", "usernameGTE", "usernameLT", "usernameLTE", "usernameContains", "usernameHasPrefix", "usernameHasSuffix", "usernameEqualFold", "usernameContainsFold", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "userPreference", "userPreferenceNEQ", "userPreferenceIn", "userPreferenceNotIn", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "activated", "activatedNEQ", "activatedIn", "activatedNotIn", "activatedGT", "activatedGTE", "activatedLT", "activatedLTE", "version", "versionNEQ", "versionIn", "versionNotIn", "versionGT", "versionGTE", "versionLT", "versionLTE", "hasTokens", "hasTokensWith", "hasExercises", "hasExercisesWith", "hasRoutines", "hasRoutinesWith", "hasWorkouts", "hasWorkoutsWith", "hasWorkoutLogs", "hasWorkoutLogsWith", "hasRoutineExercises", "hasRoutineExercisesWith"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "email", "emailNEQ", "emailIn", "emailNotIn", "emailGT", "emailGTE", "emailLT", "emailLTE", "emailContains", "emailHasPrefix", "emailHasSuffix", "emailEqualFold", "emailContainsFold", "username", "usernameNEQ", "usernameIn", "usernameNotIn", "usernameGT", "usernameGTE", "usernameLT", "usernameLTE", "usernameContains", "usernameHasPrefix", "usernameHasSuffix", "usernameEqualFold", "usernameContainsFold", "name", "nameNEQ", "nameIn", "nameNotIn", "nameGT", "nameGTE", "nameLT", "nameLTE", "nameContains", "nameHasPrefix", "nameHasSuffix", "nameEqualFold", "nameContainsFold", "unit", "unitNEQ", "unitIn", "unitNotIn", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "activated", "activatedNEQ", "activatedIn", "activatedNotIn", "activatedGT", "activatedGTE", "activatedLT", "activatedLTE", "version", "versionNEQ", "versionIn", "versionNotIn", "versionGT", "versionGTE", "versionLT", "versionLTE", "hasTokens", "hasTokensWith", "hasExercises", "hasExercisesWith", "hasRoutines", "hasRoutinesWith", "hasWorkouts", "hasWorkoutsWith", "hasWorkoutLogs", "hasWorkoutLogsWith", "hasRoutineExercises", "hasRoutineExercisesWith"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -20352,34 +20352,34 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 				return it, err
 			}
 			it.NameContainsFold = data
-		case "userPreference":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userPreference"))
-			data, err := ec.unmarshalOUserUserPreference2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx, v)
+		case "unit":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unit"))
+			data, err := ec.unmarshalOUserUnit2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.UserPreference = data
-		case "userPreferenceNEQ":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userPreferenceNEQ"))
-			data, err := ec.unmarshalOUserUserPreference2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx, v)
+			it.Unit = data
+		case "unitNEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unitNEQ"))
+			data, err := ec.unmarshalOUserUnit2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.UserPreferenceNEQ = data
-		case "userPreferenceIn":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userPreferenceIn"))
-			data, err := ec.unmarshalOUserUserPreference2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreferenceᚄ(ctx, v)
+			it.UnitNEQ = data
+		case "unitIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unitIn"))
+			data, err := ec.unmarshalOUserUnit2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnitᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.UserPreferenceIn = data
-		case "userPreferenceNotIn":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userPreferenceNotIn"))
-			data, err := ec.unmarshalOUserUserPreference2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreferenceᚄ(ctx, v)
+			it.UnitIn = data
+		case "unitNotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unitNotIn"))
+			data, err := ec.unmarshalOUserUnit2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnitᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.UserPreferenceNotIn = data
+			it.UnitNotIn = data
 		case "createdAt":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("createdAt"))
 			data, err := ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
@@ -23977,8 +23977,8 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "userPreference":
-			out.Values[i] = ec._User_userPreference(ctx, field, obj)
+		case "unit":
+			out.Values[i] = ec._User_unit(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
@@ -25947,13 +25947,13 @@ func (ec *executionContext) marshalNUserOrderField2ᚖgithubᚗcomᚋsahidrahman
 	return v
 }
 
-func (ec *executionContext) unmarshalNUserUserPreference2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx context.Context, v interface{}) (user.UserPreference, error) {
-	var res user.UserPreference
+func (ec *executionContext) unmarshalNUserUnit2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx context.Context, v interface{}) (user.Unit, error) {
+	var res user.Unit
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUserUserPreference2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx context.Context, sel ast.SelectionSet, v user.UserPreference) graphql.Marshaler {
+func (ec *executionContext) marshalNUserUnit2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx context.Context, sel ast.SelectionSet, v user.Unit) graphql.Marshaler {
 	return v
 }
 
@@ -27490,7 +27490,7 @@ func (ec *executionContext) unmarshalOUserOrder2ᚖgithubᚗcomᚋsahidrahman404
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOUserUserPreference2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreferenceᚄ(ctx context.Context, v interface{}) ([]user.UserPreference, error) {
+func (ec *executionContext) unmarshalOUserUnit2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnitᚄ(ctx context.Context, v interface{}) ([]user.Unit, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -27499,10 +27499,10 @@ func (ec *executionContext) unmarshalOUserUserPreference2ᚕgithubᚗcomᚋsahid
 		vSlice = graphql.CoerceList(v)
 	}
 	var err error
-	res := make([]user.UserPreference, len(vSlice))
+	res := make([]user.Unit, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUserUserPreference2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNUserUnit2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -27510,7 +27510,7 @@ func (ec *executionContext) unmarshalOUserUserPreference2ᚕgithubᚗcomᚋsahid
 	return res, nil
 }
 
-func (ec *executionContext) marshalOUserUserPreference2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreferenceᚄ(ctx context.Context, sel ast.SelectionSet, v []user.UserPreference) graphql.Marshaler {
+func (ec *executionContext) marshalOUserUnit2ᚕgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnitᚄ(ctx context.Context, sel ast.SelectionSet, v []user.Unit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -27537,7 +27537,7 @@ func (ec *executionContext) marshalOUserUserPreference2ᚕgithubᚗcomᚋsahidra
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUserUserPreference2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx, sel, v[i])
+			ret[i] = ec.marshalNUserUnit2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -27557,16 +27557,16 @@ func (ec *executionContext) marshalOUserUserPreference2ᚕgithubᚗcomᚋsahidra
 	return ret
 }
 
-func (ec *executionContext) unmarshalOUserUserPreference2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx context.Context, v interface{}) (*user.UserPreference, error) {
+func (ec *executionContext) unmarshalOUserUnit2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx context.Context, v interface{}) (*user.Unit, error) {
 	if v == nil {
 		return nil, nil
 	}
-	var res = new(user.UserPreference)
+	var res = new(user.Unit)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOUserUserPreference2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUserPreference(ctx context.Context, sel ast.SelectionSet, v *user.UserPreference) graphql.Marshaler {
+func (ec *executionContext) marshalOUserUnit2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx context.Context, sel ast.SelectionSet, v *user.Unit) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

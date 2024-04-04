@@ -32,7 +32,7 @@ func (User) Fields() []ent.Field {
 		field.String("hashed_password").
 			Sensitive(),
 		field.String("name"),
-		field.Enum("user_preference").
+		field.Enum("unit").
 			Values("METRIC", "IMPERIAL").
 			Default("METRIC"),
 		field.Time("created_at").Default(time.Now().UTC()).

@@ -91,16 +91,16 @@ func (uu *UserUpdate) SetNillableName(s *string) *UserUpdate {
 	return uu
 }
 
-// SetUserPreference sets the "user_preference" field.
-func (uu *UserUpdate) SetUserPreference(up user.UserPreference) *UserUpdate {
-	uu.mutation.SetUserPreference(up)
+// SetUnit sets the "unit" field.
+func (uu *UserUpdate) SetUnit(u user.Unit) *UserUpdate {
+	uu.mutation.SetUnit(u)
 	return uu
 }
 
-// SetNillableUserPreference sets the "user_preference" field if the given value is not nil.
-func (uu *UserUpdate) SetNillableUserPreference(up *user.UserPreference) *UserUpdate {
-	if up != nil {
-		uu.SetUserPreference(*up)
+// SetNillableUnit sets the "unit" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableUnit(u *user.Unit) *UserUpdate {
+	if u != nil {
+		uu.SetUnit(*u)
 	}
 	return uu
 }
@@ -411,9 +411,9 @@ func (uu *UserUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (uu *UserUpdate) check() error {
-	if v, ok := uu.mutation.UserPreference(); ok {
-		if err := user.UserPreferenceValidator(v); err != nil {
-			return &ValidationError{Name: "user_preference", err: fmt.Errorf(`ent: validator failed for field "User.user_preference": %w`, err)}
+	if v, ok := uu.mutation.Unit(); ok {
+		if err := user.UnitValidator(v); err != nil {
+			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "User.unit": %w`, err)}
 		}
 	}
 	return nil
@@ -443,8 +443,8 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := uu.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
-	if value, ok := uu.mutation.UserPreference(); ok {
-		_spec.SetField(user.FieldUserPreference, field.TypeEnum, value)
+	if value, ok := uu.mutation.Unit(); ok {
+		_spec.SetField(user.FieldUnit, field.TypeEnum, value)
 	}
 	if value, ok := uu.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
@@ -807,16 +807,16 @@ func (uuo *UserUpdateOne) SetNillableName(s *string) *UserUpdateOne {
 	return uuo
 }
 
-// SetUserPreference sets the "user_preference" field.
-func (uuo *UserUpdateOne) SetUserPreference(up user.UserPreference) *UserUpdateOne {
-	uuo.mutation.SetUserPreference(up)
+// SetUnit sets the "unit" field.
+func (uuo *UserUpdateOne) SetUnit(u user.Unit) *UserUpdateOne {
+	uuo.mutation.SetUnit(u)
 	return uuo
 }
 
-// SetNillableUserPreference sets the "user_preference" field if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableUserPreference(up *user.UserPreference) *UserUpdateOne {
-	if up != nil {
-		uuo.SetUserPreference(*up)
+// SetNillableUnit sets the "unit" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableUnit(u *user.Unit) *UserUpdateOne {
+	if u != nil {
+		uuo.SetUnit(*u)
 	}
 	return uuo
 }
@@ -1140,9 +1140,9 @@ func (uuo *UserUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (uuo *UserUpdateOne) check() error {
-	if v, ok := uuo.mutation.UserPreference(); ok {
-		if err := user.UserPreferenceValidator(v); err != nil {
-			return &ValidationError{Name: "user_preference", err: fmt.Errorf(`ent: validator failed for field "User.user_preference": %w`, err)}
+	if v, ok := uuo.mutation.Unit(); ok {
+		if err := user.UnitValidator(v); err != nil {
+			return &ValidationError{Name: "unit", err: fmt.Errorf(`ent: validator failed for field "User.unit": %w`, err)}
 		}
 	}
 	return nil
@@ -1189,8 +1189,8 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 	if value, ok := uuo.mutation.Name(); ok {
 		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
-	if value, ok := uuo.mutation.UserPreference(); ok {
-		_spec.SetField(user.FieldUserPreference, field.TypeEnum, value)
+	if value, ok := uuo.mutation.Unit(); ok {
+		_spec.SetField(user.FieldUnit, field.TypeEnum, value)
 	}
 	if value, ok := uuo.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)

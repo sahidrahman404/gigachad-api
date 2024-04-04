@@ -24,11 +24,11 @@ const (
 var AnonymousUser = &User{}
 
 type CreateUserParams struct {
-	UserPreference *user.UserPreference `json:"userPreference"`
-	Username       string               `json:"username"`
-	Email          string               `json:"email"`
-	Password       string               `json:"password"`
-	Name           string               `json:"name"`
+	Unit     *user.Unit `json:"userPreference"`
+	Username string     `json:"username"`
+	Email    string     `json:"email"`
+	Password string     `json:"password"`
+	Name     string     `json:"name"`
 }
 
 type User struct {
@@ -47,7 +47,7 @@ func NewUserFromParams(params CreateUserParams) (*User, error) {
 			Email:          strings.ToLower(params.Email),
 			HashedPassword: *encpw,
 			Name:           params.NameCaser(),
-			UserPreference: params.GetUserPreference(),
+			Unit:           params.GetUserPreference(),
 		},
 	}, nil
 }
@@ -66,14 +66,14 @@ func (p CreateUserParams) NameCaser() string {
 	return caser.String(p.Name)
 }
 
-func (p CreateUserParams) GetUserPreference() user.UserPreference {
-	userPreference := user.DefaultUserPreference
+func (p CreateUserParams) GetUserPreference() user.Unit {
+	unit := user.DefaultUnit
 
-	if p.UserPreference != nil {
-		userPreference = *p.UserPreference
+	if p.Unit != nil {
+		unit = *p.Unit
 	}
 
-	return userPreference
+	return unit
 }
 
 func ValidateEmail(v *validator.Validator, email string) {
