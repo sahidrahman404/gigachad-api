@@ -1,10 +1,10 @@
 package schematype
 
 type Set struct {
-	Reps     *int    `json:"reps,omitempty"`
-	Weight   *int    `json:"weight,omitempty"`
-	Duration *string `json:"duration,omitempty"`
-	Length   *int    `json:"length,omitempty"`
+	Reps     *int     `json:"reps,omitempty"`
+	Weight   *float64 `json:"weight,omitempty"`
+	Duration *string  `json:"duration,omitempty"`
+	Length   *float64 `json:"length,omitempty"`
 }
 
 type SetDisplay struct {

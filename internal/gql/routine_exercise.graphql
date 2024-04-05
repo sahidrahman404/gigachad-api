@@ -1,15 +1,15 @@
 type Set {
   reps: Int
-  weight: Int
+  weight: Float
   duration: String
-  length: Int
+  length: Float
 }
 
 input SetInput {
   reps: Int
-  weight: Int
+  weight: Float
   duration: String
-  length: Int
+  length: Float
 }
 
 input RoutineExerciseInput {

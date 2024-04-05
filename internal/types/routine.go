@@ -14,7 +14,8 @@ import (
 
 var (
 	EntRoutineNotFound = `ent: routine not found`
-	zero               = 0
+	emptyInt           int
+	emptyFloat         float64
 	emptyString        = ""
 )
 
@@ -109,9 +110,9 @@ func GetExercises(r []*gigachad.RoutineExerciseInput) []*gigachadv1.Exercise {
 			setNilToEmptyValue(set)
 			sets = append(sets, &gigachadv1.Set{
 				Reps:     int32(*set.Reps),
-				Weight:   int32(*set.Weight),
+				Weight:   *set.Weight,
 				Duration: *set.Duration,
-				Length:   int32(*set.Length),
+				Length:   *set.Length,
 			})
 		}
 
@@ -141,11 +142,11 @@ func GetSchedules(reminders []*schematype.Reminder) []*gigachadv1.Schedule {
 
 func setNilToEmptyValue(s *schematype.Set) {
 	if s.Reps == nil {
-		s.Reps = &zero
+		s.Reps = &emptyInt
 	}
 
 	if s.Weight == nil {
-		s.Weight = &zero
+		s.Weight = &emptyFloat
 	}
 
 	if s.Duration == nil {
@@ -153,7 +154,7 @@ func setNilToEmptyValue(s *schematype.Set) {
 	}
 
 	if s.Length == nil {
-		s.Length = &zero
+		s.Length = &emptyFloat
 	}
 }
 

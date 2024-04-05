@@ -16,6 +16,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
@@ -172,3 +173,36 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 
 	return r.client.Routine.Get(ctx, input.ID)
 }
+
+// Weight is the resolver for the weight field.
+func (r *setResolver) Weight(ctx context.Context, obj *schematype.Set) (*float64, error) {
+	return obj.Weight, nil
+}
+
+// Length is the resolver for the length field.
+func (r *setResolver) Length(ctx context.Context, obj *schematype.Set) (*float64, error) {
+	return obj.Length, nil
+}
+
+// Weight is the resolver for the weight field.
+func (r *setInputResolver) Weight(ctx context.Context, obj *schematype.Set, data *float64) error {
+	obj.Weight = data
+	return nil
+}
+
+// Length is the resolver for the length field.
+func (r *setInputResolver) Length(ctx context.Context, obj *schematype.Set, data *float64) error {
+	obj.Length = data
+	return nil
+}
+
+// Set returns gigachad.SetResolver implementation.
+func (r *Resolver) Set() gigachad.SetResolver { return &setResolver{r} }
+
+// SetInput returns gigachad.SetInputResolver implementation.
+func (r *Resolver) SetInput() gigachad.SetInputResolver { return &setInputResolver{r} }
+
+type (
+	setResolver      struct{ *Resolver }
+	setInputResolver struct{ *Resolver }
+)
