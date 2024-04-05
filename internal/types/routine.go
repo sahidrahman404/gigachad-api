@@ -5,6 +5,7 @@ import (
 
 	gigachadv1 "buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go/gigachad/v1"
 	"github.com/google/uuid"
+	"github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
@@ -98,10 +99,10 @@ func UpdateReminders(
 	}
 }
 
-func GetExercises(r *ent.Routine) []*gigachadv1.Exercise {
+func GetExercises(r []*gigachad.RoutineExerciseInput) []*gigachadv1.Exercise {
 	exercises := []*gigachadv1.Exercise{}
 
-	for _, routine := range r.Edges.RoutineExercises {
+	for _, routine := range r {
 		sets := []*gigachadv1.Set{}
 
 		for _, set := range routine.Sets {
@@ -115,7 +116,7 @@ func GetExercises(r *ent.Routine) []*gigachadv1.Exercise {
 		}
 
 		exercises = append(exercises, &gigachadv1.Exercise{
-			Name:     routine.Edges.Exercises.Name,
+			Name:     routine.ExerciseName,
 			RestTime: restTimeMap[*routine.RestTime],
 			Sets:     sets,
 		})

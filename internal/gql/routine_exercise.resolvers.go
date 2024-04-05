@@ -66,18 +66,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		return r.client.Routine.Get(ctx, routineID)
 	}
 
-	routine, err := r.client.Routine.Query().
-		Where(routine.ID(routineID)).
-		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
-			req.WithExercises()
-			req.Order(ent.Asc(routineexercise.FieldOrder))
-		}).
-		Only(ctx)
-	if err != nil {
-		return r.client.Routine.Get(ctx, routineID)
-	}
-
-	exercises := types.GetExercises(routine)
+	exercises := types.GetExercises(input.RoutineExercises)
 
 	schedules := types.GetSchedules(input.Reminders)
 
@@ -156,18 +145,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		return nil, r.serverError(err)
 	}
 
-	ro, err = r.client.Routine.Query().
-		Where(routine.ID(input.ID)).
-		WithRoutineExercises(func(req *ent.RoutineExerciseQuery) {
-			req.WithExercises()
-			req.Order(ent.Asc(routineexercise.FieldOrder))
-		}).
-		Only(ctx)
-	if err != nil {
-		return nil, r.defaultError(err)
-	}
-
-	exercises := types.GetExercises(ro)
+	exercises := types.GetExercises(input.RoutineExercises)
 
 	schedules := types.GetSchedules(input.Reminders.Reminders)
 
