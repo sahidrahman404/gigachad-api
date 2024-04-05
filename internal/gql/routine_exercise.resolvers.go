@@ -126,7 +126,16 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		if err != nil {
 			return err
 		}
-		err = txClient.RoutineExercise.MapCreateBulk(
+
+		_, err = txClient.RoutineExercise.
+			Delete().
+			Where(routineexercise.RoutineID(routine.ID)).
+			Exec(ctx)
+		if err != nil {
+			return err
+		}
+
+		_, err = txClient.RoutineExercise.MapCreateBulk(
 			input.RoutineExercises,
 			func(c *ent.RoutineExerciseCreate, i int) {
 				c.SetNillableRestTime(input.RoutineExercises[i].RestTime).
@@ -135,10 +144,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 					SetExerciseID(input.RoutineExercises[i].ExerciseID).
 					SetUserID(user.ID).
 					SetOrder(i)
-			}).
-			OnConflict().
-			UpdateNewValues().
-			Exec(ctx)
+			}).Save(ctx)
 		if err != nil {
 			return err
 		}
