@@ -5,8 +5,8 @@ go 1.22
 toolchain go1.22.0
 
 require (
-	buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go v1.16.0-20240404051156-7ea21076aacb.1
-	buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go v1.33.0-20240404051156-7ea21076aacb.1
+	buf.build/gen/go/sahidrahman/gigachadapis/connectrpc/go v1.16.0-20240404151311-f405af49d31d.1
+	buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go v1.33.0-20240404151311-f405af49d31d.1
 	connectrpc.com/connect v1.16.0
 	entgo.io/contrib v0.4.6-0.20230615102013-704944fdc0f6
 	entgo.io/ent v0.13.1
@@ -26,13 +26,13 @@ require (
 	github.com/segmentio/ksuid v1.0.4
 	github.com/tursodatabase/libsql-client-go v0.0.0-20240401075953-8e79a99d828a
 	github.com/vektah/gqlparser/v2 v2.5.11
-	golang.org/x/crypto v0.21.0
-	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8
+	golang.org/x/crypto v0.22.0
+	golang.org/x/exp v0.0.0-20240404231335-c0f41cb1a7a0
 	golang.org/x/text v0.14.0
 )
 
 require (
-	ariga.io/atlas v0.21.0 // indirect
+	ariga.io/atlas v0.21.1 // indirect
 	buf.build/gen/go/restatedev/proto/protocolbuffers/go v1.33.0-20231213083047-6ea2d15aed8f.1 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
@@ -72,10 +72,11 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/zclconf/go-cty v1.14.4 // indirect
-	golang.org/x/mod v0.16.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/tools v0.19.0 // indirect
+	golang.org/x/mod v0.17.0 // indirect
+	golang.org/x/net v0.24.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/tools v0.20.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
