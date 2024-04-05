@@ -38,16 +38,10 @@ type CreateMusclesGroupInput struct {
 	Image *schematype.Image `json:"image"`
 }
 
-type CreateRoutineExerciseInput struct {
-	RestTime   *string           `json:"restTime,omitempty"`
-	Sets       []*schematype.Set `json:"sets,omitempty"`
-	ExerciseID pksuid.ID         `json:"exerciseID"`
-}
-
 type CreateRoutineWithChildrenInput struct {
-	Name             string                        `json:"name"`
-	Reminders        []*schematype.Reminder        `json:"reminders,omitempty"`
-	RoutineExercises []*CreateRoutineExerciseInput `json:"routineExercises,omitempty"`
+	Name             string                  `json:"name"`
+	Reminders        []*schematype.Reminder  `json:"reminders,omitempty"`
+	RoutineExercises []*RoutineExerciseInput `json:"routineExercises,omitempty"`
 }
 
 type CreateWorkoutLogInput struct {
@@ -91,6 +85,13 @@ type ResetUserPasswordResult struct {
 	TokenPlainText string `json:"tokenPlainText"`
 }
 
+type RoutineExerciseInput struct {
+	RestTime     *string           `json:"restTime,omitempty"`
+	Sets         []*schematype.Set `json:"sets,omitempty"`
+	ExerciseName string            `json:"exerciseName"`
+	ExerciseID   pksuid.ID         `json:"exerciseID"`
+}
+
 type Style struct {
 	Width       *string `json:"width,omitempty"`
 	Height      *string `json:"height,omitempty"`
@@ -108,20 +109,14 @@ type UpdateExerciseInput struct {
 	ExerciseTypeIDs []pksuid.ID       `json:"exerciseTypeIDs,omitempty"`
 }
 
-type UpdateRoutineExerciseInput struct {
-	RestTime   *string           `json:"restTime,omitempty"`
-	Sets       []*schematype.Set `json:"sets,omitempty"`
-	ExerciseID pksuid.ID         `json:"exerciseID"`
-}
-
 type UpdateRoutineReminderInput struct {
 	ID        *string                `json:"id,omitempty"`
 	Reminders []*schematype.Reminder `json:"reminders,omitempty"`
 }
 
 type UpdateRoutineWithChildrenInput struct {
-	ID               pksuid.ID                     `json:"id"`
-	Name             string                        `json:"name"`
-	Reminders        *UpdateRoutineReminderInput   `json:"reminders,omitempty"`
-	RoutineExercises []*UpdateRoutineExerciseInput `json:"routineExercises,omitempty"`
+	ID               pksuid.ID                   `json:"id"`
+	Name             string                      `json:"name"`
+	Reminders        *UpdateRoutineReminderInput `json:"reminders,omitempty"`
+	RoutineExercises []*RoutineExerciseInput     `json:"routineExercises,omitempty"`
 }

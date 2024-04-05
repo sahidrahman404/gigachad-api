@@ -2004,7 +2004,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateExerciseInput,
 		ec.unmarshalInputCreateExerciseTypeInput,
 		ec.unmarshalInputCreateMusclesGroupInput,
-		ec.unmarshalInputCreateRoutineExerciseInput,
 		ec.unmarshalInputCreateRoutineWithChildrenInput,
 		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputCreateWorkoutLogInput,
@@ -2024,6 +2023,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputReminderInput,
 		ec.unmarshalInputResetPasswordInput,
 		ec.unmarshalInputResetUserPasswordInput,
+		ec.unmarshalInputRoutineExerciseInput,
 		ec.unmarshalInputRoutineExerciseOrder,
 		ec.unmarshalInputRoutineExerciseWhereInput,
 		ec.unmarshalInputRoutineOrder,
@@ -2033,7 +2033,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputTokenWhereInput,
 		ec.unmarshalInputUpdateExerciseInput,
 		ec.unmarshalInputUpdateExerciseTypeInput,
-		ec.unmarshalInputUpdateRoutineExerciseInput,
 		ec.unmarshalInputUpdateRoutineReminderInput,
 		ec.unmarshalInputUpdateRoutineWithChildrenInput,
 		ec.unmarshalInputUpdateUserInput,
@@ -16434,47 +16433,6 @@ func (ec *executionContext) unmarshalInputCreateMusclesGroupInput(ctx context.Co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateRoutineExerciseInput(ctx context.Context, obj interface{}) (CreateRoutineExerciseInput, error) {
-	var it CreateRoutineExerciseInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"restTime", "sets", "exerciseID"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "restTime":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTime"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RestTime = data
-		case "sets":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
-			data, err := ec.unmarshalOSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Sets = data
-		case "exerciseID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exerciseID"))
-			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ExerciseID = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx context.Context, obj interface{}) (CreateRoutineWithChildrenInput, error) {
 	var it CreateRoutineWithChildrenInput
 	asMap := map[string]interface{}{}
@@ -16505,7 +16463,7 @@ func (ec *executionContext) unmarshalInputCreateRoutineWithChildrenInput(ctx con
 			it.Reminders = data
 		case "routineExercises":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("routineExercises"))
-			data, err := ec.unmarshalOCreateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInputᚄ(ctx, v)
+			data, err := ec.unmarshalORoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐRoutineExerciseInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18327,6 +18285,54 @@ func (ec *executionContext) unmarshalInputResetUserPasswordInput(ctx context.Con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputRoutineExerciseInput(ctx context.Context, obj interface{}) (RoutineExerciseInput, error) {
+	var it RoutineExerciseInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"restTime", "sets", "exerciseName", "exerciseID"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "restTime":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTime"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.RestTime = data
+		case "sets":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
+			data, err := ec.unmarshalOSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Sets = data
+		case "exerciseName":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exerciseName"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ExerciseName = data
+		case "exerciseID":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exerciseID"))
+			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ExerciseID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputRoutineExerciseOrder(ctx context.Context, obj interface{}) (ent.RoutineExerciseOrder, error) {
 	var it ent.RoutineExerciseOrder
 	asMap := map[string]interface{}{}
@@ -19688,47 +19694,6 @@ func (ec *executionContext) unmarshalInputUpdateExerciseTypeInput(ctx context.Co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateRoutineExerciseInput(ctx context.Context, obj interface{}) (UpdateRoutineExerciseInput, error) {
-	var it UpdateRoutineExerciseInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"restTime", "sets", "exerciseID"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "restTime":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("restTime"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.RestTime = data
-		case "sets":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sets"))
-			data, err := ec.unmarshalOSetInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋschematypeᚐSetᚄ(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Sets = data
-		case "exerciseID":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("exerciseID"))
-			data, err := ec.unmarshalNID2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋschemaᚋpksuidᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.ExerciseID = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateRoutineReminderInput(ctx context.Context, obj interface{}) (UpdateRoutineReminderInput, error) {
 	var it UpdateRoutineReminderInput
 	asMap := map[string]interface{}{}
@@ -19800,7 +19765,7 @@ func (ec *executionContext) unmarshalInputUpdateRoutineWithChildrenInput(ctx con
 			it.Reminders = data
 		case "routineExercises":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("routineExercises"))
-			data, err := ec.unmarshalOUpdateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInputᚄ(ctx, v)
+			data, err := ec.unmarshalORoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐRoutineExerciseInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25236,11 +25201,6 @@ func (ec *executionContext) unmarshalNCreateMusclesGroupInput2githubᚗcomᚋsah
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreateRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInput(ctx context.Context, v interface{}) (*CreateRoutineExerciseInput, error) {
-	res, err := ec.unmarshalInputCreateRoutineExerciseInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNCreateRoutineWithChildrenInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineWithChildrenInput(ctx context.Context, v interface{}) (CreateRoutineWithChildrenInput, error) {
 	res, err := ec.unmarshalInputCreateRoutineWithChildrenInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -25663,6 +25623,11 @@ func (ec *executionContext) marshalNRoutineExerciseConnection2ᚖgithubᚗcomᚋ
 	return ec._RoutineExerciseConnection(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐRoutineExerciseInput(ctx context.Context, v interface{}) (*RoutineExerciseInput, error) {
+	res, err := ec.unmarshalInputRoutineExerciseInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNRoutineExerciseOrderField2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrderField(ctx context.Context, v interface{}) (*ent.RoutineExerciseOrderField, error) {
 	var res = new(ent.RoutineExerciseOrderField)
 	err := res.UnmarshalGQL(v)
@@ -25891,11 +25856,6 @@ func (ec *executionContext) unmarshalNTokenWhereInput2ᚖgithubᚗcomᚋsahidrah
 func (ec *executionContext) unmarshalNUpdateExerciseInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateExerciseInput(ctx context.Context, v interface{}) (UpdateExerciseInput, error) {
 	res, err := ec.unmarshalInputUpdateExerciseInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdateRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInput(ctx context.Context, v interface{}) (*UpdateRoutineExerciseInput, error) {
-	res, err := ec.unmarshalInputUpdateRoutineExerciseInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpdateRoutineWithChildrenInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineWithChildrenInput(ctx context.Context, v interface{}) (UpdateRoutineWithChildrenInput, error) {
@@ -26323,26 +26283,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
-}
-
-func (ec *executionContext) unmarshalOCreateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInputᚄ(ctx context.Context, v interface{}) ([]*CreateRoutineExerciseInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*CreateRoutineExerciseInput, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNCreateRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateRoutineExerciseInput(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
 }
 
 func (ec *executionContext) unmarshalOCreateWorkoutLogInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐCreateWorkoutLogInputᚄ(ctx context.Context, v interface{}) ([]*CreateWorkoutLogInput, error) {
@@ -27114,6 +27054,26 @@ func (ec *executionContext) marshalORoutineExerciseEdge2ᚖgithubᚗcomᚋsahidr
 	return ec._RoutineExerciseEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalORoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐRoutineExerciseInputᚄ(ctx context.Context, v interface{}) ([]*RoutineExerciseInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*RoutineExerciseInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐRoutineExerciseInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
 func (ec *executionContext) unmarshalORoutineExerciseOrder2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐRoutineExerciseOrder(ctx context.Context, v interface{}) (*ent.RoutineExerciseOrder, error) {
 	if v == nil {
 		return nil, nil
@@ -27397,26 +27357,6 @@ func (ec *executionContext) unmarshalOTokenWhereInput2ᚖgithubᚗcomᚋsahidrah
 	}
 	res, err := ec.unmarshalInputTokenWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalOUpdateRoutineExerciseInput2ᚕᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInputᚄ(ctx context.Context, v interface{}) ([]*UpdateRoutineExerciseInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*UpdateRoutineExerciseInput, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUpdateRoutineExerciseInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineExerciseInput(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
 }
 
 func (ec *executionContext) unmarshalOUpdateRoutineReminderInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateRoutineReminderInput(ctx context.Context, v interface{}) (*UpdateRoutineReminderInput, error) {

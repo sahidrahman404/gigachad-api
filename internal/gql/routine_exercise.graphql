@@ -12,15 +12,10 @@ input SetInput {
   length: Int
 }
 
-input CreateRoutineExerciseInput {
+input RoutineExerciseInput {
   restTime: String
   sets: [SetInput!]
-  exerciseID: ID!
-}
-
-input UpdateRoutineExerciseInput {
-  restTime: String
-  sets: [SetInput!]
+  exerciseName: String!
   exerciseID: ID!
 }
 
@@ -46,14 +41,14 @@ input UpdateRoutineReminderInput {
 input CreateRoutineWithChildrenInput {
   name: String!
   reminders: [ReminderInput!]
-  routineExercises: [CreateRoutineExerciseInput!]
+  routineExercises: [RoutineExerciseInput!]
 }
 
 input UpdateRoutineWithChildrenInput {
   id: ID!
   name: String!
   reminders: UpdateRoutineReminderInput
-  routineExercises: [UpdateRoutineExerciseInput!]
+  routineExercises: [RoutineExerciseInput!]
 }
 
 extend type Mutation {
