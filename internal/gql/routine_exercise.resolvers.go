@@ -75,6 +75,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		Msg: &gigachadv1.CreateRemindersRequest{
 			UserId: string(user.ID),
 			AddReminderRequest: &gigachadv1.AddReminderRequest{
+				Unit:         userCtx.GetUnitEnum(),
 				ReminderId:   *reminderID,
 				UserLastName: userCtx.GetUserLastName(),
 				WorkoutName:  input.Name,
@@ -158,6 +159,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 				UserId:    string(user.ID),
 				Schedules: schedules,
 				AddReminderRequest: &gigachadv1.AddReminderRequest{
+					Unit:         userCtx.GetUnitEnum(),
 					ReminderId:   newReminderID,
 					UserLastName: userCtx.GetUserLastName(),
 					WorkoutName:  input.Name,

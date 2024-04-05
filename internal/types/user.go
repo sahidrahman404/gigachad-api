@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	gigachadv1 "buf.build/gen/go/sahidrahman/gigachadapis/protocolbuffers/go/gigachad/v1"
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/user"
@@ -141,4 +142,12 @@ func (u *User) GetUserLastName() string {
 	name := u.Ent.Name
 	names := strings.Split(name, " ")
 	return names[len(names)-1]
+}
+
+func (u *User) GetUnitEnum() gigachadv1.Unit {
+	result := gigachadv1.Unit_UNIT_METRIC_UNSPECIFIED
+	if u.Ent.Unit == user.UnitIMPERIAL {
+		result = gigachadv1.Unit_UNIT_IMPERIAL
+	}
+	return result
 }
