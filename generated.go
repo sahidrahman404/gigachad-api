@@ -47,8 +47,6 @@ type ResolverRoot interface {
 	Image() ImageResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
-	Set() SetResolver
-	SetInput() SetInputResolver
 }
 
 type DirectiveRoot struct {
@@ -396,17 +394,6 @@ type QueryResolver interface {
 	Workouts(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutOrder, where *ent.WorkoutWhereInput) (*ent.WorkoutConnection, error)
 	WorkoutLogs(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) (*ent.WorkoutLogConnection, error)
 	Viewer(ctx context.Context) (*ent.User, error)
-}
-type SetResolver interface {
-	Weight(ctx context.Context, obj *schematype.Set) (*float64, error)
-
-	Length(ctx context.Context, obj *schematype.Set) (*float64, error)
-}
-
-type SetInputResolver interface {
-	Weight(ctx context.Context, obj *schematype.Set, data *float64) error
-
-	Length(ctx context.Context, obj *schematype.Set, data *float64) error
 }
 
 type executableSchema struct {
@@ -11366,7 +11353,7 @@ func (ec *executionContext) _Set_weight(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Set().Weight(rctx, obj)
+		return obj.Weight, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11384,8 +11371,8 @@ func (ec *executionContext) fieldContext_Set_weight(ctx context.Context, field g
 	fc = &graphql.FieldContext{
 		Object:     "Set",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
 		},
@@ -11448,7 +11435,7 @@ func (ec *executionContext) _Set_length(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Set().Length(rctx, obj)
+		return obj.Length, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11466,8 +11453,8 @@ func (ec *executionContext) fieldContext_Set_length(ctx context.Context, field g
 	fc = &graphql.FieldContext{
 		Object:     "Set",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Float does not have child fields")
 		},
@@ -19133,9 +19120,7 @@ func (ec *executionContext) unmarshalInputSetInput(ctx context.Context, obj inte
 			if err != nil {
 				return it, err
 			}
-			if err = ec.resolvers.SetInput().Weight(ctx, &it, data); err != nil {
-				return it, err
-			}
+			it.Weight = data
 		case "duration":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("duration"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
@@ -19149,9 +19134,7 @@ func (ec *executionContext) unmarshalInputSetInput(ctx context.Context, obj inte
 			if err != nil {
 				return it, err
 			}
-			if err = ec.resolvers.SetInput().Length(ctx, &it, data); err != nil {
-				return it, err
-			}
+			it.Length = data
 		}
 	}
 
@@ -23766,73 +23749,11 @@ func (ec *executionContext) _Set(ctx context.Context, sel ast.SelectionSet, obj 
 		case "reps":
 			out.Values[i] = ec._Set_reps(ctx, field, obj)
 		case "weight":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Set_weight(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._Set_weight(ctx, field, obj)
 		case "duration":
 			out.Values[i] = ec._Set_duration(ctx, field, obj)
 		case "length":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Set_length(ctx, field, obj)
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			out.Values[i] = ec._Set_length(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

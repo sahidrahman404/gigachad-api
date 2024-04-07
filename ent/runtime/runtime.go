@@ -49,6 +49,8 @@ func init() {
 	exerciseHooks := schema.Exercise{}.Hooks()
 
 	exercise.Hooks[1] = exerciseHooks[0]
+
+	exercise.Hooks[2] = exerciseHooks[1]
 	exerciseMixinFields0 := exerciseMixin[0].Fields()
 	_ = exerciseMixinFields0
 	exerciseFields := schema.Exercise{}.Fields()

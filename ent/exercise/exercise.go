@@ -131,7 +131,7 @@ func ValidColumn(column string) bool {
 //
 //	import _ "github.com/sahidrahman404/gigachad-api/ent/runtime"
 var (
-	Hooks  [2]ent.Hook
+	Hooks  [3]ent.Hook
 	Policy ent.Policy
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() pksuid.ID
