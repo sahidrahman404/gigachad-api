@@ -78,5 +78,6 @@ func (Exercise) Annotations() []schema.Annotation {
 func (Exercise) Hooks() []ent.Hook {
 	return []ent.Hook{
 		DeleteExerciseImage(),
+    DeleteExerciseImageOnUpsert(),
 	}
 }

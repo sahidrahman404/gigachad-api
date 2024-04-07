@@ -38,5 +38,35 @@ func DeleteExerciseImage() ent.Hook {
 			return next.Mutate(ctx, em)
 		})
 	}
-	return hook.On(hk, ent.OpDeleteOne|ent.OpCreate)
+	return hook.On(hk, ent.OpDeleteOne)
+}
+
+func DeleteExerciseImageOnUpsert() ent.Hook {
+	hk := func(next ent.Mutator) ent.Mutator {
+		return hook.ExerciseFunc(func(ctx context.Context, em *ent.ExerciseMutation) (ent.Value, error) {
+			_, exists := em.Image()
+			if !exists {
+				return next.Mutate(ctx, em)
+			}
+			id, exists := em.ID()
+			if !exists {
+				return nil, ErrMissingExerciseIDField
+			}
+			ex, err := em.Client().Exercise.Get(ctx, id)
+			if err != nil {
+				return next.Mutate(ctx, em)
+			}
+			if ex.Image == nil {
+				return next.Mutate(ctx, em)
+			}
+
+			em.DeleteObjectInput.Key = &ex.Image.Filename
+			_, err = em.S3Client.DeleteObject(ctx, em.DeleteObjectInput)
+			if err != nil {
+				return nil, ErrDeletingExerciseImage
+			}
+			return next.Mutate(ctx, em)
+		})
+	}
+	return hook.On(hk, ent.OpCreate)
 }
