@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	ErrMissingImageField     = errors.New("image field is missing")
 	ErrDeletingExerciseImage = errors.New("failed deleting exercise image from bucket")
 	ErrExerciseNotFound      = errors.New("exercise record not found")
 	ErrExercise              = errors.New("cannot get exercise record")
+	ErrMissingExerciseIDField = errors.New("exercise ID field is missing")
 )
 
 func DeleteExerciseImage() ent.Hook {
@@ -20,11 +20,11 @@ func DeleteExerciseImage() ent.Hook {
 		return hook.ExerciseFunc(func(ctx context.Context, em *ent.ExerciseMutation) (ent.Value, error) {
 			id, exists := em.ID()
 			if !exists {
-				return nil, ErrMissingImageField
+				return nil, ErrMissingExerciseIDField
 			}
 			ex, err := em.Client().Exercise.Get(ctx, id)
 			if err != nil {
-				return next.Mutate(ctx, em)
+				return nil, ErrExerciseNotFound
 			}
 			if ex.Image == nil {
 				return next.Mutate(ctx, em)
