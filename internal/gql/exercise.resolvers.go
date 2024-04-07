@@ -42,8 +42,6 @@ func (r *mutationResolver) UpdateExercise(ctx context.Context, input gigachad.Up
 			SetName(input.Name).
 			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 			SetNillableUserID(userCtx.GetUserID()).
-			AddMusclesGroupIDs(input.MusclesGroupIDs...).
-			AddExerciseTypeIDs(input.ExerciseTypeIDs...).
 			OnConflict().
 			UpdateNewValues().
 			Exec(ctx)
@@ -57,8 +55,6 @@ func (r *mutationResolver) UpdateExercise(ctx context.Context, input gigachad.Up
 			SetImage(img.SetNillableImageField(input.Image, *r.awsCfg, r.imgproxy)).
 			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 			SetNillableUserID(userCtx.GetUserID()).
-			AddMusclesGroupIDs(input.MusclesGroupIDs...).
-			AddExerciseTypeIDs(input.ExerciseTypeIDs...).
 			OnConflict().
 			UpdateNewValues().
 			Exec(ctx)
