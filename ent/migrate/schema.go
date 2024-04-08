@@ -193,7 +193,7 @@ var (
 	// WorkoutsColumns holds the columns for the "workouts" table.
 	WorkoutsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
-		{Name: "volume", Type: field.TypeInt},
+		{Name: "volume", Type: field.TypeFloat64},
 		{Name: "duration", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeInt},
 		{Name: "created_at", Type: field.TypeTime},

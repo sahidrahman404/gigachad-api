@@ -50,7 +50,7 @@ type CreateWorkoutLogInput struct {
 }
 
 type CreateWorkoutWithChildrenInput struct {
-	Volume      int                      `json:"volume"`
+	Volume      float64                  `json:"volume"`
 	Duration    string                   `json:"duration"`
 	Sets        int                      `json:"sets"`
 	Image       *schematype.Image        `json:"image,omitempty"`

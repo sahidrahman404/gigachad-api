@@ -375,7 +375,7 @@ func (wq *WorkoutQuery) WithWorkoutLogs(opts ...func(*WorkoutLogQuery)) *Workout
 // Example:
 //
 //	var v []struct {
-//		Volume int `json:"volume,omitempty"`
+//		Volume float64 `json:"volume,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -398,7 +398,7 @@ func (wq *WorkoutQuery) GroupBy(field string, fields ...string) *WorkoutGroupBy 
 // Example:
 //
 //	var v []struct {
-//		Volume int `json:"volume,omitempty"`
+//		Volume float64 `json:"volume,omitempty"`
 //	}
 //
 //	client.Workout.Query().

@@ -34,23 +34,23 @@ func (wu *WorkoutUpdate) Where(ps ...predicate.Workout) *WorkoutUpdate {
 }
 
 // SetVolume sets the "volume" field.
-func (wu *WorkoutUpdate) SetVolume(i int) *WorkoutUpdate {
+func (wu *WorkoutUpdate) SetVolume(f float64) *WorkoutUpdate {
 	wu.mutation.ResetVolume()
-	wu.mutation.SetVolume(i)
+	wu.mutation.SetVolume(f)
 	return wu
 }
 
 // SetNillableVolume sets the "volume" field if the given value is not nil.
-func (wu *WorkoutUpdate) SetNillableVolume(i *int) *WorkoutUpdate {
-	if i != nil {
-		wu.SetVolume(*i)
+func (wu *WorkoutUpdate) SetNillableVolume(f *float64) *WorkoutUpdate {
+	if f != nil {
+		wu.SetVolume(*f)
 	}
 	return wu
 }
 
-// AddVolume adds i to the "volume" field.
-func (wu *WorkoutUpdate) AddVolume(i int) *WorkoutUpdate {
-	wu.mutation.AddVolume(i)
+// AddVolume adds f to the "volume" field.
+func (wu *WorkoutUpdate) AddVolume(f float64) *WorkoutUpdate {
+	wu.mutation.AddVolume(f)
 	return wu
 }
 
@@ -291,10 +291,10 @@ func (wu *WorkoutUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := wu.mutation.Volume(); ok {
-		_spec.SetField(workout.FieldVolume, field.TypeInt, value)
+		_spec.SetField(workout.FieldVolume, field.TypeFloat64, value)
 	}
 	if value, ok := wu.mutation.AddedVolume(); ok {
-		_spec.AddField(workout.FieldVolume, field.TypeInt, value)
+		_spec.AddField(workout.FieldVolume, field.TypeFloat64, value)
 	}
 	if value, ok := wu.mutation.Duration(); ok {
 		_spec.SetField(workout.FieldDuration, field.TypeString, value)
@@ -481,23 +481,23 @@ type WorkoutUpdateOne struct {
 }
 
 // SetVolume sets the "volume" field.
-func (wuo *WorkoutUpdateOne) SetVolume(i int) *WorkoutUpdateOne {
+func (wuo *WorkoutUpdateOne) SetVolume(f float64) *WorkoutUpdateOne {
 	wuo.mutation.ResetVolume()
-	wuo.mutation.SetVolume(i)
+	wuo.mutation.SetVolume(f)
 	return wuo
 }
 
 // SetNillableVolume sets the "volume" field if the given value is not nil.
-func (wuo *WorkoutUpdateOne) SetNillableVolume(i *int) *WorkoutUpdateOne {
-	if i != nil {
-		wuo.SetVolume(*i)
+func (wuo *WorkoutUpdateOne) SetNillableVolume(f *float64) *WorkoutUpdateOne {
+	if f != nil {
+		wuo.SetVolume(*f)
 	}
 	return wuo
 }
 
-// AddVolume adds i to the "volume" field.
-func (wuo *WorkoutUpdateOne) AddVolume(i int) *WorkoutUpdateOne {
-	wuo.mutation.AddVolume(i)
+// AddVolume adds f to the "volume" field.
+func (wuo *WorkoutUpdateOne) AddVolume(f float64) *WorkoutUpdateOne {
+	wuo.mutation.AddVolume(f)
 	return wuo
 }
 
@@ -768,10 +768,10 @@ func (wuo *WorkoutUpdateOne) sqlSave(ctx context.Context) (_node *Workout, err e
 		}
 	}
 	if value, ok := wuo.mutation.Volume(); ok {
-		_spec.SetField(workout.FieldVolume, field.TypeInt, value)
+		_spec.SetField(workout.FieldVolume, field.TypeFloat64, value)
 	}
 	if value, ok := wuo.mutation.AddedVolume(); ok {
-		_spec.AddField(workout.FieldVolume, field.TypeInt, value)
+		_spec.AddField(workout.FieldVolume, field.TypeFloat64, value)
 	}
 	if value, ok := wuo.mutation.Duration(); ok {
 		_spec.SetField(workout.FieldDuration, field.TypeString, value)

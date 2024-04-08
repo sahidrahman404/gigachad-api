@@ -29,8 +29,8 @@ type WorkoutCreate struct {
 }
 
 // SetVolume sets the "volume" field.
-func (wc *WorkoutCreate) SetVolume(i int) *WorkoutCreate {
-	wc.mutation.SetVolume(i)
+func (wc *WorkoutCreate) SetVolume(f float64) *WorkoutCreate {
+	wc.mutation.SetVolume(f)
 	return wc
 }
 
@@ -243,7 +243,7 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = &id
 	}
 	if value, ok := wc.mutation.Volume(); ok {
-		_spec.SetField(workout.FieldVolume, field.TypeInt, value)
+		_spec.SetField(workout.FieldVolume, field.TypeFloat64, value)
 		_node.Volume = value
 	}
 	if value, ok := wc.mutation.Duration(); ok {
@@ -375,7 +375,7 @@ type (
 )
 
 // SetVolume sets the "volume" field.
-func (u *WorkoutUpsert) SetVolume(v int) *WorkoutUpsert {
+func (u *WorkoutUpsert) SetVolume(v float64) *WorkoutUpsert {
 	u.Set(workout.FieldVolume, v)
 	return u
 }
@@ -387,7 +387,7 @@ func (u *WorkoutUpsert) UpdateVolume() *WorkoutUpsert {
 }
 
 // AddVolume adds v to the "volume" field.
-func (u *WorkoutUpsert) AddVolume(v int) *WorkoutUpsert {
+func (u *WorkoutUpsert) AddVolume(v float64) *WorkoutUpsert {
 	u.Add(workout.FieldVolume, v)
 	return u
 }
@@ -531,14 +531,14 @@ func (u *WorkoutUpsertOne) Update(set func(*WorkoutUpsert)) *WorkoutUpsertOne {
 }
 
 // SetVolume sets the "volume" field.
-func (u *WorkoutUpsertOne) SetVolume(v int) *WorkoutUpsertOne {
+func (u *WorkoutUpsertOne) SetVolume(v float64) *WorkoutUpsertOne {
 	return u.Update(func(s *WorkoutUpsert) {
 		s.SetVolume(v)
 	})
 }
 
 // AddVolume adds v to the "volume" field.
-func (u *WorkoutUpsertOne) AddVolume(v int) *WorkoutUpsertOne {
+func (u *WorkoutUpsertOne) AddVolume(v float64) *WorkoutUpsertOne {
 	return u.Update(func(s *WorkoutUpsert) {
 		s.AddVolume(v)
 	})
@@ -872,14 +872,14 @@ func (u *WorkoutUpsertBulk) Update(set func(*WorkoutUpsert)) *WorkoutUpsertBulk 
 }
 
 // SetVolume sets the "volume" field.
-func (u *WorkoutUpsertBulk) SetVolume(v int) *WorkoutUpsertBulk {
+func (u *WorkoutUpsertBulk) SetVolume(v float64) *WorkoutUpsertBulk {
 	return u.Update(func(s *WorkoutUpsert) {
 		s.SetVolume(v)
 	})
 }
 
 // AddVolume adds v to the "volume" field.
-func (u *WorkoutUpsertBulk) AddVolume(v int) *WorkoutUpsertBulk {
+func (u *WorkoutUpsertBulk) AddVolume(v float64) *WorkoutUpsertBulk {
 	return u.Update(func(s *WorkoutUpsert) {
 		s.AddVolume(v)
 	})

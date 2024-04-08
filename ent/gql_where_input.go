@@ -2879,14 +2879,14 @@ type WorkoutWhereInput struct {
 	IDLTE   *pksuid.ID  `json:"idLTE,omitempty"`
 
 	// "volume" field predicates.
-	Volume      *int  `json:"volume,omitempty"`
-	VolumeNEQ   *int  `json:"volumeNEQ,omitempty"`
-	VolumeIn    []int `json:"volumeIn,omitempty"`
-	VolumeNotIn []int `json:"volumeNotIn,omitempty"`
-	VolumeGT    *int  `json:"volumeGT,omitempty"`
-	VolumeGTE   *int  `json:"volumeGTE,omitempty"`
-	VolumeLT    *int  `json:"volumeLT,omitempty"`
-	VolumeLTE   *int  `json:"volumeLTE,omitempty"`
+	Volume      *float64  `json:"volume,omitempty"`
+	VolumeNEQ   *float64  `json:"volumeNEQ,omitempty"`
+	VolumeIn    []float64 `json:"volumeIn,omitempty"`
+	VolumeNotIn []float64 `json:"volumeNotIn,omitempty"`
+	VolumeGT    *float64  `json:"volumeGT,omitempty"`
+	VolumeGTE   *float64  `json:"volumeGTE,omitempty"`
+	VolumeLT    *float64  `json:"volumeLT,omitempty"`
+	VolumeLTE   *float64  `json:"volumeLTE,omitempty"`
 
 	// "duration" field predicates.
 	Duration             *string  `json:"duration,omitempty"`

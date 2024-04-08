@@ -57,7 +57,7 @@ func IDLTE(id pksuid.ID) predicate.Workout {
 }
 
 // Volume applies equality check predicate on the "volume" field. It's identical to VolumeEQ.
-func Volume(v int) predicate.Workout {
+func Volume(v float64) predicate.Workout {
 	return predicate.Workout(sql.FieldEQ(FieldVolume, v))
 }
 
@@ -87,42 +87,42 @@ func UserID(v pksuid.ID) predicate.Workout {
 }
 
 // VolumeEQ applies the EQ predicate on the "volume" field.
-func VolumeEQ(v int) predicate.Workout {
+func VolumeEQ(v float64) predicate.Workout {
 	return predicate.Workout(sql.FieldEQ(FieldVolume, v))
 }
 
 // VolumeNEQ applies the NEQ predicate on the "volume" field.
-func VolumeNEQ(v int) predicate.Workout {
+func VolumeNEQ(v float64) predicate.Workout {
 	return predicate.Workout(sql.FieldNEQ(FieldVolume, v))
 }
 
 // VolumeIn applies the In predicate on the "volume" field.
-func VolumeIn(vs ...int) predicate.Workout {
+func VolumeIn(vs ...float64) predicate.Workout {
 	return predicate.Workout(sql.FieldIn(FieldVolume, vs...))
 }
 
 // VolumeNotIn applies the NotIn predicate on the "volume" field.
-func VolumeNotIn(vs ...int) predicate.Workout {
+func VolumeNotIn(vs ...float64) predicate.Workout {
 	return predicate.Workout(sql.FieldNotIn(FieldVolume, vs...))
 }
 
 // VolumeGT applies the GT predicate on the "volume" field.
-func VolumeGT(v int) predicate.Workout {
+func VolumeGT(v float64) predicate.Workout {
 	return predicate.Workout(sql.FieldGT(FieldVolume, v))
 }
 
 // VolumeGTE applies the GTE predicate on the "volume" field.
-func VolumeGTE(v int) predicate.Workout {
+func VolumeGTE(v float64) predicate.Workout {
 	return predicate.Workout(sql.FieldGTE(FieldVolume, v))
 }
 
 // VolumeLT applies the LT predicate on the "volume" field.
-func VolumeLT(v int) predicate.Workout {
+func VolumeLT(v float64) predicate.Workout {
 	return predicate.Workout(sql.FieldLT(FieldVolume, v))
 }
 
 // VolumeLTE applies the LTE predicate on the "volume" field.
-func VolumeLTE(v int) predicate.Workout {
+func VolumeLTE(v float64) predicate.Workout {
 	return predicate.Workout(sql.FieldLTE(FieldVolume, v))
 }
 

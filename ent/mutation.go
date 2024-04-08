@@ -6304,8 +6304,8 @@ type WorkoutMutation struct {
 	op                  Op
 	typ                 string
 	id                  *pksuid.ID
-	volume              *int
-	addvolume           *int
+	volume              *float64
+	addvolume           *float64
 	duration            *string
 	sets                *int
 	addsets             *int
@@ -6431,13 +6431,13 @@ func (m *WorkoutMutation) IDs(ctx context.Context) ([]pksuid.ID, error) {
 }
 
 // SetVolume sets the "volume" field.
-func (m *WorkoutMutation) SetVolume(i int) {
-	m.volume = &i
+func (m *WorkoutMutation) SetVolume(f float64) {
+	m.volume = &f
 	m.addvolume = nil
 }
 
 // Volume returns the value of the "volume" field in the mutation.
-func (m *WorkoutMutation) Volume() (r int, exists bool) {
+func (m *WorkoutMutation) Volume() (r float64, exists bool) {
 	v := m.volume
 	if v == nil {
 		return
@@ -6448,7 +6448,7 @@ func (m *WorkoutMutation) Volume() (r int, exists bool) {
 // OldVolume returns the old "volume" field's value of the Workout entity.
 // If the Workout object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *WorkoutMutation) OldVolume(ctx context.Context) (v int, err error) {
+func (m *WorkoutMutation) OldVolume(ctx context.Context) (v float64, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldVolume is only allowed on UpdateOne operations")
 	}
@@ -6462,17 +6462,17 @@ func (m *WorkoutMutation) OldVolume(ctx context.Context) (v int, err error) {
 	return oldValue.Volume, nil
 }
 
-// AddVolume adds i to the "volume" field.
-func (m *WorkoutMutation) AddVolume(i int) {
+// AddVolume adds f to the "volume" field.
+func (m *WorkoutMutation) AddVolume(f float64) {
 	if m.addvolume != nil {
-		*m.addvolume += i
+		*m.addvolume += f
 	} else {
-		m.addvolume = &i
+		m.addvolume = &f
 	}
 }
 
 // AddedVolume returns the value that was added to the "volume" field in this mutation.
-func (m *WorkoutMutation) AddedVolume() (r int, exists bool) {
+func (m *WorkoutMutation) AddedVolume() (r float64, exists bool) {
 	v := m.addvolume
 	if v == nil {
 		return
@@ -7007,7 +7007,7 @@ func (m *WorkoutMutation) OldField(ctx context.Context, name string) (ent.Value,
 func (m *WorkoutMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case workout.FieldVolume:
-		v, ok := value.(int)
+		v, ok := value.(float64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -7091,7 +7091,7 @@ func (m *WorkoutMutation) AddedField(name string) (ent.Value, bool) {
 func (m *WorkoutMutation) AddField(name string, value ent.Value) error {
 	switch name {
 	case workout.FieldVolume:
-		v, ok := value.(int)
+		v, ok := value.(float64)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
