@@ -9,8 +9,10 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/privacy"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
+	"github.com/sahidrahman404/gigachad-api/rule"
 )
 
 // WorkoutLog holds the schema definition for the WorkoutLog entity.
@@ -21,6 +23,17 @@ type WorkoutLog struct {
 func (WorkoutLog) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		pksuid.MixinWithPrefix("WL"),
+	}
+}
+
+func (WorkoutLog) Policy() ent.Policy {
+	return privacy.Policy{
+		Mutation: privacy.MutationPolicy{
+			rule.FilterByUserIDRule(),
+		},
+		Query: privacy.QueryPolicy{
+			rule.FilterByUserIDRule(),
+		},
 	}
 }
 

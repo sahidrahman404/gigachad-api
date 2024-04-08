@@ -9,13 +9,26 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
+	"github.com/sahidrahman404/gigachad-api/ent/privacy"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
+	"github.com/sahidrahman404/gigachad-api/rule"
 )
 
 // Workout holds the schema definition for the Workout entity.
 type Workout struct {
 	ent.Schema
+}
+
+func (Workout) Policy() ent.Policy {
+	return privacy.Policy{
+		Mutation: privacy.MutationPolicy{
+			rule.FilterByUserIDRule(),
+		},
+		Query: privacy.QueryPolicy{
+			rule.FilterByUserIDRule(),
+		},
+	}
 }
 
 func (Workout) Mixin() []ent.Mixin {
