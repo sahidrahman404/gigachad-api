@@ -12,6 +12,7 @@ import (
 	"unicode"
 
 	"golang.org/x/exp/slices"
+	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )
@@ -225,4 +226,9 @@ func toInt64(i any) (int64, error) {
 	}
 
 	return 0, fmt.Errorf("unable to convert type %T to int", i)
+}
+
+func Titleize(s string) string {
+	caser := cases.Title(language.AmericanEnglish)
+	return caser.String(s)
 }
