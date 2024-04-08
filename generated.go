@@ -16656,13 +16656,20 @@ func (ec *executionContext) unmarshalInputCreateWorkoutWithChildrenInput(ctx con
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"volume", "duration", "sets", "image", "description", "workoutLogs"}
+	fieldsInOrder := [...]string{"name", "volume", "duration", "sets", "image", "description", "workoutLogs"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
 		case "volume":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("volume"))
 			data, err := ec.unmarshalNFloat2float64(ctx, v)

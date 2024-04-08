@@ -50,6 +50,7 @@ type CreateWorkoutLogInput struct {
 }
 
 type CreateWorkoutWithChildrenInput struct {
+	Name        string                   `json:"name"`
 	Volume      float64                  `json:"volume"`
 	Duration    string                   `json:"duration"`
 	Sets        int                      `json:"sets"`
