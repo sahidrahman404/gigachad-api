@@ -4,7 +4,7 @@ input CreateWorkoutLogInput {
 }
 
 input CreateWorkoutWithChildrenInput {
-  volume: Int!
+  volume: Float!
   duration: String!
   sets: Int!
   image: ImageInput
