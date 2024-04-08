@@ -9,6 +9,7 @@ import (
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
 	"github.com/sahidrahman404/gigachad-api/ent"
+	"github.com/sahidrahman404/gigachad-api/internal/funcs"
 	"github.com/sahidrahman404/gigachad-api/internal/img"
 	"github.com/sahidrahman404/gigachad-api/internal/purifier"
 )
@@ -18,7 +19,7 @@ func (r *mutationResolver) CreateExercise(ctx context.Context, input gigachad.Cr
 	uCtx := r.getUserFromCtx(ctx)
 
 	ex, err := r.client.Exercise.Create().
-		SetName(input.Name).
+		SetName(funcs.Titleize(input.Name)).
 		SetImage(img.SetNillableImageField(input.Image, *r.awsCfg, r.imgproxy)).
 		SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 		SetNillableUserID(uCtx.GetUserID()).
@@ -39,7 +40,7 @@ func (r *mutationResolver) UpdateExercise(ctx context.Context, input gigachad.Up
 	case nil:
 		err := r.client.Exercise.Create().
 			SetID(input.ID).
-			SetName(input.Name).
+			SetName(funcs.Titleize(input.Name)).
 			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 			SetNillableUserID(userCtx.GetUserID()).
 			OnConflict().
@@ -51,7 +52,7 @@ func (r *mutationResolver) UpdateExercise(ctx context.Context, input gigachad.Up
 	default:
 		err := r.client.Exercise.Create().
 			SetID(input.ID).
-			SetName(input.Name).
+			SetName(funcs.Titleize(input.Name)).
 			SetImage(img.SetNillableImageField(input.Image, *r.awsCfg, r.imgproxy)).
 			SetNillableHowTo(purifier.PurifyHTML(input.HowTo, r.purifier)).
 			SetNillableUserID(userCtx.GetUserID()).

@@ -16,6 +16,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent/routine"
 	"github.com/sahidrahman404/gigachad-api/ent/routineexercise"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
+	"github.com/sahidrahman404/gigachad-api/internal/funcs"
 	"github.com/sahidrahman404/gigachad-api/internal/types"
 )
 
@@ -36,7 +37,7 @@ func (r *mutationResolver) CreateRoutineWithChildren(ctx context.Context, input 
 		txClient := tx.Client()
 		routine, err := txClient.Routine.Create().
 			SetID(routineID).
-			SetName(input.Name).
+			SetName(funcs.Titleize(input.Name)).
 			SetNillableReminderID(reminderID).
 			SetReminders(reminders).
 			SetUserID(user.ID).
@@ -117,7 +118,7 @@ func (r *mutationResolver) UpdateRoutineWithChildren(ctx context.Context, input 
 		txClient := tx.Client()
 		routine, err := txClient.Routine.
 			UpdateOneID(input.ID).
-			SetName(input.Name).
+			SetName(funcs.Titleize(input.Name)).
 			SetNillableReminderID(&newReminderID).
 			SetReminders(input.Reminders.Reminders).
 			SetUserID(user.ID).
