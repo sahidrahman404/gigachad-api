@@ -28,6 +28,20 @@ type WorkoutCreate struct {
 	conflict []sql.ConflictOption
 }
 
+// SetName sets the "name" field.
+func (wc *WorkoutCreate) SetName(s string) *WorkoutCreate {
+	wc.mutation.SetName(s)
+	return wc
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (wc *WorkoutCreate) SetNillableName(s *string) *WorkoutCreate {
+	if s != nil {
+		wc.SetName(*s)
+	}
+	return wc
+}
+
 // SetVolume sets the "volume" field.
 func (wc *WorkoutCreate) SetVolume(f float64) *WorkoutCreate {
 	wc.mutation.SetVolume(f)
@@ -176,6 +190,10 @@ func (wc *WorkoutCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (wc *WorkoutCreate) defaults() {
+	if _, ok := wc.mutation.Name(); !ok {
+		v := workout.DefaultName
+		wc.mutation.SetName(v)
+	}
 	if _, ok := wc.mutation.CreatedAt(); !ok {
 		v := workout.DefaultCreatedAt
 		wc.mutation.SetCreatedAt(v)
@@ -188,6 +206,9 @@ func (wc *WorkoutCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (wc *WorkoutCreate) check() error {
+	if _, ok := wc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Workout.name"`)}
+	}
 	if _, ok := wc.mutation.Volume(); !ok {
 		return &ValidationError{Name: "volume", err: errors.New(`ent: missing required field "Workout.volume"`)}
 	}
@@ -241,6 +262,10 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 	if id, ok := wc.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := wc.mutation.Name(); ok {
+		_spec.SetField(workout.FieldName, field.TypeString, value)
+		_node.Name = value
 	}
 	if value, ok := wc.mutation.Volume(); ok {
 		_spec.SetField(workout.FieldVolume, field.TypeFloat64, value)
@@ -329,7 +354,7 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 // of the `INSERT` statement. For example:
 //
 //	client.Workout.Create().
-//		SetVolume(v).
+//		SetName(v).
 //		OnConflict(
 //			// Update the row with the new values
 //			// the was proposed for insertion.
@@ -338,7 +363,7 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.WorkoutUpsert) {
-//			SetVolume(v+v).
+//			SetName(v+v).
 //		}).
 //		Exec(ctx)
 func (wc *WorkoutCreate) OnConflict(opts ...sql.ConflictOption) *WorkoutUpsertOne {
@@ -373,6 +398,18 @@ type (
 		*sql.UpdateSet
 	}
 )
+
+// SetName sets the "name" field.
+func (u *WorkoutUpsert) SetName(v string) *WorkoutUpsert {
+	u.Set(workout.FieldName, v)
+	return u
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *WorkoutUpsert) UpdateName() *WorkoutUpsert {
+	u.SetExcluded(workout.FieldName)
+	return u
+}
 
 // SetVolume sets the "volume" field.
 func (u *WorkoutUpsert) SetVolume(v float64) *WorkoutUpsert {
@@ -528,6 +565,20 @@ func (u *WorkoutUpsertOne) Update(set func(*WorkoutUpsert)) *WorkoutUpsertOne {
 		set(&WorkoutUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetName sets the "name" field.
+func (u *WorkoutUpsertOne) SetName(v string) *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *WorkoutUpsertOne) UpdateName() *WorkoutUpsertOne {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateName()
+	})
 }
 
 // SetVolume sets the "volume" field.
@@ -792,7 +843,7 @@ func (wcb *WorkoutCreateBulk) ExecX(ctx context.Context) {
 //		// Override some of the fields with custom
 //		// update values.
 //		Update(func(u *ent.WorkoutUpsert) {
-//			SetVolume(v+v).
+//			SetName(v+v).
 //		}).
 //		Exec(ctx)
 func (wcb *WorkoutCreateBulk) OnConflict(opts ...sql.ConflictOption) *WorkoutUpsertBulk {
@@ -869,6 +920,20 @@ func (u *WorkoutUpsertBulk) Update(set func(*WorkoutUpsert)) *WorkoutUpsertBulk 
 		set(&WorkoutUpsert{UpdateSet: update})
 	}))
 	return u
+}
+
+// SetName sets the "name" field.
+func (u *WorkoutUpsertBulk) SetName(v string) *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.SetName(v)
+	})
+}
+
+// UpdateName sets the "name" field to the value that was provided on create.
+func (u *WorkoutUpsertBulk) UpdateName() *WorkoutUpsertBulk {
+	return u.Update(func(s *WorkoutUpsert) {
+		s.UpdateName()
+	})
 }
 
 // SetVolume sets the "volume" field.

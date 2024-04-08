@@ -193,6 +193,7 @@ var (
 	// WorkoutsColumns holds the columns for the "workouts" table.
 	WorkoutsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Default: ""},
 		{Name: "volume", Type: field.TypeFloat64},
 		{Name: "duration", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeInt},
@@ -209,7 +210,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "workouts_users_workouts",
-				Columns:    []*schema.Column{WorkoutsColumns[7]},
+				Columns:    []*schema.Column{WorkoutsColumns[8]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},

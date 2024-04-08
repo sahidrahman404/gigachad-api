@@ -375,12 +375,12 @@ func (wq *WorkoutQuery) WithWorkoutLogs(opts ...func(*WorkoutLogQuery)) *Workout
 // Example:
 //
 //	var v []struct {
-//		Volume float64 `json:"volume,omitempty"`
+//		Name string `json:"name,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Workout.Query().
-//		GroupBy(workout.FieldVolume).
+//		GroupBy(workout.FieldName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (wq *WorkoutQuery) GroupBy(field string, fields ...string) *WorkoutGroupBy {
@@ -398,11 +398,11 @@ func (wq *WorkoutQuery) GroupBy(field string, fields ...string) *WorkoutGroupBy 
 // Example:
 //
 //	var v []struct {
-//		Volume float64 `json:"volume,omitempty"`
+//		Name string `json:"name,omitempty"`
 //	}
 //
 //	client.Workout.Query().
-//		Select(workout.FieldVolume).
+//		Select(workout.FieldName).
 //		Scan(ctx, &v)
 func (wq *WorkoutQuery) Select(fields ...string) *WorkoutSelect {
 	wq.ctx.Fields = append(wq.ctx.Fields, fields...)

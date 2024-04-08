@@ -481,6 +481,11 @@ table "workouts" {
     null = true
     type = text
   }
+  column "name" {
+    null    = false
+    type    = text
+    default = ""
+  }
   column "user_id" {
     null = false
     type = text

@@ -139,8 +139,12 @@ func init() {
 	_ = workoutMixinFields0
 	workoutFields := schema.Workout{}.Fields()
 	_ = workoutFields
+	// workoutDescName is the schema descriptor for name field.
+	workoutDescName := workoutFields[0].Descriptor()
+	// workout.DefaultName holds the default value on creation for the name field.
+	workout.DefaultName = workoutDescName.Default.(string)
 	// workoutDescCreatedAt is the schema descriptor for created_at field.
-	workoutDescCreatedAt := workoutFields[3].Descriptor()
+	workoutDescCreatedAt := workoutFields[4].Descriptor()
 	// workout.DefaultCreatedAt holds the default value on creation for the created_at field.
 	workout.DefaultCreatedAt = workoutDescCreatedAt.Default.(time.Time)
 	// workoutDescID is the schema descriptor for id field.

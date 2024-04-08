@@ -1,4 +1,4 @@
-h1:RZ5920FUzeZ9jEMH5/Ec6Sx2obF6YmGRqFL4SQqZI5Q=
+h1:qhck6fKXZ2xWmggRHIgaYiPs3ZtBHgBCLEaY5pa/ZqU=
 20230628141405_add-users-tokens-tables.sql h1:fuOJ2sHOMEP/24Ni9DT6j31fuudcRRBHP9FR3B+iabk=
 20230628144036_change-activated-column-type-to-int.sql h1:iGspKnS3bD1Of/VsA9jPiu/F0UQnIZkaVlhfop++diY=
 20230629131540_add-unique-constraint-to-users-table.sql h1:RTfWHMm4IFP3xoYPiVdY6LaLopPZcPiDXV9fCMojdUo=
@@ -36,3 +36,4 @@ h1:RZ5920FUzeZ9jEMH5/Ec6Sx2obF6YmGRqFL4SQqZI5Q=
 20240404071007_change-user-preference-default-value.sql h1:6OWYbLbAT+opSaOhOcoWqLUZdO5RJ/bCwYTebTkrcuE=
 20240404112238_change-user-preference-column-to-unit.sql h1:H9AhvpTOA2riQMHTZFVUWIx7hkaFTI7SjN03MhriDOs=
 20240408081837_change-volume-field-type-to-float.sql h1:Wm4HasutL6DaLj9nihD+EUwfYLwPHupr3et9NK2pAZk=
+20240408103351_add-name-column-to-workout-table.sql h1:fFHx1HsarQMoE+rBAE0cAy1q9LupiFwFF1hv7bo8UZk=
