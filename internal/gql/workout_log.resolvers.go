@@ -26,6 +26,7 @@ func (r *mutationResolver) CreateWorkoutWithChildren(ctx context.Context, input 
 		txClient := tx.Client()
 		workout, err := txClient.Workout.Create().
 			SetID(workoutID).
+			SetName(input.Name).
 			SetVolume(input.Volume).
 			SetDuration(input.Duration).
 			SetSets(input.Sets).
