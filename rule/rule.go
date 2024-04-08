@@ -38,7 +38,7 @@ func AllowIfAdmin() privacy.QueryMutationRule {
 	})
 }
 
-func FilterRoutineRule() privacy.QueryMutationRule {
+func FilterByUserIDRule() privacy.QueryMutationRule {
 	type UsersFilter interface {
 		WhereUserID(p entql.StringP)
 	}

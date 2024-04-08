@@ -21,10 +21,10 @@ type Routine struct {
 func (Routine) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			rule.FilterRoutineRule(),
+			rule.FilterByUserIDRule(),
 		},
 		Query: privacy.QueryPolicy{
-			rule.FilterRoutineRule(),
+			rule.FilterByUserIDRule(),
 		},
 	}
 }
