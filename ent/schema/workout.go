@@ -27,6 +27,7 @@ func (Workout) Mixin() []ent.Mixin {
 // Fields of the Workout.
 func (Workout) Fields() []ent.Field {
 	return []ent.Field{
+		field.String("name").Default(""),
 		field.Float("volume"),
 		field.String("duration"),
 		field.Int("sets"),
