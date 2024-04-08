@@ -48,6 +48,10 @@ func FilterByUserIDRule() privacy.QueryMutationRule {
 			return AuthenticationRequired
 		}
 
+		if userCtx.Ent.Activated == 0 {
+			return InactiveAccountErr
+		}
+
 		uf, ok := f.(UsersFilter)
 		if !ok {
 			return privacy.Denyf("unexpected filter type %T", f)
