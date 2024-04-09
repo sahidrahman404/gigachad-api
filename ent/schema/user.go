@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
@@ -35,7 +33,7 @@ func (User) Fields() []ent.Field {
 		field.Enum("unit").
 			Values("METRIC", "IMPERIAL").
 			Default("METRIC"),
-		field.Time("created_at").Default(time.Now().UTC()).
+		field.Time("created_at").Default(generateTime).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.Int("activated").
 			Default(0).

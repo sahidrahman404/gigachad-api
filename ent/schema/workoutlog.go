@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
@@ -41,7 +39,7 @@ func (WorkoutLog) Policy() ent.Policy {
 func (WorkoutLog) Fields() []ent.Field {
 	return []ent.Field{
 		field.JSON("sets", []*schematype.Set{}).Annotations(entgql.Type("[Set!]")),
-		field.Time("created_at").Default(time.Now().UTC()).
+		field.Time("created_at").Default(generateTime).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.String("workout_id").GoType(pksuid.ID("")),
 		field.String("exercise_id").GoType(pksuid.ID("")),

@@ -15,6 +15,6 @@ func generateKSUID() string {
 	return k.String()
 }
 
-func generateTime() string {
-	return time.Now().Format(time.RFC3339)
+func generateTime() time.Time {
+	return time.Now().UTC()
 }

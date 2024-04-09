@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
@@ -45,7 +43,7 @@ func (Workout) Fields() []ent.Field {
 		field.String("duration"),
 		field.Int("sets"),
 		field.Time("created_at").
-			Default(time.Now().UTC()).
+			Default(generateTime).
 			Annotations(entgql.Skip(entgql.SkipMutationCreateInput, entgql.SkipMutationUpdateInput)),
 		field.JSON("image", &schematype.Image{}).Annotations(entgql.Type("Image")).Optional(),
 		field.String("description").Optional().Nillable(),
