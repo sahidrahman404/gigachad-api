@@ -2808,6 +2808,11 @@ func (wl *WorkoutLogQuery) collectField(ctx context.Context, opCtx *graphql.Oper
 				selectedFields = append(selectedFields, workoutlog.FieldUserID)
 				fieldSeen[workoutlog.FieldUserID] = struct{}{}
 			}
+		case "order":
+			if _, ok := fieldSeen[workoutlog.FieldOrder]; !ok {
+				selectedFields = append(selectedFields, workoutlog.FieldOrder)
+				fieldSeen[workoutlog.FieldOrder] = struct{}{}
+			}
 		case "id":
 		case "__typename":
 		default:

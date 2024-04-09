@@ -102,6 +102,27 @@ func (wlu *WorkoutLogUpdate) SetNillableUserID(pk *pksuid.ID) *WorkoutLogUpdate 
 	return wlu
 }
 
+// SetOrder sets the "order" field.
+func (wlu *WorkoutLogUpdate) SetOrder(i int) *WorkoutLogUpdate {
+	wlu.mutation.ResetOrder()
+	wlu.mutation.SetOrder(i)
+	return wlu
+}
+
+// SetNillableOrder sets the "order" field if the given value is not nil.
+func (wlu *WorkoutLogUpdate) SetNillableOrder(i *int) *WorkoutLogUpdate {
+	if i != nil {
+		wlu.SetOrder(*i)
+	}
+	return wlu
+}
+
+// AddOrder adds i to the "order" field.
+func (wlu *WorkoutLogUpdate) AddOrder(i int) *WorkoutLogUpdate {
+	wlu.mutation.AddOrder(i)
+	return wlu
+}
+
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (wlu *WorkoutLogUpdate) SetUsersID(id pksuid.ID) *WorkoutLogUpdate {
 	wlu.mutation.SetUsersID(id)
@@ -221,6 +242,12 @@ func (wlu *WorkoutLogUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := wlu.mutation.CreatedAt(); ok {
 		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeTime, value)
+	}
+	if value, ok := wlu.mutation.Order(); ok {
+		_spec.SetField(workoutlog.FieldOrder, field.TypeInt, value)
+	}
+	if value, ok := wlu.mutation.AddedOrder(); ok {
+		_spec.AddField(workoutlog.FieldOrder, field.TypeInt, value)
 	}
 	if wlu.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -397,6 +424,27 @@ func (wluo *WorkoutLogUpdateOne) SetNillableUserID(pk *pksuid.ID) *WorkoutLogUpd
 	return wluo
 }
 
+// SetOrder sets the "order" field.
+func (wluo *WorkoutLogUpdateOne) SetOrder(i int) *WorkoutLogUpdateOne {
+	wluo.mutation.ResetOrder()
+	wluo.mutation.SetOrder(i)
+	return wluo
+}
+
+// SetNillableOrder sets the "order" field if the given value is not nil.
+func (wluo *WorkoutLogUpdateOne) SetNillableOrder(i *int) *WorkoutLogUpdateOne {
+	if i != nil {
+		wluo.SetOrder(*i)
+	}
+	return wluo
+}
+
+// AddOrder adds i to the "order" field.
+func (wluo *WorkoutLogUpdateOne) AddOrder(i int) *WorkoutLogUpdateOne {
+	wluo.mutation.AddOrder(i)
+	return wluo
+}
+
 // SetUsersID sets the "users" edge to the User entity by ID.
 func (wluo *WorkoutLogUpdateOne) SetUsersID(id pksuid.ID) *WorkoutLogUpdateOne {
 	wluo.mutation.SetUsersID(id)
@@ -546,6 +594,12 @@ func (wluo *WorkoutLogUpdateOne) sqlSave(ctx context.Context) (_node *WorkoutLog
 	}
 	if value, ok := wluo.mutation.CreatedAt(); ok {
 		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeTime, value)
+	}
+	if value, ok := wluo.mutation.Order(); ok {
+		_spec.SetField(workoutlog.FieldOrder, field.TypeInt, value)
+	}
+	if value, ok := wluo.mutation.AddedOrder(); ok {
+		_spec.AddField(workoutlog.FieldOrder, field.TypeInt, value)
 	}
 	if wluo.mutation.UsersCleared() {
 		edge := &sqlgraph.EdgeSpec{

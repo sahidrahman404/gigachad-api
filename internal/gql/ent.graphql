@@ -2080,6 +2080,7 @@ type WorkoutLog implements Node {
   workoutID: ID!
   exerciseID: ID!
   userID: ID!
+  order: Int!
   users: User!
   workouts: Workout!
   exercises: Exercise!
@@ -2132,6 +2133,7 @@ Properties by which WorkoutLog connections can be ordered.
 """
 enum WorkoutLogOrderField {
   ID
+  Order
 }
 """
 WorkoutLogWhereInput is used for filtering WorkoutLog objects.
@@ -2163,6 +2165,17 @@ input WorkoutLogWhereInput {
   createdAtGTE: Time
   createdAtLT: Time
   createdAtLTE: Time
+  """
+  order field predicates
+  """
+  order: Int
+  orderNEQ: Int
+  orderIn: [Int!]
+  orderNotIn: [Int!]
+  orderGT: Int
+  orderGTE: Int
+  orderLT: Int
+  orderLTE: Int
 }
 """
 Ordering options for Workout connections

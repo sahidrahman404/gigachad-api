@@ -372,6 +372,10 @@ table "workout_logs" {
     null = false
     type = text
   }
+  column "order" {
+    null = false
+    type = integer
+  }
   primary_key {
     columns = [column.id]
   }

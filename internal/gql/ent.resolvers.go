@@ -65,7 +65,7 @@ func (r *queryResolver) Workouts(ctx context.Context, after *entgql.Cursor[pksui
 
 // WorkoutLogs is the resolver for the workoutLogs field.
 func (r *queryResolver) WorkoutLogs(ctx context.Context, after *entgql.Cursor[pksuid.ID], first *int, before *entgql.Cursor[pksuid.ID], last *int, orderBy *ent.WorkoutLogOrder, where *ent.WorkoutLogWhereInput) (*ent.WorkoutLogConnection, error) {
-	return r.client.WorkoutLog.Query().Paginate(ctx, after, first, before, last, ent.WithWorkoutLogFilter(where.Filter))
+	return r.client.WorkoutLog.Query().Paginate(ctx, after, first, before, last, ent.WithWorkoutLogFilter(where.Filter), ent.WithWorkoutLogOrder(orderBy))
 }
 
 // Query returns gigachad.QueryResolver implementation.

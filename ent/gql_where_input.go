@@ -3449,6 +3449,16 @@ type WorkoutLogWhereInput struct {
 	UserIDEqualFold    *pksuid.ID  `json:"userIDEqualFold,omitempty"`
 	UserIDContainsFold *pksuid.ID  `json:"userIDContainsFold,omitempty"`
 
+	// "order" field predicates.
+	Order      *int  `json:"order,omitempty"`
+	OrderNEQ   *int  `json:"orderNEQ,omitempty"`
+	OrderIn    []int `json:"orderIn,omitempty"`
+	OrderNotIn []int `json:"orderNotIn,omitempty"`
+	OrderGT    *int  `json:"orderGT,omitempty"`
+	OrderGTE   *int  `json:"orderGTE,omitempty"`
+	OrderLT    *int  `json:"orderLT,omitempty"`
+	OrderLTE   *int  `json:"orderLTE,omitempty"`
+
 	// "users" edge predicates.
 	HasUsers     *bool             `json:"hasUsers,omitempty"`
 	HasUsersWith []*UserWhereInput `json:"hasUsersWith,omitempty"`
@@ -3697,6 +3707,30 @@ func (i *WorkoutLogWhereInput) P() (predicate.WorkoutLog, error) {
 	}
 	if i.UserIDContainsFold != nil {
 		predicates = append(predicates, workoutlog.UserIDContainsFold(*i.UserIDContainsFold))
+	}
+	if i.Order != nil {
+		predicates = append(predicates, workoutlog.OrderEQ(*i.Order))
+	}
+	if i.OrderNEQ != nil {
+		predicates = append(predicates, workoutlog.OrderNEQ(*i.OrderNEQ))
+	}
+	if len(i.OrderIn) > 0 {
+		predicates = append(predicates, workoutlog.OrderIn(i.OrderIn...))
+	}
+	if len(i.OrderNotIn) > 0 {
+		predicates = append(predicates, workoutlog.OrderNotIn(i.OrderNotIn...))
+	}
+	if i.OrderGT != nil {
+		predicates = append(predicates, workoutlog.OrderGT(*i.OrderGT))
+	}
+	if i.OrderGTE != nil {
+		predicates = append(predicates, workoutlog.OrderGTE(*i.OrderGTE))
+	}
+	if i.OrderLT != nil {
+		predicates = append(predicates, workoutlog.OrderLT(*i.OrderLT))
+	}
+	if i.OrderLTE != nil {
+		predicates = append(predicates, workoutlog.OrderLTE(*i.OrderLTE))
 	}
 
 	if i.HasUsers != nil {

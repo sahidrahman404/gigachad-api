@@ -343,6 +343,7 @@ type ComplexityRoot struct {
 		ExerciseID func(childComplexity int) int
 		Exercises  func(childComplexity int) int
 		ID         func(childComplexity int) int
+		Order      func(childComplexity int) int
 		Sets       func(childComplexity int) int
 		UserID     func(childComplexity int) int
 		Users      func(childComplexity int) int
@@ -1928,6 +1929,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.WorkoutLog.ID(childComplexity), true
+
+	case "WorkoutLog.order":
+		if e.complexity.WorkoutLog.Order == nil {
+			break
+		}
+
+		return e.complexity.WorkoutLog.Order(childComplexity), true
 
 	case "WorkoutLog.sets":
 		if e.complexity.WorkoutLog.Sets == nil {
@@ -14061,6 +14069,50 @@ func (ec *executionContext) fieldContext_WorkoutLog_userID(ctx context.Context, 
 	return fc, nil
 }
 
+func (ec *executionContext) _WorkoutLog_order(ctx context.Context, field graphql.CollectedField, obj *ent.WorkoutLog) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_WorkoutLog_order(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Order, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_WorkoutLog_order(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "WorkoutLog",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _WorkoutLog_users(ctx context.Context, field graphql.CollectedField, obj *ent.WorkoutLog) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_WorkoutLog_users(ctx, field)
 	if err != nil {
@@ -14470,6 +14522,8 @@ func (ec *executionContext) fieldContext_WorkoutLogEdge_node(ctx context.Context
 				return ec.fieldContext_WorkoutLog_exerciseID(ctx, field)
 			case "userID":
 				return ec.fieldContext_WorkoutLog_userID(ctx, field)
+			case "order":
+				return ec.fieldContext_WorkoutLog_order(ctx, field)
 			case "users":
 				return ec.fieldContext_WorkoutLog_users(ctx, field)
 			case "workouts":
@@ -20713,7 +20767,7 @@ func (ec *executionContext) unmarshalInputWorkoutLogWhereInput(ctx context.Conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE"}
+	fieldsInOrder := [...]string{"not", "and", "or", "id", "idNEQ", "idIn", "idNotIn", "idGT", "idGTE", "idLT", "idLTE", "createdAt", "createdAtNEQ", "createdAtIn", "createdAtNotIn", "createdAtGT", "createdAtGTE", "createdAtLT", "createdAtLTE", "order", "orderNEQ", "orderIn", "orderNotIn", "orderGT", "orderGTE", "orderLT", "orderLTE"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -20853,6 +20907,62 @@ func (ec *executionContext) unmarshalInputWorkoutLogWhereInput(ctx context.Conte
 				return it, err
 			}
 			it.CreatedAtLTE = data
+		case "order":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("order"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Order = data
+		case "orderNEQ":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderNEQ"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OrderNEQ = data
+		case "orderIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderIn"))
+			data, err := ec.unmarshalOInt2ᚕintᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OrderIn = data
+		case "orderNotIn":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderNotIn"))
+			data, err := ec.unmarshalOInt2ᚕintᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OrderNotIn = data
+		case "orderGT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderGT"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OrderGT = data
+		case "orderGTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderGTE"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OrderGTE = data
+		case "orderLT":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderLT"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OrderLT = data
+		case "orderLTE":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderLTE"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OrderLTE = data
 		}
 	}
 
@@ -24747,6 +24857,11 @@ func (ec *executionContext) _WorkoutLog(ctx context.Context, sel ast.SelectionSe
 			}
 		case "userID":
 			out.Values[i] = ec._WorkoutLog_userID(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "order":
+			out.Values[i] = ec._WorkoutLog_order(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}

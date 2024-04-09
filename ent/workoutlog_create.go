@@ -66,6 +66,12 @@ func (wlc *WorkoutLogCreate) SetUserID(pk pksuid.ID) *WorkoutLogCreate {
 	return wlc
 }
 
+// SetOrder sets the "order" field.
+func (wlc *WorkoutLogCreate) SetOrder(i int) *WorkoutLogCreate {
+	wlc.mutation.SetOrder(i)
+	return wlc
+}
+
 // SetID sets the "id" field.
 func (wlc *WorkoutLogCreate) SetID(pk pksuid.ID) *WorkoutLogCreate {
 	wlc.mutation.SetID(pk)
@@ -184,6 +190,9 @@ func (wlc *WorkoutLogCreate) check() error {
 	if _, ok := wlc.mutation.UserID(); !ok {
 		return &ValidationError{Name: "user_id", err: errors.New(`ent: missing required field "WorkoutLog.user_id"`)}
 	}
+	if _, ok := wlc.mutation.Order(); !ok {
+		return &ValidationError{Name: "order", err: errors.New(`ent: missing required field "WorkoutLog.order"`)}
+	}
 	if _, ok := wlc.mutation.UsersID(); !ok {
 		return &ValidationError{Name: "users", err: errors.New(`ent: missing required edge "WorkoutLog.users"`)}
 	}
@@ -236,6 +245,10 @@ func (wlc *WorkoutLogCreate) createSpec() (*WorkoutLog, *sqlgraph.CreateSpec) {
 	if value, ok := wlc.mutation.CreatedAt(); ok {
 		_spec.SetField(workoutlog.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
+	}
+	if value, ok := wlc.mutation.Order(); ok {
+		_spec.SetField(workoutlog.FieldOrder, field.TypeInt, value)
+		_node.Order = value
 	}
 	if nodes := wlc.mutation.UsersIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -400,6 +413,24 @@ func (u *WorkoutLogUpsert) UpdateUserID() *WorkoutLogUpsert {
 	return u
 }
 
+// SetOrder sets the "order" field.
+func (u *WorkoutLogUpsert) SetOrder(v int) *WorkoutLogUpsert {
+	u.Set(workoutlog.FieldOrder, v)
+	return u
+}
+
+// UpdateOrder sets the "order" field to the value that was provided on create.
+func (u *WorkoutLogUpsert) UpdateOrder() *WorkoutLogUpsert {
+	u.SetExcluded(workoutlog.FieldOrder)
+	return u
+}
+
+// AddOrder adds v to the "order" field.
+func (u *WorkoutLogUpsert) AddOrder(v int) *WorkoutLogUpsert {
+	u.Add(workoutlog.FieldOrder, v)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create except the ID field.
 // Using this option is equivalent to using:
 //
@@ -515,6 +546,27 @@ func (u *WorkoutLogUpsertOne) SetUserID(v pksuid.ID) *WorkoutLogUpsertOne {
 func (u *WorkoutLogUpsertOne) UpdateUserID() *WorkoutLogUpsertOne {
 	return u.Update(func(s *WorkoutLogUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetOrder sets the "order" field.
+func (u *WorkoutLogUpsertOne) SetOrder(v int) *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetOrder(v)
+	})
+}
+
+// AddOrder adds v to the "order" field.
+func (u *WorkoutLogUpsertOne) AddOrder(v int) *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.AddOrder(v)
+	})
+}
+
+// UpdateOrder sets the "order" field to the value that was provided on create.
+func (u *WorkoutLogUpsertOne) UpdateOrder() *WorkoutLogUpsertOne {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateOrder()
 	})
 }
 
@@ -800,6 +852,27 @@ func (u *WorkoutLogUpsertBulk) SetUserID(v pksuid.ID) *WorkoutLogUpsertBulk {
 func (u *WorkoutLogUpsertBulk) UpdateUserID() *WorkoutLogUpsertBulk {
 	return u.Update(func(s *WorkoutLogUpsert) {
 		s.UpdateUserID()
+	})
+}
+
+// SetOrder sets the "order" field.
+func (u *WorkoutLogUpsertBulk) SetOrder(v int) *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.SetOrder(v)
+	})
+}
+
+// AddOrder adds v to the "order" field.
+func (u *WorkoutLogUpsertBulk) AddOrder(v int) *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.AddOrder(v)
+	})
+}
+
+// UpdateOrder sets the "order" field to the value that was provided on create.
+func (u *WorkoutLogUpsertBulk) UpdateOrder() *WorkoutLogUpsertBulk {
+	return u.Update(func(s *WorkoutLogUpsert) {
+		s.UpdateOrder()
 	})
 }
 

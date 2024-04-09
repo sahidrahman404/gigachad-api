@@ -7362,6 +7362,8 @@ type WorkoutLogMutation struct {
 	sets             *[]*schematype.Set
 	appendsets       []*schematype.Set
 	created_at       *time.Time
+	_order           *int
+	add_order        *int
 	clearedFields    map[string]struct{}
 	users            *pksuid.ID
 	clearedusers     bool
@@ -7673,6 +7675,62 @@ func (m *WorkoutLogMutation) ResetUserID() {
 	m.users = nil
 }
 
+// SetOrder sets the "order" field.
+func (m *WorkoutLogMutation) SetOrder(i int) {
+	m._order = &i
+	m.add_order = nil
+}
+
+// Order returns the value of the "order" field in the mutation.
+func (m *WorkoutLogMutation) Order() (r int, exists bool) {
+	v := m._order
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOrder returns the old "order" field's value of the WorkoutLog entity.
+// If the WorkoutLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *WorkoutLogMutation) OldOrder(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOrder is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOrder requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOrder: %w", err)
+	}
+	return oldValue.Order, nil
+}
+
+// AddOrder adds i to the "order" field.
+func (m *WorkoutLogMutation) AddOrder(i int) {
+	if m.add_order != nil {
+		*m.add_order += i
+	} else {
+		m.add_order = &i
+	}
+}
+
+// AddedOrder returns the value that was added to the "order" field in this mutation.
+func (m *WorkoutLogMutation) AddedOrder() (r int, exists bool) {
+	v := m.add_order
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetOrder resets all changes to the "order" field.
+func (m *WorkoutLogMutation) ResetOrder() {
+	m._order = nil
+	m.add_order = nil
+}
+
 // SetUsersID sets the "users" edge to the User entity by id.
 func (m *WorkoutLogMutation) SetUsersID(id pksuid.ID) {
 	m.users = &id
@@ -7827,7 +7885,7 @@ func (m *WorkoutLogMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *WorkoutLogMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.sets != nil {
 		fields = append(fields, workoutlog.FieldSets)
 	}
@@ -7842,6 +7900,9 @@ func (m *WorkoutLogMutation) Fields() []string {
 	}
 	if m.users != nil {
 		fields = append(fields, workoutlog.FieldUserID)
+	}
+	if m._order != nil {
+		fields = append(fields, workoutlog.FieldOrder)
 	}
 	return fields
 }
@@ -7861,6 +7922,8 @@ func (m *WorkoutLogMutation) Field(name string) (ent.Value, bool) {
 		return m.ExerciseID()
 	case workoutlog.FieldUserID:
 		return m.UserID()
+	case workoutlog.FieldOrder:
+		return m.Order()
 	}
 	return nil, false
 }
@@ -7880,6 +7943,8 @@ func (m *WorkoutLogMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldExerciseID(ctx)
 	case workoutlog.FieldUserID:
 		return m.OldUserID(ctx)
+	case workoutlog.FieldOrder:
+		return m.OldOrder(ctx)
 	}
 	return nil, fmt.Errorf("unknown WorkoutLog field %s", name)
 }
@@ -7924,6 +7989,13 @@ func (m *WorkoutLogMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetUserID(v)
 		return nil
+	case workoutlog.FieldOrder:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOrder(v)
+		return nil
 	}
 	return fmt.Errorf("unknown WorkoutLog field %s", name)
 }
@@ -7931,13 +8003,21 @@ func (m *WorkoutLogMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *WorkoutLogMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.add_order != nil {
+		fields = append(fields, workoutlog.FieldOrder)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *WorkoutLogMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case workoutlog.FieldOrder:
+		return m.AddedOrder()
+	}
 	return nil, false
 }
 
@@ -7946,6 +8026,13 @@ func (m *WorkoutLogMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *WorkoutLogMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case workoutlog.FieldOrder:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddOrder(v)
+		return nil
 	}
 	return fmt.Errorf("unknown WorkoutLog numeric field %s", name)
 }
@@ -7987,6 +8074,9 @@ func (m *WorkoutLogMutation) ResetField(name string) error {
 		return nil
 	case workoutlog.FieldUserID:
 		m.ResetUserID()
+		return nil
+	case workoutlog.FieldOrder:
+		m.ResetOrder()
 		return nil
 	}
 	return fmt.Errorf("unknown WorkoutLog field %s", name)

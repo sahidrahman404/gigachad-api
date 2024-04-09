@@ -33,6 +33,8 @@ type WorkoutLog struct {
 	ExerciseID pksuid.ID `json:"exercise_id,omitempty"`
 	// UserID holds the value of the "user_id" field.
 	UserID pksuid.ID `json:"user_id,omitempty"`
+	// Order holds the value of the "order" field.
+	Order int `json:"order,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the WorkoutLogQuery when eager-loading is set.
 	Edges        WorkoutLogEdges `json:"edges"`
@@ -96,6 +98,8 @@ func (*WorkoutLog) scanValues(columns []string) ([]any, error) {
 			values[i] = new([]byte)
 		case workoutlog.FieldID, workoutlog.FieldWorkoutID, workoutlog.FieldExerciseID, workoutlog.FieldUserID:
 			values[i] = new(pksuid.ID)
+		case workoutlog.FieldOrder:
+			values[i] = new(sql.NullInt64)
 		case workoutlog.FieldCreatedAt:
 			values[i] = new(sql.NullTime)
 		default:
@@ -150,6 +154,12 @@ func (wl *WorkoutLog) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field user_id", values[i])
 			} else if value != nil {
 				wl.UserID = *value
+			}
+		case workoutlog.FieldOrder:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field order", values[i])
+			} else if value.Valid {
+				wl.Order = int(value.Int64)
 			}
 		default:
 			wl.selectValues.Set(columns[i], values[i])
@@ -216,6 +226,9 @@ func (wl *WorkoutLog) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("user_id=")
 	builder.WriteString(fmt.Sprintf("%v", wl.UserID))
+	builder.WriteString(", ")
+	builder.WriteString("order=")
+	builder.WriteString(fmt.Sprintf("%v", wl.Order))
 	builder.WriteByte(')')
 	return builder.String()
 }

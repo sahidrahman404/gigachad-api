@@ -3003,6 +3003,20 @@ var (
 			}
 		},
 	}
+	// WorkoutLogOrderFieldOrder orders WorkoutLog by order.
+	WorkoutLogOrderFieldOrder = &WorkoutLogOrderField{
+		Value: func(wl *WorkoutLog) (ent.Value, error) {
+			return wl.Order, nil
+		},
+		column: workoutlog.FieldOrder,
+		toTerm: workoutlog.ByOrder,
+		toCursor: func(wl *WorkoutLog) Cursor {
+			return Cursor{
+				ID:    wl.ID,
+				Value: wl.Order,
+			}
+		},
+	}
 )
 
 // String implement fmt.Stringer interface.
@@ -3011,6 +3025,8 @@ func (f WorkoutLogOrderField) String() string {
 	switch f.column {
 	case WorkoutLogOrderFieldID.column:
 		str = "ID"
+	case WorkoutLogOrderFieldOrder.column:
+		str = "Order"
 	}
 	return str
 }
@@ -3029,6 +3045,8 @@ func (f *WorkoutLogOrderField) UnmarshalGQL(v interface{}) error {
 	switch str {
 	case "ID":
 		*f = *WorkoutLogOrderFieldID
+	case "Order":
+		*f = *WorkoutLogOrderFieldOrder
 	default:
 		return fmt.Errorf("%s is not a valid WorkoutLogOrderField", str)
 	}

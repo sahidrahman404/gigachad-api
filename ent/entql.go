@@ -198,6 +198,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			workoutlog.FieldWorkoutID:  {Type: field.TypeString, Column: workoutlog.FieldWorkoutID},
 			workoutlog.FieldExerciseID: {Type: field.TypeString, Column: workoutlog.FieldExerciseID},
 			workoutlog.FieldUserID:     {Type: field.TypeString, Column: workoutlog.FieldUserID},
+			workoutlog.FieldOrder:      {Type: field.TypeInt, Column: workoutlog.FieldOrder},
 		},
 	}
 	graph.MustAddE(
@@ -1575,6 +1576,11 @@ func (f *WorkoutLogFilter) WhereExerciseID(p entql.StringP) {
 // WhereUserID applies the entql string predicate on the user_id field.
 func (f *WorkoutLogFilter) WhereUserID(p entql.StringP) {
 	f.Where(p.Field(workoutlog.FieldUserID))
+}
+
+// WhereOrder applies the entql int predicate on the order field.
+func (f *WorkoutLogFilter) WhereOrder(p entql.IntP) {
+	f.Where(p.Field(workoutlog.FieldOrder))
 }
 
 // WhereHasUsers applies a predicate to check if query has an edge users.

@@ -76,6 +76,11 @@ func UserID(v pksuid.ID) predicate.WorkoutLog {
 	return predicate.WorkoutLog(sql.FieldEQ(FieldUserID, v))
 }
 
+// Order applies equality check predicate on the "order" field. It's identical to OrderEQ.
+func Order(v int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldEQ(FieldOrder, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.WorkoutLog {
 	return predicate.WorkoutLog(sql.FieldEQ(FieldCreatedAt, v))
@@ -324,6 +329,46 @@ func UserIDEqualFold(v pksuid.ID) predicate.WorkoutLog {
 func UserIDContainsFold(v pksuid.ID) predicate.WorkoutLog {
 	vc := string(v)
 	return predicate.WorkoutLog(sql.FieldContainsFold(FieldUserID, vc))
+}
+
+// OrderEQ applies the EQ predicate on the "order" field.
+func OrderEQ(v int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldEQ(FieldOrder, v))
+}
+
+// OrderNEQ applies the NEQ predicate on the "order" field.
+func OrderNEQ(v int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldNEQ(FieldOrder, v))
+}
+
+// OrderIn applies the In predicate on the "order" field.
+func OrderIn(vs ...int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldIn(FieldOrder, vs...))
+}
+
+// OrderNotIn applies the NotIn predicate on the "order" field.
+func OrderNotIn(vs ...int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldNotIn(FieldOrder, vs...))
+}
+
+// OrderGT applies the GT predicate on the "order" field.
+func OrderGT(v int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldGT(FieldOrder, v))
+}
+
+// OrderGTE applies the GTE predicate on the "order" field.
+func OrderGTE(v int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldGTE(FieldOrder, v))
+}
+
+// OrderLT applies the LT predicate on the "order" field.
+func OrderLT(v int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldLT(FieldOrder, v))
+}
+
+// OrderLTE applies the LTE predicate on the "order" field.
+func OrderLTE(v int) predicate.WorkoutLog {
+	return predicate.WorkoutLog(sql.FieldLTE(FieldOrder, v))
 }
 
 // HasUsers applies the HasEdge predicate on the "users" edge.
