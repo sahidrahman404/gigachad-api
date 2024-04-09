@@ -413,7 +413,7 @@ func (ec *ExerciseCreate) createSpec() (*Exercise, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &WorkoutLogCreate{config: ec.config, mutation: newWorkoutLogMutation(ec.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {

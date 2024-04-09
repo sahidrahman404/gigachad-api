@@ -1905,7 +1905,8 @@ func (c *WorkoutClient) QueryWorkoutLogs(w *Workout) *WorkoutLogQuery {
 
 // Hooks returns the client hooks.
 func (c *WorkoutClient) Hooks() []Hook {
-	return c.hooks.Workout
+	hooks := c.hooks.Workout
+	return append(hooks[:len(hooks):len(hooks)], workout.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.
@@ -2086,7 +2087,8 @@ func (c *WorkoutLogClient) QueryExercises(wl *WorkoutLog) *ExerciseQuery {
 
 // Hooks returns the client hooks.
 func (c *WorkoutLogClient) Hooks() []Hook {
-	return c.hooks.WorkoutLog
+	hooks := c.hooks.WorkoutLog
+	return append(hooks[:len(hooks):len(hooks)], workoutlog.Hooks[:]...)
 }
 
 // Interceptors returns the client interceptors.

@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 
@@ -436,6 +437,12 @@ func (wlq *WorkoutLogQuery) prepareQuery(ctx context.Context) error {
 			return err
 		}
 		wlq.sql = prev
+	}
+	if workoutlog.Policy == nil {
+		return errors.New("ent: uninitialized workoutlog.Policy (forgotten import ent/runtime?)")
+	}
+	if err := workoutlog.Policy.EvalQuery(ctx, wlq); err != nil {
+		return err
 	}
 	return nil
 }

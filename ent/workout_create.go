@@ -162,7 +162,9 @@ func (wc *WorkoutCreate) Mutation() *WorkoutMutation {
 
 // Save creates the Workout in the database.
 func (wc *WorkoutCreate) Save(ctx context.Context) (*Workout, error) {
-	wc.defaults()
+	if err := wc.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, wc.sqlSave, wc.mutation, wc.hooks)
 }
 
@@ -189,19 +191,26 @@ func (wc *WorkoutCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (wc *WorkoutCreate) defaults() {
+func (wc *WorkoutCreate) defaults() error {
 	if _, ok := wc.mutation.Name(); !ok {
 		v := workout.DefaultName
 		wc.mutation.SetName(v)
 	}
 	if _, ok := wc.mutation.CreatedAt(); !ok {
-		v := workout.DefaultCreatedAt
+		if workout.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized workout.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := workout.DefaultCreatedAt()
 		wc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := wc.mutation.ID(); !ok {
+		if workout.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized workout.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := workout.DefaultID()
 		wc.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.
@@ -323,7 +332,7 @@ func (wc *WorkoutCreate) createSpec() (*Workout, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &WorkoutLogCreate{config: wc.config, mutation: newWorkoutLogMutation(wc.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {

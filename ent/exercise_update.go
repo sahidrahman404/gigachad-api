@@ -678,7 +678,7 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			},
 		}
 		createE := &WorkoutLogCreate{config: eu.config, mutation: newWorkoutLogMutation(eu.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -701,7 +701,7 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &WorkoutLogCreate{config: eu.config, mutation: newWorkoutLogMutation(eu.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -724,7 +724,7 @@ func (eu *ExerciseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &WorkoutLogCreate{config: eu.config, mutation: newWorkoutLogMutation(eu.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1513,7 +1513,7 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 			},
 		}
 		createE := &WorkoutLogCreate{config: euo.config, mutation: newWorkoutLogMutation(euo.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1536,7 +1536,7 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &WorkoutLogCreate{config: euo.config, mutation: newWorkoutLogMutation(euo.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {
@@ -1559,7 +1559,7 @@ func (euo *ExerciseUpdateOne) sqlSave(ctx context.Context) (_node *Exercise, err
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		createE := &WorkoutLogCreate{config: euo.config, mutation: newWorkoutLogMutation(euo.config, OpCreate)}
-		createE.defaults()
+		_ = createE.defaults()
 		_, specE := createE.createSpec()
 		edge.Target.Fields = specE.Fields
 		if specE.ID.Value != nil {

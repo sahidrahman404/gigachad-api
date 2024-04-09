@@ -121,7 +121,7 @@ func init() {
 	// userDescCreatedAt is the schema descriptor for created_at field.
 	userDescCreatedAt := userFields[5].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
-	user.DefaultCreatedAt = userDescCreatedAt.Default.(time.Time)
+	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
 	// userDescActivated is the schema descriptor for activated field.
 	userDescActivated := userFields[6].Descriptor()
 	// user.DefaultActivated holds the default value on creation for the activated field.
@@ -135,6 +135,15 @@ func init() {
 	// user.DefaultID holds the default value on creation for the id field.
 	user.DefaultID = userDescID.Default.(func() pksuid.ID)
 	workoutMixin := schema.Workout{}.Mixin()
+	workout.Policy = privacy.NewPolicies(schema.Workout{})
+	workout.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := workout.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
 	workoutMixinFields0 := workoutMixin[0].Fields()
 	_ = workoutMixinFields0
 	workoutFields := schema.Workout{}.Fields()
@@ -146,12 +155,21 @@ func init() {
 	// workoutDescCreatedAt is the schema descriptor for created_at field.
 	workoutDescCreatedAt := workoutFields[4].Descriptor()
 	// workout.DefaultCreatedAt holds the default value on creation for the created_at field.
-	workout.DefaultCreatedAt = workoutDescCreatedAt.Default.(time.Time)
+	workout.DefaultCreatedAt = workoutDescCreatedAt.Default.(func() time.Time)
 	// workoutDescID is the schema descriptor for id field.
 	workoutDescID := workoutMixinFields0[0].Descriptor()
 	// workout.DefaultID holds the default value on creation for the id field.
 	workout.DefaultID = workoutDescID.Default.(func() pksuid.ID)
 	workoutlogMixin := schema.WorkoutLog{}.Mixin()
+	workoutlog.Policy = privacy.NewPolicies(schema.WorkoutLog{})
+	workoutlog.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := workoutlog.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
 	workoutlogMixinFields0 := workoutlogMixin[0].Fields()
 	_ = workoutlogMixinFields0
 	workoutlogFields := schema.WorkoutLog{}.Fields()
@@ -159,7 +177,7 @@ func init() {
 	// workoutlogDescCreatedAt is the schema descriptor for created_at field.
 	workoutlogDescCreatedAt := workoutlogFields[1].Descriptor()
 	// workoutlog.DefaultCreatedAt holds the default value on creation for the created_at field.
-	workoutlog.DefaultCreatedAt = workoutlogDescCreatedAt.Default.(time.Time)
+	workoutlog.DefaultCreatedAt = workoutlogDescCreatedAt.Default.(func() time.Time)
 	// workoutlogDescID is the schema descriptor for id field.
 	workoutlogDescID := workoutlogMixinFields0[0].Descriptor()
 	// workoutlog.DefaultID holds the default value on creation for the id field.

@@ -117,7 +117,7 @@ func ValidColumn(column string) bool {
 
 var (
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
-	DefaultCreatedAt time.Time
+	DefaultCreatedAt func() time.Time
 	// DefaultActivated holds the default value on creation for the "activated" field.
 	DefaultActivated int
 	// DefaultVersion holds the default value on creation for the "version" field.

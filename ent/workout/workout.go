@@ -5,6 +5,7 @@ package workout
 import (
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
@@ -89,11 +90,18 @@ func ValidColumn(column string) bool {
 	return false
 }
 
+// Note that the variables below are initialized by the runtime
+// package on the initialization of the application. Therefore,
+// it should be imported in the main as follows:
+//
+//	import _ "github.com/sahidrahman404/gigachad-api/ent/runtime"
 var (
+	Hooks  [1]ent.Hook
+	Policy ent.Policy
 	// DefaultName holds the default value on creation for the "name" field.
 	DefaultName string
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
-	DefaultCreatedAt time.Time
+	DefaultCreatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() pksuid.ID
 )

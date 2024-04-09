@@ -120,7 +120,9 @@ func (wlc *WorkoutLogCreate) Mutation() *WorkoutLogMutation {
 
 // Save creates the WorkoutLog in the database.
 func (wlc *WorkoutLogCreate) Save(ctx context.Context) (*WorkoutLog, error) {
-	wlc.defaults()
+	if err := wlc.defaults(); err != nil {
+		return nil, err
+	}
 	return withHooks(ctx, wlc.sqlSave, wlc.mutation, wlc.hooks)
 }
 
@@ -147,15 +149,22 @@ func (wlc *WorkoutLogCreate) ExecX(ctx context.Context) {
 }
 
 // defaults sets the default values of the builder before save.
-func (wlc *WorkoutLogCreate) defaults() {
+func (wlc *WorkoutLogCreate) defaults() error {
 	if _, ok := wlc.mutation.CreatedAt(); !ok {
-		v := workoutlog.DefaultCreatedAt
+		if workoutlog.DefaultCreatedAt == nil {
+			return fmt.Errorf("ent: uninitialized workoutlog.DefaultCreatedAt (forgotten import ent/runtime?)")
+		}
+		v := workoutlog.DefaultCreatedAt()
 		wlc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := wlc.mutation.ID(); !ok {
+		if workoutlog.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized workoutlog.DefaultID (forgotten import ent/runtime?)")
+		}
 		v := workoutlog.DefaultID()
 		wlc.mutation.SetID(v)
 	}
+	return nil
 }
 
 // check runs all checks and user-defined validators on the builder.

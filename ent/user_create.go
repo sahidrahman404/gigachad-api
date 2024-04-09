@@ -254,7 +254,7 @@ func (uc *UserCreate) defaults() {
 		uc.mutation.SetUnit(v)
 	}
 	if _, ok := uc.mutation.CreatedAt(); !ok {
-		v := user.DefaultCreatedAt
+		v := user.DefaultCreatedAt()
 		uc.mutation.SetCreatedAt(v)
 	}
 	if _, ok := uc.mutation.Activated(); !ok {
