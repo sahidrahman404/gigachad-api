@@ -221,6 +221,7 @@ var (
 		{Name: "id", Type: field.TypeString},
 		{Name: "sets", Type: field.TypeJSON},
 		{Name: "created_at", Type: field.TypeTime},
+		{Name: "order", Type: field.TypeInt},
 		{Name: "user_id", Type: field.TypeString},
 		{Name: "workout_id", Type: field.TypeString},
 		{Name: "exercise_id", Type: field.TypeString},
@@ -233,19 +234,19 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "workout_logs_users_workout_logs",
-				Columns:    []*schema.Column{WorkoutLogsColumns[3]},
+				Columns:    []*schema.Column{WorkoutLogsColumns[4]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "workout_logs_workouts_workouts",
-				Columns:    []*schema.Column{WorkoutLogsColumns[4]},
+				Columns:    []*schema.Column{WorkoutLogsColumns[5]},
 				RefColumns: []*schema.Column{WorkoutsColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
 			{
 				Symbol:     "workout_logs_exercises_exercises",
-				Columns:    []*schema.Column{WorkoutLogsColumns[5]},
+				Columns:    []*schema.Column{WorkoutLogsColumns[6]},
 				RefColumns: []*schema.Column{ExercisesColumns[0]},
 				OnDelete:   schema.Cascade,
 			},
@@ -254,7 +255,7 @@ var (
 			{
 				Name:    "workoutlog_workout_id_exercise_id",
 				Unique:  true,
-				Columns: []*schema.Column{WorkoutLogsColumns[4], WorkoutLogsColumns[5]},
+				Columns: []*schema.Column{WorkoutLogsColumns[5], WorkoutLogsColumns[6]},
 			},
 		},
 	}

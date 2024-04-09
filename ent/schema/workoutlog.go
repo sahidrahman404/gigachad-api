@@ -44,6 +44,7 @@ func (WorkoutLog) Fields() []ent.Field {
 		field.String("workout_id").GoType(pksuid.ID("")),
 		field.String("exercise_id").GoType(pksuid.ID("")),
 		field.String("user_id").GoType(pksuid.ID("")),
+		field.Int("order").Annotations(entgql.OrderField("Order")),
 	}
 }
 
