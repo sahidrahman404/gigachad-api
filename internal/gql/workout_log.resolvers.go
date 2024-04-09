@@ -43,6 +43,7 @@ func (r *mutationResolver) CreateWorkoutWithChildren(ctx context.Context, input 
 				c.SetSets(input.WorkoutLogs[i].Sets).
 					SetExerciseID(input.WorkoutLogs[i].ExerciseID).
 					SetWorkoutID(workout.ID).
+					SetOrder(i).
 					SetUserID(user.ID)
 			}).Save(ctx)
 		if err != nil {
