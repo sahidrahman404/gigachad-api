@@ -46,7 +46,7 @@ func (r *mutationResolver) CreateAuthenticationToken(ctx context.Context, input 
 		return nil, r.invalidCredentials()
 	}
 
-	token, err := r.storage.Tokens.New(user.Ent.ID, 24*time.Hour, database.SocpeAuthentication)
+	token, err := r.storage.Tokens.New(user.Ent.ID, 7*24*time.Hour, database.SocpeAuthentication)
 	if err != nil {
 		return nil, r.serverError(err)
 	}

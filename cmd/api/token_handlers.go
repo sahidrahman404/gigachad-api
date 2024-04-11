@@ -194,7 +194,7 @@ func (app *application) setCookieHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	maxAge := 60 * 60 * 24 * 30
+	maxAge := 60 * 60 * 24 * 7
 
 	cookie := types.GetCookieSetting(app.config.env, tokenPlainText, maxAge)
 
