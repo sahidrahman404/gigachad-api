@@ -179,6 +179,7 @@ type ComplexityRoot struct {
 		UpdateExercise            func(childComplexity int, input UpdateExerciseInput) int
 		UpdateRoutineWithChildren func(childComplexity int, input UpdateRoutineWithChildrenInput) int
 		UpdateUserPassword        func(childComplexity int, input ResetUserPasswordInput) int
+		UpdateUserProfile         func(childComplexity int, input *UpdateUserProfileInput) int
 	}
 
 	PageInfo struct {
@@ -370,6 +371,7 @@ type MutationResolver interface {
 	CreateUser(ctx context.Context, input ent.CreateUserInput) (*ent.User, error)
 	ActivateUser(ctx context.Context, input ActivateUserInput) (*ActivateUserResult, error)
 	UpdateUserPassword(ctx context.Context, input ResetUserPasswordInput) (*ResetUserPasswordResult, error)
+	UpdateUserProfile(ctx context.Context, input *UpdateUserProfileInput) (*ent.User, error)
 	CreateAuthenticationToken(ctx context.Context, input LoginInput) (*AuthenticationToken, error)
 	CreateActivationToken(ctx context.Context, input ActivationTokenInput) (*ent.User, error)
 	CreatePasswordResetToken(ctx context.Context, input ResetPasswordInput) (*ent.User, error)
@@ -1101,6 +1103,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateUserPassword(childComplexity, args["input"].(ResetUserPasswordInput)), true
+
+	case "Mutation.updateUserProfile":
+		if e.complexity.Mutation.UpdateUserProfile == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateUserProfile_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateUserProfile(childComplexity, args["input"].(*UpdateUserProfileInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -2052,6 +2066,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateRoutineReminderInput,
 		ec.unmarshalInputUpdateRoutineWithChildrenInput,
 		ec.unmarshalInputUpdateUserInput,
+		ec.unmarshalInputUpdateUserProfileInput,
 		ec.unmarshalInputUserOrder,
 		ec.unmarshalInputUserWhereInput,
 		ec.unmarshalInputWorkoutLogOrder,
@@ -3000,6 +3015,21 @@ func (ec *executionContext) field_Mutation_updateUserPassword_args(ctx context.C
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNResetUserPasswordInput2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐResetUserPasswordInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateUserProfile_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *UpdateUserProfileInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOUpdateUserProfileInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateUserProfileInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7646,6 +7676,91 @@ func (ec *executionContext) fieldContext_Mutation_updateUserPassword(ctx context
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateUserPassword_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateUserProfile(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateUserProfile(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateUserProfile(rctx, fc.Args["input"].(*UpdateUserProfileInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*ent.User)
+	fc.Result = res
+	return ec.marshalNUser2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚐUser(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateUserProfile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_User_id(ctx, field)
+			case "email":
+				return ec.fieldContext_User_email(ctx, field)
+			case "username":
+				return ec.fieldContext_User_username(ctx, field)
+			case "name":
+				return ec.fieldContext_User_name(ctx, field)
+			case "unit":
+				return ec.fieldContext_User_unit(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_User_createdAt(ctx, field)
+			case "activated":
+				return ec.fieldContext_User_activated(ctx, field)
+			case "version":
+				return ec.fieldContext_User_version(ctx, field)
+			case "tokens":
+				return ec.fieldContext_User_tokens(ctx, field)
+			case "exercises":
+				return ec.fieldContext_User_exercises(ctx, field)
+			case "routines":
+				return ec.fieldContext_User_routines(ctx, field)
+			case "workouts":
+				return ec.fieldContext_User_workouts(ctx, field)
+			case "workoutLogs":
+				return ec.fieldContext_User_workoutLogs(ctx, field)
+			case "routineExercises":
+				return ec.fieldContext_User_routineExercises(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type User", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateUserProfile_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -20034,6 +20149,40 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateUserProfileInput(ctx context.Context, obj interface{}) (UpdateUserProfileInput, error) {
+	var it UpdateUserProfileInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "unit"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "unit":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unit"))
+			data, err := ec.unmarshalNUserUnit2githubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚋentᚋuserᚐUnit(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Unit = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUserOrder(ctx context.Context, obj interface{}) (ent.UserOrder, error) {
 	var it ent.UserOrder
 	asMap := map[string]interface{}{}
@@ -22930,6 +23079,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "updateUserPassword":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateUserPassword(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "updateUserProfile":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateUserProfile(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -27693,6 +27849,14 @@ func (ec *executionContext) unmarshalOUpdateRoutineReminderInput2ᚖgithubᚗcom
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputUpdateRoutineReminderInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOUpdateUserProfileInput2ᚖgithubᚗcomᚋsahidrahman404ᚋgigachadᚑapiᚐUpdateUserProfileInput(ctx context.Context, v interface{}) (*UpdateUserProfileInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputUpdateUserProfileInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

@@ -6,6 +6,7 @@ import (
 	"github.com/sahidrahman404/gigachad-api/ent"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/pksuid"
 	"github.com/sahidrahman404/gigachad-api/ent/schema/schematype"
+	"github.com/sahidrahman404/gigachad-api/ent/user"
 )
 
 type ActivateUserInput struct {
@@ -120,4 +121,9 @@ type UpdateRoutineWithChildrenInput struct {
 	Name             string                      `json:"name"`
 	Reminders        *UpdateRoutineReminderInput `json:"reminders,omitempty"`
 	RoutineExercises []*RoutineExerciseInput     `json:"routineExercises,omitempty"`
+}
+
+type UpdateUserProfileInput struct {
+	Name string    `json:"name"`
+	Unit user.Unit `json:"unit"`
 }

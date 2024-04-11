@@ -234,6 +234,22 @@ func (r *mutationResolver) UpdateUserPassword(ctx context.Context, input gigacha
 	}, nil
 }
 
+// UpdateUserProfile is the resolver for the updateUserProfile field.
+func (r *mutationResolver) UpdateUserProfile(ctx context.Context, input *gigachad.UpdateUserProfileInput) (*ent.User, error) {
+	userCtx := r.getUserFromCtx(ctx)
+	user, err := r.requireActivatedUser(userCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.client.User.UpdateOneID(user.ID).SetName(input.Name).SetUnit(input.Unit).Exec(ctx)
+	if err != nil {
+		return nil, r.defaultError(err)
+	}
+
+	return r.client.User.Get(ctx, user.ID)
+}
+
 // Viewer is the resolver for the viewer field.
 func (r *queryResolver) Viewer(ctx context.Context) (*ent.User, error) {
 	user := r.getUserFromCtx(ctx)

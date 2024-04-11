@@ -16,10 +16,16 @@ type ResetUserPasswordResult {
   tokenPlainText: String!
 }
 
+input UpdateUserProfileInput {
+  name: String!
+  unit: UserUnit!
+}
+
 type Mutation {
   createUser(input: CreateUserInput!): User!
   activateUser(input: ActivateUserInput!): ActivateUserResult!
   updateUserPassword(input: ResetUserPasswordInput!): ResetUserPasswordResult!
+  updateUserProfile(input: UpdateUserProfileInput): User!
 }
 
 extend type Query {
