@@ -7,6 +7,7 @@ package gql
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	gigachad "github.com/sahidrahman404/gigachad-api"
@@ -20,14 +21,15 @@ import (
 func (r *mutationResolver) CreateAuthenticationToken(ctx context.Context, input gigachad.LoginInput) (*gigachad.AuthenticationToken, error) {
 	v := validator.NewValidator()
 
-	types.ValidateEmail(v, input.Email)
+	email := strings.ToLower(input.Email)
+	types.ValidateEmail(v, email)
 	types.ValidatePasswordPlaintext(v, input.Password)
 
 	if v.HasErrors() {
 		return nil, r.errorMessage(v)
 	}
 
-	user, err := r.storage.Users.GetByEmail(input.Email)
+	user, err := r.storage.Users.GetByEmail(email)
 	if err != nil {
 		switch {
 		case errors.Is(err, database.ErrRecordNotFound):
