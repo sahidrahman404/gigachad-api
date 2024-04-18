@@ -1,0 +1,17 @@
+name: Prod Gigachad Backend
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    if: github.event.pull_request.merged
+    name: Deploy app
+    runs-on: ubuntu-latest
+    concurrency: deploy-group
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --ha=false
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
