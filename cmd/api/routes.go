@@ -21,7 +21,7 @@ func (app *application) routes() http.Handler {
 
 	mux.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"https://gigachad.buzz", "http://localhost:3000"},
+		AllowedOrigins: []string{"https://gigachad.buzz", "http://localhost:3000", "https://staging.gigachad.buzz"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},

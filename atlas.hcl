@@ -1,9 +1,9 @@
-variable "token" {
+variable "dsn" {
   type    = string
-  default = getenv("TURSO_TOKEN")
+  default = getenv("DB_DSN")
 }
 
 env "local" {
-  url     = "libsql://gigachad-sahidrahman404.turso.io?authToken=${var.token}"
+  url     = "${var.dsn}"
   exclude = ["_litestream*", "stories_fts*"]
 }
