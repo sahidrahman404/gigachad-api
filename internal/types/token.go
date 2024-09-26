@@ -64,7 +64,7 @@ func GetCookieSetting(env string, tokenPlainText string, age int) http.Cookie {
 		Name:     "auth",
 		Value:    tokenPlainText,
 		Path:     "/",
-		Domain:   "gigachad.buzz",
+		Domain:   "wellup.fyi",
 		MaxAge:   age,
 		HttpOnly: true,
 		Secure:   true,
